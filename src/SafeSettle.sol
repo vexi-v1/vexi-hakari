@@ -10,15 +10,15 @@ import {PushCostLens} from "./PushCostLens.sol";
 import {CostModel} from "./CostModel.sol";
 
 /// @title SafeSettle
-/// @notice A demo settlement rule (not a product): which TWAP to settle on when the raw and truncated series disagree.
-/// @dev raw ≈ trunc → raw, nothing to explain. Otherwise: if faking the raw TWAP by the gap would cost the attacker
-///      more than it would move this settlement's payout, the move is genuine and the raw price is used (truncation
-///      would only lag); if faking is cheaper than the gain, the truncated price is used and the attacker paid fees
-///      for nothing. `arbReversionSeconds` is the caller's statement about the world (0 for a stock token while
-///      Robinhood's mint/redeem window is closed) — that is the one place this contract trusts an off-chain gauge.
-///      It refuses to answer while the PoolManager is unlocked: inside an unlock an attacker can add a liquidity wall,
-///      ask, and remove it, inflating the cost to fake. A wall held across blocks is not stopped here (it costs the
-///      attacker the capital and the exposure for that long); see the README's limitations.
+/// @notice A demo settlement rule (not a product): settle on the raw TWAP only if the pool is deep enough that faking a
+///         price move would cost more than it could earn on everything settling on that price; otherwise refuse.
+/// @dev The question is not whether the raw and truncated series disagree: truncation moves Δ per observation, so a push
+///      held long enough makes them agree on the fake. The question is how much exposure this pool's depth can carry
+///      right now (CostModel.maxSafeExposure). The two series still inform it: their gap, when there is one, is priced
+///      as one more move. `exposure` must be the total settling on this price (every position, not one call), and
+///      `arbReversionSeconds` is the caller's statement about the world (0 for a stock token while Robinhood's
+///      mint/redeem window is closed): those two inputs are where this contract trusts its integrator. It refuses to
+///      answer while the PoolManager is unlocked (a liquidity wall added and removed in one transaction).
 contract SafeSettle {
     using PoolIdLibrary for PoolKey;
     using TransientStateLibrary for IPoolManager;
@@ -26,15 +26,24 @@ contract SafeSettle {
     struct Decision {
         int24 rawTick;
         int24 truncTick;
-        int24 tickUsed;
-        bool usedRaw;
-        uint256 costToFake; // quote units, CostModel v0
-        uint256 gainIfFaked; // quote units
-        bool costComplete; // false: the tick walk hit its cap, costToFake is "at least this"
+        bool trusted; // exposure < maxSafeExposure: settle on rawTick
+        int24 tickUsed; // rawTick when trusted, 0 when refused (read `trusted`)
+        uint256 maxSafeExposure; // quote units
+        int24 bindingTicks; // the move that sets the bound
+        bool bindingUp; // its tick direction
+        uint256 bindingCost; // what faking that move costs, quote units
+        bool costComplete; // false: the binding walk hit its cap; the bound is "at least this"
     }
 
     event Settled(
-        PoolId indexed id, int24 rawTick, int24 truncTick, bool usedRaw, uint256 costToFake, uint256 gainIfFaked
+        PoolId indexed id,
+        int24 rawTick,
+        int24 truncTick,
+        bool trusted,
+        uint256 exposure,
+        uint256 maxSafeExposure,
+        int24 bindingTicks,
+        bool bindingUp
     );
 
     error WrongHook();
@@ -42,7 +51,7 @@ contract SafeSettle {
 
     HakariOracleHook public immutable hook;
     PushCostLens public immutable lens;
-    /// @dev Gaps this small are rounding and honest drift, not an attack.
+    /// @dev A gap this small between the two TWAPs is rounding and honest drift, not one more move to price.
     int24 public constant TOLERANCE_TICKS = 10;
     uint256 public constant MAX_WALK_STEPS = 64;
 
@@ -51,48 +60,43 @@ contract SafeSettle {
         lens = _lens;
     }
 
-    /// @param window            TWAP window in seconds
-    /// @param notionalAtStake   payout notional this settlement moves, in the quote currency's units
-    /// @param quoteIsCurrency0  which side of the pool is the quote (USDG is currency0 in HIMS/USDG, currency1 in TSLA/USDG)
+    /// @param window              TWAP window in seconds
+    /// @param exposure            total payout notional settling on this price, in the quote currency's units
+    /// @param quoteIsCurrency0    which side of the pool is the quote (USDG is currency0 in HIMS/USDG, currency1 in TSLA/USDG)
     /// @param arbReversionSeconds how often arbitrageurs pull the price back, in seconds; 0 when nobody can (mint/redeem
-    ///                          closed). Pass a slow, measured bound: a fast one overstates the cost to fake.
+    ///                            closed). Pass a slow, measured bound: a fast one overstates what faking costs.
     function settlePrice(
         PoolKey calldata key,
         uint32 window,
-        uint256 notionalAtStake,
+        uint256 exposure,
         bool quoteIsCurrency0,
         uint32 arbReversionSeconds
     ) public view returns (Decision memory d) {
         if (address(key.hooks) != address(hook)) revert WrongHook();
         if (lens.poolManager().isUnlocked()) revert PoolManagerUnlocked();
         (d.rawTick, d.truncTick) = hook.twaps(key.toId(), window);
-        int24 gap = d.rawTick - d.truncTick;
-        bool up = gap > 0;
-        int24 x = up ? gap : -gap;
-        if (x <= TOLERANCE_TICKS) {
-            d.usedRaw = true;
-            d.tickUsed = d.rawTick;
-            d.costComplete = true;
-            return d;
-        }
-        (d.costToFake, d.costComplete) = CostModel.costToFake(
-            lens, key, d.truncTick, x, up, window, arbReversionSeconds, quoteIsCurrency0, MAX_WALK_STEPS
+        int24 gap = d.rawTick > d.truncTick ? d.rawTick - d.truncTick : d.truncTick - d.rawTick;
+        CostModel.Bound memory b = CostModel.maxSafeExposure(
+            lens, key, gap > TOLERANCE_TICKS ? gap : int24(0), window, arbReversionSeconds, quoteIsCurrency0, MAX_WALK_STEPS
         );
-        // the v4 price is currency1 per currency0: when the quote is currency0 the asset moves against the tick
-        d.gainIfFaked = CostModel.gainIfFaked(notionalAtStake, x, quoteIsCurrency0 ? !up : up);
-        d.usedRaw = d.costToFake > d.gainIfFaked;
-        d.tickUsed = d.usedRaw ? d.rawTick : d.truncTick;
+        d.maxSafeExposure = b.maxSafeExposure;
+        d.bindingTicks = b.ticks;
+        d.bindingUp = b.up;
+        d.bindingCost = b.cost;
+        d.costComplete = b.complete;
+        d.trusted = exposure < b.maxSafeExposure;
+        d.tickUsed = d.trusted ? d.rawTick : int24(0);
     }
 
     /// @notice Same decision, written to the log with its reason.
     function settle(
         PoolKey calldata key,
         uint32 window,
-        uint256 notionalAtStake,
+        uint256 exposure,
         bool quoteIsCurrency0,
         uint32 arbReversionSeconds
     ) external returns (Decision memory d) {
-        d = settlePrice(key, window, notionalAtStake, quoteIsCurrency0, arbReversionSeconds);
-        emit Settled(key.toId(), d.rawTick, d.truncTick, d.usedRaw, d.costToFake, d.gainIfFaked);
+        d = settlePrice(key, window, exposure, quoteIsCurrency0, arbReversionSeconds);
+        emit Settled(key.toId(), d.rawTick, d.truncTick, d.trusted, exposure, d.maxSafeExposure, d.bindingTicks, d.bindingUp);
     }
 }

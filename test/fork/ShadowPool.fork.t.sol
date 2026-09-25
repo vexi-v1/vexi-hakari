@@ -18,12 +18,13 @@ import {HakariOracleHook} from "../../src/HakariOracleHook.sol";
 import {PushCostLens} from "../../src/PushCostLens.sol";
 import {SafeSettle} from "../../src/SafeSettle.sol";
 import {TickBitmapView} from "../../src/libraries/TickBitmapView.sol";
+import {DecisionLog} from "../utils/DecisionLog.sol";
 
 /// @notice SPEC.md § 3.2's shadow pool: on a fork of Robinhood Chain 4663, a new pool on the *official*
 ///         PoolManager with HakariOracleHook attached, seeded with the exact liquidity profile of the real
 ///         TSLA/USDG pool (read tick by tick through the bitmap). Then the sustained-push attack and
 ///         SafeSettle's decision, in USDG, on a TSLA-shaped book. Run: forge test --match-contract ShadowPool -vv
-contract ShadowPoolForkTest is Test {
+contract ShadowPoolForkTest is DecisionLog {
     using PoolIdLibrary for PoolKey;
     using StateLibrary for IPoolManager;
 
@@ -35,8 +36,7 @@ contract ShadowPoolForkTest is Test {
     /// @dev gauge/data/delta.json: p99 tick move per swap block on TSLA/USDG over the last 300k blocks
     int24 constant TSLA_DELTA = 3;
     uint32 constant WINDOW = 10;
-    /// @dev Assumption, not a measurement: on a weekday arbitrageurs pull TSLA/USDG back once every 5 s.
-    uint32 constant WEEKDAY_REVERSION = 5;
+    uint32 constant LONG_WINDOW = 1800;
 
     PoolKey real;
     PoolKey shadow;
@@ -139,21 +139,6 @@ contract ShadowPoolForkTest is Test {
         return (next, false);
     }
 
-    function _record(string memory scenario, SafeSettle.Decision memory d, uint32 arbReversionSeconds, uint256 notional) internal {
-        string memory row = scenario;
-        vm.serializeString(row, "scenario", scenario);
-        vm.serializeString(row, "pool", string(abi.encodePacked("TSLA/USDG profile at block ", vm.toString(block.number), ", delta 3, notional 100,000 USDG")));
-        vm.serializeUint(row, "arbReversionSeconds", arbReversionSeconds);
-        vm.serializeString(row, "notional", vm.toString(notional));
-        vm.serializeInt(row, "rawTick", int256(d.rawTick));
-        vm.serializeInt(row, "truncTick", int256(d.truncTick));
-        vm.serializeString(row, "costToFake", vm.toString(d.costToFake));
-        vm.serializeString(row, "gainIfFaked", vm.toString(d.gainIfFaked));
-        vm.serializeBool(row, "costComplete", d.costComplete);
-        string memory out = vm.serializeBool(row, "usedRaw", d.usedRaw);
-        vm.writeJson(out, string(abi.encodePacked("web/decisions/", scenario, ".json")));
-    }
-
     function _seed(int24 lower, int24 upper, uint128 liquidity) internal {
         if (liquidity == 0 || lower >= upper) return;
         lpRouter.modifyLiquidity(shadow, ModifyLiquidityParams({tickLower: lower, tickUpper: upper, liquidityDelta: int256(uint256(liquidity)), salt: 0}), "");
@@ -182,37 +167,51 @@ contract ShadowPoolForkTest is Test {
         console2.log("shadow pool mirrors TSLA/USDG at block", block.number);
     }
 
-    /// The weekend attack on a TSLA-shaped book: hold the price 5 % up for the window, then settle.
-    function test_sustainedPush_onTslaShapedBook_inUsdg() public {
+    function _log(string memory label, SafeSettle.Decision memory d) internal pure {
+        console2.log(label);
+        console2.log("  max safe exposure, USDG (6 dec)", d.maxSafeExposure);
+        console2.log("  binding move (ticks)", d.bindingTicks);
+        console2.log("  cost to fake it, USDG (6 dec)", d.bindingCost);
+        console2.log("  trusted for 100,000 USDG?", d.trusted);
+    }
+
+    /// How much settlement can a TSLA-shaped book carry on a 30-minute TWAP? Nobody pushing back (a fenced weekend)
+    /// versus arbitrage that pulls the price back every 12 s or every 60 s.
+    function test_tslaShapedBook_maxSafeExposure_weekendVsWeekday() public {
+        vm.warp(t0 + LONG_WINDOW + 1);
+        _poke();
+        uint256 exposure = 100_000e6;
+        SafeSettle.Decision memory weekend = settle.settlePrice(shadow, LONG_WINDOW, exposure, false, 0);
+        SafeSettle.Decision memory weekday12 = settle.settlePrice(shadow, LONG_WINDOW, exposure, false, 12);
+        SafeSettle.Decision memory weekday60 = settle.settlePrice(shadow, LONG_WINDOW, exposure, false, 60);
+        console2.log("TSLA/USDG book at block", block.number);
+        _log("weekend (nobody pushes back)", weekend);
+        _log("weekday, arbitrage every 12 s", weekday12);
+        _log("weekday, arbitrage every 60 s", weekday60);
+        string memory pool = string(abi.encodePacked("TSLA/USDG book at block ", vm.toString(block.number), ", 30-min TWAP"));
+        _record("tsla-shaped-weekend", pool, 0, LONG_WINDOW, exposure, 6, "USDG", weekend);
+        _record("tsla-shaped-weekday-12s", pool, 12, LONG_WINDOW, exposure, 6, "USDG", weekday12);
+        _record("tsla-shaped-weekday-60s", pool, 60, LONG_WINDOW, exposure, 6, "USDG", weekday60);
+        // the ordering is structural; which side of 100,000 each lands on depends on the live book, so it is logged
+        assertGt(weekday12.maxSafeExposure, weekday60.maxSafeExposure * 2, "faster arbitrage, more re-pushes to pay");
+        assertGt(weekday60.maxSafeExposure, weekend.maxSafeExposure * 10, "a 30-minute hold against arbitrage costs dozens of re-pushes");
+    }
+
+    /// The weekend attack on the same book: hold +5 % with a dust swap a second. With nobody pushing back the pool is
+    /// cheap to move, so 100,000 USDG of settlement is refused.
+    function test_heldPushOnTslaShapedBook_weekend_isRefused() public {
         (, int24 honest,,) = MANAGER.getSlot0(shadowId);
-        // 488 ticks = +5 %: pushing the v4 price (USDG per TSLA) up means buying TSLA with USDG
-        uint256 usdgBefore = MockERC20(Currency.unwrap(shadow.currency1)).balanceOf(address(this));
         _swapTo(false, TickMath.getSqrtPriceAtTick(honest + 488));
         for (uint256 s = 1; s <= WINDOW; s++) {
             vm.warp(t0 + s);
             _poke();
         }
         vm.warp(t0 + WINDOW + 1);
-        uint256 usdgSpent = usdgBefore - MockERC20(Currency.unwrap(shadow.currency1)).balanceOf(address(this));
-        console2.log("USDG spent holding +5% (6 dec)", usdgSpent);
-
-        // 100,000 USDG of payout riding on this settlement
-        uint256 notional = 100_000e6;
-        SafeSettle.Decision memory weekend = settle.settlePrice(shadow, WINDOW, notional, false, 0);
-        SafeSettle.Decision memory weekday = settle.settlePrice(shadow, WINDOW, notional, false, WEEKDAY_REVERSION);
-        console2.log("raw TWAP tick", weekend.rawTick);
-        console2.log("truncated TWAP tick (delta = 3)", weekend.truncTick);
-        console2.log("gain if faked, USDG (6 dec)", weekend.gainIfFaked);
-        console2.log("cost to fake, weekend (arb closed), USDG", weekend.costToFake);
-        console2.log("cost to fake, weekday (arb open), USDG", weekday.costToFake);
-        console2.log("weekend: used raw?", weekend.usedRaw);
-        console2.log("weekday: used raw?", weekday.usedRaw);
-        _record("tsla-shaped-weekend", weekend, 0, notional);
-        _record("tsla-shaped-weekday", weekday, WEEKDAY_REVERSION, notional);
-        assertGt(weekend.rawTick, weekend.truncTick + 100, "truncation held the line");
-        assertFalse(weekend.usedRaw, "with arbitrage closed the fake is cheap: settle truncated");
-        // one push plus at least one re-push, and a wider push only costs more fees: at least twice the weekend cost.
-        // Whether that crosses the gain depends on the live book, so the weekday decision is logged, not asserted.
-        assertGe(weekday.costToFake, weekend.costToFake * 2, "with arbitrage open, holding the push costs re-pushes");
+        SafeSettle.Decision memory d = settle.settlePrice(shadow, WINDOW, 100_000e6, false, 0);
+        console2.log("held +5 % for 10 s on a weekend, raw TWAP", d.rawTick);
+        console2.log("truncated TWAP", d.truncTick);
+        _log("decision", d);
+        assertFalse(d.trusted);
+        _record("tsla-shaped-weekend-held-push", "TSLA/USDG book, +5 % held 10 s", 0, WINDOW, 100_000e6, 6, "USDG", d);
     }
 }

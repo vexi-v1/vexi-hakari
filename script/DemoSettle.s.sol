@@ -36,15 +36,15 @@ contract DemoSettle is Script {
 
         uint256 key = vm.envUint("HAKARI_DEPLOYER_KEY");
         vm.startBroadcast(key);
-        // 1,000,000 quote units riding on the settlement; weekend (arbitrage closed)
+        // 1,000,000 quote tokens settling on this price; weekend (nobody pushes back)
         SafeSettle.Decision memory d = settle.settle(pool, window, 1_000_000e18, false, 0);
         vm.stopBroadcast();
 
         console2.log("window (s)", window);
         console2.log("raw TWAP tick", d.rawTick);
         console2.log("truncated TWAP tick", d.truncTick);
-        console2.log("cost to fake", d.costToFake);
-        console2.log("gain if faked", d.gainIfFaked);
-        console2.log("used raw?", d.usedRaw);
+        console2.log("max safe exposure", d.maxSafeExposure);
+        console2.log("binding move (ticks)", d.bindingTicks);
+        console2.log("trusted?", d.trusted);
     }
 }

@@ -3,6 +3,7 @@ pragma solidity ^0.8.26;
 
 import {console2} from "forge-std/Test.sol";
 import {HakariDeployers} from "../utils/HakariDeployers.sol";
+import {DecisionLog} from "../utils/DecisionLog.sol";
 import {HakariOracleHook} from "../../src/HakariOracleHook.sol";
 import {PushCostLens} from "../../src/PushCostLens.sol";
 import {SafeSettle} from "../../src/SafeSettle.sol";
@@ -14,7 +15,7 @@ import {TickMath} from "@uniswap/v4-core/src/libraries/TickMath.sol";
 import {BalanceDelta} from "@uniswap/v4-core/src/types/BalanceDelta.sol";
 
 /// @notice The demo script of SPEC.md § 5, as tests with logs. Run: forge test --match-contract ThreeLayers -vv
-contract ThreeLayersTest is HakariDeployers {
+contract ThreeLayersTest is HakariDeployers, DecisionLog {
     using PoolIdLibrary for PoolKey;
 
     int24 constant DELTA = 100;
@@ -72,68 +73,83 @@ contract ThreeLayersTest is HakariDeployers {
         assertApproxEqAbs(trunc, honest, 1, "truncated TWAP never saw the push");
     }
 
-    /// Layers 2 + 3. A thin pool held off-price for the window: the truncated series lags, the cost model says
-    /// the fake was cheap, SafeSettle refuses to pay on the raw price.
-    function test_layer2and3_sustainedPushOnThinPool_settlesTruncated() public {
-        addLiquidity(key, -6000, 6000, 1e15);
-        int24 honest = currentTick(id);
-        swapToPrice(key, false, TickMath.getSqrtPriceAtTick(honest + 3000));
-        for (uint256 s = 1; s <= WINDOW; s++) {
+    function _log(SafeSettle.Decision memory d) internal pure {
+        console2.log("raw TWAP", d.rawTick);
+        console2.log("truncated TWAP", d.truncTick);
+        console2.log("max safe exposure (quote wei)", d.maxSafeExposure);
+        console2.log("binding move (ticks)", d.bindingTicks);
+        console2.log("cost to fake it (quote wei)", d.bindingCost);
+        console2.log("trusted?", d.trusted);
+    }
+
+    function _heldPush(int24 ticks, uint256 secs) internal {
+        swapToPrice(key, false, TickMath.getSqrtPriceAtTick(currentTick(id) + ticks));
+        for (uint256 s = 1; s <= secs; s++) {
             vm.warp(t0 + s);
             poke(key);
         }
-        vm.warp(t0 + WINDOW + 1);
-        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, 0);
-        console2.log("raw TWAP", d.rawTick);
-        console2.log("truncated TWAP", d.truncTick);
-        console2.log("cost to fake (quote units)", d.costToFake);
-        console2.log("gain if faked (quote units)", d.gainIfFaked);
-        console2.log("used raw?", d.usedRaw);
-        assertFalse(d.usedRaw);
-        assertLt(d.costToFake, d.gainIfFaked);
-        _record("thin-pool-sustained-push", "local 18/18, L=1e15, fee 0.3%", 0, 1e18, d);
+        vm.warp(t0 + secs + 1);
     }
 
-    /// Layer 3, the other way. A deep pool, arbitrage open, a real move: the raw series is trusted and the
-    /// truncated lag is avoided.
-    function test_layer3_genuineSurgeOnDeepPool_settlesRaw() public {
+    /// Layer 2. A thin pool held off-price with nobody to push back: the pool is cheap to move, so SafeSettle refuses
+    /// to settle on it for this exposure, whether the two TWAPs still disagree (10 s) ...
+    function test_layer2_heldPushOnThinPool_isRefused() public {
+        addLiquidity(key, -6000, 6000, 1e15);
+        _heldPush(3000, WINDOW);
+        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, 0);
+        _log(d);
+        assertGt(d.rawTick, d.truncTick + 1000, "the series disagree");
+        assertFalse(d.trusted);
+        _record("thin-pool-held-push", "local, L = 1e15, fee 0.3 %", 0, WINDOW, 1e18, 18, "tokens", d);
+    }
+
+    /// ... or have been held long enough to agree on the fake (42 s at Δ = 100). The old rule settled this on raw with
+    /// no check at all.
+    function test_layer2_heldUntilTheSeriesAgree_isStillRefused() public {
+        addLiquidity(key, -6000, 6000, 1e15);
+        _heldPush(3000, 42);
+        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, 0);
+        _log(d);
+        assertApproxEqAbs(d.rawTick, d.truncTick, uint256(uint24(TOLERANCE())), "the series agree on the fake");
+        assertFalse(d.trusted);
+        _record("thin-pool-held-until-converged", "local, L = 1e15, fee 0.3 %", 0, WINDOW, 1e18, 18, "tokens", d);
+    }
+
+    /// Layer 3. A deep pool, arbitrage open, a genuine surge: faking a move here would cost more than it earns, so the
+    /// raw price is trusted and truncation's lag is avoided.
+    function test_layer3_genuineSurgeOnDeepPool_isTrusted() public {
         addLiquidity(key, -6000, 6000, 1e21);
         int24 honest = currentTick(id);
-        // a surge: independent buyers walk the price up over the window, nobody pushes back
         for (uint256 s = 1; s <= WINDOW; s++) {
             vm.warp(t0 + s);
             swapToPrice(key, false, TickMath.getSqrtPriceAtTick(honest + int24(int256(s)) * 300));
         }
         vm.warp(t0 + WINDOW + 1);
         SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, ARB_REVERSION);
-        console2.log("raw TWAP", d.rawTick);
-        console2.log("truncated TWAP", d.truncTick);
-        console2.log("cost to fake (quote units)", d.costToFake);
-        console2.log("gain if faked (quote units)", d.gainIfFaked);
-        console2.log("used raw?", d.usedRaw);
-        assertGt(d.rawTick, d.truncTick + TOLERANCE(), "the series disagree: truncation is lagging");
-        assertTrue(d.usedRaw, "but faking this would cost more than it pays, so the move is real");
-        _record("deep-pool-genuine-surge", "local 18/18, L=1e21, fee 0.3%", ARB_REVERSION, 1e18, d);
+        _log(d);
+        assertGt(d.rawTick, d.truncTick + TOLERANCE(), "truncation is lagging");
+        assertTrue(d.trusted, "the pool is deep enough: this move is real");
+        assertEq(d.tickUsed, d.rawTick);
+        _record("deep-pool-genuine-surge", "local, L = 1e21, fee 0.3 %", ARB_REVERSION, WINDOW, 1e18, 18, "tokens", d);
+    }
+
+    /// The same surge on a thin pool is refused: where faking is cheap the rule cannot tell real from fake, and it says
+    /// so instead of settling on a lagging price.
+    function test_layer3_genuineSurgeOnThinPool_isRefused() public {
+        addLiquidity(key, -6000, 6000, 1e15);
+        int24 honest = currentTick(id);
+        for (uint256 s = 1; s <= WINDOW; s++) {
+            vm.warp(t0 + s);
+            swapToPrice(key, false, TickMath.getSqrtPriceAtTick(honest + int24(int256(s)) * 300));
+        }
+        vm.warp(t0 + WINDOW + 1);
+        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, ARB_REVERSION);
+        _log(d);
+        assertFalse(d.trusted);
+        _record("thin-pool-genuine-surge", "local, L = 1e15, fee 0.3 %", ARB_REVERSION, WINDOW, 1e18, 18, "tokens", d);
     }
 
     function TOLERANCE() internal view returns (int24) {
         return settle.TOLERANCE_TICKS();
-    }
-
-    /// @dev The web page's decision log: one row per scenario, appended by each test that settles.
-    function _record(string memory scenario, string memory pool, uint32 arbReversionSeconds, uint256 notional, SafeSettle.Decision memory d) internal {
-        string memory row = scenario;
-        vm.serializeString(row, "scenario", scenario);
-        vm.serializeString(row, "pool", pool);
-        vm.serializeUint(row, "arbReversionSeconds", arbReversionSeconds);
-        vm.serializeString(row, "notional", vm.toString(notional));
-        vm.serializeInt(row, "rawTick", int256(d.rawTick));
-        vm.serializeInt(row, "truncTick", int256(d.truncTick));
-        vm.serializeString(row, "costToFake", vm.toString(d.costToFake));
-        vm.serializeString(row, "gainIfFaked", vm.toString(d.gainIfFaked));
-        vm.serializeBool(row, "costComplete", d.costComplete);
-        string memory out = vm.serializeBool(row, "usedRaw", d.usedRaw);
-        string memory path = string(abi.encodePacked("web/decisions/", scenario, ".json"));
-        vm.writeJson(out, path);
     }
 }
