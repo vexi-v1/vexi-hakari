@@ -52,3 +52,24 @@ pool explorers and the fee tier in the key do not. Anyone estimating slippage or
 `key.fee` on this chain is ~17 % low. `PushCostLens.depthToMove` folds the protocol fee in the way
 `Pool.swap` does (`ProtocolFeeLibrary.calculateSwapFee`); it took reading `Pool.sol` to know that
 was needed. A note on the deployments page per chain ("protocol fee: on, X pips") would help. (H2)
+
+## 6. `StateLibrary` reads the tick bitmap but nothing walks it
+
+To price a push from *outside* a pool (a view, callable from inside someone else's unlock, and
+from a historical reconstruction) we needed "next initialized tick from here". v4-core's
+`TickBitmap.nextInitializedTickWithinOneWord` only works on a storage mapping the caller owns;
+`StateLibrary` exposes `getTickBitmap(poolId, wordPos)` but no walker over it, and `StateView`
+in v4-periphery does not add one. We re-implemented the word walk over `extsload`
+(`src/libraries/TickBitmapView.sol`, ~30 lines that mirror `TickBitmap` bit for bit). A
+`StateLibrary.nextInitializedTickWithinOneWord(manager, poolId, tick, tickSpacing, lte)` would
+save every quoter, liquidity-depth tool and simulator from doing this. (H4)
+
+## 7. The truncated-oracle family has no "both series" read
+
+`BaseOracleHook.observe` already returns the raw and truncated cumulatives side by side, which
+is exactly the signal a consumer needs to notice a push — but every downstream adapter we
+found (`V3TruncatedOracleAdapter`, the `OracleHookWithV3Adapters` pair) exposes *one* series in
+a v3-shaped interface. `HakariOracleHook.twaps(id, window)` is a 12-line wrapper that returns
+both TWAP ticks; the interesting decisions (SPEC.md § 3.3) all start from their disagreement.
+Worth a first-class getter in the library, and a sentence in the README saying the two series
+are meant to be compared, not chosen between. (H4)

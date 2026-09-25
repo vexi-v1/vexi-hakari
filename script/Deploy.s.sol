@@ -20,7 +20,8 @@ contract Deploy is Script {
     uint160 constant FLAG_MASK = Hooks.ALL_HOOK_MASK;
 
     function run() external {
-        require(block.chainid != 4663, "mainnet 4663 is read-only");
+        // an RPC variable can be mislabelled; the chain id cannot. Testnet only, whatever the URL said.
+        require(block.chainid == 46630, "testnet 46630 only");
         int24 delta = int24(int256(vm.envOr("HAKARI_DELTA", uint256(250))));
         require(POOL_MANAGER.code.length > 0, "no PoolManager here");
 

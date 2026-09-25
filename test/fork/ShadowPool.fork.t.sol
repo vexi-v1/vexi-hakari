@@ -50,6 +50,13 @@ contract ShadowPoolForkTest is Test {
         string memory rpc = vm.envOr("RH_MAINNET_RPC", string(""));
         if (bytes(rpc).length == 0) rpc = "https://rpc.mainnet.chain.robinhood.com";
         vm.createSelectFork(rpc);
+        if (block.chainid != 4663) {
+            // RH_MAINNET_RPC pointed somewhere else (a testnet URL, say): use the public mainnet RPC instead
+            rpc = "https://rpc.mainnet.chain.robinhood.com";
+            vm.createSelectFork(rpc);
+        }
+        // fork a little behind the head: the load-balanced public RPC sometimes has no state yet for `latest`
+        vm.createSelectFork(rpc, block.number - 60);
         real = PoolKey({currency0: Currency.wrap(TSLA), currency1: Currency.wrap(USDG), fee: 3000, tickSpacing: SPACING, hooks: IHooks(address(0))});
 
         swapRouter = new PoolSwapTest(MANAGER);
