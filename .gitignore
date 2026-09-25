@@ -1,0 +1,19 @@
+# foundry
+out/
+cache/
+broadcast/**/dry-run/
+
+# node
+node_modules/
+gauge/dist/
+web/dist/
+web/node_modules/
+
+# secrets: never committed, never printed
+.env
+.env.*
+*.key
+
+# local scratch
+.DS_Store
+/tmp/
