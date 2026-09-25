@@ -15,9 +15,11 @@ import {PoolModifyLiquidityTest} from "@uniswap/v4-core/src/test/PoolModifyLiqui
 import {HakariOracleHook} from "../src/HakariOracleHook.sol";
 import {SafeSettle} from "../src/SafeSettle.sol";
 
-/// @notice A public, on-chain run of the whole loop on testnet 46630: a pool with HakariOracleHook on the official
-///         PoolManager, liquidity, a push held across blocks, and a SafeSettle.settle() that emits its reason.
-/// @dev Reads deployments/46630.json. Key from the environment only.
+/// @notice Step 1 of a public, on-chain run of the whole loop on testnet 46630: a pool with HakariOracleHook on the
+///         official PoolManager, liquidity, a push, and pokes that keep the pushed tick in the record. Step 2
+///         (DemoSettle.s.sol, run a minute later so the TWAP window has history) settles and emits the reason.
+/// @dev Reads deployments/46630.json. Key from the environment only. Two scripts because forge simulates a
+///      script in one block: a 60-second window would predate the pool's first observation.
 ///      forge script script/DemoPool.s.sol --rpc-url robinhood_testnet --broadcast --slow
 contract DemoPool is Script {
     using PoolIdLibrary for PoolKey;
@@ -66,23 +68,19 @@ contract DemoPool is Script {
         for (uint256 i; i < 4; i++) {
             swapRouter.swap(pool, SwapParams({zeroForOne: true, amountSpecified: -1, sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1}), PoolSwapTest.TestSettings(false, false), "");
         }
-        // 1,000,000 quote units riding on a 60-second TWAP; weekend (arbitrage closed)
-        SafeSettle.Decision memory d = settle.settle(pool, 60, 1_000_000e18, false, false);
         vm.stopBroadcast();
 
         console2.log("demo pool id");
         console2.logBytes32(PoolId.unwrap(id));
-        console2.log("raw TWAP tick", d.rawTick);
-        console2.log("truncated TWAP tick", d.truncTick);
-        console2.log("cost to fake", d.costToFake);
-        console2.log("gain if faked", d.gainIfFaked);
-        console2.log("used raw?", d.usedRaw);
+        console2.log("pushed to tick 3000 and poked; run DemoSettle.s.sol a minute later");
 
         string memory json = "demo";
         vm.serializeAddress(json, "currency0", address(c0));
         vm.serializeAddress(json, "currency1", address(c1));
         vm.serializeAddress(json, "swapRouter", address(swapRouter));
         vm.serializeAddress(json, "lpRouter", address(lpRouter));
+        vm.serializeUint(json, "createdAt", block.timestamp);
+        vm.serializeAddress(json, "hooks", address(hook));
         string memory out = vm.serializeBytes32(json, "poolId", PoolId.unwrap(id));
         vm.writeJson(out, "deployments/46630-demo-pool.json");
     }
