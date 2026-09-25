@@ -77,6 +77,26 @@ contract PushCostLensTest is HakariDeployers {
         assertLt(qs[1].cost, qs[2].cost);
     }
 
+    function test_quotePushToPrice_stopsExactlyAtAMidTickPrice() public {
+        (uint160 sqrtBefore, int24 tickBefore,,) = manager.getSlot0(id);
+        // a price strictly between two tick boundaries
+        uint160 target = (TickMath.getSqrtPriceAtTick(tickBefore + 37) + TickMath.getSqrtPriceAtTick(tickBefore + 38)) / 2;
+        PushCostLens.PushQuote memory q = lens.quotePushToPrice(key, target);
+        assertEq(q.sqrtPriceTarget, target);
+        assertEq(q.sqrtPriceReached, target, "reached the exact price, not a tick boundary");
+        assertFalse(q.zeroForOne);
+        PushCostLens.PushQuote memory byTicks = lens.quotePush(key, 37, true);
+        assertGt(q.amountIn, byTicks.amountIn, "half a tick further costs more than the tick boundary");
+        (uint160 sqrtAfter,,,) = manager.getSlot0(id);
+        assertEq(sqrtAfter, sqrtBefore, "state reverted");
+    }
+
+    function test_quotePushToPrice_atTheCurrentPrice_reverts() public {
+        (uint160 sqrtNow,,,) = manager.getSlot0(id);
+        vm.expectRevert(PushCostLens.ZeroTicks.selector);
+        lens.quotePushToPrice(key, sqrtNow);
+    }
+
     function test_quotePush_zeroTicks_reverts() public {
         vm.expectRevert(PushCostLens.ZeroTicks.selector);
         lens.quotePush(key, 0, true);

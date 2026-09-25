@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { writeData } from "./chain.ts";
 
 const artifact = JSON.parse(readFileSync(new URL("../../out/PushCostLens.sol/PushCostLens.json", import.meta.url), "utf8"));
-const abi = artifact.abi.filter((f: any) => ["quotePush", "quotePushLadder", "depthToMove", "roundTripCost"].includes(f.name));
+const abi = artifact.abi.filter((f: any) => ["quotePush", "quotePushToPrice", "quotePushLadder", "depthToMove", "roundTripCost"].includes(f.name));
 writeData(new URL("../../web/lens-artifact.json", import.meta.url).pathname, {
   contract: "PushCostLens",
   creationBytecode: artifact.bytecode.object,

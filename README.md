@@ -36,7 +36,7 @@ real v4 pool ──▶ PushCostLens ──▶ SafeSettle ──▶ settlement pr
 
 | Piece | What it does | Where |
 |---|---|---|
-| **`PushCostLens`** | What it costs to push any v4 pool by *x* ticks and sell back. Exact mode runs a real `swap` to a price limit inside `unlock` and reverts with the answer; view mode walks the tick bitmap through `StateLibrary`. Works on mainnet with an `eth_call` state override — no deployment. | [`src/PushCostLens.sol`](src/PushCostLens.sol) |
+| **`PushCostLens`** | What it costs to push any v4 pool by *x* ticks (or to an exact price) and sell back. Exact mode runs a real `swap` to a price limit inside `unlock` and reverts with the answer; view mode walks the tick bitmap through `StateLibrary`. Works on mainnet with an `eth_call` state override — no deployment. | [`src/PushCostLens.sol`](src/PushCostLens.sol) |
 | **`HakariOracleHook`** | OpenZeppelin's truncated oracle hook + `twaps()` returning the raw **and** truncated TWAP side by side. `afterInitialize` + `beforeSwap` only, address bits `0x1080`. | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol) |
 | **`SafeSettle`** + **`CostModel`** | Demo settlement rule: raw ≈ truncated → raw. Else price the fake with the lens; cost > gain → the move is genuine, settle raw; cost ≤ gain → settle truncated. Emits `Settled(id, raw, trunc, usedRaw, cost, gain)`. | [`src/SafeSettle.sol`](src/SafeSettle.sol), [`src/CostModel.sol`](src/CostModel.sol) |
 | **Gauge** (TypeScript) | Mainnet cost ladder (1/5/10 % each way), Δ calibration from `Swap` events, the HIMS weekend rebuilt from `ModifyLiquidity` logs, Robinhood mint-window flag. | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
@@ -49,10 +49,10 @@ Everything runs against the **official v4 PoolManager** `0x8366a39CC670B4001A112
 
 | What | File : line |
 |---|---|
-| `PoolManager.unlock` → `unlockCallback` (V4Quoter pattern) | [`src/PushCostLens.sol:71`](src/PushCostLens.sol#L71), [`:90`](src/PushCostLens.sol#L90) |
-| Push leg: `poolManager.swap` with `sqrtPriceLimitX96` = target, `BalanceDelta` read | [`src/PushCostLens.sol:100`](src/PushCostLens.sol#L100) |
-| Return leg: sell exactly `amountOut` back | [`src/PushCostLens.sol:111`](src/PushCostLens.sol#L111) |
-| View walk over `StateLibrary` (`getSlot0`, `getLiquidity`, `getTickBitmap`, `getTickLiquidity`) with the protocol fee folded in as `Pool.swap` does | [`src/PushCostLens.sol:155`](src/PushCostLens.sol#L155), [`src/libraries/TickBitmapView.sol:14`](src/libraries/TickBitmapView.sol#L14) |
+| `PoolManager.unlock` → `unlockCallback` (V4Quoter pattern) | [`src/PushCostLens.sol:85`](src/PushCostLens.sol#L85), [`:104`](src/PushCostLens.sol#L104) |
+| Push leg: `poolManager.swap` with `sqrtPriceLimitX96` = target, `BalanceDelta` read | [`src/PushCostLens.sol:114`](src/PushCostLens.sol#L114) |
+| Return leg: sell exactly `amountOut` back | [`src/PushCostLens.sol:125`](src/PushCostLens.sol#L125) |
+| View walk over `StateLibrary` (`getSlot0`, `getLiquidity`, `getTickBitmap`, `getTickLiquidity`) with the protocol fee folded in as `Pool.swap` does | [`src/PushCostLens.sol:169`](src/PushCostLens.sol#L169), [`src/libraries/TickBitmapView.sol:14`](src/libraries/TickBitmapView.sol#L14) |
 | `BaseOracleHook.observe` → both TWAPs | [`src/HakariOracleHook.sol:24`](src/HakariOracleHook.sol#L24) |
 | The decision: cost to fake vs gain if faked | [`src/SafeSettle.sol:68`](src/SafeSettle.sol#L68)–[`:70`](src/SafeSettle.sol#L70), [`src/CostModel.sol:22`](src/CostModel.sol#L22), [`:50`](src/CostModel.sol#L50) |
 | Hook salt mined against the CREATE2 proxy, deployed with `new{salt}` | [`script/Deploy.s.sol`](script/Deploy.s.sol) |

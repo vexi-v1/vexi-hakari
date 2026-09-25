@@ -68,7 +68,21 @@ contract PushCostLens is IUnlockCallback {
     /// @dev Reverts internally and decodes its own revert; the pool is left exactly as it was.
     function quotePush(PoolKey calldata key, int24 ticks, bool up) external returns (PushQuote memory) {
         if (ticks <= 0) revert ZeroTicks();
-        try poolManager.unlock(abi.encode(key, ticks, up)) {}
+        (, int24 tick,,) = poolManager.getSlot0(key.toId());
+        return _quote(key, TickMath.getSqrtPriceAtTick(_targetTick(tick, ticks, up)), up);
+    }
+
+    /// @notice Same round trip, to an exact sqrt price instead of a tick boundary (a tick can be wide).
+    function quotePushToPrice(PoolKey calldata key, uint160 sqrtPriceTarget) external returns (PushQuote memory) {
+        (uint160 sqrtNow,,,) = poolManager.getSlot0(key.toId());
+        if (sqrtPriceTarget == sqrtNow) revert ZeroTicks();
+        if (sqrtPriceTarget <= TickMath.MIN_SQRT_PRICE) sqrtPriceTarget = TickMath.MIN_SQRT_PRICE + 1;
+        if (sqrtPriceTarget >= TickMath.MAX_SQRT_PRICE) sqrtPriceTarget = TickMath.MAX_SQRT_PRICE - 1;
+        return _quote(key, sqrtPriceTarget, sqrtPriceTarget > sqrtNow);
+    }
+
+    function _quote(PoolKey calldata key, uint160 sqrtPriceTarget, bool up) private returns (PushQuote memory) {
+        try poolManager.unlock(abi.encode(key, sqrtPriceTarget, up)) {}
         catch (bytes memory reason) {
             return _parse(reason);
         }
@@ -89,12 +103,12 @@ contract PushCostLens is IUnlockCallback {
     /// @inheritdoc IUnlockCallback
     function unlockCallback(bytes calldata data) external returns (bytes memory) {
         if (msg.sender != address(poolManager)) revert NotPoolManager();
-        (PoolKey memory key, int24 ticks, bool up) = abi.decode(data, (PoolKey, int24, bool));
+        (PoolKey memory key, uint160 sqrtPriceTarget, bool up) = abi.decode(data, (PoolKey, uint160, bool));
         PoolId id = key.toId();
         PushQuote memory q;
         (q.sqrtPriceStart, q.tickStart,,) = poolManager.getSlot0(id);
         q.zeroForOne = !up;
-        q.sqrtPriceTarget = TickMath.getSqrtPriceAtTick(_targetTick(q.tickStart, ticks, up));
+        q.sqrtPriceTarget = sqrtPriceTarget;
 
         // push leg: exact input, stop at the target price
         BalanceDelta pushDelta = poolManager.swap(

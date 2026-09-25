@@ -62,8 +62,9 @@ contract PushCostLensForkTest is Test {
         assertLt(manual.netDelta1, 0, "and down in USDG");
 
         int24 ticksMoved = manual.tickAfterBuy - tickStart;
-        assertGt(ticksMoved, 0, "buying TSLA pushed the price up");
-        PushCostLens.PushQuote memory q = lens.quotePush(key, ticksMoved, true);
+        assertGe(ticksMoved, 0, "buying TSLA pushed the price up");
+        // push to the exact price the buy reached (a tick boundary can be a sixth of 10 TSLA away)
+        PushCostLens.PushQuote memory q = lens.quotePushToPrice(key, manual.sqrtPriceAfterBuy);
 
         console2.log("block", block.number);
         console2.log("start tick", tickStart);
@@ -73,9 +74,8 @@ contract PushCostLensForkTest is Test {
         console2.log("lens cost USDG (6 dec)", q.cost);
         console2.log("pre-hackathon figure at block 71,937,777: -26.560259 USDG");
 
-        // the lens pushes to the tick's price, not exactly to 10 TSLA, so allow the tick-granularity gap
-        assertApproxEqRel(q.amountOut, 10e18, 0.02e18, "lens push bought ~10 TSLA");
-        assertApproxEqRel(q.cost, uint256(-manual.netDelta1), 0.02e18, "lens cost ~ manual round trip");
+        assertApproxEqRel(q.amountOut, 10e18, 0.001e18, "lens push bought 10 TSLA");
+        assertApproxEqRel(q.cost, uint256(-manual.netDelta1), 0.001e18, "lens cost = manual round trip");
         assertEq(q.sqrtPriceStart, sqrtStart);
     }
 
