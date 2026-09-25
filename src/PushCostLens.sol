@@ -23,7 +23,7 @@ import {TickBitmapView} from "./libraries/TickBitmapView.sol";
 ///        exact-input amount, sells back exactly what it received, and reverts with the result (the V4Quoter
 ///        pattern). Every hook and fee on the pool runs for real; every state change is undone. Call it with
 ///        `eth_call` — on a chain you cannot deploy to, inject this bytecode with an `eth_call` state override.
-///      - `depthToMove` / `roundTripCost` are views that walk the tick bitmap through `StateLibrary` (extsload),
+///      - `depthToMove` / `roundTripCost(s)` are views that walk the tick bitmap through `StateLibrary` (extsload),
 ///        so a contract that is itself inside an unlock can still ask. They use the pool's stored LP fee and
 ///        protocol fee; a hook that overrides the fee per swap is not seen here (it is in `quotePush`).
 contract PushCostLens is IUnlockCallback {
@@ -48,6 +48,7 @@ contract PushCostLens is IUnlockCallback {
     }
 
     error ZeroTicks();
+    error WidthsNotAscending();
     error NotPoolManager();
     error UnexpectedSuccess();
     /// @dev Carries the result out of `unlockCallback`; never surfaces to a caller.
@@ -225,6 +226,33 @@ contract PushCostLens is IUnlockCallback {
         (, amountOut, feePaid, complete) = this.depthToMove(key, ticks, up, maxSteps);
         (uint160 sqrtStart,,,) = poolManager.getSlot0(key.toId());
         (cost, costInCurrency0, costInCurrency1) = _roundTrip(key.toId(), feePaid, amountOut, !up, sqrtStart);
+    }
+
+    /// @notice `roundTripCost` at several push widths from one walk, each from the price now.
+    /// @dev `widths` ascending. The walk stops at each width on its way out, so a checkpoint splits a step and each
+    ///      piece rounds on its own: a result can differ from a separate `roundTripCost` by a few wei. The steps are
+    ///      shared: once `maxSteps` is spent, every later width is incomplete ("at least this").
+    function roundTripCosts(PoolKey calldata key, int24[] calldata widths, bool up, uint256 maxSteps)
+        external
+        view
+        returns (uint256[] memory costInCurrency0, uint256[] memory costInCurrency1, bool[] memory complete)
+    {
+        PoolId id = key.toId();
+        (Walk memory w, uint24 protocolFee, uint24 lpFee) = _startWalk(id);
+        uint160 sqrtStart = w.sqrtP;
+        int24 tickStart = w.tick;
+        uint24 pushFee = _swapFee(protocolFee, lpFee, !up);
+        costInCurrency0 = new uint256[](widths.length);
+        costInCurrency1 = new uint256[](widths.length);
+        complete = new bool[](widths.length);
+        for (uint256 j; j < widths.length; j++) {
+            if (widths[j] <= 0) revert ZeroTicks();
+            if (j > 0 && widths[j] < widths[j - 1]) revert WidthsNotAscending();
+            uint160 target = TickMath.getSqrtPriceAtTick(_targetTick(tickStart, widths[j], up));
+            complete[j] = _walkTo(id, key.tickSpacing, w, target, maxSteps);
+            (, uint256 feePaid) = _gross(w.netIn, pushFee);
+            (, costInCurrency0[j], costInCurrency1[j]) = _roundTrip(id, feePaid, w.amountOut, !up, sqrtStart);
+        }
     }
 
     /// @notice `roundTripCost` for the stretch from `fromTick` to `toTick`, valued at `fromTick`'s price.

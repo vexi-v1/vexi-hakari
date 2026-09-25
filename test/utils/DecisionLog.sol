@@ -30,6 +30,7 @@ abstract contract DecisionLog is Test {
         vm.serializeInt(row, "bindingTicks", int256(d.bindingTicks));
         vm.serializeBool(row, "bindingUp", d.bindingUp);
         vm.serializeString(row, "bindingCost", vm.toString(d.bindingCost));
+        vm.serializeInt(row, "bindingWidth", int256(d.bindingWidth));
         vm.serializeBool(row, "costComplete", d.costComplete);
         string memory out = vm.serializeBool(row, "trusted", d.trusted);
         vm.writeJson(out, string(abi.encodePacked("web/decisions/", scenario, ".json")));

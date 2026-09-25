@@ -32,6 +32,7 @@ contract SafeSettle {
         int24 bindingTicks; // the move that sets the bound
         bool bindingUp; // its tick direction
         uint256 bindingCost; // what faking that move costs, quote units
+        int24 bindingWidth; // the push width that costs it: wider than the move when a short, wide push is cheapest
         bool costComplete; // false: the binding walk hit its cap; the bound is "at least this"
     }
 
@@ -53,7 +54,8 @@ contract SafeSettle {
     PushCostLens public immutable lens;
     /// @dev A gap this small between the two TWAPs is rounding and honest drift, not one more move to price.
     int24 public constant TOLERANCE_TICKS = 10;
-    uint256 public constant MAX_WALK_STEPS = 64;
+    /// @dev Steps for one walk per direction, shared by every push width it prices (segments, empty words, widths).
+    uint256 public constant MAX_WALK_STEPS = 256;
 
     constructor(HakariOracleHook _hook, PushCostLens _lens) {
         hook = _hook;
@@ -75,17 +77,28 @@ contract SafeSettle {
         if (address(key.hooks) != address(hook)) revert WrongHook();
         if (lens.poolManager().isUnlocked()) revert PoolManagerUnlocked();
         (d.rawTick, d.truncTick) = hook.twaps(key.toId(), window);
+        _bound(d, key, window, quoteIsCurrency0, arbReversionSeconds);
+        d.trusted = exposure < d.maxSafeExposure;
+        d.tickUsed = d.trusted ? d.rawTick : int24(0);
+    }
+
+    /// @dev Fills the bound into `d`: the gap between the two TWAPs, if more than rounding, is one more move to price.
+    function _bound(Decision memory d, PoolKey calldata key, uint32 window, bool quoteIsCurrency0, uint32 arbReversionSeconds)
+        private
+        view
+    {
         int24 gap = d.rawTick > d.truncTick ? d.rawTick - d.truncTick : d.truncTick - d.rawTick;
         CostModel.Bound memory b = CostModel.maxSafeExposure(
-            lens, key, gap > TOLERANCE_TICKS ? gap : int24(0), window, arbReversionSeconds, quoteIsCurrency0, MAX_WALK_STEPS
+            lens,
+            key,
+            CostModel.Query(gap > TOLERANCE_TICKS ? gap : int24(0), window, arbReversionSeconds, quoteIsCurrency0, MAX_WALK_STEPS)
         );
         d.maxSafeExposure = b.maxSafeExposure;
         d.bindingTicks = b.ticks;
         d.bindingUp = b.up;
         d.bindingCost = b.cost;
+        d.bindingWidth = b.width;
         d.costComplete = b.complete;
-        d.trusted = exposure < b.maxSafeExposure;
-        d.tickUsed = d.trusted ? d.rawTick : int24(0);
     }
 
     /// @notice Same decision, written to the log with its reason.

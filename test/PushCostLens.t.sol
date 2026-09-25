@@ -168,4 +168,38 @@ contract PushCostLensTest is HakariDeployers {
         assertEq(in1, cost, "pushing up is paid in currency1");
         assertApproxEqRel(in0, q.costInCurrency0, 0.01e18);
     }
+
+    function test_roundTripCosts_oneWalk_matchesASeparateWalkPerWidth() public {
+        // widths inside the core (±600), across the wings (±6000) and past the book
+        int24[] memory ws = new int24[](6);
+        (ws[0], ws[1], ws[2], ws[3], ws[4], ws[5]) = (int24(50), 300, 600, 1823, 6000, 50_000);
+        for (uint256 dir; dir < 2; dir++) {
+            bool up = dir == 0;
+            (uint256[] memory c0, uint256[] memory c1, bool[] memory ok) = lens.roundTripCosts(key, ws, up, 64);
+            for (uint256 j; j < ws.length; j++) {
+                (, uint256 s0, uint256 s1, bool sok) = lens.roundTripCost(key, ws[j], up, 64);
+                assertTrue(ok[j] && sok);
+                // A checkpoint splits a step and each piece rounds on its own: net input up by at most one wei per
+                // earlier checkpoint, output down by as much. Through the fee gross-up and the sell-back fee (0.3 %,
+                // valued at 1:1) that moves the cost by at most two wei per leg.
+                assertApproxEqAbs(c0[j], s0, 4, "currency0");
+                assertApproxEqAbs(c1[j], s1, 4, "currency1");
+            }
+        }
+    }
+
+    function test_roundTripCosts_widthsMustAscend() public {
+        int24[] memory ws = new int24[](2);
+        (ws[0], ws[1]) = (int24(600), 300);
+        vm.expectRevert(PushCostLens.WidthsNotAscending.selector);
+        lens.roundTripCosts(key, ws, true, 64);
+    }
+
+    function test_roundTripCosts_shareOneStepCap() public {
+        int24[] memory ws = new int24[](2);
+        (ws[0], ws[1]) = (int24(300), 3000);
+        (,, bool[] memory ok) = lens.roundTripCosts(key, ws, true, 1);
+        assertTrue(ok[0], "one step reaches 300 inside the core");
+        assertFalse(ok[1], "and the cap is spent: 3000 is past the core boundary");
+    }
 }

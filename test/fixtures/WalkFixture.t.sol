@@ -14,7 +14,7 @@ import {StateLibrary} from "@uniswap/v4-core/src/libraries/StateLibrary.sol";
 /// @dev Calls CostModel.maxSafeExposure (a library) from outside.
 contract MaxSafeHarness {
     function bound(PushCostLens lens, PoolKey calldata key, bool quoteIsCurrency0) external view returns (CostModel.Bound memory) {
-        return CostModel.maxSafeExposure(lens, key, 0, 60, 0, quoteIsCurrency0, 64);
+        return CostModel.maxSafeExposure(lens, key, CostModel.Query(0, 60, 0, quoteIsCurrency0, 64));
     }
 }
 

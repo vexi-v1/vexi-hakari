@@ -32,7 +32,8 @@ contract ShadowPoolForkTest is DecisionLog {
     address constant TSLA = 0x322F0929c4625eD5bAd873c95208D54E1c003b2d;
     address constant USDG = 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
     int24 constant SPACING = 60;
-    uint256 constant SEGMENTS_EACH_WAY = 40;
+    /// @dev Every initialized tick each way: a wide push crosses the whole book, so a partial mirror would be too thin.
+    uint256 constant SEGMENTS_EACH_WAY = 1000;
     /// @dev gauge/data/delta.json: p99 tick move per swap block on TSLA/USDG over the last 300k blocks
     int24 constant TSLA_DELTA = 3;
     uint32 constant WINDOW = 10;
@@ -139,8 +140,11 @@ contract ShadowPoolForkTest is DecisionLog {
         return (next, false);
     }
 
+    uint256 segments;
+
     function _seed(int24 lower, int24 upper, uint128 liquidity) internal {
         if (liquidity == 0 || lower >= upper) return;
+        segments++;
         lpRouter.modifyLiquidity(shadow, ModifyLiquidityParams({tickLower: lower, tickUpper: upper, liquidityDelta: int256(uint256(liquidity)), salt: 0}), "");
     }
 
@@ -153,7 +157,8 @@ contract ShadowPoolForkTest is DecisionLog {
     }
 
     function test_shadowPool_hasTheRealPoolsDepth() public {
-        int24[3] memory ladder = [int24(100), 488, 953];
+        // out to where the widest pushes go: past the last range the two must still agree
+        int24[5] memory ladder = [int24(100), 488, 953, 58_336, 466_688];
         for (uint256 i; i < ladder.length; i++) {
             for (uint256 d; d < 2; d++) {
                 bool up = d == 0;
@@ -165,6 +170,7 @@ contract ShadowPoolForkTest is DecisionLog {
             }
         }
         console2.log("shadow pool mirrors TSLA/USDG at block", block.number);
+        console2.log("segments mirrored", segments);
     }
 
     function _log(string memory label, SafeSettle.Decision memory d) internal pure {
@@ -172,6 +178,8 @@ contract ShadowPoolForkTest is DecisionLog {
         console2.log("  max safe exposure, USDG (6 dec)", d.maxSafeExposure);
         console2.log("  binding move (ticks)", d.bindingTicks);
         console2.log("  cost to fake it, USDG (6 dec)", d.bindingCost);
+        console2.log("  push width that costs it (ticks)", d.bindingWidth);
+        console2.log("  walk complete?", d.costComplete);
         console2.log("  trusted for 100,000 USDG?", d.trusted);
     }
 
@@ -195,15 +203,16 @@ contract ShadowPoolForkTest is DecisionLog {
         // Gas of one settlement on a real book, storage cold as it would be on-chain (settle() adds an event).
         uint256 gasWeekend = _coldGas(0, exposure);
         uint256 gasWeekday = _coldGas(12, exposure);
-        console2.log("gas, settlePrice, weekend (1 rung per move)", gasWeekend);
-        console2.log("gas, settlePrice, weekday (3 rungs per move)", gasWeekday);
+        console2.log("gas, settlePrice, weekend (the six moves, one walk each way)", gasWeekend);
+        console2.log("gas, settlePrice, weekday 12 s (every width, one walk each way)", gasWeekday);
         assertLt(gasWeekday, 30_000_000, "fits a block");
         // Which side of 100,000 each lands on depends on the live book, so the decisions are logged. The ratios are
-        // derivable: a push held 1,800 s at d = x, 2x, 4x (hold 1,800 / 900 / 450 s) pays 1 + ⌈hold / R⌉ round trips,
-        // and a longer push never costs less than a shorter one. R = 60 s: at least 9 round trips (the 4x rung),
-        // so ≥ 9 × the weekend bound. R = 12 s against 60 s: 39/9, 76/16, 151/31 per rung, so ≥ 4.3×.
-        assertGe(weekday60.maxSafeExposure, weekend.maxSafeExposure * 9, "a 30-minute hold against arbitrage pays at least 9 round trips");
-        assertGe(weekday12.maxSafeExposure * 9, weekday60.maxSafeExposure * 39, "faster arbitrage: at least 39/9 as many");
+        // derivable: a push of width d ≥ x pays 1 + ⌈hold / R⌉ ≥ 2 round trips, and a wider push never has a smaller
+        // round trip, so with arbitrage open the bound is at least twice the weekend one. Faster arbitrage pays at
+        // least as many re-pushes at every width, so it never lowers the bound. The ratios the 4x cap gave (≥ 9×,
+        // ≥ 39/9) do not hold: past the last LP range a wide push held for seconds is cheaper.
+        assertGe(weekday60.maxSafeExposure, weekend.maxSafeExposure * 2, "arbitrage open: at least one re-push");
+        assertGe(weekday12.maxSafeExposure, weekday60.maxSafeExposure, "faster arbitrage never lowers the bound");
     }
 
     function _coldGas(uint32 reversion, uint256 exposure) internal returns (uint256 used) {

@@ -42,6 +42,10 @@ contract CostModelHarness {
     function gainIfFaked(uint256 exposure, int24 x, bool assetUp) external pure returns (uint256) {
         return CostModel.gainIfFaked(exposure, x, assetUp);
     }
+
+    function ladder() external pure returns (int24[6] memory) {
+        return CostModel.ladder();
+    }
 }
 
 contract SafeSettleTest is HakariDeployers {
@@ -152,8 +156,13 @@ contract SafeSettleTest is HakariDeployers {
         assertApproxEqRel(deep, thin * 10, 0.02e18, "ten times the liquidity, ten times the exposure it can carry");
     }
 
+    /// @dev Liquidity at every price, so no push can get past the book for free.
+    function _fullRange(int256 liquidity) internal {
+        addLiquidity(key, TickMath.minUsableTick(key.tickSpacing), TickMath.maxUsableTick(key.tickSpacing), liquidity);
+    }
+
     function test_arbitrage_raisesTheBound_andALongerWindowRaisesItFurther() public {
-        addLiquidity(key, -6000, 6000, 1e18);
+        _fullRange(1e18);
         vm.warp(t0 + 601);
         poke(key);
         uint256 closed = settle.settlePrice(key, 600, 1, false, 0).maxSafeExposure;
@@ -166,12 +175,116 @@ contract SafeSettleTest is HakariDeployers {
     }
 
     function test_slowerArbitrage_lowersTheBound() public {
-        addLiquidity(key, -6000, 6000, 1e18);
+        _fullRange(1e18);
         vm.warp(t0 + 601);
         poke(key);
         uint256 fast = settle.settlePrice(key, 600, 1, false, 2).maxSafeExposure;
         uint256 slow = settle.settlePrice(key, 600, 1, false, 60).maxSafeExposure;
         assertLt(slow, fast, "overstating arbitrage speed overstates the bound: callers pass a slow, measured one");
+    }
+
+    function test_onABookThatEnds_arbitrageSpeedStopsMattering() public {
+        // Past ±6000 there is no liquidity: a push beyond it, wide enough to move the TWAP within one reversion
+        // interval, costs two round trips to the edge however fast arbitrage is. Fast arbitrage buys nothing here.
+        addLiquidity(key, -6000, 6000, 1e18);
+        vm.warp(t0 + 601);
+        poke(key);
+        SafeSettle.Decision memory fast = settle.settlePrice(key, 600, 1, false, 2);
+        SafeSettle.Decision memory slow = settle.settlePrice(key, 600, 1, false, 60);
+        assertEq(fast.maxSafeExposure, slow.maxSafeExposure);
+        assertGt(fast.bindingWidth, 6000, "set by a push past the book");
+    }
+
+    function test_aPushPastTheLastRange_heldUnderOneReversion_setsTheBound() public {
+        // The UF review's measurement on TSLA/USDG: with the push width capped at 4x, the cheapest hold was missed. Past
+        // the last LP range a wider push costs no more fees, and a push wide enough moves the TWAP in less than one
+        // reversion interval: one push and one re-push. On a book that ends at ±600 ticks, a 20 % move over a 600 s
+        // window against 5 s arbitrage (width ≥ 1823 × 600 / 5 ticks) costs at most two round trips past the edge.
+        addLiquidity(key, -600, 600, 1e21);
+        vm.warp(t0 + 601);
+        poke(key);
+        SafeSettle.Decision memory d = settle.settlePrice(key, 600, 1, false, 5);
+        assertGt(d.bindingWidth, 600, "the binding push goes past the book");
+        uint256 bound = d.maxSafeExposure;
+        for (uint256 dir; dir < 2; dir++) {
+            bool up = dir == 0;
+            // any width past the book costs the same round trip; 300,000 ticks is past it and inside the walk cap
+            (,, uint256 pastTheEdge, bool complete) = lens.roundTripCost(key, 300_000, up, settle.MAX_WALK_STEPS());
+            assertTrue(complete);
+            // + 4 wei: the one-walk round trip may round a few wei above a separate walk (PushCostLens.t.sol)
+            uint256 ceiling = FullMath.mulDiv(2 * (pastTheEdge + 4), 1e18, model.gainIfFaked(1e18, 1823, up));
+            assertLe(bound, ceiling, "a wide push held under one reversion interval is priced");
+        }
+    }
+
+    function test_widthSearch_stopsOnlyWhenNoWiderPushCanBeCheaper() public {
+        // two ranges, so the cheapest width is neither the first nor the last
+        addLiquidity(key, -600, 600, 1e21);
+        addLiquidity(key, -6000, 6000, 1e18);
+        vm.warp(t0 + 601);
+        poke(key);
+        uint32[3] memory reversions = [uint32(2), 12, 60];
+        for (uint256 r; r < reversions.length; r++) {
+            assertEq(
+                settle.settlePrice(key, 600, 1, false, reversions[r]).maxSafeExposure,
+                _boundOverEveryWidth(600, reversions[r]),
+                "the early stop never skips a cheaper width"
+            );
+        }
+    }
+
+    /// @dev CostModel's bound with no early stop: every move against every width on one grid (the ladder and 50
+    ///      doubled up to MAX_TICK), each width priced by one walk each way, quote currency1.
+    function _boundOverEveryWidth(uint32 window, uint32 reversion) internal view returns (uint256 best) {
+        int24[6] memory xs = model.ladder();
+        int24[] memory ds = new int24[](6 + 15);
+        for (uint256 i; i < 6; i++) {
+            ds[i] = xs[i];
+        }
+        uint256 n = 6;
+        for (int24 d = 50; d < TickMath.MAX_TICK;) {
+            d = d > TickMath.MAX_TICK / 2 ? TickMath.MAX_TICK : d * 2;
+            ds[n++] = d;
+        }
+        // ascending: 50 100 200 [400] 488 [800] 953 [1600] 1823 [3200] …
+        for (uint256 i = 1; i < n; i++) {
+            for (uint256 j = i; j > 0 && ds[j - 1] > ds[j]; j--) {
+                (ds[j - 1], ds[j]) = (ds[j], ds[j - 1]);
+            }
+        }
+        assembly ("memory-safe") {
+            mstore(ds, n)
+        }
+        int24[] memory grid = _dedupe(ds);
+        uint256 upBest = _bestOneWay(grid, true, window, reversion);
+        uint256 downBest = _bestOneWay(grid, false, window, reversion);
+        best = upBest < downBest ? upBest : downBest;
+    }
+
+    function _bestOneWay(int24[] memory grid, bool up, uint32 window, uint32 reversion) internal view returns (uint256 best) {
+        int24[6] memory xs = model.ladder();
+        (, uint256[] memory rt,) = lens.roundTripCosts(key, grid, up, settle.MAX_WALK_STEPS());
+        best = type(uint256).max;
+        for (uint256 i; i < xs.length; i++) {
+            uint256 gain = model.gainIfFaked(1e18, xs[i], up); // quote is currency1: the asset moves with the tick
+            for (uint256 j; j < grid.length; j++) {
+                if (grid[j] < xs[i]) continue;
+                uint256 hold = (uint256(uint24(xs[i])) * window - 1) / uint256(uint24(grid[j])) + 1;
+                uint256 n = FullMath.mulDiv(rt[j] * (1 + (hold - 1) / reversion + 1), 1e18, gain);
+                if (n < best) best = n;
+            }
+        }
+    }
+
+    function _dedupe(int24[] memory a) internal pure returns (int24[] memory out) {
+        uint256 m;
+        out = new int24[](a.length);
+        for (uint256 i; i < a.length; i++) {
+            if (m == 0 || a[i] != out[m - 1]) out[m++] = a[i];
+        }
+        assembly ("memory-safe") {
+            mstore(out, m)
+        }
     }
 
     function test_gain_followsTheAsset() public view {
