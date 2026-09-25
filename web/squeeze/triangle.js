@@ -405,16 +405,22 @@
       else d.textContent = tr('hero.was', { v: S.fmtUsdg(base), t: when }) + ' · ' +
         (r <= 0.5 ? tr('hero.cheaper', { x: S.fmtFixed(1 / r, 1 / r < 10 ? 1 : 0) }) : (r >= 2 ? tr('hero.dearer', { x: S.fmtFixed(r, 1) }) : S.fmtPct((r - 1) * 100)));
     } else d.textContent = up == null ? tr('ro.nullCost') : '';
-    // HAKARI's max safe exposure next to it (a replay), compared with Sun 19:40 once that minute has passed
-    var mb = S.$('hero-mse'), ms = S.ser('hakari.maxSafeUsdg');
+    // HAKARI's max safe exposure next to it (a replay): the bound v1 decides with (the ladder, lower where the gap
+    // between the two TWAPs binds), so it agrees with the decision on the line below; compared with Sun 19:40
+    var mb = S.$('hero-mse'), ms = S.ser('hakari.maxSafeUsdg') && S.hkEffArr ? S.hkEffArr() : null;
     if (mb) {
       mb.hidden = !ms;
       if (ms) {
-        var mv = ms[i], m0 = ms[S.baseI], md = S.$('hero-mse-delta');
-        S.$('hero-mse-value').textContent = mv == null ? '—' : S.fmtUsdg(mv);
+        var mv = ms[i], m0 = ms[S.baseI], md = S.$('hero-mse-delta'), gapIn = S.hkBound(i).gap != null;
+        S.$('hero-mse-value').textContent = mv == null ? '—' : S.fmtBound(mv);
         if (mv == null || !m0 || S.state.cursorTs < S.baseTs) md.textContent = '';
-        else if (S.state.cursorTs < S.baseTs + 30) md.textContent = tr('hero.baseline', { t: S.fmtWdHM(S.baseTs), v: S.fmtUsdg(m0) });
-        else md.textContent = tr('hero.was', { v: S.fmtUsdg(m0), t: S.fmtWdHM(S.baseTs) });
+        else if (S.state.cursorTs < S.baseTs + 30) md.textContent = tr('hero.baseline', { t: S.fmtWdHM(S.baseTs), v: S.fmtBound(m0) });
+        else md.textContent = tr('hero.was', { v: S.fmtBound(m0), t: S.fmtWdHM(S.baseTs) });
+        var sub = S.$('hero-mse-sub');
+        if (sub) {
+          var dec = S.hkDecision(i);
+          sub.textContent = dec == null ? tr('hk.noTwap') : tr('hk.heroSub', { d: dec === 0 ? tr('w.refuses') : tr('w.trusts'), v: S.fmtInt(S.hk.exp) }) + (gapIn ? ' · ' + tr('w.gapIn') : '');
+        }
       }
     }
     if (T.heroDot && T.heroX && up != null && T.heroY) {

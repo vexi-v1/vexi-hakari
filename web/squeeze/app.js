@@ -265,14 +265,32 @@
     volHimsBonerHims: { c: 'pool-boner', f: function (i) { return S.fmtHims(S.sumRange('volHimsBonerHims', i - 9, i)) + ' HIMS ' + tr('ro.10min'); } },
     himsMinted: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsMinted', S.idxFloor(c.fromTs) + 1, i) || 0; return '+' + S.fmtHims(n) + ' HIMS'; } },
     himsBurned: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsBurned', S.idxFloor(c.fromTs) + 1, i) || 0; return (n ? '−' : '') + S.fmtHims(n) + ' HIMS'; } },
-    // HAKARI's read (a counterfactual replay: series.hakari)
-    maxSafeExposure: { c: 'hakari', f: function (i) { var v = S.val('hakari.maxSafeUsdg', i); return v == null ? '—' : S.fmtUsdg(v) + ' USDG'; }, raw: 'hakari.maxSafeUsdg' },
+    // HAKARI's read (a counterfactual replay: series.hakari). Max safe exposure is the bound v1 decides with (the
+    // ladder, lower where the gap between the two TWAPs binds), so it never contradicts the decision row beside it.
+    maxSafeExposure: { need: 'hakari.maxSafeUsdg', c: 'hakari', v: function (i) { return S.hkBound(i).eff; }, f: function (i) {
+      var b = S.hkBound(i); return b.eff == null ? '—' : S.fmtBound(b.eff) + ' USDG' + (b.gap != null ? ' · ' + tr('w.gapIn') : '');
+    } },
     hakariDecision: { need: 'hakari.decision.e1000', c: 'hakari', cf: function (i) { var d = S.hkDecision(i); return d === 0 ? 'hakari' : (d === 1 ? 'pool-usd' : null); }, rect: true, f: function (i) { var d = S.hkDecision(i); return (d === 0 ? tr('w.refuses') : d === 1 ? tr('w.trusts') : tr('hk.noTwap')) + (d == null ? '' : ' ' + S.fmtInt(S.hk.exp) + ' USDG'); } },
-    v0Settle: { need: 'hakari.v0Pick.d10.w1800', c: 'text-primary', f: function (i) {
-      var p = S.hkV0(i), c = S.val('himsUsdg.close', i); if (!p || p.price == null) return '—';
-      return S.fmtUsdg2(p.price) + ' USDG' + (c ? ' · ' + tr('w.vsPool', { p: S.fmtPct((p.price / c - 1) * 100) }) : '');
+    // what each rule would have paid out on, measured against NAV first (the pool itself is the premium); the mint
+    // chapter adds "vs the pool", where the question is how far the TWAPs lag a real drop
+    v0Settle: { need: 'hakari.v0Pick.d10.w1800', c: 'text-primary', f: function (i, ch) {
+      var p = S.hkV0(i); if (!p || p.price == null) return '—';
+      return settleText(p.price, i, ch);
+    } },
+    v1Settle: { need: 'hakari.decision.e1000', c: 'hakari', f: function (i, ch) {
+      var p = S.hkV1(i, S.hk.exp); if (!p || p.dec == null) return tr('hk.noTwap');
+      return p.dec === 0 ? tr('w.refuses') + ' ' + S.fmtInt(S.hk.exp) + ' USDG' : settleText(p.price, i, ch);
+    } },
+    hookTwap: { need: 'hakari.rawTick.w1800', c: 'hakari', lab: function () { return tr('w.hookTwap', { w: S.hk.win / 60, d: S.hk.delta }); }, f: function (i) {
+      var r = S.tickPrice(S.hkRawTick(i)), u = S.tickPrice(S.hkTruncTick(i)); if (r == null || u == null) return '—';
+      return tr('w.hookTwapV', { r: S.fmtUsdg2(r), u: S.fmtUsdg2(u) });
     } }
   };
+  function settleText(price, i, ch) {
+    var c = S.val('himsUsdg.close', i), out = S.fmtUsdg2(price) + ' USDG · ' + tr('w.vsNav', { x: S.fmtFixed(price / S.NAV, 2) });
+    if (ch && ch.id === 'mint' && c) out += ' · ' + tr('w.vsPool', { p: S.fmtPct((price / c - 1) * 100) });
+    return out;
+  }
   var warned = {};
   function updateWatch(i) {
     var host = $('watch'); if (!host) return;
@@ -289,10 +307,11 @@
       var col = w.cf ? w.cf(i) : w.c;
       row.appendChild(S.el('i', { cls: (w.rect ? 'key-rect' : 'key-line') + (w.dash ? ' dash' : ''), style: col && !w.dash ? 'background:var(--' + col + ')' : null, 'aria-hidden': 'true' }));
       row.appendChild(S.el('strong', { cls: 'wv', text: w.f(i, c) }));
-      var lab = w.since ? tr(k === 'himsMinted' ? 'ro.mintedSince' : 'ro.burnedSince', { t: S.fmtHM(c.fromTs) }) : tr('w.' + k);
+      var lab = w.since ? tr(k === 'himsMinted' ? 'ro.mintedSince' : 'ro.burnedSince', { t: S.fmtHM(c.fromTs) }) : (w.lab ? w.lab() : tr('w.' + k));
       row.appendChild(S.el('span', { cls: 'wl', text: lab }));
-      if (w.raw) {
-        var a = S.val(w.raw, S.idxFloor(c.fromTs)), b = S.val(w.raw, i);
+      if (w.raw || w.v) {
+        var at = function (j) { return w.v ? w.v(j) : S.val(w.raw, j); };
+        var a = at(S.idxFloor(c.fromTs)), b = at(i);
         if (a && b != null && Math.abs(b / a - 1) > 0.0005) row.appendChild(S.el('span', { cls: 'wd', text: S.fmtChange(b, a) + (S.lang === 'zh' ? '' : ' ') + tr('ro.since', { t: S.fmtHM(c.fromTs) }) }));
       }
       host.appendChild(row);
@@ -729,14 +748,15 @@
         s3.appendChild(hero);
       }
       para(1);
-      var ms = S.ser('hakari.maxSafeUsdg'), dec = S.ser('hakari.decision.e1000');
+      // the bound v1 decides with (S.hkEffArr), the one every "max safe exposure" on the page shows
+      var ms = S.hkEffArr ? S.hkEffArr() : null, dec = S.ser('hakari.decision.e1000');
       if (ms && dec) {
-        var m0 = ms[S.baseI], lo = Infinity, lj = 0, nref = 0;
-        for (var r = S.idx(S.fenceFrom); r < S.idx(S.firstMintTs || S.W1); r++) if (ms[r] != null && ms[r] < lo) { lo = ms[r]; lj = r; }
-        for (var r2 = 0; r2 < S.N; r2++) if (dec[r2] === 0) nref++;
+        var m0 = ms[S.baseI], lo = Infinity, lj = 0, nref = 0, nclosed = 0, mintTs = S.firstMintTs || S.W1;
+        for (var r = S.idx(S.fenceFrom); r < S.idx(mintTs); r++) if (ms[r] != null && ms[r] < lo) { lo = ms[r]; lj = r; }
+        for (var r2 = 0; r2 < S.N; r2++) if (dec[r2] === 0) { nref++; if (S.t[r2] >= S.fenceFrom && S.t[r2] <= mintTs) nclosed++; }
         var hero2 = S.el('div', { cls: 'hakari-hero' });
-        hero2.appendChild(S.el('p', { cls: 'hh-pair' }, [S.el('span', { cls: 'hh-v', text: S.fmtUsdg(m0) }), S.el('span', { cls: 'hh-arrow', text: '→' }), S.el('i', { cls: 'key-line', style: 'background:var(--hakari)', 'aria-hidden': 'true' }), S.el('span', { cls: 'hh-v', text: S.fmtUsdg(lo) }), S.el('span', { cls: 'hh-u', text: tr('hakari.mseUnit') })]));
-        hero2.appendChild(S.el('p', { cls: 'hh-sub', text: tr('hakari.mseSub', { a: S.fmtWdHM(S.baseTs), b: S.fmtWdHM(S.t[lj]), z: S.zoneLabel(), m: S.fmtInt(nref) }) }));
+        hero2.appendChild(S.el('p', { cls: 'hh-pair' }, [S.el('span', { cls: 'hh-v', text: S.fmtBound(m0) }), S.el('span', { cls: 'hh-arrow', text: '→' }), S.el('i', { cls: 'key-line', style: 'background:var(--hakari)', 'aria-hidden': 'true' }), S.el('span', { cls: 'hh-v', text: S.fmtBound(lo) }), S.el('span', { cls: 'hh-u', text: tr('hakari.mseUnit') })]));
+        hero2.appendChild(S.el('p', { cls: 'hh-sub', text: tr('hakari.mseSub', { a: S.fmtWdHM(S.baseTs), b: S.fmtWdHM(S.t[lj]), z: S.zoneLabel(), m: S.fmtInt(nref), c: S.fmtInt(nclosed) }) }));
         var jump = S.el('a', { href: '#lane-hakari', cls: 'to-ch', text: '→ ' + tr('hakari.toLanes') });
         jump.addEventListener('click', function (ev) { var t = $('lane-hakari'); if (!t) return; ev.preventDefault(); t.scrollIntoView({ behavior: S.reducedMotion() ? 'auto' : 'smooth', block: 'center' }); });
         hero2.appendChild(S.el('p', { cls: 'hh-sub' }, [jump]));

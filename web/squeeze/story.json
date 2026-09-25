@@ -264,24 +264,26 @@
           "Above the LPs' ranges there is almost nothing left to sell, so pushing the price another 10% and selling back costs **3.85 USDG** at 23:25 and about **12 USDG** at 23:53, instead of 1,351 at 19:40. More than 80% of all HIMS sits in BONER's pool, and BONER, measured in HIMS, has nearly tripled since 19:40.",
           "Other readings of the same half hour: with almost no liquidity in range, one swap at 23:28:42 left the pool quoting 124.70 (it paid 71.25 per HIMS on average); DeFiPrime sampled 61.15 from a single swap at 23:36:13 UTC (+112%). By 23:53 the price was back at about 43.27, still 50% over, and the positions held only about **67 HIMS** against about 130K USDG; shortly after midnight @0xSammy counted about 92 HIMS against about 135K USDG.",
           "LP flight explains only a small part of the thinning. Rebuilding every position between 19:40 and the first mint attributes about **91%** of the drop in the pool's HIMS to the price moving above the LPs' concentrated ranges and about **9%** to position changes (190 removals against 327 additions).",
-          "In a replay of HAKARI's own rules over these minutes (a counterfactual: this pool never had the hook), the largest settlement SafeSettle v1 would have trusted with nobody pushing back fell from **7,258.82 USDG** at 19:40 to **20.38** at 23:25 and was **115.19** at 23:53, so it refused a 1,000 USDG settlement without a break from 22:51 to 00:50."
+          "In a replay of HAKARI's own rules over these minutes (a counterfactual: this pool never had the hook), the largest settlement SafeSettle v1 would have trusted with nobody pushing back fell from **7,258.82 USDG** at 19:40 to **20.38** at 23:25 and was **115.19** at 23:53, so it would have refused a 1,000 USDG settlement without a break from 22:51 to 00:50 (Δ 10, 30-minute TWAP). At 23:31 the replayed hook's 30-minute TWAP read **45.34** raw and **40.74** truncated against a 71.23 pool close: it smoothed the spike but still sat 41–57% over the Friday close, and v0 would have settled 1,000 USDG on **40.74** (1.41× the close) while v1 refused."
         ],
         "zh": [
           "23:24:59 UTC，一筆交易以 937.09 USDG 買走 LP 區間內最後的 12.91 顆 HIMS。美元池的部位只剩 **3.68 顆 HIMS**，對上約 13.46 萬 USDG；六分鐘後，分鐘收盤價衝到 **71.23**（+147%）。",
           "LP 區間之上幾乎沒有 HIMS 可賣，所以把價格再推高 10% 然後賣回，23:25 只要 **3.85 USDG**，23:53 約 **12 USDG**，而 19:40 要 1,351。此時全部 HIMS 有八成以上在 BONER 的池子裡；以 HIMS 計價的 BONER 從 19:40 起已漲了將近三倍。",
           "同一個半小時的其他讀數：區間內幾乎沒有流動性時，23:28:42 有一筆兌換後池子報價停在 124.70（該筆平均每顆付 71.25）；DeFiPrime 在 23:36:13 UTC 取樣到一筆 61.15（+112%）。到 23:53 價格回到約 43.27，仍高出 50%，部位只剩約 **67 顆 HIMS**，對上約 13 萬 USDG；午夜過後不久，@0xSammy 數到的是約 92 顆 HIMS 對約 13.5 萬 USDG。",
           "LP 撤離只能解釋一小部分的變薄。重建 19:40 到首次鑄造前的每一個部位後，美元池 HIMS 的減少約 **91%** 可歸於價格漲出 LP 的集中流動性區間，約 **9%** 歸於部位變動（190 次撤出、327 次加入）。",
-          "以 HAKARI 自己的規則重播這幾分鐘（這是反事實推演：這個池子從未掛上 hook），在無人拉回價格時，SafeSettle v1 願意信任的最大結算從 19:40 的 **7,258.82 USDG** 掉到 23:25 的 **20.38**，23:53 為 **115.19**，所以從 22:51 到 00:50，1,000 USDG 的結算一路被拒絕。"
+          "以 HAKARI 自己的規則重播這幾分鐘（這是反事實推演：這個池子從未掛上 hook），在無人拉回價格時，SafeSettle v1 願意信任的最大結算從 19:40 的 **7,258.82 USDG** 掉到 23:25 的 **20.38**，23:53 為 **115.19**，所以從 22:51 到 00:50，1,000 USDG 的結算會一路被拒絕（Δ 10、30 分鐘 TWAP）。23:31 重播中 hook 的 30 分鐘 TWAP 原始值 **45.34**、截斷值 **40.74**，池價收盤 71.23：它把尖峰抹平了，但仍比週五收盤價高 41–57%；v0 會以 **40.74**（收盤價的 1.41 倍）結算 1,000 USDG，而 v1 會拒絕。"
         ]
       },
       "presenterNote": {
-        "en": "The peak: above 71 for a stock that closed at 28.84. At 23:25 the dollar pool is down to under 4 HIMS; a 10% push costs a few USDG, about 12 by 23:53, not 1,351. Replayed, HAKARI's safe bound falls from 7,259 to 20 USDG: on a 1,000 USDG settlement, HAKARI would have refused.",
-        "zh": "這是高峰：收盤 28.84 的股票，鏈上分鐘收盤超過 71。23:25 美元池只剩不到 4 顆 HIMS，把價格推 10% 只要幾 USDG，到 23:53 也只要約 12，而不是 1,351。重播 HAKARI 的規則，安全上限從 7,259 掉到 20 USDG：1,000 USDG 的結算，HAKARI 會拒絕。"
+        "en": "The peak: above 71 for a stock that closed at 28.84. At 23:25 the dollar pool is down to under 4 HIMS; a 10% push costs a few USDG, about 12 by 23:53, not 1,351. Replayed, HAKARI's safe bound falls from 7,259 to about 20 USDG: on a 1,000 USDG settlement, HAKARI would have refused. Its hook's 30-minute TWAP smooths the spike but still reads 41–57% over the close, and the old rule would have settled on 40.74.",
+        "zh": "這是高峰：收盤 28.84 的股票，鏈上分鐘收盤超過 71。23:25 美元池只剩不到 4 顆 HIMS，把價格推 10% 只要幾 USDG，到 23:53 也只要約 12，而不是 1,351。重播 HAKARI 的規則，安全上限從 7,259 掉到約 20 USDG：1,000 USDG 的結算，HAKARI 會拒絕。它的 hook 的 30 分鐘 TWAP 把尖峰抹平，但仍比收盤價高 41–57%，舊規則會以 40.74 結算。"
       },
       "watch": [
         "himsUsdg",
-        "maxSafeExposure",
         "hakariDecision",
+        "v0Settle",
+        "maxSafeExposure",
+        "hookTwap",
         "pushUp10CostUsdg",
         "himsPremiumPct",
         "himsInHimsUsdg",
@@ -332,23 +334,24 @@
           "At Mon 00:00 UTC (Sunday 20:00 in New York) Robinhood's 24/5 session reopens and the issuer can buy shares again. For 43 minutes, though, no mint reaches the chain. The price eases to about 34.33 at 00:13, then spikes again: single swaps reach 70.97 in the 00:24 minute and the minute close is back above **59** at 00:37 (+105%). The 00:43 close is 53.45, and the last swap before the first mint leaves the pool at 54.50.",
           "The float is still frozen, so pushing the price 10% still costs only about 13 USDG. People were watching live: at 00:13 UTC @0xSammy posted that BONER's pool held about 81% of all on-chain HIMS.",
           "The replies split. One warned that anyone buying at these levels would lose once arbitrage came back. At 00:42, a minute before the first mint, another argued the gap would vanish as soon as whoever holds mint rights minted and sold; @0xSammy questioned whether Robinhood's tokenization works that way.",
-          "At 00:43:30, the last second before the first mint, the replayed hook's Δ = 10 TWAPs read **51.51 / 48.21 / 44.93** raw and **50.39 / 48.18 / 48.69** truncated over 10 / 30 / 60 minutes; the 30-minute pair sat **6 ticks** apart, inside the first rule's 10-tick tolerance, so v0 would have settled on the raw **48.21** unchecked, while v1's bound was **123.86 USDG** and it refused 1,000."
+          "At 00:43:30, the second of the first mint (on the pool as the block before the mint left it), the replayed hook's Δ = 10 TWAPs read **51.51 / 48.21 / 44.93** raw and **50.39 / 48.18 / 48.69** truncated over 10 / 30 / 60 minutes; the 30-minute pair sat **6 ticks** apart, inside the first rule's 10-tick tolerance, so v0 would have settled on the raw **48.21** unchecked (1.67× the Friday close), while v1's bound was **123.86 USDG** and it would have refused 1,000. That is one second's reading: at the 00:43 and 00:44 minute closes the 30-minute pair was 49 and 63 ticks apart and v0 would have taken the truncated 48.09 and 48.28; either way it settles near 48."
         ],
         "zh": [
           "週一 00:00 UTC（紐約週日 20:00），Robinhood 的 24/5 時段重開，發行方可以再買股票。但接下來 43 分鐘，鏈上沒有任何鑄造。價格在 00:13 回落到約 34.33，接著又衝一次：00:24 那一分鐘單筆最高到 70.97，00:37 分鐘收盤價回到 **59** 以上（+105%）。00:43 的分鐘收盤是 53.45，首次鑄造前最後一筆兌換後池價為 54.50。",
           "流通量依然凍結，把價格推高 10% 仍然只要約 13 USDG。當時就有人即時關注：00:13 UTC @0xSammy 發文指出，BONER 的池子握有鏈上約 81% 的 HIMS。",
           "回覆意見分歧。有人提醒，套利一回來，在這個價位買進的人會虧很多。00:42，也就是首次鑄造前一分鐘，另一則回覆認為只要有鑄造權的一方鑄造並賣出，價差就會消失；@0xSammy 則質疑 Robinhood 的代幣化機制是否真的這樣運作。",
-          "00:43:30，也就是首次鑄造前的最後一秒，重播中 hook 的 Δ = 10 TWAP 在 10／30／60 分鐘時窗下，原始值為 **51.51／48.21／44.93**，截斷值為 **50.39／48.18／48.69**；30 分鐘那一組只差 **6 ticks**，落在第一版規則 10 ticks 的容忍範圍內，所以 v0 會不加檢查就以原始的 **48.21** 結算，而 v1 的上限是 **123.86 USDG**，會拒絕 1,000。"
+          "00:43:30，也就是首次鑄造的那一秒（以鑄造前一個區塊留下的池子狀態計算），重播中 hook 的 Δ = 10 TWAP 在 10／30／60 分鐘時窗下，原始值為 **51.51／48.21／44.93**，截斷值為 **50.39／48.18／48.69**；30 分鐘那一組只差 **6 ticks**，落在第一版規則 10 ticks 的容忍範圍內，所以 v0 會不加檢查就以原始的 **48.21** 結算（週五收盤價的 1.67 倍），而 v1 的上限是 **123.86 USDG**，會拒絕 1,000。這只是那一秒的讀數：00:43 與 00:44 的分鐘收盤時，30 分鐘那一組相差 49 與 63 ticks，v0 會改用截斷的 48.09 與 48.28；無論哪種，結算價都在 48 附近。"
         ]
       },
       "presenterNote": {
-        "en": "Midnight UTC the brokerage session reopens, but minting lags by 43 minutes. The float is still frozen, so the price spikes again: minute closes near 59, single swaps up to 71. At 00:43:30 the old rule would have settled on 48.21 unchecked, and HAKARI would have refused.",
-        "zh": "UTC 午夜，券商的交易時段重開，但鑄造晚了 43 分鐘。流通量還是凍結的，所以價格又衝一次：分鐘收盤接近 59，單筆最高到 71。00:43:30 舊規則會不加檢查就以 48.21 結算，而 HAKARI 會拒絕。"
+        "en": "Midnight UTC the brokerage session reopens, but minting lags by 43 minutes. The float is still frozen, so the price spikes again: minute closes near 59, single swaps up to 71. At 00:43:30 the old rule would have settled on 48.21 unchecked, 1.67× the Friday close; SafeSettle v1, replayed, would have refused.",
+        "zh": "UTC 午夜，券商的交易時段重開，但鑄造晚了 43 分鐘。流通量還是凍結的，所以價格又衝一次：分鐘收盤接近 59，單筆最高到 71。00:43:30 舊規則會不加檢查就以 48.21 結算，是週五收盤價的 1.67 倍；重播中的 SafeSettle v1 會拒絕。"
       },
       "watch": [
         "himsUsdg",
-        "maxSafeExposure",
         "hakariDecision",
+        "v0Settle",
+        "maxSafeExposure",
         "himsPremiumPct",
         "himsMinted",
         "pushUp10CostUsdg",
@@ -406,23 +409,24 @@
           "The first new supply since Friday: **1,000 HIMS** minted at 00:43:30 UTC, more than 51 hours after the last Friday burn. It is the first of **294 mints** that add about **18,750 HIMS** by 09:54, more than the entire weekend float.",
           "New tokens go to the issuer's distribution wallet, and a market-making wallet sells them into the pools as they arrive (DeFiPrime notes it held under 25 HIMS by the end of the morning). The price goes from about 55.61 at the 00:47 minute close (single swaps up to 63.85, +121%, in that minute) to 32.37 at 00:55 and 29.31 at 01:59.",
           "Outside arbitrage was small change. Seconds after the first mint, two cyclic trades (USDG → HIMS → BONER → AI → USDG; AI is another Robinhood Chain memecoin) cleared about 2.71 and 5.61 USDG before costs. What actually closed the gap was new supply, and only the issuer can mint.",
-          "After the mint the drop was real and the truncated TWAP lagged it: in the replay, v0 settling 10,000 USDG stayed on that truncated price, more than 10% above the pool, for **144 minutes** in all (worst at 01:20: **49.14** against a pool at **29.85**, +64.6%), while v1 trusted 1,000 USDG again from 01:49 and its bound was back to **5,310.34 USDG** at 01:59."
+          "After the mint the drop was real and both TWAPs lagged it; the truncated one lagged longest. In the replay, v0 settling 1,000 USDG used it for **30 minutes** while it sat more than 10% above the pool (**49.61** against **30.34** at 01:17; 144 minutes at 10,000 USDG, worst at 01:20: 49.14 against 29.85, +64.6%). SafeSettle is a cost-to-fake test, not a NAV check: once the mints had deepened the pool, faking the price cost more than 1,000 USDG could earn, so from 00:51 v1 trusted 1,000 USDG on and off, on the raw 30-minute TWAP. That TWAP still read **50.31** at 00:51 (1.74× the Friday close, against a pool at 32.71) and sat more than 10% above the pool for **20 minutes**. v1's last refusal at 1,000 USDG was 01:48; at 01:59 its bound was **2,907.56 USDG** with the 3,404-tick gap between the two TWAPs priced in (5,310.34 on the ladder alone). It refused 10,000 USDG throughout, but it refuses that size most of the weekend: the pool's normal depth, not the squeeze. After the mint arbitrage was open again, so the replay's “nobody pushing back” makes these refusals conservative."
         ],
         "zh": [
           "週五之後第一批新供給：00:43:30 UTC 鑄造 **1,000 顆 HIMS**，距離週五最後一次銷毀已超過 51 小時。這是 **294 次鑄造**中的第一次，到 09:54 共增加約 **18,750 顆 HIMS**，比整個週末的流通量還多。",
           "新代幣先進到發行方的分發錢包，再由一個造市錢包隨到隨賣進池子（DeFiPrime 指出它到早上結束時只剩不到 25 顆）。價格從 00:47 分鐘收盤的約 55.61（那一分鐘單筆最高 63.85，+121%），掉到 00:55 的 32.37，01:59 回到 29.31。",
           "外部套利只是零頭：首次鑄造後幾秒，兩筆循環交易（USDG → HIMS → BONER → AI → USDG；AI 是 Robinhood Chain 上另一個迷因幣）扣除成本前分別約賺 2.71 與 5.61 USDG。真正把價差收掉的是新供給，而只有發行方能鑄造。",
-          "鑄造後的下跌是真的，截斷 TWAP 卻跟不上：重播中，結算 10,000 USDG 的 v0 一直用那個截斷價，比池價高出 10% 以上的時間共 **144 分鐘**（最嚴重在 01:20：**49.14** 對上池價 **29.85**，+64.6%）；而 v1 從 01:49 起重新信任 1,000 USDG，01:59 的上限已回到 **5,310.34 USDG**。"
+          "鑄造後的下跌是真的，兩條 TWAP 都跟不上，截斷的那條落後最久。重播中，結算 1,000 USDG 的 v0 有 **30 分鐘**用的是比池價高出 10% 以上的截斷價（01:17 為 **49.61** 對上 **30.34**；結算 10,000 USDG 時是 144 分鐘，最嚴重在 01:20：49.14 對 29.85，+64.6%）。SafeSettle 檢查的是造假成本，不是淨值：鑄造讓池子變深之後，造假的成本高過 1,000 USDG 能賺到的，所以從 00:51 起 v1 斷斷續續信任 1,000 USDG，用的是原始 30 分鐘 TWAP。那條 TWAP 在 00:51 仍是 **50.31**（週五收盤價的 1.74 倍，池價 32.71），高出池價 10% 以上共 **20 分鐘**。v1 對 1,000 USDG 最後一次拒絕在 01:48；01:59 計入兩條 TWAP 相差的 3,404 ticks 後，上限是 **2,907.56 USDG**（只看階梯為 5,310.34）。它全程拒絕 10,000 USDG，但這個規模它整個週末大多都拒絕：那是池子平常的深度，不是擠壓。鑄造後套利已恢復，重播假設「無人拉回價格」，所以這些拒絕偏保守。"
         ]
       },
       "presenterNote": {
-        "en": "First mint, 43 minutes after the reopen. The issuer sells new tokens into the premium, and within about 75 minutes the price is back near 29.",
-        "zh": "重開 43 分鐘後第一筆鑄造上鏈。發行方把新代幣賣進溢價，約 75 分鐘內價格回到 29 附近。"
+        "en": "First mint, 43 minutes after the reopen. The issuer sells new tokens into the premium, and within about 75 minutes the price is back near 29. Both TWAPs lag the real drop. The old rule keeps settling on the truncated one near 50, and v1 is not a NAV check either: once the pool is deep again it trusts 1,000 USDG on the raw TWAP, still 50.31 at 00:51.",
+        "zh": "重開 43 分鐘後第一筆鑄造上鏈。發行方把新代幣賣進溢價，約 75 分鐘內價格回到 29 附近。兩條 TWAP 都跟不上真實的下跌：舊規則繼續用 50 附近的截斷價結算；v1 也不是淨值檢查，池子一變深，它就用原始 TWAP 信任 1,000 USDG，00:51 時仍是 50.31。"
       },
       "watch": [
         "himsMinted",
-        "himsUsdg",
         "v0Settle",
+        "v1Settle",
+        "himsUsdg",
         "himsSupply",
         "himsPremiumPct",
         "himsInHimsUsdg",
@@ -604,8 +608,8 @@
     }
   ],
   "hakari": {
-    "en": "Any protocol that reads a price from this pool, whether a lending market, an options venue or a perp oracle, would have seen a stock that closed at 28.84 quoted at about 61, and at 71.23 at the highest minute close, and nothing in the number itself says it is 112% to 147% away from the share behind it. What had changed was the cost of moving it: pushing HIMS/USDG up 10% and selling straight back cost about **1,351 USDG** at 19:40 and about **12 USDG** at 23:53, more than a hundred times cheaper, while the fence meant no arbitrageur could pull the price back. That cost is what HAKARI measures; the cost-to-push lane on this page follows the same method as HAKARI's on-chain cost lens (PushCostLens).\n\nThe lanes under “HAKARI's read” replay HAKARI's own rules over these same minutes. The pool never had the hook, so they are a counterfactual, computed from its real swaps and positions. In that replay SafeSettle v1 refuses a 1,000 USDG settlement for **183 minutes** (175 of them from Sunday 21:58 UTC on, and without a break from 22:51 to 00:50), minutes in which the first rule, v0, would have settled at **29.89 to 51.70**; and after the first mint, v0 would have kept settling 10,000 USDG on a truncated price more than 10% above the pool for **144 minutes** (49.14 against 29.85 at 01:20). A 10,000 USDG settlement is refused most of the weekend, but that is this pool's normal depth (its bound with nobody pushing back was 7,258.82 USDG on a quiet Sunday evening), not the squeeze; 1,000 USDG is the size whose refusals isolate the squeeze.\n\nThe calendar alone cannot tell such weekends apart: on the ordinary weekend of 2026-09-18, sampled every six hours, the cheapest moment for HIMS while minting was closed still cost about 0.96x what it did at Friday's close; on 2026-08-30, minute by minute, it fell to about 0.004x (3.85 USDG against about 979 at Friday's close). So HAKARI measures at settlement time: it settles on the pool's price only when faking it would cost more than the fake could earn on everything settling on it, and otherwise refuses to settle.",
-    "zh": "任何從這個池子讀價格的協議，不論是借貸市場、選擇權平台還是永續合約的預言機，都會看到一檔收盤 28.84 的股票被報到約 61，最高的分鐘收盤價更到 71.23，而這個數字本身看不出它離背後的股票已經差了 112% 到 147%。改變的是推動它的成本：把 HIMS/USDG 推高 10% 再立刻賣回，19:40 要約 **1,351 USDG**，23:53 只要約 **12 USDG**，便宜了一百倍以上；同時圍欄讓套利者沒辦法把價格拉回來。HAKARI 量的就是這個成本；本頁的推價成本那條線，用的是和 HAKARI 鏈上推價成本工具（PushCostLens）相同的方法。\n\n「HAKARI 的判讀」底下的軌道，是用 HAKARI 自己的規則重播同樣這幾分鐘。這個池子從未掛上 hook，所以那是反事實推演，由它真實的兌換與部位算出。在重播中，SafeSettle v1 拒絕 1,000 USDG 的結算共 **183 分鐘**（其中 175 分鐘在 UTC 週日 21:58 之後，22:51 到 00:50 則一路拒絕），而同一時間第一版規則 v0 會以 **29.89 到 51.70** 結算；首次鑄造之後，v0 結算 10,000 USDG 時，還會繼續用比池價高出 10% 以上的截斷價共 **144 分鐘**（01:20 時為 49.14 對 29.85）。10,000 USDG 的結算整個週末大多被拒絕，但那是這個池子平常的深度（平靜的週日傍晚，無人拉回價格時的上限是 7,258.82 USDG），不是擠壓造成的；能單獨看出擠壓的是 1,000 USDG 的拒絕。\n\n光看日曆分不出這兩種週末：在 2026-09-18 那個平常的週末（每六小時取樣），鑄造關閉期間 HIMS 最便宜的時刻，成本仍約是週五收盤時的 0.96 倍；2026-08-30 逐分鐘看，則掉到約 0.004 倍（3.85 USDG 對週五收盤時的約 979）。所以 HAKARI 在結算當下量測：只有在造假的成本高於造假能從所有結算部位賺到的錢時，才用池子的價格結算，否則拒絕結算。"
+    "en": "Any protocol that reads a price from this pool, whether a lending market, an options venue or a perp oracle, would have seen a stock that closed at 28.84 quoted at about 61, and at 71.23 at the highest minute close, and nothing in the number itself says it is 112% to 147% away from the share behind it. What had changed was the cost of moving it: pushing HIMS/USDG up 10% and selling straight back cost about **1,351 USDG** at 19:40 and about **12 USDG** at 23:53, more than a hundred times cheaper, while the fence meant no arbitrageur could pull the price back. That cost is what HAKARI measures; the cost-to-push lane on this page follows the same method as HAKARI's on-chain cost lens (PushCostLens).\n\nThe lanes under “HAKARI's read” replay HAKARI's own rules over these same minutes. The pool never had the hook, so they are a counterfactual, computed from its real swaps and positions. In that replay SafeSettle v1 (Δ 10, 30-minute TWAP) refuses a 1,000 USDG settlement for **183 minutes** over the weekend: **153** while minting was closed (8 on Saturday morning, the rest from Sunday 21:58 UTC, without a break from 22:51 on) and 30 after the first mint, when arbitrage was open again and a refusal is conservative. In those minutes the first rule, v0, would have settled at **29.89 to 51.70**. After the first mint the drop was real and both TWAPs lagged it: v0 settling 1,000 USDG used a truncated price more than 10% above the pool for 30 minutes (144 at 10,000 USDG), and v1, which prices the cost to fake rather than the distance from NAV, trusted 1,000 USDG on a raw TWAP more than 10% above the pool for 20 minutes (50.31 against 32.71 at 00:51). A 10,000 USDG settlement is refused most of the weekend, but that is this pool's normal depth (its bound with nobody pushing back was 7,258.82 USDG on a quiet Sunday evening), not the squeeze; 1,000 USDG is the size whose refusals isolate the squeeze.\n\nThe calendar alone cannot tell such weekends apart: on the ordinary weekend of 2026-09-18, sampled every six hours, the cheapest moment for HIMS while minting was closed still cost about 0.96x what it did at Friday's close; on 2026-08-30, minute by minute, it fell to about 0.004x (3.85 USDG against about 979 at Friday's close). So HAKARI measures at settlement time: it settles on the pool's price only when faking it would cost more than the fake could earn on everything settling on it, and otherwise refuses to settle.",
+    "zh": "任何從這個池子讀價格的協議，不論是借貸市場、選擇權平台還是永續合約的預言機，都會看到一檔收盤 28.84 的股票被報到約 61，最高的分鐘收盤價更到 71.23，而這個數字本身看不出它離背後的股票已經差了 112% 到 147%。改變的是推動它的成本：把 HIMS/USDG 推高 10% 再立刻賣回，19:40 要約 **1,351 USDG**，23:53 只要約 **12 USDG**，便宜了一百倍以上；同時圍欄讓套利者沒辦法把價格拉回來。HAKARI 量的就是這個成本；本頁的推價成本那條線，用的是和 HAKARI 鏈上推價成本工具（PushCostLens）相同的方法。\n\n「HAKARI 的判讀」底下的軌道，是用 HAKARI 自己的規則重播同樣這幾分鐘。這個池子從未掛上 hook，所以那是反事實推演，由它真實的兌換與部位算出。在重播中，SafeSettle v1（Δ 10、30 分鐘 TWAP）整個週末拒絕 1,000 USDG 的結算共 **183 分鐘**：其中 **153** 分鐘在鑄造關閉期間（週六早上 8 分鐘，其餘從 UTC 週日 21:58 開始，22:51 之後一路拒絕），30 分鐘在首次鑄造之後，那時套利已恢復，拒絕是保守的判斷。同一時間第一版規則 v0 會以 **29.89 到 51.70** 結算。首次鑄造後的下跌是真的，兩條 TWAP 都跟不上：結算 1,000 USDG 的 v0 有 30 分鐘用的是比池價高出 10% 以上的截斷價（10,000 USDG 時是 144 分鐘）；而 v1 衡量的是造假成本、不是離淨值多遠，它有 20 分鐘信任 1,000 USDG、用的是比池價高出 10% 以上的原始 TWAP（00:51 為 50.31 對 32.71）。10,000 USDG 的結算整個週末大多被拒絕，但那是這個池子平常的深度（平靜的週日傍晚，無人拉回價格時的上限是 7,258.82 USDG），不是擠壓造成的；能單獨看出擠壓的是 1,000 USDG 的拒絕。\n\n光看日曆分不出這兩種週末：在 2026-09-18 那個平常的週末（每六小時取樣），鑄造關閉期間 HIMS 最便宜的時刻，成本仍約是週五收盤時的 0.96 倍；2026-08-30 逐分鐘看，則掉到約 0.004 倍（3.85 USDG 對週五收盤時的約 979）。所以 HAKARI 在結算當下量測：只有在造假的成本高於造假能從所有結算部位賺到的錢時，才用池子的價格結算，否則拒絕結算。"
   },
   "next": {
     "en": "This page now replays HAKARI's own rules on these minutes: under “HAKARI's read”, SafeSettle v1's max safe exposure and its trust-or-refuse decision, the hook's raw and truncated TWAPs, and the price the first rule (v0) would have settled on, all computed from the pool's real swaps because the pool never had the hook. Still next: a measured arbitrage reversion instead of “nobody pushes back” before and after the fence, and the Vexi options venue reading SafeSettle for its own settlements.",
@@ -770,6 +774,66 @@
       "def": {
         "en": "What it costs in fees to move a pool's price by a given percentage and sell straight back. A low cost means the price is cheap to fake.",
         "zh": "把池子價格推動某個百分比、再立刻賣回所損失的手續費。成本越低，這個價格越便宜就能造假。"
+      }
+    },
+    {
+      "term": {
+        "en": "Max safe exposure (HAKARI term)",
+        "zh": "最大安全曝險（HAKARI 用語）"
+      },
+      "def": {
+        "en": "The most USDG that can settle on a pool's price before faking that price pays: the cost of the cheapest fake (push the price, hold it over the TWAP window, sell back) divided by what each USDG settling on the faked price would gain. SafeSettle v1 settles on the raw TWAP only below it, and refuses above it.",
+        "zh": "在造假開始划算之前，能用這個池子價格結算的最大 USDG 金額：最便宜的造假成本（推動價格、在 TWAP 時窗內撐住、再賣回），除以每 1 USDG 結算能從造假價格賺到的錢。SafeSettle v1 只在低於它時用原始 TWAP 結算，高於它就拒絕。"
+      }
+    },
+    {
+      "term": {
+        "en": "SafeSettle v0 / v1",
+        "zh": "SafeSettle v0／v1"
+      },
+      "def": {
+        "en": "HAKARI's settlement rules. v0, the first one, chose between the raw and the truncated TWAP and never refused. v1, the current one, settles on the raw TWAP only when the exposure is below the max safe exposure, and otherwise refuses. On this page both are replayed over the weekend; neither ran on this pool.",
+        "zh": "HAKARI 的結算規則。v0 是第一版，在原始與截斷 TWAP 之間二選一，從不拒絕。v1 是現行版，只有在結算規模低於最大安全曝險時才用原始 TWAP 結算，否則拒絕。本頁兩者都是用這個週末重播的，都沒有真的在這個池子上執行過。"
+      }
+    },
+    {
+      "term": {
+        "en": "TWAP (raw and truncated)",
+        "zh": "TWAP（原始與截斷）"
+      },
+      "def": {
+        "en": "Time-weighted average price over a window (10, 30 or 60 minutes here). The raw TWAP averages the pool's price as it was; the truncated one averages a copy that may move at most Δ ticks per observation, so it lags any fast move, fake or real.",
+        "zh": "時間加權平均價格，這裡的時窗是 10、30 或 60 分鐘。原始 TWAP 平均的是池子當時的價格；截斷 TWAP 平均的是一個每次觀測最多只能移動 Δ 個 tick 的副本，所以任何快速變動，不論真假，它都會跟不上。"
+      }
+    },
+    {
+      "term": {
+        "en": "Δ (truncation limit)",
+        "zh": "Δ（截斷上限）"
+      },
+      "def": {
+        "en": "How far the truncated series may move per observation, in ticks. HAKARI sets it from the 99th percentile of a pool's tick moves between consecutive swap blocks: Δ = 10 for HIMS (gauge/data/delta.json). The oracle lane can switch to Δ = 3.",
+        "zh": "截斷序列每次觀測最多能移動幾個 tick。HAKARI 以池子相鄰兌換區塊之間 tick 變動的第 99 百分位數來設定：HIMS 是 Δ = 10（gauge/data/delta.json）。預言機軌道可切換為 Δ = 3。"
+      }
+    },
+    {
+      "term": {
+        "en": "Tick",
+        "zh": "Tick"
+      },
+      "def": {
+        "en": "Uniswap's price step: one tick is a 0.01% change in price, so 953 ticks is about 10% and 1,823 ticks about 20%.",
+        "zh": "Uniswap 的價格刻度：一個 tick 是 0.01% 的價格變動，所以 953 ticks 約是 10%，1,823 ticks 約是 20%。"
+      }
+    },
+    {
+      "term": {
+        "en": "Nobody pushing back",
+        "zh": "無人拉回價格"
+      },
+      "def": {
+        "en": "The replay's assumption that no arbitrageur pulls a pushed price back (arbitrage reversion time 0 seconds), so a fake only has to be pushed once. It held while minting was closed; before and after, arbitrage was possible, so there a refusal is conservative.",
+        "zh": "重播的假設：沒有套利者會把被推走的價格拉回來（套利回復時間 0 秒），所以造假只需要推一次。鑄造關閉期間這個假設成立；在那之前與之後都能套利，所以那段時間的拒絕是保守的判斷。"
       }
     },
     {
@@ -1288,18 +1352,23 @@
     },
     {
       "value": "123.86",
-      "meaning": "v1 max safe exposure at 00:43:30 UTC, the last second before the first mint (replay)",
+      "meaning": "v1 max safe exposure at 00:43:30 UTC, the first mint's second, on the pool as the block before the mint left it (replay)",
       "source": "gauge/data/hims-hook-replay.json keyMoments mon-004330"
     },
     {
       "value": "5,310.34",
-      "meaning": "v1 max safe exposure (ladder), Mon 01:59 UTC (replay)",
-      "source": "gauge/data/hims-hook-replay.json keyMoments mon-0159"
+      "meaning": "v1 max safe exposure on the ladder alone (before the TWAP gap), Mon 01:59 UTC (replay)",
+      "source": "gauge/data/hims-hook-replay.json keyMoments mon-0159 maxSafeExposureUsdg"
+    },
+    {
+      "value": "2,907.56 (3,404 ticks)",
+      "meaning": "v1 max safe exposure at Mon 01:59 UTC with the gap between the two 30-minute TWAPs (3,404 ticks) priced in: the bound it decides with (replay)",
+      "source": "gauge/data/hims-hook-replay.json keyMoments mon-0159 configs.d10w1800.v1.maxSafeExposureUsdg (binding: the TWAP gap, 3404 ticks); data.json series.hakari.gapBoundUsdg[3359]"
     },
     {
       "value": "183 minutes",
-      "meaning": "v1 refuses a 1,000 USDG settlement (Δ 10, 30-minute TWAP), whole window; 175 from Sun 21:58, 8 on Sat 06:01-06:08",
-      "source": "gauge/data/hims-hook-replay.json weekend.v1RefusalsPrimary 1000.minutesRefused and runsRefusing1000Usdg"
+      "meaning": "v1 refuses a 1,000 USDG settlement (Δ 10, 30-minute TWAP), whole window: 153 while minting was closed (8 on Sat 06:01-06:08, 145 from Sun 21:58 to the first mint) and 30 after the first mint",
+      "source": "gauge/data/hims-hook-replay.json weekend.v1RefusalsPrimary 1000 (minutesRefused, minutesRefusedWhileMintClosed, runsRefusing1000Usdg); data.json hakari.derived.refused1000"
     },
     {
       "value": "22:51 to 00:50",
@@ -1337,9 +1406,44 @@
       "source": "gauge/data/hims-hook-replay.json v0StaleAfterFirstMint 10000.worst"
     },
     {
-      "value": "01:49",
-      "meaning": "v1 trusts 1,000 USDG again from this minute (last refusal 01:48)",
-      "source": "gauge/data/hims-hook-replay.json v1RefusalsPrimary 1000.lastRefused"
+      "value": "01:48; 00:51–01:31 with gaps",
+      "meaning": "v1 and 1,000 USDG after the first mint: last refusal 01:48; trusted at 00:51, 00:53–01:02, 01:05–01:08, 01:12–01:31 and from 01:49",
+      "source": "data.json hakari.derived.afterFirstMint.byExposureUsdg.1000.v1 (trustRuns, lastRefused = hims-hook-replay.json v1RefusalsPrimary 1000.lastRefused)"
+    },
+    {
+      "value": "20 minutes; 50.31 vs 32.71 at 00:51 (1.74×)",
+      "meaning": "After the first mint, minutes in which v1 trusted 1,000 USDG on a raw 30-minute TWAP more than 10% above the pool, and the worst of them (1.74× the 28.84 close)",
+      "source": "data.json hakari.derived.afterFirstMint.byExposureUsdg.1000.v1.onRawOverPool (squeeze/build.ts mintFacts, from series.hakari and hakari-1m.json spotTick)"
+    },
+    {
+      "value": "30 minutes; 49.61 vs 30.34 at 01:17",
+      "meaning": "After the first mint, minutes in which v0 settling 1,000 USDG used a truncated TWAP more than 10% above the pool, and the worst",
+      "source": "gauge/data/hims-hook-replay.json weekend.v0StaleAfterFirstMint 1000; = data.json hakari.derived.afterFirstMint.byExposureUsdg.1000.v0"
+    },
+    {
+      "value": "47.08 vs 32.37 (00:55)",
+      "meaning": "Raw 30-minute TWAP v1 settles 1,000 USDG on at the mint chapter's focus, against the pool's minute close",
+      "source": "data.json series.hakari rawTick.w1800 and decision.e1000 at grid 3295; series himsUsdg.close"
+    },
+    {
+      "value": "45.34 / 40.74 vs 71.23 (23:31)",
+      "meaning": "Raw and truncated (Δ 10) 30-minute TWAP at the peak minute, against the pool's minute close; v0 settles 1,000 USDG on the truncated 40.74 (1.41×), v1 refuses",
+      "source": "data.json series.hakari rawTick.w1800, gapTicks.d10.w1800, v0Pick.d10.w1800, decision.e1000 at grid 3211"
+    },
+    {
+      "value": "41–57%",
+      "meaning": "How far those two TWAPs sat above the 28.84 Friday close at 23:31",
+      "source": "derived: 40.74 / 28.84 = 1.41, 45.34 / 28.84 = 1.57"
+    },
+    {
+      "value": "48.09 and 48.28 (49 and 63 ticks)",
+      "meaning": "v0's settlement price at the 00:43 and 00:44 grid minutes: the 30-minute pair was 49 and 63 ticks apart, so v0 took the truncated TWAP (at 00:43:30 they were 6 ticks apart and it took the raw 48.21)",
+      "source": "data.json series.hakari rawTick.w1800, gapTicks.d10.w1800, v0Pick.d10.w1800 at grid 3283 and 3284"
+    },
+    {
+      "value": "1.67×",
+      "meaning": "v0's 48.21 at 00:43:30 against the 28.84 Friday close",
+      "source": "derived: 48.21 / 28.84 = 1.672"
     },
     {
       "value": "3,890 of 4,051 minutes",

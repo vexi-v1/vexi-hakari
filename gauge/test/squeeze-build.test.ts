@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import {
-  argExt, badLengths, derive, floatSplitProblems, gridProblems, hakariSeries, HK, matchLevel, mintClusters, nonFinite, ohlcProblems, packPicks, serialize, seriesArrays, settledAt, sig6,
+  argExt, badLengths, derive, floatSplitProblems, gridProblems, hakariSeries, HK, matchLevel, mintClusters, mintFacts, nonFinite, ohlcProblems, packPicks, serialize, seriesArrays, settledAt, sig6,
   spikeProblems, unpackPick, usdgPerHimsAtTick, worst,
 } from "../src/squeeze/build.ts";
 
@@ -168,6 +168,36 @@ test("hakariSeries reshapes the replay's per-minute file for the page and flags 
   assert.ok(hakariSeries({ t }, t).problems.length > 10);
 });
 
+test("mintFacts splits v1's refusals by the mint window and finds stale settlements after the first mint", () => {
+  // five minutes; the mint rule closes at 30 s and the first mint lands at 90 s, so minutes 2-4 are after it
+  const t = [0, 60, 120, 180, 240], spot = 240_000;
+  const cfgs = (f: () => unknown) => Object.fromEntries(HK.deltas.map((d) => [`d${d}`, Object.fromEntries(HK.windows.map((w) => [`w${w}`, f()]))]));
+  const s = {
+    decision: { e1000: [0, 1, 1, 0, 1], e10000: [0, 0, 0, 0, 0], e100000: [0, 0, 0, 0, 0] },
+    // raw 1,000 ticks under the pool's tick = 10.5 % above its price at minute 2; 500 ticks (5.1 %) at minute 4
+    rawTick: Object.fromEntries(HK.windows.map((w) => [`w${w}`, [239_000, 239_000, 239_000, 240_000, 239_500]])),
+    // truncated = raw - gap: 239,500 (5.1 % over) at minute 2, 240,000 at minute 3, 238,500 (16.2 % over) at minute 4
+    gapTicks: cfgs(() => [0, 0, -500, 0, 1_000]),
+    // v0 on truncated for every size at minutes 2 and 4, for 10k and 100k only at minute 3
+    v0Pick: cfgs(() => [0, 0, 2 + 3 * 2 + 9 * 2, 0 + 3 * 2 + 9 * 2, 2 + 3 * 2 + 9 * 2]),
+  };
+  const f = mintFacts(s, [spot, spot, spot, spot, spot], t, 30, 90, 28.84);
+  assert.deepEqual(f.refused1000, { total: 2, beforeMintClose: 1, whileMintClosed: 0, afterFirstMint: 1 });
+  const k1 = f.afterFirstMint.byExposureUsdg[1000] as any, k10 = f.afterFirstMint.byExposureUsdg[10000] as any;
+  assert.equal(k1.v1.trustedMinutes, 2);
+  assert.deepEqual(k1.v1.trustRuns.map((r: any) => r.minutes), [1, 1]);
+  assert.equal(k1.v1.lastRefused, "1970-01-01T00:03:00Z");
+  assert.equal(k1.v1.onRawOverPool.minutes, 1);
+  assert.equal(k1.v1.onRawOverPool.worst.at, "1970-01-01T00:02:00Z");
+  near(k1.v1.onRawOverPool.worst.premiumPct, Math.round((1.0001 ** 1000 - 1) * 1e4) / 100);
+  assert.equal(k1.v0.onTruncatedOverPool.minutes, 1);
+  assert.equal(k1.v0.onTruncatedOverPool.worst.at, "1970-01-01T00:04:00Z");
+  assert.equal(k10.v1.trustedMinutes, 0);
+  assert.equal(k10.v1.onRawOverPool.worst, null);
+  assert.equal(k10.v0.onTruncatedOverPool.minutes, 1);
+  near(k10.v0.onTruncatedOverPool.worst.timesNav, Math.round((usdgPerHimsAtTick(238_500) / 28.84) * 100) / 100);
+});
+
 test("serialize puts plain arrays on one line and round-trips", () => {
   const v = { t: [1, 2, 3], s: { a: [null, 0.5] }, e: [{ id: "x", label: { en: "a [b]", zh: "c" } }] };
   const text = serialize(v);
@@ -217,7 +247,14 @@ test("web/squeeze/data.json follows the contract", { skip: !existsSync(dataFile)
   assert.equal(h.maxSafeUsdg[2980], 7258.82);
   assert.equal(h.maxSafeUsdg[3205], 20.3787);
   assert.equal(h.decision.e1000.filter((x: number | null) => x === 0).length, hk.weekend.v1RefusalsPrimary.byExposureUsdg["1000"].minutesRefused);
-  assert.ok(d.checks.filter((c: any) => /^HAKARI/.test(c.name)).length >= 5);
+  assert.ok(d.checks.filter((c: any) => /^HAKARI/.test(c.name)).length >= 6);
+  // the numbers the story quotes around the first mint: 183 = 153 while minting was closed + 30 after the first mint
+  const fx = hk.derived, r1 = hk.weekend.v1RefusalsPrimary.byExposureUsdg["1000"];
+  assert.equal(fx.refused1000.total, r1.minutesRefused);
+  assert.equal(fx.refused1000.whileMintClosed, r1.minutesRefusedWhileMintClosed);
+  assert.equal(fx.refused1000.beforeMintClose + fx.refused1000.whileMintClosed + fx.refused1000.afterFirstMint, fx.refused1000.total);
+  assert.equal(fx.afterFirstMint.byExposureUsdg["1000"].v1.lastRefused, r1.lastRefused);
+  assert.equal(fx.afterFirstMint.byExposureUsdg["1000"].v0.onTruncatedOverPool.minutes, hk.weekend.v0StaleAfterFirstMint.byExposureUsdg["1000"].minutesOnTruncatedOver10PctAboveSpot);
   for (const e of d.events) {
     assert.ok(["burn", "mint", "mintCluster", "reopen", "nyse", "peak", "arb", "note"].includes(e.kind), e.kind);
     assert.ok(e.label.en && e.label.zh, e.id);

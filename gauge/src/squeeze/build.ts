@@ -246,6 +246,73 @@ export function hakariSeries(h: any, t: readonly number[]): { series: Record<str
   };
 }
 
+type HakariSeries = { decision: Record<string, Num[]>; rawTick: Record<string, Num[]>; gapTicks: Record<string, Record<string, Num[]>>; v0Pick: Record<string, Record<string, Num[]>> };
+const isoT = (ts: number) => new Date(ts * 1000).toISOString().replace(".000Z", "Z");
+const cents = (x: number) => Math.round(x * 100) / 100;
+
+/**
+ * What the page says about HAKARI's replay around the first Monday mint, recounted from series.hakari (primary
+ * configuration, Δ = 10, 30 min) and the pool's tick at each minute (hakari-1m.json spotTick), for the story to quote:
+ *  - refused1000: v1's refusals of 1,000 USDG, split into before the mint rule closed, while it was closed (up to and
+ *    including the first mint's second) and after the first mint (when arbitrage was open, so a refusal is conservative);
+ *  - afterFirstMint: per exposure, v1's trusted minutes and runs, its last refusal, and the minutes it trusted a raw TWAP
+ *    more than `over` above the pool (SafeSettle prices the cost to fake, not NAV); and v0's minutes on a truncated TWAP
+ *    more than `over` above the pool (hims-hook-replay.json's v0StaleAfterFirstMint, recounted here).
+ * Minutes are grid points; "after" is t > firstMintTs, as hakari-read.ts counts it. Pure; tested.
+ */
+export function mintFacts(s: HakariSeries, spotTick: readonly Num[], t: readonly number[], mintCloseTs: number, firstMintTs: number, nav: number, over = 0.1) {
+  const { delta: d, window: w } = HK.primary;
+  const raw = s.rawTick[`w${w}`], gap = s.gapTicks[`d${d}`][`w${w}`], picks = s.v0Pick[`d${d}`][`w${w}`];
+  const worstOf = (k: number, v: number, pool: number) => ({ at: isoT(t[k]), settlesUsdgPerHims: cents(v), poolUsdgPerHims: cents(pool), premiumPct: cents((v / pool - 1) * 100), timesNav: cents(v / nav) });
+  const dec1k = s.decision.e1000;
+  const refused1000 = { total: 0, beforeMintClose: 0, whileMintClosed: 0, afterFirstMint: 0 };
+  dec1k.forEach((x, k) => {
+    if (x !== 0) return;
+    refused1000.total++;
+    if (t[k] < mintCloseTs) refused1000.beforeMintClose++;
+    else if (t[k] <= firstMintTs) refused1000.whileMintClosed++;
+    else refused1000.afterFirstMint++;
+  });
+  const byExposureUsdg: Record<string, unknown> = {};
+  HK.exposures.forEach((e, ei) => {
+    const dec = s.decision[`e${e}`];
+    let trusted = 0, lastRefused: number | null = null;
+    let v1Over = 0, v1Worst: { k: number; v: number; pool: number; prem: number } | null = null;
+    let v0Over = 0, v0Worst: { k: number; v: number; pool: number; prem: number } | null = null;
+    const runs: { from: string; to: string; minutes: number }[] = [];
+    let cur: [number, number] | null = null;
+    const flush = () => { if (cur) runs.push({ from: isoT(t[cur[0]]), to: isoT(t[cur[1]]), minutes: cur[1] - cur[0] + 1 }); cur = null; };
+    for (let k = 0; k < t.length; k++) {
+      if (t[k] <= firstMintTs || spotTick[k] === null || raw[k] === null) continue;
+      const pool = usdgPerHimsAtTick(spotTick[k]!);
+      if (dec[k] === 0) lastRefused = k;
+      if (dec[k] === 1) {
+        trusted++;
+        if (cur && cur[1] === k - 1) cur[1] = k; else { flush(); cur = [k, k]; }
+        const v = usdgPerHimsAtTick(raw[k]!), prem = v / pool - 1;
+        if (prem > over) { v1Over++; if (!v1Worst || prem > v1Worst.prem) v1Worst = { k, v, pool, prem }; }
+      } else flush();
+      const p = unpackPick(picks[k], ei);
+      if (p === 2 && gap[k] !== null) {
+        const v = usdgPerHimsAtTick(raw[k]! - gap[k]!), prem = v / pool - 1;
+        if (prem > over) v0Over++;
+        if (prem > (v0Worst?.prem ?? 0)) v0Worst = { k, v, pool, prem };
+      }
+    }
+    flush();
+    byExposureUsdg[e] = {
+      v1: {
+        trustedMinutes: trusted,
+        trustRuns: runs,
+        lastRefused: lastRefused === null ? null : isoT(t[lastRefused]),
+        onRawOverPool: { minutes: v1Over, worst: v1Worst ? worstOf(v1Worst.k, v1Worst.v, v1Worst.pool) : null },
+      },
+      v0: { onTruncatedOverPool: { minutes: v0Over, worst: v0Worst ? worstOf(v0Worst.k, v0Worst.v, v0Worst.pool) : null } },
+    };
+  });
+  return { refused1000, afterFirstMint: { from: isoT(firstMintTs), overPct: over * 100, byExposureUsdg } };
+}
+
 // ---- the two facts fetched here (cached) ----
 
 const EXTRAS = `${cacheDir}build-extras.json`;
@@ -703,6 +770,7 @@ export async function main() {
   const collectorVia = off(d.bonerUsdgViaHims, sw.derived.usdgPerBonerViaHims, (x) => Math.abs(x) * 1e-8);
   check("Derived series recompute from the rounded closes", derivedOff === 0 && collectorVia === 0, `${derivedOff} points off beyond rounding; BONER via HIMS equals pools-swaps.ts's own product at ${n - collectorVia}/${n} points`);
   const hkS = hkRead?.series;
+  let hkFacts: ReturnType<typeof mintFacts> | null = null;
   if (hkRead && hkS) {
     check("HAKARI's read on the data grid", hkRead.problems.length === 0,
       hkRead.problems.length ? hkRead.problems.join("; ") : `hakari-1m.json: ${seriesArrays(hkS).length} arrays of ${n} minutes on this grid; the page's tick -> USDG per HIMS equals the replay's raw TWAP prices at every minute`);
@@ -714,6 +782,17 @@ export async function main() {
     check("HAKARI refusals recounted from the arrays", recount.every((x, i) => x === theirs[i]), `Δ = 10, 30-minute TWAP: ${recount.map((x, i) => `${fmt(x, 0)} min at ${fmt(HK.exposures[i], 0)}`).join(", ")} USDG (summary ${theirs.join(" / ")})`);
     const onGrid = (hkSummary.keyMoments as any[]).filter((m) => m.gridIndex !== null).map((m) => ({ id: m.id, theirs: m.maxSafeExposureUsdg, ours: hkS.maxSafeUsdg[m.gridIndex] }));
     check("HAKARI key moments = the arrays", onGrid.every((m) => m.theirs === m.ours), onGrid.map((m) => `${m.id} ${m.ours} USDG${m.theirs === m.ours ? "" : ` (summary ${m.theirs})`}`).join(", "));
+    // the story's numbers around the first mint, recounted from the page's own arrays against the replay's summary
+    if (!Array.isArray(hk.spotTick) || hk.spotTick.length !== n) throw new Error("hakari-1m.json has no spotTick on the grid: rerun npm run hims:hook");
+    hkFacts = mintFacts(hkS as HakariSeries, hk.spotTick as Num[], t, REF.mintRuleClose, firstMint.ts, NAV);
+    const stale = hkSummary.weekend.v0StaleAfterFirstMint.byExposureUsdg, r1k = hkSummary.weekend.v1RefusalsPrimary.byExposureUsdg[1000];
+    const factRows = HK.exposures.map((e) => {
+      const ours = (hkFacts!.afterFirstMint.byExposureUsdg[e] as any).v0.onTruncatedOverPool, theirs = stale[e];
+      return { e, ok: ours.minutes === theirs.minutesOnTruncatedOver10PctAboveSpot && ours.worst?.at === theirs.worst?.at, text: `${fmt(e, 0)} USDG: v0 ${ours.minutes} min (summary ${theirs.minutesOnTruncatedOver10PctAboveSpot})` };
+    });
+    const f1k = hkFacts.afterFirstMint.byExposureUsdg[1000] as any;
+    check("HAKARI after the first mint recounted", factRows.every((x) => x.ok) && hkFacts.refused1000.whileMintClosed === r1k.minutesRefusedWhileMintClosed && hkFacts.refused1000.total === r1k.minutesRefused && f1k.v1.lastRefused === r1k.lastRefused,
+      `${factRows.map((x) => x.text).join("; ")}; 1,000 USDG refused ${hkFacts.refused1000.total} min = ${hkFacts.refused1000.beforeMintClose} before the mint rule closed + ${hkFacts.refused1000.whileMintClosed} while closed (summary ${r1k.minutesRefusedWhileMintClosed}) + ${hkFacts.refused1000.afterFirstMint} after the first mint, last ${f1k.v1.lastRefused}; v1 trusted 1,000 USDG on a raw TWAP more than 10 % above the pool in ${f1k.v1.onRawOverPool.minutes} minutes after the mint${f1k.v1.onRawOverPool.worst ? ` (worst ${f1k.v1.onRawOverPool.worst.at}: ${f1k.v1.onRawOverPool.worst.settlesUsdgPerHims} vs ${f1k.v1.onRawOverPool.worst.poolUsdgPerHims})` : ""}`);
   } else check("HAKARI's read merged", false, "gauge/cache/squeeze/out/hakari-1m.json or gauge/data/hims-hook-replay.json is missing: run npm run hims:hook, then this build");
 
   // 6. caveats
@@ -811,6 +890,10 @@ export async function main() {
         configs: Object.fromEntries(HK.windows.map((w) => [`d${P.delta}w${w}`, m.configs[`d${P.delta}w${w}`]])),
       })),
       weekend: hkSummary.weekend,
+      derived: hkFacts && {
+        note: `Recounted by squeeze/build.ts from series.hakari (Δ = ${P.delta}, ${P.window / 60}-minute TWAP) and hakari-1m.json's pool tick per minute, for the numbers the page quotes. refused1000 splits v1's 1,000 USDG refusals by the mint window (closed ${iso(REF.mintRuleClose)} to the first mint ${iso(firstMint.ts)}); after the first mint arbitrage was open, so there a refusal is conservative. afterFirstMint: minutes after ${iso(firstMint.ts)} in which v1 trusted the raw TWAP while it sat more than 10 % above the pool (SafeSettle prices the cost to fake the price, not its distance from NAV), and in which v0 settled on the truncated TWAP more than 10 % above the pool (= hims-hook-replay.json v0StaleAfterFirstMint). timesNav is the settlement price over the ${NAV} Friday close.`,
+        ...hkFacts,
+      },
       checks: hk.meta.checks,
       generatedAt: hk.meta.generatedAt,
     };

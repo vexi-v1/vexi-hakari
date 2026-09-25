@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import {
-  avgTick, DEFAULT_CONFIG, HookReplay, loadInputs, minCardinality, REPLAY_BLOCKS, replay, TargetPredatesOldestObservation, TOLERANCE_TICKS,
-  transform, truncatedStartForgottenAt, TruncatedOracle, usdgPerHimsAtTick, v0Decision, v0Pick, v1Bound, v1Trusts, cfgKey,
+  avgTick, DEFAULT_CONFIG, FIRST_MINT, HookReplay, loadInputs, minCardinality, MOMENTS, REPLAY_BLOCKS, replay, rereadAtCardinality, TargetPredatesOldestObservation,
+  TOLERANCE_TICKS, transform, truncatedStartForgottenAt, TruncatedOracle, usdgPerHimsAtTick, v0Decision, v0Pick, v1Bound, v1Trusts, cfgKey,
 } from "../src/squeeze/hakari-read.ts";
 import { gainPerUnit, maxSafeExposure, pushCostInQuote } from "../src/replay.ts";
 import { getSqrtPriceAtTick, poolStateFromPositions, type Position } from "../src/v4math.ts";
@@ -187,6 +187,39 @@ test("random swaps: twaps equal a second-by-second sum of the ticks the hook saw
   }
 });
 
+test("rereadAtCardinality: the same reads at any cardinality from minCardinality up; one fewer loses the worst one", () => {
+  const r = rng(7);
+  const init = { ts: 0, tick: 100 };
+  const writes: { ts: number; tick: number }[] = [];
+  for (let ts = 0, tick = 100; writes.length < 400; ) {
+    ts += 1 + Math.floor(r() * (r() < 0.1 ? 90 : 6));
+    tick += Math.round((r() - 0.5) * 80);
+    writes.push({ ts, tick });
+  }
+  const windows = [60, 300];
+  const need = Math.max(...windows.map((w) => minCardinality([init.ts, ...writes.map((x) => x.ts)], w)));
+  // reads at every observation second (where the worst read sits) and in between, pool tick = the last write's
+  const reads = writes.flatMap((x, i) => [{ time: x.ts, tick: x.tick }, ...(i + 1 < writes.length && writes[i + 1].ts > x.ts + 1 ? [{ time: x.ts + 1, tick: x.tick }] : [])]);
+  const at = (c: number) => rereadAtCardinality(init, writes, reads, 10, windows, c);
+  const ref = at(65535);
+  assert.ok(ref.flat().some((x) => x === null) && ref.flat().filter((x) => x !== null).length > 500);
+  assert.deepEqual(at(need), ref);
+  assert.deepEqual(at(need + 37), ref);
+  const lost = at(need - 1).flat().filter((x, i) => x === null && ref.flat()[i] !== null).length;
+  assert.ok(lost > 0, `${need - 1} slots should lose a read`);
+});
+
+test("the replay's buffer is one a pool creator can pay for, and larger than any read needs", () => {
+  // Oracle.grow writes each new slot once (~22.1k gas cold): 65,535 slots would be ~1.45B gas; 1,024 is ~22.6M
+  assert.ok(DEFAULT_CONFIG.cardinality <= 1024, `${DEFAULT_CONFIG.cardinality}`);
+  const summary = JSON.parse(readFileSync(new URL("../data/hims-hook-replay.json", import.meta.url), "utf8"));
+  const need = Math.max(...(Object.values(summary.oracle.minCardinality) as number[]));
+  assert.equal(need, 919);
+  assert.ok(need <= DEFAULT_CONFIG.cardinality);
+  assert.ok(summary.checks.some((c: any) => /buffer at oracle\.minCardinality/.test(c.name) && c.pass));
+  assert.ok(summary.assumptions.every((a: string) => !/grown to 65535/.test(a)));
+});
+
 test("a wrong truncated start is forgotten once both copies meet", () => {
   const writes = [{ ts: 1, tick: 0 }, { ts: 2, tick: 0 }, { ts: 3, tick: 0 }, { ts: 4, tick: 0 }];
   assert.equal(truncatedStartForgottenAt({ ts: 0, tick: 0 }, writes, 10, 25), 3); // 25 → 15 → 5 → 0
@@ -275,4 +308,33 @@ test("the audit probe's numbers: 3,220 swaps in 1,687 seconds; at 00:43:30 Δ = 
   assert.deepEqual(c(10, 1800).v0Picks, [0, 0, 0]);
   assert.deepEqual(c(10, 1800).trusted, [false, false, false]);
   assert.equal(Math.round(c(10, 1800).v1!.exposure / 1e4) / 100, 123.86);
+});
+
+test("00:43:30 is the second of the first mint; the read there is the pool at block 50,444,948, the last block before it", { skip: !haveCaches && "no squeeze caches (npm run squeeze)" }, async () => {
+  // both blocks carry the same timestamp, so no read can fall between them
+  const ts: Record<string, number> = {};
+  for (const f of ["timestamps-swaps.json", "timestamps.json", "timestamps-supply.json", "timestamps-inventory.json"]) {
+    const p = `${cacheDir}${f}`;
+    if (!existsSync(p)) continue;
+    const c = JSON.parse(readFileSync(p, "utf8")) as Record<string, number>;
+    for (const b of [FIRST_MINT.block, FIRST_MINT.lastBlockBefore]) if (ts[b] === undefined && Number.isFinite(c[b])) ts[b] = c[b];
+  }
+  assert.equal(ts[FIRST_MINT.block], FIRST_MINT.ts);
+  assert.equal(ts[FIRST_MINT.lastBlockBefore], FIRST_MINT.ts);
+  const { inp, res } = await weekend();
+  // no HIMS/USDG swap or liquidity change from after block 50,444,948 to the end of that second
+  assert.equal(inp.swaps.filter((s) => s.block > FIRST_MINT.lastBlockBefore && s.ts <= FIRST_MINT.ts).length, 0);
+  assert.equal(inp.mods.filter((m) => m.block > FIRST_MINT.lastBlockBefore && m.ts <= FIRST_MINT.ts).length, 0);
+  const second = res.times.find((p) => p.time === FIRST_MINT.ts)!;
+  const block = res.blocks.find((p) => p.block === FIRST_MINT.lastBlockBefore)!;
+  assert.equal(block.time, FIRST_MINT.ts);
+  assert.equal(second.tick, block.tick);
+  assert.equal(second.sqrtPriceX96, block.sqrtPriceX96);
+  assert.equal(second.ladder!.exposure, block.ladder!.exposure);
+  for (const k of Object.keys(second.configs)) {
+    assert.equal(second.configs[k]!.rawTick, block.configs[k]!.rawTick, k);
+    assert.equal(second.configs[k]!.truncTick, block.configs[k]!.truncTick, k);
+  }
+  const label = MOMENTS.find((m) => m.id === "mon-004330")!.label;
+  assert.ok(/second of the first Monday mint/.test(label) && !/last second before/.test(label), label);
 });

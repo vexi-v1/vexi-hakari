@@ -259,6 +259,37 @@ export function minCardinality(obsTimes: number[], window: number): number {
   return best;
 }
 
+/**
+ * The hook's TWAP reads again from its recorded observations alone, with the buffer grown to `cardinality` after
+ * initialization: per read (in time order, each after every write at or before its second) and window, the int24 raw
+ * and truncated ticks, or null where the contract reverts (TargetPredatesOldestObservation).
+ */
+export function rereadAtCardinality(
+  init: { ts: number; tick: number },
+  writes: { ts: number; tick: number }[],
+  reads: { time: number; tick: number }[],
+  delta: number,
+  windows: number[],
+  cardinality: number,
+): ({ raw: number; trunc: number } | null)[][] {
+  const h = new HookReplay(delta);
+  h.afterInitialize(init.ts, init.tick);
+  h.increaseObservationCardinalityNext(cardinality);
+  let j = 0;
+  return reads.map((r) => {
+    for (; j < writes.length && writes[j].ts <= r.time; j++) h.beforeSwap(writes[j].ts, writes[j].tick);
+    return windows.map((w) => {
+      try {
+        const t = h.twaps(r.time, w, r.tick);
+        return { raw: t.rawTick, trunc: t.truncTick };
+      } catch (e) {
+        if (e instanceof TargetPredatesOldestObservation) return null;
+        throw e;
+      }
+    });
+  });
+}
+
 // ───────────────────────── 2. the settlement rules ─────────────────────────
 
 /** SafeSettle.TOLERANCE_TICKS (v0 and v1). */
@@ -399,11 +430,17 @@ export interface ReplayConfig {
   deltas: number[];
   windows: number[];
   exposures: number[];
-  /** observation cardinality the hook is grown to at initialization (65535 = the most a uint16 allows) */
+  /**
+   * observation slots the hook's buffer is grown to right after initialization (increaseObservationCardinalityNext).
+   * 1,024 is a buffer a pool creator can pay for: Oracle.grow writes each new slot once, about 22.1k gas a cold slot,
+   * so ~22.6M gas, which several calls can split. The whole uint16 range (65,535 slots) would be ~1.45B gas; the
+   * replay does not assume it. Every read here needs at most oracle.minCardinality slots and is the same at any
+   * cardinality at or above it (checked in main).
+   */
   cardinality: number;
 }
 
-export const DEFAULT_CONFIG: ReplayConfig = { deltas: [10, 3], windows: [600, 1800, 3600], exposures: [1_000, 10_000, 100_000], cardinality: 65535 };
+export const DEFAULT_CONFIG: ReplayConfig = { deltas: [10, 3], windows: [600, 1800, 3600], exposures: [1_000, 10_000, 100_000], cardinality: 1024 };
 
 export interface ConfigRead {
   rawTick: number;
@@ -543,13 +580,19 @@ export function replay(inp: Pick<Inputs, "mods" | "swaps">, times: number[], blo
 /** gauge/data/hims-replay.json's five blocks (hims-replay.ts POINTS; not imported: that module talks to the chain). */
 export const REPLAY_BLOCKS = [50_265_277, 50_415_299, 50_444_948, 50_490_000, 50_772_447];
 
-/** Moments the page and README name. 00:43:30 is the last second before the first Monday mint (block 50,444,949). */
+/**
+ * Moments the page and README name. 00:43:30 is the second of the first Monday mint: the mint's block 50,444,949 and
+ * the block before it, 50,444,948, share that timestamp. A read covers the whole second, so it comes after the mint's
+ * block; the pool is still as it was at 50,444,948 (its last swap was at 00:43:23; no swap or liquidity change follows
+ * until 00:43:32), which the tests check.
+ */
+export const FIRST_MINT = { ts: 1_788_137_010, block: 50_444_949, lastBlockBefore: 50_444_948 };
 export const MOMENTS = [
   { id: "sun-1940", ts: 1_788_118_800, label: "Sun 19:40 UTC: before the squeeze (hims-replay point 1)" },
   { id: "sun-2325", ts: 1_788_132_300, label: "Sun 23:25: a swap at 23:24:59 bought the last HIMS in the LPs' ranges; the positions hold 3.68 HIMS" },
   { id: "sun-2336", ts: 1_788_132_960, label: "Sun 23:36: DeFiPrime samples 61.15 at 23:36:14" },
   { id: "sun-2353", ts: 1_788_133_980, label: "Sun 23:53: 12 USDG to push +10 % (hims-replay point 2 is at 23:53:36)" },
-  { id: "mon-004330", ts: 1_788_137_010, label: "Mon 00:43:30: the last second before the first Monday mint; pool at 54.50" },
+  { id: "mon-004330", ts: 1_788_137_010, label: "Mon 00:43:30: the second of the first Monday mint (block 50,444,949); the pool is as at block 50,444,948, the last block before it, at 54.50" },
   { id: "mon-0159", ts: 1_788_141_540, label: "Mon 01:59: back near 29.3 after the mints (hims-replay point 4 is at 01:59:17)" },
 ];
 
@@ -700,6 +743,26 @@ export async function main() {
   // ── assumptions measured ──
   const obsTimes = [res.init.ts, ...res.writes.map((w) => w.ts)];
   const cardinality = Object.fromEntries(cfg.windows.map((w) => [w, minCardinality(obsTimes, w)]));
+  // the buffer: re-read every TWAP from the recorded observations with exactly the slots the longest window needs at
+  // its worst second, and with one fewer
+  const need = Math.max(...Object.values(cardinality));
+  const readsAt = res.times.map((p) => ({ time: p.time, tick: p.tick }));
+  let sameAtNeed = 0, readsTotal = 0, lostBelow = 0;
+  for (const d of cfg.deltas) {
+    const atNeed = rereadAtCardinality(res.init, res.writes, readsAt, d, cfg.windows, need);
+    const below = rereadAtCardinality(res.init, res.writes, readsAt, d, cfg.windows, need - 1);
+    res.times.forEach((p, k) => cfg.windows.forEach((w, i) => {
+      const c = p.configs[cfgKey(d, w)], a = atNeed[k][i];
+      readsTotal++;
+      if (c === null ? a === null : a !== null && a.raw === c.rawTick && a.trunc === c.truncTick) sameAtNeed++;
+      if (c !== null && below[k][i] === null) lostBelow++;
+    }));
+  }
+  checks.push({
+    name: "Every TWAP read is the same with the buffer at oracle.minCardinality",
+    pass: need <= cfg.cardinality && sameAtNeed === readsTotal,
+    detail: `replayed with ${cfg.cardinality} slots; re-read from the recorded observations with ${need} slots (the most any window needs at its worst second): ${sameAtNeed}/${readsTotal} reads identical; with ${need - 1} slots, ${lostBelow} of these reads would revert`,
+  });
   const forgotten: Record<string, string | null> = {};
   let forgetMinutes = 0;
   for (const d of cfg.deltas) for (const off of [-500, 500]) {
@@ -739,10 +802,10 @@ export async function main() {
       assumptions: [
         "Counterfactual: HIMS/USDG never had HakariOracleHook, and a v4 hook is part of the PoolKey, so it never could have. The replay assumes the same swaps and positions in a pool that had it. The hook only records (no fee, no delta), so it would not by itself have changed any swap.",
         `The hook's record starts at the last swap before the window (block ${res.init.block}, ${iso(res.init.ts)}), initialized at the tick that swap left, with the truncated series equal to the raw one. Windows reaching before it are null (the contract reverts with TargetPredatesOldestObservation). A truncated start 500 ticks off either way is forgotten within ${forgetMinutes} minutes (oracle.truncatedStartForgottenAt), two days before the squeeze.`,
-        `Observation cardinality grown to ${cfg.cardinality} at initialization (increaseObservationCardinalityNext); the least that serves every read is oracle.minCardinality, per window in seconds.`,
+        `Observation buffer grown to ${cfg.cardinality} slots right after initialization (increaseObservationCardinalityNext: one first-time storage write per slot, about ${(((cfg.cardinality - 1) * 22_100) / 1e6).toFixed(1)}M gas, which several calls can split). Every read here needs at most oracle.minCardinality slots (${need} for ${Math.max(...cfg.windows) / 60}-minute reads) and is identical at any cardinality at or above that (see checks).`,
         "Reads at t_k: every ModifyLiquidity and Swap with block timestamp <= t_k applied, and the hook read as a view call at the end of that second (observe with the current slot0 tick) — the convention of web/squeeze/data.json.",
-        "Nobody pushes back (arbReversionSeconds = 0) at every minute. That holds between the mint rule's close (Sat 00:00 UTC) and the first Monday mint (00:43:30 UTC); before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative.",
-        "Max safe exposure: replay.ts maxSafeExposure (the gauge's mirror of CostModel.maxSafeExposure, pinned by test/max-safe-exposure.test.ts) on the pool rebuilt from positions at the last swap's price, fee = that swap's fee (9,991 pips). Its walk is capped at 1,024 segments, not the contract's MAX_WALK_STEPS = 64 bitmap steps; every walk here completed.",
+        "Nobody pushes back (arbReversionSeconds = 0) at every minute. That holds between the mint rule's close (Sat 00:00 UTC) and the first Monday mint (00:43:30 UTC); before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative. weekend.v1RefusalsPrimary counts both: minutesRefusedWhileMintClosed and longestRunWhileMintClosed where the assumption holds, minutesRefused and longestRun over the whole window.",
+        "Max safe exposure: replay.ts maxSafeExposure (the gauge's mirror of CostModel.maxSafeExposure, pinned by test/max-safe-exposure.test.ts) on the pool rebuilt from positions at the last swap's price, fee = that swap's fee (9,991 pips). Its walk is capped at 1,024 segments, not the contract's MAX_WALK_STEPS bitmap steps (64 in the SafeSettle deployed from 98bc7d7, 256 from 20e7d87); every walk here completed. With nobody pushing back, 20e7d87's push-width search prices each move at its own width, as 98bc7d7 does.",
         "SafeSettle v1 also prices the gap between the two TWAPs as one more move when it exceeds 10 ticks (CostModel's extraTicks). v1.gapBoundUsdg is that bound where it binds, else null; the effective bound is gapBoundUsdg ?? maxSafeExposureUsdg.",
         "SafeSettle v0 is the rule at fced71c: within 10 ticks, raw with no check; otherwise the round trip from the truncated price to the raw one through the liquidity present now (PushCostLens.roundTripCostBetween, mirrored with v4math), against the gain on the exposure. It never refuses.",
         "TWAP ticks are HakariOracleHook.twaps' int24 results (rounded toward negative infinity); prices are 1e12 / 1.0001^tick USDG per HIMS.",
@@ -785,23 +848,28 @@ export async function main() {
   writeJson(`${outDir}hakari-1m.json`, perMinute);
 
   // ── summary ──
-  const closedFrom = REF.mintRuleClose, closedTo = 1_788_137_010; // the mint rule's close to the first Monday mint
+  const closedFrom = REF.mintRuleClose, closedTo = FIRST_MINT.ts; // the mint rule's close to the first Monday mint
   const primary = cfgKey(10, 1800);
   const ladderMin = gridReads.reduce<{ k: number; v: number } | null>((m, p, k) => (p.ladder && (m === null || p.ladder.exposure < m.v) ? { k, v: p.ladder.exposure } : m), null)!;
   const refusals = Object.fromEntries(cfg.exposures.map((e, i) => {
     const refusedAt = gridReads.map((p, k) => ({ k, c: p.configs[primary] })).filter((x) => x.c?.trusted && !x.c.trusted[i]);
     const inClosed = refusedAt.filter((x) => grid[x.k] >= closedFrom && grid[x.k] <= closedTo);
     // the longest run of consecutive refused minutes
-    let best = { from: -1, to: -1 }, cur = { from: -1, to: -1 };
-    for (const x of refusedAt) { if (x.k === cur.to + 1) cur.to = x.k; else cur = { from: x.k, to: x.k }; if (cur.to - cur.from > best.to - best.from) best = { ...cur }; }
+    const longest = (xs: { k: number }[]) => {
+      let best = { from: -1, to: -1 }, cur = { from: -1, to: -1 };
+      for (const x of xs) { if (x.k === cur.to + 1) cur.to = x.k; else cur = { from: x.k, to: x.k }; if (cur.to - cur.from > best.to - best.from) best = { ...cur }; }
+      return best.from >= 0 ? { from: iso(grid[best.from]), to: iso(grid[best.to]), minutes: best.to - best.from + 1 } : null;
+    };
     // what v0 settled on in the minutes v1 refused
     const v0Prices = refusedAt.map((x) => usdgPerHimsAtTick(x.c!.v0Picks![i] === 2 ? x.c!.truncTick : x.c!.rawTick));
     return [e, {
       minutesRefused: refusedAt.length,
       minutesRefusedWhileMintClosed: inClosed.length,
+      minutesRefusedAfterFirstMint: refusedAt.filter((x) => grid[x.k] > closedTo).length,
       firstRefused: refusedAt.length ? iso(grid[refusedAt[0].k]) : null,
       lastRefused: refusedAt.length ? iso(grid[refusedAt[refusedAt.length - 1].k]) : null,
-      longestRun: best.from >= 0 ? { from: iso(grid[best.from]), to: iso(grid[best.to]), minutes: best.to - best.from + 1 } : null,
+      longestRun: longest(refusedAt),
+      longestRunWhileMintClosed: longest(inClosed),
       v0SettledMeanwhileUsdgPerHims: v0Prices.length ? { min: r2(Math.min(...v0Prices)), max: r2(Math.max(...v0Prices)) } : null,
     }];
   }));
@@ -816,7 +884,7 @@ export async function main() {
     gridReads.forEach((p, k) => { const c = p.configs[key]; if (c) { const v = usdgPerHimsAtTick(f(c)); if (v > best.v) best = { k, v }; } });
     return { usdgPerHims: r2(best.v), at: iso(grid[best.k]) };
   };
-  const moment = at.get(1_788_137_010)!;
+  const moment = at.get(FIRST_MINT.ts)!;
   const v0At004330 = cfg.deltas.flatMap((d) => cfg.windows.flatMap((w) => { const c = moment.configs[cfgKey(d, w)]!; return c.v0Picks!.map((pk) => usdgPerHimsAtTick(pk === 2 ? c.truncTick : c.rawTick)); }));
   // every stretch of minutes in which v1 (primary) refuses 1,000 USDG, and which move set the bound
   const runs: { from: string; to: string; minutes: number; lowestBoundUsdg: number | null; setBy: string }[] = [];
@@ -833,7 +901,7 @@ export async function main() {
     flush();
   }
   // after the first Monday mint the move was real; truncation lags it, and v0 can settle on the lagging series
-  const afterMint = gridReads.map((p, k) => ({ p, k })).filter(({ k }) => grid[k] > 1_788_137_010);
+  const afterMint = gridReads.map((p, k) => ({ p, k })).filter(({ k }) => grid[k] > FIRST_MINT.ts);
   const stale = Object.fromEntries(cfg.exposures.map((e, i) => {
     let n = 0, worst = { k: -1, prem: 0, settle: 0, spot: 0 };
     for (const { p, k } of afterMint) {
@@ -898,7 +966,7 @@ export async function main() {
   for (const c of checks) console.log(`${c.pass ? "PASS" : "FAIL"} ${c.name}: ${c.detail}`);
   console.log(`min cardinality ${JSON.stringify(cardinality)}; truncated start forgotten ${JSON.stringify(forgotten)}`);
   console.log(`max safe exposure min ${summary.weekend.minMaxSafeExposure.usdg} USDG at ${summary.weekend.minMaxSafeExposure.at}; v0 at 00:43:30 settles ${summary.weekend.v0At004330.min}-${summary.weekend.v0At004330.max}`);
-  for (const [e, r] of Object.entries(refusals)) console.log(`  ${e} USDG: refused ${r.minutesRefused} min (${r.minutesRefusedWhileMintClosed} while the mint was closed), first ${r.firstRefused}, longest ${JSON.stringify(r.longestRun)}, v0 meanwhile ${JSON.stringify(r.v0SettledMeanwhileUsdgPerHims)}`);
+  for (const [e, r] of Object.entries(refusals)) console.log(`  ${e} USDG: refused ${r.minutesRefused} min (${r.minutesRefusedWhileMintClosed} while the mint was closed, ${r.minutesRefusedAfterFirstMint} after the first mint), first ${r.firstRefused}, longest ${JSON.stringify(r.longestRun)} (while closed ${JSON.stringify(r.longestRunWhileMintClosed)}), v0 meanwhile ${JSON.stringify(r.v0SettledMeanwhileUsdgPerHims)}`);
   console.log(`wrote ${outDir}hakari-1m.json and gauge/data/hims-hook-replay.json`);
   if (checks.some((c) => !c.pass)) process.exitCode = 1;
 }

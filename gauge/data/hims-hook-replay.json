@@ -22,7 +22,7 @@
     "arbReversionSeconds": 0,
     "primary": { "delta": 10, "windowSec": 1800 }
   },
-  "assumptions": ["Counterfactual: HIMS/USDG never had HakariOracleHook, and a v4 hook is part of the PoolKey, so it never could have. The replay assumes the same swaps and positions in a pool that had it. The hook only records (no fee, no delta), so it would not by itself have changed any swap.", "The hook's record starts at the last swap before the window (block 48495677, 2026-08-28T17:59:51Z), initialized at the tick that swap left, with the truncated series equal to the raw one. Windows reaching before it are null (the contract reverts with TargetPredatesOldestObservation). A truncated start 500 ticks off either way is forgotten within 75 minutes (oracle.truncatedStartForgottenAt), two days before the squeeze.", "Observation cardinality grown to 65535 at initialization (increaseObservationCardinalityNext); the least that serves every read is oracle.minCardinality, per window in seconds.", "Reads at t_k: every ModifyLiquidity and Swap with block timestamp <= t_k applied, and the hook read as a view call at the end of that second (observe with the current slot0 tick) — the convention of web/squeeze/data.json.", "Nobody pushes back (arbReversionSeconds = 0) at every minute. That holds between the mint rule's close (Sat 00:00 UTC) and the first Monday mint (00:43:30 UTC); before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative.", "Max safe exposure: replay.ts maxSafeExposure (the gauge's mirror of CostModel.maxSafeExposure, pinned by test/max-safe-exposure.test.ts) on the pool rebuilt from positions at the last swap's price, fee = that swap's fee (9,991 pips). Its walk is capped at 1,024 segments, not the contract's MAX_WALK_STEPS = 64 bitmap steps; every walk here completed.", "SafeSettle v1 also prices the gap between the two TWAPs as one more move when it exceeds 10 ticks (CostModel's extraTicks). v1.gapBoundUsdg is that bound where it binds, else null; the effective bound is gapBoundUsdg ?? maxSafeExposureUsdg.", "SafeSettle v0 is the rule at fced71c: within 10 ticks, raw with no check; otherwise the round trip from the truncated price to the raw one through the liquidity present now (PushCostLens.roundTripCostBetween, mirrored with v4math), against the gain on the exposure. It never refuses.", "TWAP ticks are HakariOracleHook.twaps' int24 results (rounded toward negative infinity); prices are 1e12 / 1.0001^tick USDG per HIMS."],
+  "assumptions": ["Counterfactual: HIMS/USDG never had HakariOracleHook, and a v4 hook is part of the PoolKey, so it never could have. The replay assumes the same swaps and positions in a pool that had it. The hook only records (no fee, no delta), so it would not by itself have changed any swap.", "The hook's record starts at the last swap before the window (block 48495677, 2026-08-28T17:59:51Z), initialized at the tick that swap left, with the truncated series equal to the raw one. Windows reaching before it are null (the contract reverts with TargetPredatesOldestObservation). A truncated start 500 ticks off either way is forgotten within 75 minutes (oracle.truncatedStartForgottenAt), two days before the squeeze.", "Observation buffer grown to 1024 slots right after initialization (increaseObservationCardinalityNext: one first-time storage write per slot, about 22.6M gas, which several calls can split). Every read here needs at most oracle.minCardinality slots (919 for 60-minute reads) and is identical at any cardinality at or above that (see checks).", "Reads at t_k: every ModifyLiquidity and Swap with block timestamp <= t_k applied, and the hook read as a view call at the end of that second (observe with the current slot0 tick) — the convention of web/squeeze/data.json.", "Nobody pushes back (arbReversionSeconds = 0) at every minute. That holds between the mint rule's close (Sat 00:00 UTC) and the first Monday mint (00:43:30 UTC); before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative. weekend.v1RefusalsPrimary counts both: minutesRefusedWhileMintClosed and longestRunWhileMintClosed where the assumption holds, minutesRefused and longestRun over the whole window.", "Max safe exposure: replay.ts maxSafeExposure (the gauge's mirror of CostModel.maxSafeExposure, pinned by test/max-safe-exposure.test.ts) on the pool rebuilt from positions at the last swap's price, fee = that swap's fee (9,991 pips). Its walk is capped at 1,024 segments, not the contract's MAX_WALK_STEPS bitmap steps (64 in the SafeSettle deployed from 98bc7d7, 256 from 20e7d87); every walk here completed. With nobody pushing back, 20e7d87's push-width search prices each move at its own width, as 98bc7d7 does.", "SafeSettle v1 also prices the gap between the two TWAPs as one more move when it exceeds 10 ticks (CostModel's extraTicks). v1.gapBoundUsdg is that bound where it binds, else null; the effective bound is gapBoundUsdg ?? maxSafeExposureUsdg.", "SafeSettle v0 is the rule at fced71c: within 10 ticks, raw with no check; otherwise the round trip from the truncated price to the raw one through the liquidity present now (PushCostLens.roundTripCostBetween, mirrored with v4math), against the gain on the exposure. It never refuses.", "TWAP ticks are HakariOracleHook.twaps' int24 results (rounded toward negative infinity); prices are 1e12 / 1.0001^tick USDG per HIMS."],
   "oracle": {
     "firstObservation": { "block": 48495677, "ts": 1787939991, "iso": "2026-08-28T17:59:51Z", "tick": 242604 },
     "observationsWritten": 7313,
@@ -628,7 +628,7 @@
     },
     {
       "id": "mon-004330",
-      "label": "Mon 00:43:30: the last second before the first Monday mint; pool at 54.50",
+      "label": "Mon 00:43:30: the second of the first Monday mint (block 50,444,949); the pool is as at block 50,444,948, the last block before it, at 54.50",
       "ts": 1788137010,
       "time": "2026-08-31T00:43:30Z",
       "gridIndex": null,
@@ -939,25 +939,31 @@
         "1000": {
           "minutesRefused": 183,
           "minutesRefusedWhileMintClosed": 153,
+          "minutesRefusedAfterFirstMint": 30,
           "firstRefused": "2026-08-29T06:01:00Z",
           "lastRefused": "2026-08-31T01:48:00Z",
           "longestRun": { "from": "2026-08-30T22:51:00Z", "to": "2026-08-31T00:50:00Z", "minutes": 120 },
+          "longestRunWhileMintClosed": { "from": "2026-08-30T22:51:00Z", "to": "2026-08-31T00:43:00Z", "minutes": 113 },
           "v0SettledMeanwhileUsdgPerHims": { "min": 29.89, "max": 51.7 }
         },
         "10000": {
           "minutesRefused": 3890,
           "minutesRefusedWhileMintClosed": 2763,
+          "minutesRefusedAfterFirstMint": 797,
           "firstRefused": "2026-08-28T18:30:00Z",
           "lastRefused": "2026-08-31T14:00:00Z",
           "longestRun": { "from": "2026-08-29T18:22:00Z", "to": "2026-08-31T14:00:00Z", "minutes": 2619 },
+          "longestRunWhileMintClosed": { "from": "2026-08-29T18:22:00Z", "to": "2026-08-31T00:43:00Z", "minutes": 1822 },
           "v0SettledMeanwhileUsdgPerHims": { "min": 28.37, "max": 51.7 }
         },
         "100000": {
           "minutesRefused": 4051,
           "minutesRefusedWhileMintClosed": 2924,
+          "minutesRefusedAfterFirstMint": 797,
           "firstRefused": "2026-08-28T18:30:00Z",
           "lastRefused": "2026-08-31T14:00:00Z",
           "longestRun": { "from": "2026-08-28T18:30:00Z", "to": "2026-08-31T14:00:00Z", "minutes": 4051 },
+          "longestRunWhileMintClosed": { "from": "2026-08-29T00:00:00Z", "to": "2026-08-31T00:43:00Z", "minutes": 2924 },
           "v0SettledMeanwhileUsdgPerHims": { "min": 28.37, "max": 51.7 }
         }
       },
@@ -1044,6 +1050,11 @@
       "name": "Audit probe hims_sim.py reproduced",
       "pass": true,
       "detail": "19:40-00:43:30: 3220 swaps in 1687 seconds (1687 observations; probe 3220 / 1687); 18/18 TWAP rows identical to 2 decimals and 1 tick"
+    },
+    {
+      "name": "Every TWAP read is the same with the buffer at oracle.minCardinality",
+      "pass": true,
+      "detail": "replayed with 1024 slots; re-read from the recorded observations with 919 slots (the most any window needs at its worst second): 24492/24492 reads identical; with 918 slots, 2 of these reads would revert"
     }
   ],
   "sources": {
@@ -1053,5 +1064,5 @@
     "himsReplay": "gauge/data/hims-replay.json",
     "auditProbe": "hims_sim.py, the internal review's float replay of the same swaps (2026-09-26, run outside this repo; its printed numbers are compared here, none of its code is used)"
   },
-  "generatedAt": "2026-09-25T18:36:59.191Z"
+  "generatedAt": "2026-09-25T19:37:56.968Z"
 }

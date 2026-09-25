@@ -20,6 +20,7 @@
   --display: "Archivo", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --dur-fast: 160ms; --dur-med: 250ms; --ease: cubic-bezier(.2, .7, .2, 1);
+  --trust-op: .26; --trust-mix: 30%;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -32,6 +33,7 @@
     --pool-usd-fill: #315f97; --pool-boner-fill: #8f3f5a; --other-v4: #85847d; --outside: #302f2c;
     --good: #4caf50; --serious: #e66767; --warning: #fab219; --focus: #ffffff;
     --shadow: 0 4px 16px rgb(0 0 0 / .45);
+    --trust-op: .45; --trust-mix: 50%;
   }
 }
 :root[data-theme="dark"] {
@@ -44,6 +46,7 @@
   --pool-usd-fill: #315f97; --pool-boner-fill: #8f3f5a; --other-v4: #85847d; --outside: #302f2c;
   --good: #4caf50; --serious: #e66767; --warning: #fab219; --focus: #ffffff;
   --shadow: 0 4px 16px rgb(0 0 0 / .45);
+  --trust-op: .45; --trust-mix: 50%;
 }
 @media (max-width: 719px) { :root { --gutter: 16px; } }
 
@@ -199,6 +202,7 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .hero-value2 { font-size: 22px; font-weight: 650; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
 .hero-unit2 { font-size: 13px; color: var(--text-secondary); margin-right: 4px; }
 .hero-delta2 { font-size: 12px; color: var(--text-secondary); }
+.hero-mse-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.35; margin-top: 2px !important; }
 .panel-h { font-family: var(--display); font-stretch: 85%; font-weight: 650; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin: 0 0 6px; }
 .pools-legend, .float-rows { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 4px; font-size: 13px; }
 .pools-legend li, .float-rows li { display: flex; align-items: baseline; gap: 6px; }
@@ -262,6 +266,8 @@ body.playing .chev { animation: march 1.2s linear infinite; }
 /* ------------------------------------------------------------------ lanes */
 .lanes { position: relative; }
 .group-label { font-family: var(--display); font-stretch: 85%; font-weight: 650; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin: 16px 0 2px; }
+:lang(zh-Hant-TW) .group-label, :lang(zh-Hant-TW) .kicker, :lang(zh-Hant-TW) .card-h, :lang(zh-Hant-TW) .card-h3,
+:lang(zh-Hant-TW) .panel-h, :lang(zh-Hant-TW) .mm-label, :lang(zh-Hant-TW) .moment .mo-k { text-transform: none; }
 .lane { border-top: 1px solid var(--grid); padding-top: 6px; margin-bottom: 8px; }
 .lane-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
 .lh-main { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; min-width: 0; }
@@ -274,6 +280,7 @@ body.playing .chev { animation: march 1.2s linear infinite; }
 .ro .key-line, .ro .key-rect { align-self: center; margin-right: 1px; }
 .ro strong { font-weight: 650; }
 .ro-l { color: var(--text-secondary); font-size: 12px; }
+.lane-readout .ro { max-width: 100%; min-width: 0; } .lane-readout .ro-l { white-space: normal; min-width: 0; } /* a long label wraps inside a narrow lane instead of widening the page */
 .ro-note { white-space: normal; max-width: 100%; min-width: 0; }
 .lh-tools { display: flex; gap: 6px; align-self: center; }
 .lane-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 16px; margin: 2px 0 0; }
@@ -317,6 +324,8 @@ svg text { font-family: var(--sans); font-size: 11px; fill: var(--text-tertiary)
 .xref-label { fill: var(--text-tertiary); }
 .xref-label.emph { fill: var(--text-primary); font-weight: 600; }
 .strip-frame { fill: none; stroke: var(--line); stroke-width: 1; }
+.strip .st-trust { fill-opacity: var(--trust-op); }
+.key-rect.st-trust-key { background: color-mix(in srgb, var(--pool-usd) var(--trust-mix), transparent); box-shadow: inset 0 0 0 1px var(--pool-usd); }
 .strip-label { fill: var(--text-primary); font-weight: 600; }
 .strip-axis { fill: var(--text-secondary); font-weight: 600; }
 .rug { stroke: var(--text-primary); stroke-width: 1; opacity: .55; }

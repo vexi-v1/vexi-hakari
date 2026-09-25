@@ -116,17 +116,39 @@
     var p = Math.floor(code / Math.pow(3, e == null ? S.hkExpIdx() : e)) % 3;
     return { pick: p, tick: p === 2 ? S.hkTruncTick(i, w, d) : S.hkRawTick(i, w), price: S.tickPrice(p === 2 ? S.hkTruncTick(i, w, d) : S.hkRawTick(i, w)) };
   };
-  // v1's bound: the ladder (nobody pushing back), lower where the gap between the two TWAPs binds (Δ 10, 30 min)
+  // v1's bound: the ladder (nobody pushing back), lower where the gap between the two TWAPs binds (Δ 10, 30 min).
+  // `eff` is the bound v1 decides with, so it is the one every "max safe exposure" on the page shows.
   S.hkBound = function (i) {
     var ladder = S.val('hakari.maxSafeUsdg', i), gap = S.val('hakari.gapBoundUsdg', i);
     return { ladder: ladder, gap: gap, eff: gap != null ? gap : ladder, ticks: S.val('hakari.bindingTicks', i), up: S.val('hakari.bindingUp', i) };
   };
+  var effArr = null;
+  S.hkEffArr = function () {
+    if (effArr) return effArr;
+    if (!S.ser('hakari.maxSafeUsdg')) return null;
+    effArr = new Array(S.N);
+    for (var i = 0; i < S.N; i++) effArr[i] = S.hkBound(i).eff;
+    return effArr;
+  };
+  // a bound: two decimals under 100 USDG (the weekend low is 20.38 everywhere on the page), else as USDG amounts
+  S.fmtBound = function (v) { return v == null || !isFinite(v) ? '—' : (Math.abs(v) < 100 ? S.fmtUsdg2(v) : S.fmtUsdg(v)); };
+  // n ticks as a HIMS price move (USDG is currency0: HIMS up = tick down): up +(1.0001^n - 1), down -(1 - 1.0001^-n)
+  S.tickMovePct = function (n, up) { return n == null ? null : (up === false ? Math.pow(1.0001, -Math.abs(n)) - 1 : Math.pow(1.0001, Math.abs(n)) - 1) * 100; };
+  S.tickGapPct = function (n) { return n == null ? '—' : '≈' + S.fmtFixed((Math.pow(1.0001, Math.abs(n)) - 1) * 100, 0) + '%'; };
   S.hkDecision = function (i, exp) { return S.val('hakari.decision.e' + (exp || S.hk.exp), i); };
+  S.hkPrimary = function () { return S.hk.win === 1800 && S.hk.delta === 10; };
+  // v1 (Δ 10, 30 min, the only configuration it decides in here): {dec, price} with price = the raw TWAP when trusted
+  S.hkV1 = function (i, exp) {
+    if (!S.hkPrimary() && exp == null) return null;
+    var dec = S.hkDecision(i, exp);
+    return { dec: dec, price: dec === 1 ? S.tickPrice(S.hkRawTick(i, 1800)) : null };
+  };
   S.hkDecisionText = function (dec) { return dec === 0 ? tr('hk.refuse') : (dec === 1 ? tr('hk.trust') : tr('hk.noTwap')); };
-  S.fmtExp = function (v) { return S.lang === 'zh' ? S.fmtInt(v) : S.fmtCompact(v); };
+  // the y axis's own format (1K / 1 萬), so the size labels on the plot read on the same scale
+  S.fmtExp = function (v) { return S.fmtCompact(v); };
   function hkStates(v) {
     if (v === 0) return { fill: 'hakari', opacity: 0.88, text: tr('hk.refuse') };
-    if (v === 1) return { fill: 'pool-usd', opacity: 0.26, text: tr('hk.trust') };
+    if (v === 1) return { fill: 'pool-usd', opacity: 0.26, text: tr('hk.trust'), cls: 'st-trust' }; // opacity per theme in squeeze.css
     return { fill: 'grid', opacity: 1, text: tr('hk.noTwap') };
   }
   function hkMoment(id) { var h = S.D && S.D.hakari; return h && h.moments ? h.moments.filter(function (m) { return m.id === id; })[0] : null; }
@@ -334,12 +356,15 @@
       when: function () { return !!(S.ser('hakari.maxSafeUsdg') && S.ser('hakari.decision.e1000')); },
       y: { scale: 'log', fixed: function () { return [10, 200000]; }, fitKeys: ['hakari.maxSafeUsdg', 'hakari.gapBoundUsdg'] },
       series: [
-        { id: 'bound', kind: 'line', key: 'hakari.maxSafeUsdg', color: 'hakari', width: 2, label: 's.maxSafe', end: 'e.maxSafe', z: 3, watch: ['maxSafeExposure'] },
-        { id: 'eff', kind: 'line', get: function (i) { return S.hkBound(i).eff; }, color: 'hakari', width: 1.25, opacity: 0.55, label: 's.gapBound', z: 2 },
+        // bold: the bound v1 decides with (the TWAP gap priced in where it binds); faint: the ladder alone, which
+        // shows above the bold line only in the minutes the gap binds (127 of them, mostly after the first mint)
+        { id: 'bound', kind: 'line', get: function (i) { return S.hkBound(i).eff; }, color: 'hakari', width: 2, label: 's.maxSafe', end: 'e.maxSafe', z: 3, watch: ['maxSafeExposure'] },
+        { id: 'ladder', kind: 'line', key: 'hakari.maxSafeUsdg', color: 'hakari', width: 1.25, opacity: 0.55, label: 's.ladder', z: 2 },
         { id: 'sizes', kind: 'refs', legend: false, z: 0,
           values: function () { return EXPS.map(function (v) { return { v: v, emph: v === S.hk.exp, label: tr('hk.settling', { v: S.fmtExp(v) }) }; }); } },
         { id: 'decide', kind: 'flagStrip', h: 16, get: function (i) { return S.hkDecision(i); }, states: hkStates, legend: false, watch: ['hakariDecision'],
-          axisLabel: function () { return S.fmtExp(S.hk.exp); } }
+          // "@1K" / "結算 1,000", not a bare "1K" that reads as one more y-axis tick (the phone margin fits "@" only)
+          axisLabel: function () { return tr(S.layout.mode === 'phone' ? 'hk.stripAxisShort' : 'hk.stripAxis', { v: S.fmtExp(S.hk.exp) }); } }
       ],
       controls: [
         { id: 'exp', label: 'ctl.exposure', prefix: 'ctl.settling', options: EXPS.map(function (v) { return { v: v, t: function () { return S.fmtExp(v); } }; }),
@@ -347,21 +372,21 @@
       ],
       readout: function (i) {
         var b = S.hkBound(i), dec = S.hkDecision(i), out = [];
-        out.push({ v: b.eff == null ? '—' : S.fmtUsdg(b.eff) + ' USDG', l: tr('ro.maxSafe'), color: 'hakari' });
-        if (b.gap != null) out.push({ l: tr('ro.bindGap', { n: S.fmtInt(Math.abs(S.hkGap(i, 1800, 10))), v: S.fmtUsdg(b.ladder) }) });
-        else if (b.ticks != null) out.push({ l: tr('ro.bind', { n: S.fmtInt(b.ticks), d: tr(b.up ? 'ro.up' : 'ro.down') }) });
+        out.push({ v: b.eff == null ? '—' : S.fmtBound(b.eff) + ' USDG', l: tr('ro.maxSafe'), color: 'hakari' });
+        if (b.gap != null) { var gt = S.hkGap(i, 1800, 10); out.push({ l: tr('ro.bindGap', { n: S.fmtInt(Math.abs(gt)), p: S.tickGapPct(gt), v: S.fmtBound(b.ladder) }) }); }
+        else if (b.ticks != null) out.push({ l: tr('ro.bind', { n: S.fmtInt(b.ticks), p: S.fmtPct(S.tickMovePct(b.ticks, !!b.up), 0) }) });
         out.push({ v: S.hkDecisionText(dec), l: tr('ro.settlingV', { v: S.fmtInt(S.hk.exp) }), color: dec === 0 ? 'hakari' : (dec === 1 ? 'pool-usd' : null), rect: true });
         return out;
       },
       table: { cols: [
-        { h: 's.maxSafe', get: function (i) { return S.fmtUsdg(S.val('hakari.maxSafeUsdg', i)); } },
-        { h: 'tbl.gapBound', get: function (i) { var g = S.val('hakari.gapBoundUsdg', i); return g == null ? '—' : S.fmtUsdg(g); } },
-        { h: 'tbl.binding', get: function (i) { var b = S.hkBound(i); if (b.gap != null) return tr('tbl.bindGap', { n: S.fmtInt(Math.abs(S.hkGap(i, 1800, 10))) }); return b.ticks == null ? '—' : S.fmtInt(b.ticks) + ' ' + tr(b.up ? 'ro.upShort' : 'ro.downShort'); } }
+        { h: 's.maxSafe', get: function (i) { return S.fmtBound(S.hkBound(i).eff); } },
+        { h: 'tbl.ladder', get: function (i) { return S.fmtBound(S.val('hakari.maxSafeUsdg', i)); } },
+        { h: 'tbl.binding', get: function (i) { var b = S.hkBound(i); if (b.gap != null) { var gt = S.hkGap(i, 1800, 10); return tr('tbl.bindGap', { n: S.fmtInt(Math.abs(gt)), p: S.tickGapPct(gt) }); } return b.ticks == null ? '—' : S.fmtInt(b.ticks) + ' (' + S.fmtPct(S.tickMovePct(b.ticks, !!b.up), 0) + ')'; } }
       ].concat(EXPS.map(function (v) { return { h: function () { return tr('tbl.decide', { v: S.fmtExp(v) }); }, get: function (i) { return S.hkDecisionText(S.hkDecision(i, v)); } }; })) },
       marks: function (ctx) {
-        var a = S.ser('hakari.maxSafeUsdg'); if (a) baseAndMin(ctx, a, function (v) { return S.fmtUsdg(v); });
+        var a = S.hkEffArr(); if (a) baseAndMin(ctx, a, S.fmtBound);
       },
-      spark: 'hakari.maxSafeUsdg'
+      spark: function () { return S.hkEffArr(); }
     },
     {
       // HAKARI's read, 2 of 2: the hook's two TWAPs over the same swaps, and what v0 would have settled on
@@ -373,6 +398,9 @@
       series: [
         { id: 'v0', kind: 'line', get: function (i) { var p = S.hkV0(i); return p ? p.price : null; }, color: 'text-primary', width: 7, opacity: 0.16, legend: 'wide',
           label: function () { return tr('s.v0', { v: S.fmtExp(S.hk.exp) }); }, z: 0, watch: ['v0Settle'] },
+        // v1 settles on the raw TWAP when it trusts and not at all when it refuses: a gap in this band is a refusal
+        { id: 'v1', kind: 'line', get: function (i) { var p = S.hkV1(i); return p && p.price != null ? p.price : null; }, color: 'hakari', width: 7, opacity: 0.2, legend: 'wide',
+          label: function () { return tr(S.hkPrimary() ? 's.v1' : 's.v1Only', { v: S.fmtExp(S.hk.exp) }); }, z: 0, watch: ['v1Settle'] },
         { id: 'spot', kind: 'line', key: 'himsUsdg.close', color: 'pool-usd', width: 1.25, opacity: 0.6, label: 's.close', z: 1 },
         { id: 'trunc', kind: 'line', get: function (i) { return S.tickPrice(S.hkTruncTick(i)); }, color: 'ref', width: 1.5, z: 2, end: 'e.trunc',
           label: function () { return tr('s.trunc', { d: S.hk.delta, w: S.hk.win / 60 }); } },
@@ -393,8 +421,11 @@
           { v: S.fmtUsdg2(raw), l: tr('ro.raw', { w: S.hk.win / 60 }), color: 'hakari' },
           { v: S.fmtUsdg2(tr0), l: tr('ro.trunc', { d: S.hk.delta }), color: 'ref' }
         ];
-        if (gap != null) out.push({ l: tr('ro.gap', { n: S.fmtInt(Math.abs(gap)) }) });
+        if (gap != null) out.push({ l: tr('ro.gap', { n: S.fmtInt(Math.abs(gap)), p: S.tickGapPct(gap) }) });
         if (v0) out.push({ v: S.fmtUsdg2(v0.price), l: tr(v0.pick === 2 ? 'ro.v0trunc' : (v0.pick === 1 ? 'ro.v0raw' : 'ro.v0unchecked'), { v: S.fmtInt(S.hk.exp) }), color: 'text-primary' });
+        var v1 = S.hkPrimary() ? S.hkV1(i) : null;
+        if (v1 && v1.dec === 1) out.push({ v: S.fmtUsdg2(v1.price), l: tr('ro.v1trust', { v: S.fmtInt(S.hk.exp) }), color: 'hakari' });
+        else if (v1 && v1.dec === 0) out.push({ v: tr('hk.refuse'), l: tr('ro.v1refuse', { v: S.fmtInt(S.hk.exp) }), color: 'hakari', rect: true });
         return out;
       },
       table: { cols: [
@@ -402,7 +433,8 @@
         { h: function () { return tr('s.raw', { w: S.hk.win / 60 }); }, get: function (i) { return S.fmtUsdg2(S.tickPrice(S.hkRawTick(i))); } },
         { h: function () { return tr('s.trunc', { d: S.hk.delta, w: S.hk.win / 60 }); }, get: function (i) { return S.fmtUsdg2(S.tickPrice(S.hkTruncTick(i))); } },
         { h: 'tbl.gapTicks', get: function (i) { return S.fmtInt(S.hkGap(i)); } }
-      ].concat(EXPS.map(function (v, e) { return { h: function () { return tr('tbl.v0', { v: S.fmtExp(v) }); }, get: function (i) { var p = S.hkV0(i, e); return p ? S.fmtUsdg2(p.price) + (p.pick === 2 ? ' ' + tr('tbl.truncMark') : '') : '—'; } }; })) },
+      ].concat(EXPS.map(function (v, e) { return { h: function () { return tr('tbl.v0', { v: S.fmtExp(v) }); }, get: function (i) { var p = S.hkV0(i, e); return p ? S.fmtUsdg2(p.price) + (p.pick === 2 ? ' ' + tr('tbl.truncMark') : '') : '—'; } }; }))
+        .concat([{ h: function () { return tr('tbl.v1', { v: S.fmtExp(S.hk.exp) }); }, get: function (i) { var p = S.hkV1(i); return !p || p.dec == null ? '—' : (p.dec === 1 ? S.fmtUsdg2(p.price) : tr('hk.refuse')); } }]) },
       marks: function (ctx) {
         var hk = S.D.hakari || {}, lim = hk.oracle && hk.oracle.tickLimitSwap, g = ctx.g, m = ctx.m, x = ctx.x, y = ctx.y, W = ctx.W;
         var close = (S.view.d1 - S.view.d0) <= 12 * 3600;
@@ -425,7 +457,7 @@
             S.svg('path', { cls: 'leader', d: 'M' + mx.toFixed(1) + ',' + (my - 5).toFixed(1) + 'V' + (ly + 4) }, g);
             S.svg('circle', { cls: 'glyph dot', cx: mx, cy: my, r: 3.5 }, g);
             var t2 = S.svg('text', { cls: 'halo mark-label strong', x: rt ? mx + 5 : mx - 5, y: ly, 'text-anchor': rt ? 'start' : 'end' }, g);
-            t2.textContent = tr('mk.v0at', { t: S.fmtHMS(mo.ts), r: S.fmtUsdg2(c.usdgPerHims.raw), u: S.fmtUsdg2(c.usdgPerHims.trunc), n: S.fmtInt(Math.abs(c.twapTicks.gap)), v: S.fmtUsdg2(pv) });
+            t2.textContent = tr(S.layout.mode === 'phone' ? 'mk.v0atShort' : 'mk.v0at', { t: S.fmtHMS(mo.ts), r: S.fmtUsdg2(c.usdgPerHims.raw), u: S.fmtUsdg2(c.usdgPerHims.trunc), n: S.fmtInt(Math.abs(c.twapTicks.gap)), v: S.fmtUsdg2(pv) });
           }
         }
       },
@@ -606,7 +638,7 @@
       });
       (d.series || []).forEach(function (s) {
         if (s.kind !== 'flagStrip' || !s.states) return;
-        [0, 1].forEach(function (v) { var st = s.states(v); L.legendEl.appendChild(S.el('span', { cls: 'lg' }, [S.el('i', { cls: 'key-rect', style: 'background:var(--' + st.fill + ');opacity:' + st.opacity }), st.text])); });
+        [0, 1].forEach(function (v) { var st = s.states(v); L.legendEl.appendChild(S.el('span', { cls: 'lg' }, [S.el('i', st.cls ? { cls: 'key-rect ' + st.cls + '-key' } : { cls: 'key-rect', style: 'background:var(--' + st.fill + ');opacity:' + st.opacity }), st.text])); });
       });
       if (d.kind === 'social') S.socialLegend(L);
     });
@@ -822,7 +854,7 @@
       var xa = S.clamp(x(S.t[a]), m.l, W - m.r), xb = S.clamp(x(S.t[b] + S.step), m.l, W - m.r);
       if (xb - xa < 0.25) return;
       var st = s.states(v);
-      S.svg('rect', { x: xa.toFixed(1), y: top, width: (xb - xa).toFixed(1), height: hh, fill: 'var(--' + st.fill + ')', 'fill-opacity': st.opacity }, g);
+      S.svg('rect', { cls: st.cls || null, x: xa.toFixed(1), y: top, width: (xb - xa).toFixed(1), height: hh, fill: 'var(--' + st.fill + ')', 'fill-opacity': st.opacity }, g);
       if (st.text && xb - xa >= st.text.length * cw + 10) {
         var t = S.svg('text', { cls: 'halo strip-label', x: ((xa + xb) / 2).toFixed(1), y: top + hh / 2 + 4, 'text-anchor': 'middle' }, g);
         t.textContent = st.text;
@@ -962,7 +994,7 @@
   function renderSpark(L) {
     var el = L.sparkEl; S.clear(el);
     if (!L.def.spark) return;
-    var a = S.ser(L.def.spark); if (!a) return;
+    var a = typeof L.def.spark === 'function' ? L.def.spark() : S.ser(L.def.spark); if (!a) return;
     var W = el.clientWidth || 200, H = 24, i0 = S.idx(S.view.d0), i1 = S.idx(S.view.d1);
     var e = S.extent([a], i0, i1) || [0, 1];
     var log = L.def.y && L.def.y.scale === 'log';

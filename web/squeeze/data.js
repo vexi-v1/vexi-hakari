@@ -1,6 +1,6 @@
 window.SQUEEZE_DATA = {
  "version": 1,
- "generatedAt": "2026-09-25T18:58:02.670Z",
+ "generatedAt": "2026-09-25T19:41:49.949Z",
  "chain": {
   "id": 4663,
   "name": "Robinhood Chain",
@@ -8941,12 +8941,12 @@ window.SQUEEZE_DATA = {
   {
    "name": "HAKARI replay's own checks",
    "pass": true,
-   "detail": "pass: Max safe exposure at the five hims-replay.json blocks; pass: Pool state at every grid minute equals inventory-1m.json's; pass: Raw TWAP identical in the Δ = 10 and Δ = 3 hooks; pass: Audit probe hims_sim.py reproduced"
+   "detail": "pass: Max safe exposure at the five hims-replay.json blocks; pass: Pool state at every grid minute equals inventory-1m.json's; pass: Raw TWAP identical in the Δ = 10 and Δ = 3 hooks; pass: Audit probe hims_sim.py reproduced; pass: Every TWAP read is the same with the buffer at oracle.minCardinality"
   },
   {
    "name": "HAKARI per-minute file and summary from one run",
    "pass": true,
-   "detail": "hakari-1m.json 2026-09-25T18:36:59.191Z, hims-hook-replay.json 2026-09-25T18:36:59.191Z"
+   "detail": "hakari-1m.json 2026-09-25T19:37:56.968Z, hims-hook-replay.json 2026-09-25T19:37:56.968Z"
   },
   {
    "name": "HAKARI refusals recounted from the arrays",
@@ -8957,6 +8957,11 @@ window.SQUEEZE_DATA = {
    "name": "HAKARI key moments = the arrays",
    "pass": true,
    "detail": "sun-1940 7258.82 USDG, sun-2325 20.3787 USDG, sun-2336 76.3714 USDG, sun-2353 115.19 USDG, mon-0159 5310.34 USDG"
+  },
+  {
+   "name": "HAKARI after the first mint recounted",
+   "pass": true,
+   "detail": "1,000 USDG: v0 30 min (summary 30); 10,000 USDG: v0 144 min (summary 144); 100,000 USDG: v0 144 min (summary 144); 1,000 USDG refused 183 min = 0 before the mint rule closed + 153 while closed (summary 153) + 30 after the first mint, last 2026-08-31T01:48:00Z; v1 trusted 1,000 USDG on a raw TWAP more than 10 % above the pool in 20 minutes after the mint (worst 2026-08-31T00:51:00Z: 50.31 vs 32.71)"
   },
   {
    "name": "No NaN or Infinity",
@@ -8971,7 +8976,7 @@ window.SQUEEZE_DATA = {
   {
    "name": "data.json under 2 MB",
    "pass": true,
-   "detail": "1,767,105 bytes"
+   "detail": "1,772,490 bytes"
   }
  ],
  "caveats": [
@@ -9062,7 +9067,7 @@ window.SQUEEZE_DATA = {
    "gapTicks": "raw minus truncated TWAP tick, per Δ and window: truncated tick = rawTick - gapTicks. USDG is currency0, so a negative gap means the raw price is above the truncated one",
    "v0Pick": "SafeSettle v0's choice per Δ and window, the three exposures packed as p1000 + 3·p10000 + 9·p100000, p = 0 raw (gap <= 10 ticks, unchecked), 1 raw (faking costs more than it earns), 2 truncated. v0 never refuses"
   },
-  "assumptions": ["Counterfactual: HIMS/USDG never had HakariOracleHook, and a v4 hook is part of the PoolKey, so it never could have. The replay assumes the same swaps and positions in a pool that had it. The hook only records (no fee, no delta), so it would not by itself have changed any swap.","The hook's record starts at the last swap before the window (block 48495677, 2026-08-28T17:59:51Z), initialized at the tick that swap left, with the truncated series equal to the raw one. Windows reaching before it are null (the contract reverts with TargetPredatesOldestObservation). A truncated start 500 ticks off either way is forgotten within 75 minutes (oracle.truncatedStartForgottenAt), two days before the squeeze.","Observation cardinality grown to 65535 at initialization (increaseObservationCardinalityNext); the least that serves every read is oracle.minCardinality, per window in seconds.","Reads at t_k: every ModifyLiquidity and Swap with block timestamp <= t_k applied, and the hook read as a view call at the end of that second (observe with the current slot0 tick) — the convention of web/squeeze/data.json.","Nobody pushes back (arbReversionSeconds = 0) at every minute. That holds between the mint rule's close (Sat 00:00 UTC) and the first Monday mint (00:43:30 UTC); before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative.","Max safe exposure: replay.ts maxSafeExposure (the gauge's mirror of CostModel.maxSafeExposure, pinned by test/max-safe-exposure.test.ts) on the pool rebuilt from positions at the last swap's price, fee = that swap's fee (9,991 pips). Its walk is capped at 1,024 segments, not the contract's MAX_WALK_STEPS = 64 bitmap steps; every walk here completed.","SafeSettle v1 also prices the gap between the two TWAPs as one more move when it exceeds 10 ticks (CostModel's extraTicks). v1.gapBoundUsdg is that bound where it binds, else null; the effective bound is gapBoundUsdg ?? maxSafeExposureUsdg.","SafeSettle v0 is the rule at fced71c: within 10 ticks, raw with no check; otherwise the round trip from the truncated price to the raw one through the liquidity present now (PushCostLens.roundTripCostBetween, mirrored with v4math), against the gain on the exposure. It never refuses.","TWAP ticks are HakariOracleHook.twaps' int24 results (rounded toward negative infinity); prices are 1e12 / 1.0001^tick USDG per HIMS."],
+  "assumptions": ["Counterfactual: HIMS/USDG never had HakariOracleHook, and a v4 hook is part of the PoolKey, so it never could have. The replay assumes the same swaps and positions in a pool that had it. The hook only records (no fee, no delta), so it would not by itself have changed any swap.","The hook's record starts at the last swap before the window (block 48495677, 2026-08-28T17:59:51Z), initialized at the tick that swap left, with the truncated series equal to the raw one. Windows reaching before it are null (the contract reverts with TargetPredatesOldestObservation). A truncated start 500 ticks off either way is forgotten within 75 minutes (oracle.truncatedStartForgottenAt), two days before the squeeze.","Observation buffer grown to 1024 slots right after initialization (increaseObservationCardinalityNext: one first-time storage write per slot, about 22.6M gas, which several calls can split). Every read here needs at most oracle.minCardinality slots (919 for 60-minute reads) and is identical at any cardinality at or above that (see checks).","Reads at t_k: every ModifyLiquidity and Swap with block timestamp <= t_k applied, and the hook read as a view call at the end of that second (observe with the current slot0 tick) — the convention of web/squeeze/data.json.","Nobody pushes back (arbReversionSeconds = 0) at every minute. That holds between the mint rule's close (Sat 00:00 UTC) and the first Monday mint (00:43:30 UTC); before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative. weekend.v1RefusalsPrimary counts both: minutesRefusedWhileMintClosed and longestRunWhileMintClosed where the assumption holds, minutesRefused and longestRun over the whole window.","Max safe exposure: replay.ts maxSafeExposure (the gauge's mirror of CostModel.maxSafeExposure, pinned by test/max-safe-exposure.test.ts) on the pool rebuilt from positions at the last swap's price, fee = that swap's fee (9,991 pips). Its walk is capped at 1,024 segments, not the contract's MAX_WALK_STEPS bitmap steps (64 in the SafeSettle deployed from 98bc7d7, 256 from 20e7d87); every walk here completed. With nobody pushing back, 20e7d87's push-width search prices each move at its own width, as 98bc7d7 does.","SafeSettle v1 also prices the gap between the two TWAPs as one more move when it exceeds 10 ticks (CostModel's extraTicks). v1.gapBoundUsdg is that bound where it binds, else null; the effective bound is gapBoundUsdg ?? maxSafeExposureUsdg.","SafeSettle v0 is the rule at fced71c: within 10 ticks, raw with no check; otherwise the round trip from the truncated price to the raw one through the liquidity present now (PushCostLens.roundTripCostBetween, mirrored with v4math), against the gain on the exposure. It never refuses.","TWAP ticks are HakariOracleHook.twaps' int24 results (rounded toward negative infinity); prices are 1e12 / 1.0001^tick USDG per HIMS."],
   "caveats": [
    {
     "en": "HAKARI's read is a replay, not a record. HIMS/USDG was created without a hook (hooks = 0x0), so no HAKARI contract ever read this pool; the HAKARI lanes replay HakariOracleHook's observations and SafeSettle's rules over the pool's real swaps and rebuilt positions, minute by minute.",
@@ -9532,7 +9537,7 @@ window.SQUEEZE_DATA = {
    {
     "id": "mon-004330",
     "ts": 1788137010,
-    "label": "Mon 00:43:30: the last second before the first Monday mint; pool at 54.50",
+    "label": "Mon 00:43:30: the second of the first Monday mint (block 50,444,949); the pool is as at block 50,444,948, the last block before it, at 54.50",
     "gridIndex": null,
     "usdgPerHims": 54.5001,
     "maxSafeExposureUsdg": 123.86,
@@ -9749,12 +9754,18 @@ window.SQUEEZE_DATA = {
      "1000": {
       "minutesRefused": 183,
       "minutesRefusedWhileMintClosed": 153,
+      "minutesRefusedAfterFirstMint": 30,
       "firstRefused": "2026-08-29T06:01:00Z",
       "lastRefused": "2026-08-31T01:48:00Z",
       "longestRun": {
        "from": "2026-08-30T22:51:00Z",
        "to": "2026-08-31T00:50:00Z",
        "minutes": 120
+      },
+      "longestRunWhileMintClosed": {
+       "from": "2026-08-30T22:51:00Z",
+       "to": "2026-08-31T00:43:00Z",
+       "minutes": 113
       },
       "v0SettledMeanwhileUsdgPerHims": {
        "min": 29.89,
@@ -9764,12 +9775,18 @@ window.SQUEEZE_DATA = {
      "10000": {
       "minutesRefused": 3890,
       "minutesRefusedWhileMintClosed": 2763,
+      "minutesRefusedAfterFirstMint": 797,
       "firstRefused": "2026-08-28T18:30:00Z",
       "lastRefused": "2026-08-31T14:00:00Z",
       "longestRun": {
        "from": "2026-08-29T18:22:00Z",
        "to": "2026-08-31T14:00:00Z",
        "minutes": 2619
+      },
+      "longestRunWhileMintClosed": {
+       "from": "2026-08-29T18:22:00Z",
+       "to": "2026-08-31T00:43:00Z",
+       "minutes": 1822
       },
       "v0SettledMeanwhileUsdgPerHims": {
        "min": 28.37,
@@ -9779,12 +9796,18 @@ window.SQUEEZE_DATA = {
      "100000": {
       "minutesRefused": 4051,
       "minutesRefusedWhileMintClosed": 2924,
+      "minutesRefusedAfterFirstMint": 797,
       "firstRefused": "2026-08-28T18:30:00Z",
       "lastRefused": "2026-08-31T14:00:00Z",
       "longestRun": {
        "from": "2026-08-28T18:30:00Z",
        "to": "2026-08-31T14:00:00Z",
        "minutes": 4051
+      },
+      "longestRunWhileMintClosed": {
+       "from": "2026-08-29T00:00:00Z",
+       "to": "2026-08-31T00:43:00Z",
+       "minutes": 2924
       },
       "v0SettledMeanwhileUsdgPerHims": {
        "min": 28.37,
@@ -9989,6 +10012,122 @@ window.SQUEEZE_DATA = {
     "d3w3600": 209
    }
   },
+  "derived": {
+   "note": "Recounted by squeeze/build.ts from series.hakari (Δ = 10, 30-minute TWAP) and hakari-1m.json's pool tick per minute, for the numbers the page quotes. refused1000 splits v1's 1,000 USDG refusals by the mint window (closed 2026-08-29T00:00:00Z to the first mint 2026-08-31T00:43:30Z); after the first mint arbitrage was open, so there a refusal is conservative. afterFirstMint: minutes after 2026-08-31T00:43:30Z in which v1 trusted the raw TWAP while it sat more than 10 % above the pool (SafeSettle prices the cost to fake the price, not its distance from NAV), and in which v0 settled on the truncated TWAP more than 10 % above the pool (= hims-hook-replay.json v0StaleAfterFirstMint). timesNav is the settlement price over the 28.84 Friday close.",
+   "refused1000": {
+    "total": 183,
+    "beforeMintClose": 0,
+    "whileMintClosed": 153,
+    "afterFirstMint": 30
+   },
+   "afterFirstMint": {
+    "from": "2026-08-31T00:43:30Z",
+    "overPct": 10,
+    "byExposureUsdg": {
+     "1000": {
+      "v1": {
+       "trustedMinutes": 767,
+       "trustRuns": [
+        {
+         "from": "2026-08-31T00:51:00Z",
+         "to": "2026-08-31T00:51:00Z",
+         "minutes": 1
+        },
+        {
+         "from": "2026-08-31T00:53:00Z",
+         "to": "2026-08-31T01:02:00Z",
+         "minutes": 10
+        },
+        {
+         "from": "2026-08-31T01:05:00Z",
+         "to": "2026-08-31T01:08:00Z",
+         "minutes": 4
+        },
+        {
+         "from": "2026-08-31T01:12:00Z",
+         "to": "2026-08-31T01:31:00Z",
+         "minutes": 20
+        },
+        {
+         "from": "2026-08-31T01:49:00Z",
+         "to": "2026-08-31T14:00:00Z",
+         "minutes": 732
+        }
+       ],
+       "lastRefused": "2026-08-31T01:48:00Z",
+       "onRawOverPool": {
+        "minutes": 20,
+        "worst": {
+         "at": "2026-08-31T00:51:00Z",
+         "settlesUsdgPerHims": 50.31,
+         "poolUsdgPerHims": 32.71,
+         "premiumPct": 53.81,
+         "timesNav": 1.74
+        }
+       }
+      },
+      "v0": {
+       "onTruncatedOverPool": {
+        "minutes": 30,
+        "worst": {
+         "at": "2026-08-31T01:17:00Z",
+         "settlesUsdgPerHims": 49.61,
+         "poolUsdgPerHims": 30.34,
+         "premiumPct": 63.51,
+         "timesNav": 1.72
+        }
+       }
+      }
+     },
+     "10000": {
+      "v1": {
+       "trustedMinutes": 0,
+       "trustRuns": [],
+       "lastRefused": "2026-08-31T14:00:00Z",
+       "onRawOverPool": {
+        "minutes": 0,
+        "worst": null
+       }
+      },
+      "v0": {
+       "onTruncatedOverPool": {
+        "minutes": 144,
+        "worst": {
+         "at": "2026-08-31T01:20:00Z",
+         "settlesUsdgPerHims": 49.14,
+         "poolUsdgPerHims": 29.85,
+         "premiumPct": 64.62,
+         "timesNav": 1.7
+        }
+       }
+      }
+     },
+     "100000": {
+      "v1": {
+       "trustedMinutes": 0,
+       "trustRuns": [],
+       "lastRefused": "2026-08-31T14:00:00Z",
+       "onRawOverPool": {
+        "minutes": 0,
+        "worst": null
+       }
+      },
+      "v0": {
+       "onTruncatedOverPool": {
+        "minutes": 144,
+        "worst": {
+         "at": "2026-08-31T01:20:00Z",
+         "settlesUsdgPerHims": 49.14,
+         "poolUsdgPerHims": 29.85,
+         "premiumPct": 64.62,
+         "timesNav": 1.7
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "checks": [
    {
     "name": "Max safe exposure at the five hims-replay.json blocks",
@@ -10009,8 +10148,13 @@ window.SQUEEZE_DATA = {
     "name": "Audit probe hims_sim.py reproduced",
     "pass": true,
     "detail": "19:40-00:43:30: 3220 swaps in 1687 seconds (1687 observations; probe 3220 / 1687); 18/18 TWAP rows identical to 2 decimals and 1 tick"
+   },
+   {
+    "name": "Every TWAP read is the same with the buffer at oracle.minCardinality",
+    "pass": true,
+    "detail": "replayed with 1024 slots; re-read from the recorded observations with 919 slots (the most any window needs at its worst second): 24492/24492 reads identical; with 918 slots, 2 of these reads would revert"
    }
   ],
-  "generatedAt": "2026-09-25T18:36:59.191Z"
+  "generatedAt": "2026-09-25T19:37:56.968Z"
  }
 };
