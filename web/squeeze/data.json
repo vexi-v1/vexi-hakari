@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-09-25T17:46:29.259Z",
+ "generatedAt": "2026-09-25T18:19:01.377Z",
  "chain": {
   "id": 4663,
   "name": "Robinhood Chain",
@@ -128,6 +128,60 @@
     "volumeNote": "14,174 USDG in 38 swaps (copycat USDG/HIMS pool)"
    },
    {
+    "id": "0x2c65c424788e8fa78f1e5a51d6f4d816a075058a6d8ee5df9c3f75e79191db73",
+    "label": "USDG/HIMS · fee 2800",
+    "swapsInWindow": 44,
+    "volumeNote": "3,624 USDG in 44 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0x3f6d5ec276db4a087c3eb213f6bd2996f4e1006f5c19a968f2d214bbad004359",
+    "label": "USDG/HIMS · fee 8288",
+    "swapsInWindow": 11,
+    "volumeNote": "2,192 USDG in 11 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0x27dfc306ddc9dd9e5614a345344821d1db56428c1abf5f6669a8192bbb528f2b",
+    "label": "USDG/HIMS · fee 30000",
+    "swapsInWindow": 30,
+    "volumeNote": "230 USDG in 30 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0xfea832297447585044a74aec326e4b01d489bf6e2035cd0075f8493dbcafbc57",
+    "label": "USDG/HIMS · fee 500000",
+    "swapsInWindow": 13,
+    "volumeNote": "218 USDG in 13 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0xf779906abf76ecbb9a48972fd08d2fc07c0709af887ad3a912636c1d046dfd0f",
+    "label": "USDG/HIMS · dynamic fee · hook",
+    "swapsInWindow": 5,
+    "volumeNote": "187 USDG in 5 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0x2edb10d14838c5e699eeb03c4c1a42e66aecae3451a78a0de4db0e317d502797",
+    "label": "USDG/HIMS · fee 22122",
+    "swapsInWindow": 3,
+    "volumeNote": "168 USDG in 3 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0xd8d98b954fdf76fcfc2b40909419e6243eefabfe664bfb17f0f36543d2766d63",
+    "label": "USDG/HIMS · fee 25500",
+    "swapsInWindow": 10,
+    "volumeNote": "68 USDG in 10 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0x1005cb9d382c67cdb5aebea138e840787867cd2f513e4b5369db1f8949908e7a",
+    "label": "USDG/HIMS · fee 52000",
+    "swapsInWindow": 6,
+    "volumeNote": "62 USDG in 6 swaps (copycat USDG/HIMS pool)"
+   },
+   {
+    "id": "0xddd0fbfc0958aee6e002104c719019275e69cac540583ad8b24533c1d3e78641",
+    "label": "ETH/HIMS · fee 50000",
+    "swapsInWindow": 1281,
+    "volumeNote": "11,657 HIMS in 1,281 swaps"
+   },
+   {
     "id": "0x693a3a12628e2a7e5b9e8c29681377f6a3f8aba453dbd7fcb28d9c8b5ed80402",
     "label": "0x422fa612/HIMS · dynamic fee · hook",
     "swapsInWindow": 5892,
@@ -140,22 +194,10 @@
     "volumeNote": "3,765 HIMS in 2,301 swaps"
    },
    {
-    "id": "0x2c65c424788e8fa78f1e5a51d6f4d816a075058a6d8ee5df9c3f75e79191db73",
-    "label": "USDG/HIMS · fee 2800",
-    "swapsInWindow": 44,
-    "volumeNote": "3,624 USDG in 44 swaps (copycat USDG/HIMS pool)"
-   },
-   {
     "id": "0x5e16ba535a23221e06c0c5f7bb505c0158ebe2f287f967f0de1973aaf82b3086",
     "label": "0x3ab003a9/HIMS · fee 0 · hook",
     "swapsInWindow": 1181,
     "volumeNote": "3,145 HIMS in 1,181 swaps"
-   },
-   {
-    "id": "0x3f6d5ec276db4a087c3eb213f6bd2996f4e1006f5c19a968f2d214bbad004359",
-    "label": "USDG/HIMS · fee 8288",
-    "swapsInWindow": 11,
-    "volumeNote": "2,192 USDG in 11 swaps (copycat USDG/HIMS pool)"
    },
    {
     "id": "0xbe1129e555b02341f8b28a2a198000e09f85c914ec49cdc1170ae47f8a6fe9fe",
@@ -194,34 +236,10 @@
     "volumeNote": "248 HIMS in 126 swaps"
    },
    {
-    "id": "0x27dfc306ddc9dd9e5614a345344821d1db56428c1abf5f6669a8192bbb528f2b",
-    "label": "USDG/HIMS · fee 30000",
-    "swapsInWindow": 30,
-    "volumeNote": "230 USDG in 30 swaps (copycat USDG/HIMS pool)"
-   },
-   {
-    "id": "0xfea832297447585044a74aec326e4b01d489bf6e2035cd0075f8493dbcafbc57",
-    "label": "USDG/HIMS · fee 500000",
-    "swapsInWindow": 13,
-    "volumeNote": "218 USDG in 13 swaps (copycat USDG/HIMS pool)"
-   },
-   {
     "id": "0x72a4f9003bd8e0f209075eae9e9bbe7828db73229049c1ebe1ab2b6a471260cf",
     "label": "0xab05b053/HIMS · dynamic fee · hook",
     "swapsInWindow": 216,
     "volumeNote": "212 HIMS in 216 swaps"
-   },
-   {
-    "id": "0xf779906abf76ecbb9a48972fd08d2fc07c0709af887ad3a912636c1d046dfd0f",
-    "label": "USDG/HIMS · dynamic fee · hook",
-    "swapsInWindow": 5,
-    "volumeNote": "187 USDG in 5 swaps (copycat USDG/HIMS pool)"
-   },
-   {
-    "id": "0x2edb10d14838c5e699eeb03c4c1a42e66aecae3451a78a0de4db0e317d502797",
-    "label": "USDG/HIMS · fee 22122",
-    "swapsInWindow": 3,
-    "volumeNote": "168 USDG in 3 swaps (copycat USDG/HIMS pool)"
    },
    {
     "id": "0x250ea879f50200318650ace7bc2b1a79ccf1e881ab9dfb581bb181a1dcc98746",
@@ -242,22 +260,10 @@
     "volumeNote": "80 HIMS in 51 swaps"
    },
    {
-    "id": "0xd8d98b954fdf76fcfc2b40909419e6243eefabfe664bfb17f0f36543d2766d63",
-    "label": "USDG/HIMS · fee 25500",
-    "swapsInWindow": 10,
-    "volumeNote": "68 USDG in 10 swaps (copycat USDG/HIMS pool)"
-   },
-   {
     "id": "0x45f61c1d79ac7653c5a01bb8e42ba0a0e07edcdd26879fd30c58897aa6745929",
     "label": "0x25f0ad9a/HIMS · dynamic fee · hook",
     "swapsInWindow": 39,
     "volumeNote": "62 HIMS in 39 swaps"
-   },
-   {
-    "id": "0x1005cb9d382c67cdb5aebea138e840787867cd2f513e4b5369db1f8949908e7a",
-    "label": "USDG/HIMS · fee 52000",
-    "swapsInWindow": 6,
-    "volumeNote": "62 USDG in 6 swaps (copycat USDG/HIMS pool)"
    },
    {
     "id": "0xe2ea964778dadcc0f325af89238a2ae64b8915c3bcff85f8d51c2147ad4dc5ca",
@@ -330,6 +336,12 @@
     "label": "0x724bdf01/HIMS · dynamic fee · hook",
     "swapsInWindow": 6,
     "volumeNote": "8 HIMS in 6 swaps"
+   },
+   {
+    "id": "0x81dc82445bd91b1a73a5b97706db3c2fc805ebd9cf34d4dd8022b4a1b11e128a",
+    "label": "0x28d5c848/HIMS · dynamic fee · hook",
+    "swapsInWindow": 51,
+    "volumeNote": "6 HIMS in 51 swaps"
    },
    {
     "id": "0xc2d92ddb07bf4022554248129ec17ca1cea990bec078c7edc742f54dfbf0aa4d",
@@ -428,64 +440,10 @@
     "volumeNote": "0 HIMS in 1 swaps"
    },
    {
-    "id": "0x1f1778596d8c1ee3e1eaf64ea83a5e77063b142fa3ef59a7c81e520c516379bc",
-    "label": "AI/BONER · fee 9000",
-    "swapsInWindow": 15019,
-    "volumeNote": "639,055,753 BONER in 15,019 swaps (4-hop arbitrage leg)"
-   },
-   {
-    "id": "0x80053770d2093931b4331053fc5df7439ebbfcc0828d9d7dd00d41343b1769ed",
-    "label": "ETH/BONER · fee 30000",
-    "swapsInWindow": 90,
-    "volumeNote": "2,399,730 BONER in 90 swaps"
-   },
-   {
-    "id": "0xc9f4861f690e36b2990eeb66e2e88a232162f6b375d6066c46344dddae3afaab",
-    "label": "0x45242320/BONER · fee 36500",
-    "swapsInWindow": 38,
-    "volumeNote": "1,651,819 BONER in 38 swaps"
-   },
-   {
-    "id": "0x66ceb11d2a593e4ce0004602e9f5d25d28ecac6c93f4629f8980e1c026165e67",
-    "label": "ETH/BONER · fee 50000",
-    "swapsInWindow": 398,
-    "volumeNote": "1,474,853 BONER in 398 swaps"
-   },
-   {
-    "id": "0xe6456e90d5d4808a51c47234dff96c132ea87014460c20f89106137af9bef70c",
-    "label": "ETH/BONER · fee 30100",
-    "swapsInWindow": 25,
-    "volumeNote": "930,602 BONER in 25 swaps"
-   },
-   {
-    "id": "0xf92df76ffd44ec9d0b8eec88ea5804fe70ec98d106d240db2fa97ba42ce84c7b",
-    "label": "ETH/BONER · fee 30400",
-    "swapsInWindow": 38,
-    "volumeNote": "440,094 BONER in 38 swaps"
-   },
-   {
-    "id": "0x20399073fca9a92f78774063239dcd8c1550fd5b8f1e36d2ee704e6bd04781f6",
-    "label": "0x1f8b49b6/BONER · fee 30850",
-    "swapsInWindow": 143,
-    "volumeNote": "423,269 BONER in 143 swaps"
-   },
-   {
-    "id": "0x5131a66b984d9210f877ad2af1e6428f8b22b7de958678e90c747aad2e03a412",
-    "label": "0x45242320/BONER · fee 75000",
-    "swapsInWindow": 5,
-    "volumeNote": "246,438 BONER in 5 swaps"
-   },
-   {
     "id": "0x103f9255ada47fdd13b17ecc7bad719a6326a491f5a16e8fdd359f4aa3b27536",
     "label": "USDG/BONER · fee 30916",
     "swapsInWindow": 470,
     "volumeNote": "238,969 USDG in 470 swaps (other USDG/BONER pool)"
-   },
-   {
-    "id": "0x6dfdadd08dd2c479ab581520542f0f335714341178921e62e001ec6c4f4ad47c",
-    "label": "AI/BONER · fee 8950",
-    "swapsInWindow": 235,
-    "volumeNote": "201,440 BONER in 235 swaps"
    },
    {
     "id": "0x6fc10e944773473dc969223f23cf3cdea07771aaa668c818c1a1bf3b4b765e9f",
@@ -494,28 +452,10 @@
     "volumeNote": "93,006 USDG in 408 swaps (other USDG/BONER pool)"
    },
    {
-    "id": "0x0d3448c5221606881239f45faa414bfd0b6215a7b54cd5171132f7fff454c252",
-    "label": "ETH/BONER · fee 150000",
-    "swapsInWindow": 154,
-    "volumeNote": "82,876 BONER in 154 swaps"
-   },
-   {
     "id": "0xbfb0579a57a88e05b754e01bf91a97c311e02d90b29d26c69de3d94a1b1973d3",
     "label": "USDG/BONER · fee 28888",
     "swapsInWindow": 921,
     "volumeNote": "63,203 USDG in 921 swaps (other USDG/BONER pool)"
-   },
-   {
-    "id": "0xefdbafc231f59bcd5188d857bc0300c34e60ad40d6f4a71b42abadffd38e2eba",
-    "label": "ETH/BONER · fee 20000",
-    "swapsInWindow": 97,
-    "volumeNote": "62,239 BONER in 97 swaps"
-   },
-   {
-    "id": "0xf1589db9b6546178b8e088379e2527d06a8fa283c36f5ea104bb2e0ebdee6946",
-    "label": "AI/BONER · fee 30125",
-    "swapsInWindow": 42,
-    "volumeNote": "46,995 BONER in 42 swaps"
    },
    {
     "id": "0x428895bbbbb837e3ca10a4e2d2aa652158b48849893123cb5549c2252ef90bf6",
@@ -524,22 +464,10 @@
     "volumeNote": "44,872 USDG in 110 swaps (other USDG/BONER pool)"
    },
    {
-    "id": "0x459071b4688295abe82e59730ed9c155fe4452b269dba14edd9e4f041a84632f",
-    "label": "AI/BONER · fee 8111",
-    "swapsInWindow": 9,
-    "volumeNote": "33,177 BONER in 9 swaps"
-   },
-   {
     "id": "0x269a6c90bac2984ebb0a0ee5e73752699c9ab3b89c638a5e888443d7c88b3b82",
     "label": "USDG/BONER · fee 50055",
     "swapsInWindow": 269,
     "volumeNote": "32,486 USDG in 269 swaps (other USDG/BONER pool)"
-   },
-   {
-    "id": "0x68f2ea53d97bf0c4358d2dca0ade6b0dc0186e47371190e6af9a34050d6bd946",
-    "label": "BONER/0xee5576fa · fee 5000",
-    "swapsInWindow": 12,
-    "volumeNote": "30,611 BONER in 12 swaps"
    },
    {
     "id": "0xa2e7509684627ec2c4fa8d444e248f3492ea527d968f45eb368268abff2af392",
@@ -656,18 +584,6 @@
     "volumeNote": "953 USDG in 131 swaps (other USDG/BONER pool)"
    },
    {
-    "id": "0xe1f9c47746e28cd801952b1ee744c63f6b06f05ebf99ebf638a7ccd0600eef93",
-    "label": "ETH/BONER · fee 977219",
-    "swapsInWindow": 5,
-    "volumeNote": "794 BONER in 5 swaps"
-   },
-   {
-    "id": "0x59190d446b4639536d052d0053f97214e7ed8a11207ef5a67cee4a26a8c37d34",
-    "label": "ETH/BONER · fee 970000",
-    "swapsInWindow": 5,
-    "volumeNote": "700 BONER in 5 swaps"
-   },
-   {
     "id": "0x5f49df713e4f53dbac02b7e2d525b79e4d722b40f714533dcf5bf2dcf6863cf8",
     "label": "USDG/BONER · fee 43350",
     "swapsInWindow": 108,
@@ -722,12 +638,6 @@
     "volumeNote": "43 USDG in 9 swaps (other USDG/BONER pool)"
    },
    {
-    "id": "0x0f8fea3d357eaaeb2b7d092ec29e0fe79f9ed257201f7a75bdcf6112b8506ba2",
-    "label": "ETH/BONER · fee 983420",
-    "swapsInWindow": 2,
-    "volumeNote": "38 BONER in 2 swaps"
-   },
-   {
     "id": "0x05fcac137374385ac58de38e4a5b6e86b8f2d54f11b10692982076d394ed143b",
     "label": "USDG/BONER · fee 920000",
     "swapsInWindow": 6,
@@ -758,16 +668,118 @@
     "volumeNote": "9 USDG in 1 swaps (other USDG/BONER pool)"
    },
    {
-    "id": "0x6f1f29ef9dcc5897d6d911d8451908651df3a1c005a54f523e592e18ad0b4da4",
-    "label": "ETH/BONER · fee 880000",
-    "swapsInWindow": 3,
-    "volumeNote": "5 BONER in 3 swaps"
-   },
-   {
     "id": "0x7b02d7fc8fcecb242b2eacf4516bb4cb153ed931787fef69dc6624e3bbbc36bd",
     "label": "USDG/BONER · fee 15000",
     "swapsInWindow": 12,
     "volumeNote": "4 USDG in 12 swaps (other USDG/BONER pool)"
+   },
+   {
+    "id": "0x1f1778596d8c1ee3e1eaf64ea83a5e77063b142fa3ef59a7c81e520c516379bc",
+    "label": "AI/BONER · fee 9000",
+    "swapsInWindow": 15019,
+    "volumeNote": "639,055,753 BONER in 15,019 swaps (4-hop arbitrage leg)"
+   },
+   {
+    "id": "0x80053770d2093931b4331053fc5df7439ebbfcc0828d9d7dd00d41343b1769ed",
+    "label": "ETH/BONER · fee 30000",
+    "swapsInWindow": 90,
+    "volumeNote": "2,399,730 BONER in 90 swaps"
+   },
+   {
+    "id": "0xc9f4861f690e36b2990eeb66e2e88a232162f6b375d6066c46344dddae3afaab",
+    "label": "0x45242320/BONER · fee 36500",
+    "swapsInWindow": 38,
+    "volumeNote": "1,651,819 BONER in 38 swaps"
+   },
+   {
+    "id": "0x66ceb11d2a593e4ce0004602e9f5d25d28ecac6c93f4629f8980e1c026165e67",
+    "label": "ETH/BONER · fee 50000",
+    "swapsInWindow": 398,
+    "volumeNote": "1,474,853 BONER in 398 swaps"
+   },
+   {
+    "id": "0xe6456e90d5d4808a51c47234dff96c132ea87014460c20f89106137af9bef70c",
+    "label": "ETH/BONER · fee 30100",
+    "swapsInWindow": 25,
+    "volumeNote": "930,602 BONER in 25 swaps"
+   },
+   {
+    "id": "0xf92df76ffd44ec9d0b8eec88ea5804fe70ec98d106d240db2fa97ba42ce84c7b",
+    "label": "ETH/BONER · fee 30400",
+    "swapsInWindow": 38,
+    "volumeNote": "440,094 BONER in 38 swaps"
+   },
+   {
+    "id": "0x20399073fca9a92f78774063239dcd8c1550fd5b8f1e36d2ee704e6bd04781f6",
+    "label": "0x1f8b49b6/BONER · fee 30850",
+    "swapsInWindow": 143,
+    "volumeNote": "423,269 BONER in 143 swaps"
+   },
+   {
+    "id": "0x5131a66b984d9210f877ad2af1e6428f8b22b7de958678e90c747aad2e03a412",
+    "label": "0x45242320/BONER · fee 75000",
+    "swapsInWindow": 5,
+    "volumeNote": "246,438 BONER in 5 swaps"
+   },
+   {
+    "id": "0x6dfdadd08dd2c479ab581520542f0f335714341178921e62e001ec6c4f4ad47c",
+    "label": "AI/BONER · fee 8950",
+    "swapsInWindow": 235,
+    "volumeNote": "201,440 BONER in 235 swaps"
+   },
+   {
+    "id": "0x0d3448c5221606881239f45faa414bfd0b6215a7b54cd5171132f7fff454c252",
+    "label": "ETH/BONER · fee 150000",
+    "swapsInWindow": 154,
+    "volumeNote": "82,876 BONER in 154 swaps"
+   },
+   {
+    "id": "0xefdbafc231f59bcd5188d857bc0300c34e60ad40d6f4a71b42abadffd38e2eba",
+    "label": "ETH/BONER · fee 20000",
+    "swapsInWindow": 97,
+    "volumeNote": "62,239 BONER in 97 swaps"
+   },
+   {
+    "id": "0xf1589db9b6546178b8e088379e2527d06a8fa283c36f5ea104bb2e0ebdee6946",
+    "label": "AI/BONER · fee 30125",
+    "swapsInWindow": 42,
+    "volumeNote": "46,995 BONER in 42 swaps"
+   },
+   {
+    "id": "0x459071b4688295abe82e59730ed9c155fe4452b269dba14edd9e4f041a84632f",
+    "label": "AI/BONER · fee 8111",
+    "swapsInWindow": 9,
+    "volumeNote": "33,177 BONER in 9 swaps"
+   },
+   {
+    "id": "0x68f2ea53d97bf0c4358d2dca0ade6b0dc0186e47371190e6af9a34050d6bd946",
+    "label": "BONER/0xee5576fa · fee 5000",
+    "swapsInWindow": 12,
+    "volumeNote": "30,611 BONER in 12 swaps"
+   },
+   {
+    "id": "0xe1f9c47746e28cd801952b1ee744c63f6b06f05ebf99ebf638a7ccd0600eef93",
+    "label": "ETH/BONER · fee 977219",
+    "swapsInWindow": 5,
+    "volumeNote": "794 BONER in 5 swaps"
+   },
+   {
+    "id": "0x59190d446b4639536d052d0053f97214e7ed8a11207ef5a67cee4a26a8c37d34",
+    "label": "ETH/BONER · fee 970000",
+    "swapsInWindow": 5,
+    "volumeNote": "700 BONER in 5 swaps"
+   },
+   {
+    "id": "0x0f8fea3d357eaaeb2b7d092ec29e0fe79f9ed257201f7a75bdcf6112b8506ba2",
+    "label": "ETH/BONER · fee 983420",
+    "swapsInWindow": 2,
+    "volumeNote": "38 BONER in 2 swaps"
+   },
+   {
+    "id": "0x6f1f29ef9dcc5897d6d911d8451908651df3a1c005a54f523e592e18ad0b4da4",
+    "label": "ETH/BONER · fee 880000",
+    "swapsInWindow": 3,
+    "volumeNote": "5 BONER in 3 swaps"
    },
    {
     "id": "0x508ab5b7a7b447598017eba58530c2a2a5d647b8074a2dc85aa533dfbed4d543",
@@ -8722,6 +8734,11 @@
    "detail": "HIMS/USDG and BONER/HIMS PoolKeys verified against their Initialize logs; BONER/USDG is the USDG/BONER pool with the largest window USDG volume"
   },
   {
+   "name": "Pool discovery covers every HIMS pool",
+   "pass": true,
+   "detail": "Initialize logs with HIMS or BONER from block 20,950,062 (HIMS deployed at 20,950,062): 290 pools. Of 27,300 window txs moving HIMS in or out of the PoolManager, 25,687 swap in a discovered HIMS pool and 1,610 change its liquidity; 3 (15.2 HIMS) are protocol fees taken out by the PoolManager's fee controller; 0 (0 HIMS) touch no HIMS pool, 0 an undiscovered pool, 0 a swap missing from the tapes"
+  },
+  {
    "name": "HIMS/USDG: rebuilt liquidity = every Swap event's liquidity",
    "pass": true,
    "detail": "11242/11242 swaps exact as BigInt (11241/11241 inside the window)"
@@ -8889,7 +8906,7 @@
   {
    "name": "data.json under 1.5 MB",
    "pass": true,
-   "detail": "1,416,784 bytes"
+   "detail": "1,417,688 bytes"
   }
  ],
  "caveats": [

@@ -9,7 +9,7 @@
 import { createHash } from "node:crypto";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
-import { decodeFunctionResult, encodeFunctionData, formatUnits, parseAbiItem, toEventSelector, type PublicClient } from "viem";
+import { decodeFunctionResult, encodeFunctionData, formatUnits, parseAbi, parseAbiItem, toEventSelector, type PublicClient } from "viem";
 import { POOL_MANAGER, STATE_VIEW, readCache, redact, run, sleep, writeCache } from "../chain.ts";
 import { poolManagerEvents, stateViewAbi } from "../abi.ts";
 import {
@@ -176,14 +176,14 @@ function ser(l: any): RawLog {
  * getLogs over [from, to], walking forward one window at a time. The public RPC refuses a query that matches more
  * than 10,000 logs ("logs matched by query exceeds limit"), and the HIMS/BONER pools reach ~900 swaps per 1,000
  * blocks on busy hours, so the window halves on that error (or after repeated failures) and grows back to
- * `window` once responses are small again. Logs are appended to `<file>.ndjson` and progress kept in
- * `<file>.next`, so a rerun resumes where it stopped.
+ * `window` once responses are small again; a rate limit (429 or the CDN's challenge page) waits instead. Logs are
+ * appended to `<file>.ndjson` and progress kept in `<file>.next`, so a rerun resumes where it stopped.
  */
 async function logsAdaptive(client: PublicClient, event: any, args: Record<string, unknown>, from: bigint, to: bigint, file: string, window = 100_000n): Promise<RawLog[]> {
   const logFile = `${file}.ndjson`, nextFile = `${file}.next`;
   let a = existsSync(nextFile) ? BigInt(readFileSync(nextFile, "utf8").trim()) : from;
   if (a === from) { mkdirSync(dirname(logFile), { recursive: true }); writeFileSync(logFile, ""); }
-  let w = window, fails = 0, calls = 0, got = 0;
+  let w = window, fails = 0, waits = 0, calls = 0, got = 0;
   while (a <= to) {
     const b = a + w - 1n > to ? to : a + w - 1n;
     let logs: any[] | undefined, err = "";
@@ -192,6 +192,14 @@ async function logsAdaptive(client: PublicClient, event: any, args: Record<strin
     } catch (e: any) {
       err = redact(String(e?.details ?? e?.shortMessage ?? e?.message ?? e)).slice(0, 160);
     }
+    // a rate limit (HTTP 429, or the CDN's HTML challenge page) says nothing about the range: wait, keep the window
+    if (!logs && /\b429\b|too many requests|rate limit|rate exceeds|<!doctype|just a moment/i.test(err)) {
+      if (++waits > 8) throw new Error(`getLogs ${a}-${b}: still throttled after ${waits - 1} waits`);
+      console.log(`  ${a}-${b}: throttled (${/<!doctype/i.test(err) ? "HTML challenge page" : err.slice(0, 60)}); waiting ${15 * waits} s`);
+      await sleep(15_000 * waits);
+      continue;
+    }
+    if (logs) waits = 0;
     if (!logs) {
       const capped = /exceeds limit/i.test(err);
       if (!capped && ++fails < 3) { await sleep(2000 * fails); continue; }
@@ -270,7 +278,7 @@ async function hasCode(pairs: { address: string; block: bigint }[]): Promise<boo
 /** Every pool with HIMS or BONER on either side, per DISCOVERY segment (Initialize logs, cached per segment and side). */
 async function discoverPools(client: PublicClient) {
   const found = new Map<string, PoolKeyRow>();
-  const segments = [];
+  const segments: ((typeof DISCOVERY)[number] & { initializeLogs: Record<string, number>; ids: string[] })[] = [];
   for (const seg of DISCOVERY) {
     const perSide: Record<string, number> = {};
     for (const side of ["currency0", "currency1"] as const) {
@@ -318,23 +326,33 @@ async function mintReceipt(): Promise<{ blockNumber: number; logs: { address: st
 }
 
 const DONATE = parseAbiItem("event Donate(bytes32 indexed id, address indexed sender, uint256 amount0, uint256 amount1)");
+/** Emitted by the PoolManager's protocol fee controller for every currency it collects (amount = what left the PoolManager). */
+const FEES_COLLECTED = parseAbiItem("event FeesCollected(address indexed currency, uint256 amount)");
 const POOL_EVENT: Record<string, string> = {
   [toEventSelector(poolManagerEvents.Swap)]: "Swap", [toEventSelector(poolManagerEvents.ModifyLiquidity)]: "ModifyLiquidity", [toEventSelector(DONATE)]: "Donate",
 };
+const FEES_TOPIC = toEventSelector(FEES_COLLECTED);
+
+/** A receipt, reduced: PoolManager pool events as [event, poolId], the fee controller's FeesCollected as [currency, amount]. */
+interface ReceiptFacts { pool: [string, string][]; fees?: [string, string][] }
 
 /**
- * The PoolManager pool events (Swap, ModifyLiquidity, Donate) in each transaction's receipt, as [event, poolId]
- * pairs, from the archive node; cached by tx in pm-receipts.json, so no receipt is fetched twice.
+ * ReceiptFacts per tx, from the archive node, cached by tx in pm-receipts.json so no receipt is fetched twice. Early
+ * entries kept only `pool` (a bare array); such a receipt is fetched again only when `needFees` says its fees matter.
  */
-async function poolEventsOf(txs: string[]): Promise<Map<string, [string, string][]>> {
+async function receiptFacts(txs: string[], feeControllers: Set<string>, needFees: (f: ReceiptFacts) => boolean): Promise<Map<string, ReceiptFacts>> {
   const file = `${cacheDir}pm-receipts.json`, pm = POOL_MANAGER.toLowerCase();
-  const c = (readCache(file) as Record<string, [string, string][]> | undefined) ?? {};
-  const want = [...new Set(txs)].filter((tx) => c[tx] === undefined);
+  const raw = (readCache(file) as Record<string, ReceiptFacts | [string, string][]> | undefined) ?? {};
+  const c: Record<string, ReceiptFacts> = Object.fromEntries(Object.entries(raw).map(([tx, v]) => [tx, Array.isArray(v) ? { pool: v } : v]));
+  const want = [...new Set(txs)].filter((tx) => c[tx] === undefined || (c[tx].fees === undefined && needFees(c[tx])));
   if (want.length) console.log(`  receipts: ${txs.length - want.length} cached, ${want.length} to fetch (${STATE_RPC_LABEL})`);
   for (let i = 0; i < want.length; i += 50) {
     const slice = want.slice(i, i + 50);
     const rs = await rpcBatch(slice.map((tx) => ({ method: "eth_getTransactionReceipt", params: [tx] })));
-    rs.forEach((r, j) => (c[slice[j]] = r.logs.filter((l: any) => l.address.toLowerCase() === pm && POOL_EVENT[l.topics[0]]).map((l: any) => [POOL_EVENT[l.topics[0]], l.topics[1].toLowerCase()])));
+    rs.forEach((r, j) => (c[slice[j]] = {
+      pool: r.logs.filter((l: any) => l.address.toLowerCase() === pm && POOL_EVENT[l.topics[0]]).map((l: any) => [POOL_EVENT[l.topics[0]], l.topics[1].toLowerCase()]),
+      fees: r.logs.filter((l: any) => feeControllers.has(l.address.toLowerCase()) && l.topics[0] === FEES_TOPIC).map((l: any) => [`0x${l.topics[1].slice(26)}`.toLowerCase(), BigInt(l.data).toString()]),
+    }));
     writeCache(file, c);
     await sleep(150);
   }
@@ -344,34 +362,46 @@ async function poolEventsOf(txs: string[]): Promise<Map<string, [string, string]
 /**
  * Is pool discovery complete? Every HIMS Transfer into or out of the PoolManager in the window should sit in a
  * transaction that swapped in a discovered HIMS pool (the tapes) or, per its receipt, changed liquidity in or donated
- * to one. A receipt with a pool event on an undiscovered id is a discovery gap, one with a Swap on a discovered HIMS
- * pool that the tape lacks is a tape gap; the rest touch no HIMS pool at all (settle/take or ERC-6909 claims only).
+ * to one, or be protocol fees leaving through the PoolManager's fee controller (its FeesCollected for HIMS equals the
+ * tx's HIMS outflow). A receipt with a pool event on an undiscovered id is a discovery gap, one with a Swap on a
+ * discovered HIMS pool that the tape lacks is a tape gap; anything else touches no HIMS pool at all.
  */
 async function discoveryCoverage(pools: PoolKeyRow[], swapLogs: RawLog[]) {
   const himsIds = new Set(pools.filter((p) => p.currency0 === HIMS || p.currency1 === HIMS).map((p) => p.id)), known = new Set(pools.map((p) => p.id));
   const [a, b] = [Number(WINDOW_START_BLOCK), Number(WINDOW_END_BLOCK)];
+  const pm = POOL_MANAGER.toLowerCase();
+  const ctlCall = encodeFunctionData({ abi: parseAbi(["function protocolFeeController() view returns (address)"]), functionName: "protocolFeeController" });
+  const controllers = new Set((await archiveCalls([a, b].map((block) => ({ to: pm, data: ctlCall, block })))).map((r) => `0x${r.slice(26)}`.toLowerCase()));
   const xs = await poolManagerTransfers(a, b);
   const swapTx = new Set(swapLogs.filter((l) => himsIds.has(l.args.id) && Number(l.blockNumber) >= a && Number(l.blockNumber) <= b).map((l) => l.transactionHash));
-  const byTx = new Map<string, bigint>();
-  for (const x of xs) byTx.set(x.tx, (byTx.get(x.tx) ?? 0n) + BigInt(x.v));
+  const byTx = new Map<string, { moved: bigint; into: bigint; out: bigint }>();
+  for (const x of xs) {
+    const t = byTx.get(x.tx) ?? { moved: 0n, into: 0n, out: 0n };
+    t.moved += BigInt(x.v);
+    if (x.to === pm) t.into += BigInt(x.v);
+    else t.out += BigInt(x.v);
+    byTx.set(x.tx, t);
+  }
   const rest = [...byTx.keys()].filter((tx) => !swapTx.has(tx));
-  const events = await poolEventsOf(rest);
+  const onHimsPool = (f: ReceiptFacts) => f.pool.some(([, id]) => himsIds.has(id));
+  const facts = await receiptFacts(rest, controllers, (f) => !onHimsPool(f));
   const kind = (tx: string) => {
-    const ev = events.get(tx)!;
-    if (ev.some(([e, id]) => e === "Swap" && himsIds.has(id))) return "tapeGap";
-    if (ev.some(([, id]) => himsIds.has(id))) return "liquidityOrDonate";
-    return ev.some(([, id]) => !known.has(id)) ? "undiscoveredPool" : "noHimsPoolEvent";
+    const f = facts.get(tx)!, t = byTx.get(tx)!;
+    if (f.pool.some(([e, id]) => e === "Swap" && himsIds.has(id))) return "tapeGap";
+    if (onHimsPool(f)) return "liquidityOrDonate";
+    const himsFees = (f.fees ?? []).filter(([cur]) => cur === HIMS).reduce((s, [, v]) => s + BigInt(v), 0n);
+    if (t.into === 0n && himsFees > 0n && himsFees === t.out) return "protocolFees";
+    return f.pool.some(([, id]) => !known.has(id)) ? "undiscoveredPool" : "noHimsPoolEvent";
   };
-  const groups: Record<string, string[]> = { swap: [...byTx.keys()].filter((tx) => swapTx.has(tx)), liquidityOrDonate: [], noHimsPoolEvent: [], undiscoveredPool: [], tapeGap: [] };
+  const groups: Record<string, string[]> = { swap: [...byTx.keys()].filter((tx) => swapTx.has(tx)), liquidityOrDonate: [], protocolFees: [], noHimsPoolEvent: [], undiscoveredPool: [], tapeGap: [] };
   for (const tx of rest) groups[kind(tx)].push(tx);
-  const sum = (txs: string[]) => sig(units(txs.reduce((s, tx) => s + byTx.get(tx)!, 0n), 18), 8);
-  const unknownIds = [...new Set(rest.flatMap((tx) => events.get(tx)!.filter(([, id]) => !known.has(id)).map(([, id]) => id)))];
+  const sum = (txs: string[]) => sig(units(txs.reduce((s, tx) => s + byTx.get(tx)!.moved, 0n), 18), 8);
   return {
-    question: "does every HIMS Transfer into or out of the PoolManager in the window belong to a tx with a Swap, ModifyLiquidity or Donate on a discovered HIMS pool?",
-    method: "Swaps from the tapes; for the other txs, PoolManager Swap/ModifyLiquidity/Donate events from their receipts (archive node, cached in cache/squeeze/pm-receipts.json)",
-    blocks: `${a}..${b}`, transfers: xs.length, txs: byTx.size, himsMoved: sum([...byTx.keys()]), himsPools: himsIds.size,
+    question: "does every HIMS Transfer into or out of the PoolManager in the window belong to a tx with a Swap, ModifyLiquidity or Donate on a discovered HIMS pool (or to a protocol fee collection)?",
+    method: "Swaps from the tapes; for the other txs, PoolManager Swap/ModifyLiquidity/Donate events and the protocol fee controller's FeesCollected from their receipts (archive node, cached in cache/squeeze/pm-receipts.json)",
+    blocks: `${a}..${b}`, transfers: xs.length, txs: byTx.size, himsMoved: sum([...byTx.keys()]), himsPools: himsIds.size, protocolFeeController: [...controllers],
     ...Object.fromEntries(Object.entries(groups).map(([k, txs]) => [k, { txs: txs.length, himsMoved: sum(txs), ...(k === "swap" ? {} : { firstTxs: txs.slice(0, 5) }) }])),
-    undiscoveredPoolIdsInTheseTxs: unknownIds,
+    undiscoveredPoolIds: [...new Set(groups.undiscoveredPool.flatMap((tx) => facts.get(tx)!.pool.filter(([, id]) => !known.has(id)).map(([, id]) => id)))],
     complete: groups.undiscoveredPool.length === 0 && groups.tapeGap.length === 0,
   };
 }
@@ -454,7 +484,7 @@ export async function main() {
     const tag = createHash("sha1").update(seg.ids.join(",")).digest("hex").slice(0, 10);
     const got = await logsAdaptive(client, poolManagerEvents.Swap, { id: seg.ids }, from, WINDOW_END_BLOCK, `${cacheDir}swaps-${tag}.json`);
     swapCaches.push({ segment: seg.name, pools: seg.ids.length, cache: `cache/squeeze/swaps-${tag}.json.ndjson`, logs: got.length });
-    logs.push(...got);
+    for (const l of got) logs.push(l); // push(...got) overflows the stack at 150k logs
   }
   const n = logs.length;
   console.log(`Swap logs ${from}..${WINDOW_END_BLOCK}: ${n} (${swapCaches.map((c) => `${c.logs} from ${c.pools} pools of ${c.segment}`).join(", ")})`);
@@ -568,7 +598,7 @@ export async function main() {
   const isHims = (p: PoolKeyRow) => p.currency0 === HIMS || p.currency1 === HIMS;
   const coverage = await discoveryCoverage(pools, logs);
   const cv = coverage as any;
-  console.log(`discovery coverage: ${cv.txs} txs move HIMS through the PoolManager; swap ${cv.swap.txs}, LP/donate ${cv.liquidityOrDonate.txs}, no HIMS pool event ${cv.noHimsPoolEvent.txs} (${cv.noHimsPoolEvent.himsMoved} HIMS), undiscovered pool ${cv.undiscoveredPool.txs}, tape gap ${cv.tapeGap.txs}`);
+  console.log(`discovery coverage: ${cv.txs} txs move HIMS through the PoolManager; swap ${cv.swap.txs}, LP/donate ${cv.liquidityOrDonate.txs}, protocol fees ${cv.protocolFees.txs} (${cv.protocolFees.himsMoved} HIMS), no HIMS pool event ${cv.noHimsPoolEvent.txs} (${cv.noHimsPoolEvent.himsMoved} HIMS), undiscovered pool ${cv.undiscoveredPool.txs}, tape gap ${cv.tapeGap.txs}`);
   const poolsOut = {
     meta: {
       discovery: {

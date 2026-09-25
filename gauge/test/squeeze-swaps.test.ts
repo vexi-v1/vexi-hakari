@@ -171,7 +171,10 @@ test("the pool registry reaches back to HIMS's deployment and explains every Poo
   assert.equal(cov.undiscoveredPool.txs, 0);
   assert.equal(cov.tapeGap.txs, 0);
   assert.equal(cov.complete, true);
-  assert.equal(cov.swap.txs + cov.liquidityOrDonate.txs + cov.noHimsPoolEvent.txs, cov.txs);
+  assert.equal(cov.swap.txs + cov.liquidityOrDonate.txs + cov.protocolFees.txs + cov.noHimsPoolEvent.txs, cov.txs);
+  // HIMS leaving in protocol fee sweeps (the fee controller's FeesCollected for HIMS = the tx's HIMS outflow)
+  assert.equal(cov.protocolFees.txs, 3);
+  assert.ok(cov.protocolFeeController.includes("0x6d0009504d129cf5002dba61d9ae8575aa79314c"));
   // others are ranked within their volume unit, USDG pools first
   const units = p.otherHimsPools.active.map((x: any) => ["USDG", "HIMS", "BONER"].indexOf(x.volumeUnit));
   assert.deepEqual(units, [...units].sort((a: number, b: number) => a - b));
