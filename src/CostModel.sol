@@ -17,10 +17,10 @@ import {PushCostLens} from "./PushCostLens.sol";
 ///      - arbReversionSeconds = 0: nobody pulls the price back (a fenced weekend stock); holding is free, d = x, and the
 ///        cost is fees on an exact retrace: a lower bound for the liquidity the pool has now.
 ///      - arbReversionSeconds > 0: the attacker re-pushes after every pull-back, so wider, shorter pushes are tried
-///        too, on widths that double from the smallest move until a push is wide enough to move the TWAP within one
+///        too, up to each move's one-interval width ⌈x·W / R⌉, the narrowest push that moves the TWAP within one
 ///        reversion interval; no wider push can be cheaper. Past the last LP range a wider push costs no more fees,
-///        so the cheapest hold is often a push beyond the book held for seconds. This term is only as good as the
-///        reversion time the caller asserts: pass a slow bound.
+///        so the cheapest hold is often exactly that: a push beyond the book, held for seconds. This term is only as
+///        good as the reversion time the caller asserts: pass a slow bound.
 ///      - One view walk per direction prices every width (`PushCostLens.roundTripCosts`).
 ///      - Liquidity is read at settlement. A wall added in an earlier transaction inflates the bound (README).
 library CostModel {
@@ -101,38 +101,42 @@ library CostModel {
         if (extraTicks > 0) xs[6] = extraTicks > TickMath.MAX_TICK ? TickMath.MAX_TICK : extraTicks;
     }
 
-    /// @notice The push widths to price, ascending and distinct: every move, and while arbitrage is open the smallest
-    ///         move doubled until the first width that moves the TWAP by the largest move within one reversion
-    ///         interval (⌈x·W / R⌉). Past that width a push costs two round trips and a wider one is never cheaper.
+    /// @notice The push widths to price, ascending and distinct. Every move; and while arbitrage is open, each move's
+    ///         one-interval width ⌈x·W / R⌉ (the narrowest push that moves the TWAP by x within one reversion interval,
+    ///         where the hold drops to one re-push and a wider push only costs more), plus the smallest move doubled
+    ///         up to the largest of those, for holds that pay several re-pushes.
     function widths(int24[] memory xs, uint32 window, uint32 arbReversionSeconds)
         internal
         pure
         returns (int24[] memory ds)
     {
-        int24[] memory all = new int24[](xs.length + 24);
+        int24[] memory all = new int24[](2 * xs.length + 24);
         for (uint256 i; i < xs.length; i++) {
             all[i] = xs[i];
         }
-        uint256 n = arbReversionSeconds == 0 ? xs.length : _appendDoublings(all, xs, window, arbReversionSeconds);
+        uint256 n = arbReversionSeconds == 0 ? xs.length : _appendHoldWidths(all, xs, window, arbReversionSeconds);
         ds = _sortedDistinct(all, n);
     }
 
-    /// @dev After the moves in `all`: the smallest move doubled up to the first width ≥ ⌈largest move · W / R⌉.
-    function _appendDoublings(int24[] memory all, int24[] memory xs, uint32 window, uint32 arbReversionSeconds)
+    /// @dev After the moves in `all`: each move's one-interval width, and the smallest move doubled below the largest.
+    function _appendHoldWidths(int24[] memory all, int24[] memory xs, uint32 window, uint32 arbReversionSeconds)
         private
         pure
         returns (uint256 n)
     {
-        (int24 d, int24 top) = (xs[0], xs[0]);
-        for (uint256 i = 1; i < xs.length; i++) {
-            if (xs[i] < d) d = xs[i];
-            if (xs[i] > top) top = xs[i];
-        }
-        uint256 need = _ceilDiv(uint256(uint24(top)) * window, arbReversionSeconds);
         n = xs.length;
-        while (uint256(uint24(d)) < need && d < TickMath.MAX_TICK) {
-            d = d > TickMath.MAX_TICK / 2 ? TickMath.MAX_TICK : d * 2;
-            all[n++] = d;
+        int24 d = xs[0];
+        int24 widest;
+        for (uint256 i; i < xs.length; i++) {
+            if (xs[i] < d) d = xs[i];
+            uint256 w = _ceilDiv(uint256(uint24(xs[i])) * window, arbReversionSeconds);
+            int24 oneInterval = w >= uint256(uint24(TickMath.MAX_TICK)) ? TickMath.MAX_TICK : int24(uint24(w));
+            if (oneInterval > xs[i]) all[n++] = oneInterval;
+            if (oneInterval > widest) widest = oneInterval;
+        }
+        while (d < widest && d < TickMath.MAX_TICK / 2) {
+            d *= 2;
+            if (d < widest) all[n++] = d;
         }
     }
 

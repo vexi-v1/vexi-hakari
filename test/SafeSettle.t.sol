@@ -46,6 +46,10 @@ contract CostModelHarness {
     function ladder() external pure returns (int24[6] memory) {
         return CostModel.ladder();
     }
+
+    function widths(int24[] memory xs, uint32 window, uint32 reversion) external pure returns (int24[] memory) {
+        return CostModel.widths(xs, window, reversion);
+    }
 }
 
 contract SafeSettleTest is HakariDeployers {
@@ -204,7 +208,8 @@ contract SafeSettleTest is HakariDeployers {
         vm.warp(t0 + 601);
         poke(key);
         SafeSettle.Decision memory d = settle.settlePrice(key, 600, 1, false, 5);
-        assertGt(d.bindingWidth, 600, "the binding push goes past the book");
+        assertEq(d.bindingTicks, 1823, "the 20 % move, which earns the most");
+        assertEq(d.bindingWidth, 218_760, "held by the narrowest push that moves the TWAP within one interval: 1823 x 600 / 5");
         uint256 bound = d.maxSafeExposure;
         for (uint256 dir; dir < 2; dir++) {
             bool up = dir == 0;
@@ -233,29 +238,53 @@ contract SafeSettleTest is HakariDeployers {
         }
     }
 
-    /// @dev CostModel's bound with no early stop: every move against every width on one grid (the ladder and 50
-    ///      doubled up to MAX_TICK), each width priced by one walk each way, quote currency1.
-    function _boundOverEveryWidth(uint32 window, uint32 reversion) internal view returns (uint256 best) {
+    function test_onABookThatNeverEnds_theBoundIsWithinTwiceTheCheapestHold() public {
+        // With liquidity at every price a wide push is dear, so the cheapest hold can pay several re-pushes at a middle
+        // width. Within a stretch where the re-push count is constant a wider push only costs more, so the cheapest
+        // hold sits where the count steps: d = x or d = ⌈x·W / (k·R)⌉. CostModel samples widths by doubling, so it
+        // lands on a width at most twice as narrow, with at most twice the re-pushes: never below the true minimum,
+        // never above twice it.
+        _fullRange(1e18);
+        vm.warp(t0 + 601);
+        poke(key);
+        uint256 bound = settle.settlePrice(key, 600, 1, false, 5).maxSafeExposure;
+        uint256 exact = _boundOverEveryBreakpoint(600, 5);
+        // one-walk checkpoints round a few wei on round trips above 1e14 wei: well under 1e-9 of the bound
+        assertGe(bound + exact / 1e9, exact, "never below the cheapest hold");
+        assertLe(bound, 2 * exact + exact / 1e9, "never above twice it");
+    }
+
+    /// @dev The exact cheapest hold for every move, both ways, each width its own walk.
+    function _boundOverEveryBreakpoint(uint32 window, uint32 reversion) internal view returns (uint256 best) {
         int24[6] memory xs = model.ladder();
-        int24[] memory ds = new int24[](6 + 15);
-        for (uint256 i; i < 6; i++) {
-            ds[i] = xs[i];
-        }
-        uint256 n = 6;
-        for (int24 d = 50; d < TickMath.MAX_TICK;) {
-            d = d > TickMath.MAX_TICK / 2 ? TickMath.MAX_TICK : d * 2;
-            ds[n++] = d;
-        }
-        // ascending: 50 100 200 [400] 488 [800] 953 [1600] 1823 [3200] …
-        for (uint256 i = 1; i < n; i++) {
-            for (uint256 j = i; j > 0 && ds[j - 1] > ds[j]; j--) {
-                (ds[j - 1], ds[j]) = (ds[j], ds[j - 1]);
+        best = type(uint256).max;
+        for (uint256 dir; dir < 2; dir++) {
+            bool up = dir == 0;
+            for (uint256 i; i < xs.length; i++) {
+                uint256 gain = model.gainIfFaked(1e18, xs[i], up);
+                uint256 xw = uint256(uint24(xs[i])) * window;
+                for (uint256 k; k <= (window + reversion - 1) / reversion; k++) {
+                    // k = 0: d = x; else the narrowest width that holds with k re-pushes
+                    uint256 d = k == 0 ? uint256(uint24(xs[i])) : (xw + k * reversion - 1) / (k * reversion);
+                    if (d < uint256(uint24(xs[i]))) continue;
+                    (,, uint256 rt,) = lens.roundTripCost(key, int24(uint24(d)), up, settle.MAX_WALK_STEPS());
+                    uint256 hold = (xw - 1) / d + 1;
+                    uint256 n = FullMath.mulDiv(rt * (1 + (hold - 1) / reversion + 1), 1e18, gain);
+                    if (n < best) best = n;
+                }
             }
         }
-        assembly ("memory-safe") {
-            mstore(ds, n)
+    }
+
+    /// @dev CostModel's bound with no early stop: every move against every width CostModel prices, each width from one
+    ///      walk each way, quote currency1.
+    function _boundOverEveryWidth(uint32 window, uint32 reversion) internal view returns (uint256 best) {
+        int24[6] memory l = model.ladder();
+        int24[] memory xs = new int24[](6);
+        for (uint256 i; i < 6; i++) {
+            xs[i] = l[i];
         }
-        int24[] memory grid = _dedupe(ds);
+        int24[] memory grid = model.widths(xs, window, reversion);
         uint256 upBest = _bestOneWay(grid, true, window, reversion);
         uint256 downBest = _bestOneWay(grid, false, window, reversion);
         best = upBest < downBest ? upBest : downBest;
@@ -273,17 +302,6 @@ contract SafeSettleTest is HakariDeployers {
                 uint256 n = FullMath.mulDiv(rt[j] * (1 + (hold - 1) / reversion + 1), 1e18, gain);
                 if (n < best) best = n;
             }
-        }
-    }
-
-    function _dedupe(int24[] memory a) internal pure returns (int24[] memory out) {
-        uint256 m;
-        out = new int24[](a.length);
-        for (uint256 i; i < a.length; i++) {
-            if (m == 0 || a[i] != out[m - 1]) out[m++] = a[i];
-        }
-        assembly ("memory-safe") {
-            mstore(out, m)
         }
     }
 
