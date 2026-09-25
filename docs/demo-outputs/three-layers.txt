@@ -1,4 +1,4 @@
-Ran 3 tests for test/demo/ThreeLayers.t.sol:ThreeLayersTest
+Ran 5 tests for test/demo/ThreeLayers.t.sol:ThreeLayersTest
 [PASS] test_layer1_atomicPush_foolsSlot0_notTheHook() (gas: 673840)
 Logs:
   naive settlement tick 499
@@ -7,21 +7,37 @@ Logs:
   attacker net currency1 -76015778694356
   hook raw TWAP -1
   hook truncated TWAP -1
-
-[PASS] test_layer2and3_sustainedPushOnThinPool_settlesTruncated() (gas: 1089478)
+[PASS] test_layer2_heldPushOnThinPool_isRefused() (gas: 1322316)
 Logs:
   raw TWAP 3000
   truncated TWAP 650
-  cost to fake (quote units) 822239396895
-  gain if faked (quote units) 264893907132936289
-  used raw? false
-
-[PASS] test_layer3_genuineSurgeOnDeepPool_settlesRaw() (gas: 1162455)
+  max safe exposure (quote wei) 3104032877896
+  binding move (ticks) 2350
+  cost to fake it (quote wei) 822239396895
+  trusted? false
+[PASS] test_layer2_heldUntilTheSeriesAgree_isStillRefused() (gas: 3189572)
+Logs:
+  raw TWAP 3000
+  truncated TWAP 3000
+  max safe exposure (quote wei) 3186844178310
+  binding move (ticks) 1823
+  cost to fake it (quote wei) 637251544311
+  trusted? false
+[PASS] test_layer3_genuineSurgeOnDeepPool_isTrusted() (gas: 1614360)
 Logs:
   raw TWAP 1650
   truncated TWAP 550
-  cost to fake (quote units) 3153638677493050284
-  gain if faked (quote units) 116271931355636455
-  used raw? true
-
-Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 6.21ms (7.86ms CPU time)
+  max safe exposure (quote wei) 9560532534953153439
+  binding move (ticks) 1823
+  cost to fake it (quote wei) 1911754632937062795
+  trusted? true
+[PASS] test_layer3_genuineSurgeOnThinPool_isRefused() (gas: 1611264)
+Logs:
+  raw TWAP 1650
+  truncated TWAP 550
+  max safe exposure (quote wei) 9560532534932
+  binding move (ticks) 1823
+  cost to fake it (quote wei) 1911754632933
+  trusted? false
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 14.14ms (23.93ms CPU time)
+Ran 1 test suite in 157.64ms (14.14ms CPU time): 5 tests passed, 0 failed, 0 skipped (5 total tests)

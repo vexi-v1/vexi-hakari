@@ -1,51 +1,60 @@
 Ran 2 tests for test/fork/PushCostLens.fork.t.sol:PushCostLensForkTest
-[PASS] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 172365)
+[PASS] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 174023)
 Logs:
-  block 72419444
-  start tick -217115
+  block 72481549
+  start tick -217114
   ticks moved by 10 TSLA 4
-  manual net USDG (6 dec) -26126663
+  manual net USDG (6 dec) -26129562
   lens amountOut TSLA (18 dec) 10000000000000000000
-  lens cost USDG (6 dec) 26126663
+  lens cost USDG (6 dec) 26129562
   pre-hackathon figure at block 71,937,777: -26.560259 USDG
-[PASS] test_depthToMove_agreesWithQuotePush_onTheRealPool() (gas: 1261504)
+[PASS] test_depthToMove_agreesWithQuotePush_onTheRealPool() (gas: 1261444)
 Logs:
-  push up ticks / USDG needed / round-trip cost 50 45302103932 316078387
-  push up ticks / USDG needed / round-trip cost 200 166425859125 1157155407
-  push up ticks / USDG needed / round-trip cost 1000 386019168868 2659907760
-Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 24.60s (22.24s CPU time)
+  push up ticks / USDG needed / round-trip cost 50 45227330586 315557510
+  push up ticks / USDG needed / round-trip cost 200 166207303984 1155639457
+  push up ticks / USDG needed / round-trip cost 1000 385168291601 2654082396
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 22.61s (21.59s CPU time)
 Ran 3 tests for test/fork/ShadowPool.fork.t.sol:ShadowPoolForkTest
-[PASS] test_heldPushOnTslaShapedBook_weekend_isRefused() (gas: 2146584)
+[PASS] test_heldPushOnTslaShapedBook_weekend_isRefused() (gas: 1693120)
 Logs:
-  held +5 % for 10 s on a weekend, raw TWAP -216627
-  truncated TWAP -217096
+  held +5 % for 10 s on a weekend, raw TWAP -216626
+  truncated TWAP -217095
   decision
-    max safe exposure, USDG (6 dec) 2606636939
+    max safe exposure, USDG (6 dec) 2601858175
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 521231451
+    cost to fake it, USDG (6 dec) 520275874
+    push width that costs it (ticks) 1823
+    walk complete? true
     trusted for 100,000 USDG? false
-[PASS] test_shadowPool_hasTheRealPoolsDepth() (gas: 889900)
+[PASS] test_shadowPool_hasTheRealPoolsDepth() (gas: 4337975)
 Logs:
-  shadow pool mirrors TSLA/USDG at block 72419444
-[PASS] test_tslaShapedBook_maxSafeExposure_weekendVsWeekday() (gas: 14362926)
+  shadow pool mirrors TSLA/USDG at block 72481549
+  segments mirrored 105
+[PASS] test_tslaShapedBook_maxSafeExposure_weekendVsWeekday() (gas: 6650404)
 Logs:
-  TSLA/USDG book at block 72419444
+  TSLA/USDG book at block 72481549
   weekend (nobody pushes back)
-    max safe exposure, USDG (6 dec) 12088548046
+    max safe exposure, USDG (6 dec) 12062711727
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 2417264692
+    cost to fake it, USDG (6 dec) 2412098379
+    push width that costs it (ticks) 1823
+    walk complete? true
     trusted for 100,000 USDG? false
   weekday, arbitrage every 12 s
-    max safe exposure, USDG (6 dec) 486467066074
+    max safe exposure, USDG (6 dec) 58044279177
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 97275508863
-    trusted for 100,000 USDG? true
+    cost to fake it, USDG (6 dec) 11606719524
+    push width that costs it (ticks) 102400
+    walk complete? true
+    trusted for 100,000 USDG? false
   weekday, arbitrage every 60 s
-    max safe exposure, USDG (6 dec) 112261630632
+    max safe exposure, USDG (6 dec) 25268704205
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 22448194353
-    trusted for 100,000 USDG? true
-  gas, settlePrice, weekend (1 rung per move) 1049669
-  gas, settlePrice, weekday (3 rungs per move) 4123047
-Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 225.84s (77.94ms CPU time)
-Ran 2 test suites in 225.84s (250.44s CPU time): 5 tests passed, 0 failed, 0 skipped (5 total tests)
+    cost to fake it, USDG (6 dec) 5052810830
+    push width that costs it (ticks) 54690
+    walk complete? true
+    trusted for 100,000 USDG? false
+  gas, settlePrice, weekend (the six moves, one walk each way) 674887
+  gas, settlePrice, weekday 12 s (every width, one walk each way) 1908029
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 318.08s (23.43s CPU time)
+Ran 2 test suites in 318.08s (340.69s CPU time): 5 tests passed, 0 failed, 0 skipped (5 total tests)
