@@ -225,14 +225,16 @@
   S.blockUrl = function (b) { return S.D.chain.explorer.replace(/\/$/, '') + '/block/' + b; };
   S.addrUrl = function (a, kind) { return S.D.chain.explorer.replace(/\/$/, '') + '/' + (kind || 'address') + '/' + a; };
   // Repo-relative links in story.json resolve against web/squeeze/; the artifact bundle rewrites them (window.SQZ_LINKBASE).
+  // Source files (.md, .ts, .sol, .mjs) always go to GitHub's source view: a static host (GitHub Pages, http.server)
+  // serves them raw or as a download, and a README anchor only works when GitHub renders it.
+  var SOURCE_BASE = 'https://github.com/vexi-v1/vexi-hakari/blob/main/';
   S.resolveUrl = function (u) {
     if (!u) return null;
     if (/^https?:/.test(u) || u.charAt(0) === '#') return u;
-    if (window.SQZ_LINKBASE) {
-      var rel = u.replace(/^(\.\.\/)+/, ''), hash = '';
-      var hi = rel.indexOf('#'); if (hi >= 0) { hash = rel.slice(hi); rel = rel.slice(0, hi); }
-      return window.SQZ_LINKBASE + rel + hash;
-    }
+    var rel = u.replace(/^(\.\.\/)+/, ''), hash = '';
+    var hi = rel.indexOf('#'); if (hi >= 0) { hash = rel.slice(hi); rel = rel.slice(0, hi); }
+    if (window.SQZ_LINKBASE) return window.SQZ_LINKBASE + rel + hash;
+    if (/\.(md|ts|sol|mjs)$/.test(rel)) return SOURCE_BASE + rel + hash;
     return u;
   };
   S.link = function (href, text, cls) {
