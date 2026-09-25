@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HAKARI gauge</title>
+<link rel="icon" href="data:,">
 <meta name="description" content="What it costs to fake a Uniswap v4 price on Robinhood Chain: live cost ladder, the HIMS weekend replay, and SafeSettle's decisions.">
 <style>
   :root {
@@ -68,14 +69,35 @@
   code { font-size: 13px; background: var(--surface-2); padding: 1px 4px; border-radius: 4px; }
   .err { color: var(--serious); }
   details summary { cursor: pointer; color: var(--text-secondary); }
+  details { margin: 8px 0; }
+  .cta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0 12px; }
+  @media (max-width: 720px) { .cta { grid-template-columns: 1fr; } }
+  .cta a { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text-primary); text-decoration: none; }
+  .cta a b { font-size: 16px; }
+  .cta a span { font-size: 13px; color: var(--text-secondary); }
+  .cta a.primary { background: var(--text-primary); color: var(--surface-1); border-color: transparent; }
+  .cta a.primary span { color: color-mix(in oklab, var(--surface-1) 80%, transparent); }
+  .cta a:hover { border-color: var(--text-muted); }
+  .cta a:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+  h2[id] { scroll-margin-top: 16px; }
+  .safe { border-left: 3px solid var(--series-2); padding: 2px 0 2px 12px; margin: 16px 0 8px; }
+  .safe p { margin: 6px 0; max-width: 80ch; }
+  .safe .safe-line { font-size: 17px; }
+  .nowrap { white-space: nowrap; }
+  #measure-out code { overflow-wrap: anywhere; }
+  tr.binding td { font-weight: 600; }
 </style>
 </head>
 <body>
 <main>
   <h1>HAKARI (秤) — what it costs to fake a price</h1>
-  <p class="lead">A scale for any protocol that reads a price from a Uniswap v4 pool on Robinhood Chain: can this price be pushed right now, what would pushing it cost, and should it be trusted? Everything below is read-only against mainnet 4663; the lens runs through an <code>eth_call</code> state override, nothing is deployed there.</p>
+  <p class="lead">HAKARI measures what it would cost to fake a Uniswap v4 pool's price right now, turns that into the largest settlement the price can safely carry, and refuses to settle above it.</p>
+  <nav class="cta" aria-label="Start here">
+    <a class="primary" href="squeeze/"><b>Replay the HIMS weekend</b><span>Minute by minute from Robinhood Chain's logs: prices, the float, the cost to push, what X said (English / 繁中)</span></a>
+    <a href="#measure-live"><b>Measure a pool live</b><span>Any v4 pool on mainnet 4663, read-only: no wallet, nothing deployed</span></a>
+    <a href="https://explorer.testnet.chain.robinhood.com/tx/0x50c06e53dad5689111ed40cbb80f8cb4dd43f1f357db44d141b9da48f4dc299e" target="_blank" rel="noopener"><b>See the on-chain refusal ↗</b><span>SafeSettle's <code>Settled</code> event with trusted = false, on testnet 46630</span></a>
+  </nav>
   <p class="meta" id="meta">loading…</p>
-  <p class="card" id="squeeze-link"><strong>New:</strong> <a href="squeeze/">the HIMS weekend, minute by minute</a> — scrub Friday to Monday and watch HIMS, BONER and USDG prices, the float and the dollar pool drain, HAKARI's cost to push, and what X said at the time (English / 繁中).</p>
 
   <h2>1 · The HIMS weekend, replayed from events</h2>
   <p class="lead">Sunday 2026-08-30, Robinhood's busiest day on-chain ($270.6M of stock-token volume, per SQD) and a day with no minting. With nobody able to arbitrage, the cost to push HIMS/USDG 10 % fell from 1,351 USDG at 19:40 UTC to 12 USDG at 23:53 UTC, by when the pool already read 43.27 against a 28.84 NYSE close. It peaked at 54.50 as minting reopened, and fell back to 29.31 after the first mint. The largest settlement the pool could safely carry fell from 7,259 USDG to 115: SafeSettle would have refused anything above that. Positions rebuilt from every <code>ModifyLiquidity</code> log; at each point the rebuilt liquidity equals the last <code>Swap</code> event's own liquidity field.</p>
@@ -87,8 +109,8 @@
   <p class="lead" id="weekend-lead">The deepest USDG pool of each Robinhood stock token, rebuilt from logs from Friday's US close to Monday, priced as the largest settlement it could safely carry with nobody pushing back. On the weekend of 2026-09-18 nothing collapsed: the weekend low was 0.69× to 2.4× of Friday (HIMS 1.06×); on 2026-08-30 HIMS fell to 0.016× (7,259 → 115 USDG). A closed mint window makes a collapse possible, not certain, which is why the bound is measured at settlement.</p>
   <figure id="weekend-fig"></figure>
 
-  <h2>3 · Measure any pool, right now</h2>
-  <p class="lead">Any v4 pool on the official PoolManager. The page simulates the lens's deployment, injects it with an <code>eth_call</code> state override, and asks mainnet live. Nothing is deployed.</p>
+  <h2 id="measure-live">3 · Measure any pool, right now</h2>
+  <p class="lead">Any v4 pool on the official PoolManager, read-only against Robinhood Chain mainnet 4663. The page simulates <code>PushCostLens</code>'s deployment, injects its bytecode at a throwaway address with an <code>eth_call</code> state override, and pushes the live pool there and back inside that call: no wallet, no transaction, nothing deployed. From those costs it computes the largest settlement the pool can safely carry, the number <code>SafeSettle</code> decides on.</p>
   <div class="card">
     <div class="row">
       <label>preset <select id="preset"></select></label>
@@ -100,7 +122,7 @@
       <label>quote is <select id="quote"><option value="1">currency1</option><option value="0">currency0</option></select></label>
       <button id="measure">Measure</button>
     </div>
-    <div id="measure-out" style="margin-top:12px"></div>
+    <div id="measure-out" style="margin-top:12px" aria-live="polite"></div>
   </div>
 
   <h2>4 · Cost to push: a snapshot</h2>

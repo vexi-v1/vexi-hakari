@@ -10,6 +10,7 @@ const PCTS = [1, 5, 10];
 const ticksForPct = (pct) => Math.round(Math.log(1 + pct / 100) / Math.log(1.0001));
 const $ = (id) => document.getElementById(id);
 const fmt = (x, d = 2) => Number(x).toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d });
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 const stateViewAbi = parseAbi([
   "function getSlot0(bytes32 poolId) view returns (uint160 sqrtPriceX96, int24 tick, uint24 protocolFee, uint24 lpFee)",
@@ -17,7 +18,9 @@ const stateViewAbi = parseAbi([
 ]);
 const erc20Abi = parseAbi(["function decimals() view returns (uint8)", "function symbol() view returns (string)"]);
 
-const client = createPublicClient({ transport: http(RPC) });
+// batch: requests issued together (a pool's reads, the two push ladders) go out as one JSON-RPC batch; the public RPC
+// rate-limits bursts, so a 429 is retried with backoff (0.4, 0.8, 1.6, 3.2 s) before the page reports it
+const client = createPublicClient({ transport: http(RPC, { batch: true, retryCount: 4, retryDelay: 400 }) });
 const load = (p) => fetch(p).then((r) => (r.ok ? r.json() : null)).catch(() => null);
 
 const WEEKEND = "2026-09-18";
@@ -55,6 +58,31 @@ function renderLadder(data) {
 }
 if (ladder) renderLadder(ladder);
 
+// ───────── max safe exposure (pure: no DOM, no network; gauge/test/web-max-safe.test.ts runs this block in node) ─────────
+// CostModel.maxSafeExposure with nobody pushing back (arbReversionSeconds = 0: a stock token while the mint window is
+// closed), from the lens's exact quotes. For every ladder move x, both tick directions: the round trip of pushing the
+// price x ticks and selling straight back, in the quote, ÷ what that move earns per unit of exposure. The smallest ratio
+// is the bound, in the quote's raw units. Same as gauge/src/replay.ts maxSafeExposure, which is pinned to the Solidity.
+const LADDER = [50, 100, 200, 488, 953, 1823]; // CostModel.ladder(): ≈ 0.5, 1, 2, 5, 10, 20 %
+const gainPerUnit = (x, assetUp) => (assetUp ? Math.pow(1.0001, x) - 1 : 1 - Math.pow(1.0001, -x));
+function maxSafeFromQuotes(quotesUp, quotesDown, ticks, quoteIsCurrency0) {
+  let binding;
+  const rungs = [];
+  ticks.forEach((x, i) => {
+    for (const up of [true, false]) {
+      const q = (up ? quotesUp : quotesDown)[i];
+      // the payout follows the asset; with the quote as currency0 the asset moves against the tick
+      const assetUp = quoteIsCurrency0 ? !up : up;
+      const cost = BigInt(quoteIsCurrency0 ? q.costInCurrency0 : q.costInCurrency1);
+      const gain = gainPerUnit(x, assetUp);
+      const r = { ticks: x, up, assetUp, cost, gain, exposure: Number(cost) / gain, complete: BigInt(q.sqrtPriceReached) === BigInt(q.sqrtPriceTarget) };
+      rungs.push(r);
+      if (!binding || r.exposure < binding.exposure) binding = r;
+    }
+  });
+  return { exposure: binding.exposure, binding, rungs };
+}
+
 // ───────── lens over state override ─────────
 let lensCode;
 async function lens() {
@@ -72,27 +100,43 @@ async function quoteLadder(key, ticks, up, blockNumber) {
   const { data: out } = await client.call({ to: LENS_AT, data, blockNumber, stateOverride: [{ address: LENS_AT, code }] });
   return decodeFunctionResult({ abi: lensArtifact.abi, functionName: "quotePushLadder", data: out });
 }
-async function measurePool(key, quoteIsCurrency0, blockNumber) {
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+// Three round trips, each one JSON-RPC batch: (the caller's block), the pool + its tokens + the lens code, then the
+// whole ladder pushed both ways (two quotePushLadder eth_calls). The +1/5/10 % entries are rungs of the same ladder.
+async function measurePool(key, quoteIsCurrency0, blockNumber, progress = () => {}) {
   const id = keyId(key);
-  const [sqrtPriceX96, tick, protocolFee, lpFee] = await client.readContract({ address: STATE_VIEW, abi: stateViewAbi, functionName: "getSlot0", args: [id], blockNumber });
+  const quoteToken = quoteIsCurrency0 ? key.currency0 : key.currency1;
+  const decimalsOf = (a) => (a === ZERO_ADDRESS ? 18 : client.readContract({ address: a, abi: erc20Abi, functionName: "decimals" }));
+  progress("reading the pool, its tokens and the lens bytecode");
+  const [[sqrtPriceX96, tick, protocolFee, lpFee], liquidity, d0, d1, quoteSymbol] = await Promise.all([
+    client.readContract({ address: STATE_VIEW, abi: stateViewAbi, functionName: "getSlot0", args: [id], blockNumber }),
+    client.readContract({ address: STATE_VIEW, abi: stateViewAbi, functionName: "getLiquidity", args: [id], blockNumber }),
+    decimalsOf(key.currency0),
+    decimalsOf(key.currency1),
+    quoteToken === ZERO_ADDRESS ? "ETH" : client.readContract({ address: quoteToken, abi: erc20Abi, functionName: "symbol" }).catch(() => "quote"),
+    lens(),
+  ]);
   if (sqrtPriceX96 === 0n) throw new Error("pool not initialized: check the key");
-  const liquidity = await client.readContract({ address: STATE_VIEW, abi: stateViewAbi, functionName: "getLiquidity", args: [id], blockNumber });
-  const [d0, d1] = await Promise.all([key.currency0, key.currency1].map((a) => (a === "0x0000000000000000000000000000000000000000" ? 18 : client.readContract({ address: a, abi: erc20Abi, functionName: "decimals" }))));
-  const ticks = PCTS.map(ticksForPct);
+  progress(`pushing the price ${LADDER.length} distances up and ${LADDER.length} down through the lens, then straight back (2 eth_calls)`);
+  const [qsUp, qsDown] = await Promise.all([quoteLadder(key, LADDER, true, blockNumber), quoteLadder(key, LADDER, false, blockNumber)]);
+  const quoteDec = Number(quoteIsCurrency0 ? d0 : d1);
+  const baseDec = Number(quoteIsCurrency0 ? d1 : d0);
   const entries = [];
-  for (const up of [true, false]) {
-    const qs = await quoteLadder(key, ticks, up, blockNumber);
-    qs.forEach((q, i) => {
+  for (const [up, qs] of [[true, qsUp], [false, qsDown]]) {
+    PCTS.forEach((pct) => {
+      const i = LADDER.indexOf(ticksForPct(pct));
+      if (i < 0) return;
+      const q = qs[i];
       const quoteUp = quoteIsCurrency0 ? !up : up;
-      const quoteDec = quoteIsCurrency0 ? d0 : d1;
       const costQuote = quoteIsCurrency0 ? q.costInCurrency0 : q.costInCurrency1;
       const inputIsQuote = quoteIsCurrency0 ? q.zeroForOne : !q.zeroForOne;
-      entries.push({ pct: PCTS[i], direction: quoteUp ? "up" : "down", ticks: ticks[i], reached: q.sqrtPriceReached === q.sqrtPriceTarget, inputToken: inputIsQuote ? "quote" : "base", amountInHuman: formatUnits(q.amountIn, inputIsQuote ? quoteDec : quoteIsCurrency0 ? d1 : d0), costQuoteHuman: formatUnits(costQuote, quoteDec) });
+      entries.push({ pct, direction: quoteUp ? "up" : "down", ticks: LADDER[i], reached: q.sqrtPriceReached === q.sqrtPriceTarget, inputToken: inputIsQuote ? "quote" : "base", amountInHuman: formatUnits(q.amountIn, inputIsQuote ? quoteDec : baseDec), costQuoteHuman: formatUnits(costQuote, quoteDec) });
     });
   }
+  const bound = maxSafeFromQuotes(qsUp, qsDown, LADDER, quoteIsCurrency0);
   const raw = Number(sqrtPriceX96) / 2 ** 96;
   const p1per0 = raw * raw * 10 ** (Number(d0) - Number(d1));
-  return { id, tick, lpFee, protocolFee, liquidity: liquidity.toString(), priceQuote: quoteIsCurrency0 ? 1 / p1per0 : p1per0, entries };
+  return { id, tick, lpFee, protocolFee, liquidity: liquidity.toString(), priceQuote: quoteIsCurrency0 ? 1 / p1per0 : p1per0, entries, bound, quoteDec, quoteSymbol };
 }
 function keyId(key) {
   const enc = encodeAbiParameters([{ type: "address" }, { type: "address" }, { type: "uint24" }, { type: "int24" }, { type: "address" }], [key.currency0, key.currency1, key.fee, key.tickSpacing, key.hooks]);
@@ -207,26 +251,48 @@ $("measure").onclick = async () => {
   const b = $("measure");
   const out = $("measure-out");
   b.disabled = true;
-  out.textContent = "measuring…";
+  const t0 = performance.now();
+  const say = (step) => { out.innerHTML = `<p class="meta">Measuring · ${step}…</p>`; };
+  say("reading the latest block");
   try {
     const key = { currency0: $("c0").value.trim().toLowerCase(), currency1: $("c1").value.trim().toLowerCase(), fee: Number($("fee").value), tickSpacing: Number($("ts").value), hooks: $("hooks").value.trim().toLowerCase() };
     const quoteIsCurrency0 = $("quote").value === "0";
     const block = await client.getBlock();
-    const m = await measurePool(key, quoteIsCurrency0, block.number);
+    const m = await measurePool(key, quoteIsCurrency0, block.number, (s) => say(`${s} at block ${Number(block.number).toLocaleString()}`));
     const preset = presets.find((p) => p.id === m.id);
     const d = delta?.pools.find((p) => p.id === m.id);
     const closed = mintWindowClosed(new Date());
-    const fenced = preset?.stock ? closed : false;
     const five = m.entries.find((e) => e.pct === 5 && e.direction === "up");
+    const unit = esc(m.quoteSymbol); // a pasted pool's token picks its own symbol: never raw HTML
+    const asset = preset?.stock ?? "the other token";
+    const baseLabel = preset?.stock ?? "base";
+    const toHuman = (raw) => Number(raw) / 10 ** m.quoteDec;
+    const amount = (x) => (x !== 0 && Math.abs(x) < 0.01 ? x.toExponential(2) : fmt(x, x < 100 ? 2 : 0));
+    const moveOf = (r) => `${r.assetUp ? "+" : "−"}${fmt(r.gain * 100, 1)} %`;
+    const bnd = m.bound.binding;
+    const safe = toHuman(m.bound.exposure);
+    const atLeast = bnd.complete ? "" : " (at least)";
+    const hooked = key.hooks !== ZERO_ADDRESS;
+    const rungs = [...m.bound.rungs].sort((a, b) => a.ticks - b.ticks || Number(b.assetUp) - Number(a.assetUp));
     out.innerHTML = `
-      <p><b>${preset?.name ?? "pool"}</b> <code>${m.id}</code> · block ${Number(block.number).toLocaleString()}</p>
-      <p>price <b>${fmt(m.priceQuote, 4)}</b> quote · LP fee ${m.lpFee} pips, protocol fee ${m.protocolFee ? `on (${m.protocolFee & 0xfff}/${m.protocolFee >> 12} pips)` : "off"} · in-range liquidity <code>${m.liquidity}</code></p>
-      <p>Push +5 % right now: <b>${fmt(five.costQuoteHuman)}</b> quote of fees, tying up <b>${fmt(five.amountInHuman, 0)}</b> ${five.inputToken}.
+      <p><b>${preset?.name ?? "pool"}</b> <code>${m.id}</code> · block ${Number(block.number).toLocaleString()} · <span class="meta">measured in ${fmt((performance.now() - t0) / 1000, 1)} s</span></p>
+      <p>price <b>${fmt(m.priceQuote, 4)}</b> ${unit} · LP fee ${m.lpFee} pips, protocol fee ${m.protocolFee ? `on (${m.protocolFee & 0xfff}/${m.protocolFee >> 12} pips)` : "off"} · in-range liquidity <code>${m.liquidity}</code></p>
+      <p>Push +5 % right now: <b>${fmt(five.costQuoteHuman)}</b> ${unit} of fees, tying up <b>${fmt(five.amountInHuman, 0)}</b> ${five.inputToken === "quote" ? unit : baseLabel}.
       ${preset?.stock ? ` Robinhood mint/redeem window: <span class="pill ${closed ? "closed" : "open"}">${closed ? "closed: nobody can arbitrage, pass arbReversionSeconds = 0" : "open: pass a measured reversion time"}</span>` : " Not a stock token: no mint window; the reversion time follows the market."}</p>
-      <p>Suggested Δ for a HakariOracleHook on this pool: <b>${d ? d.suggestedDelta : "not calibrated (run npm run calibrate)"}</b>${d ? ` <span class="meta">(p99 of ${d.swapBlocks} swap blocks; max ${d.perSwapBlock.max})</span>` : ""}</p>
-      <div class="tablewrap"><table><tr><th>move</th><th>ticks</th><th>reached</th><th>capital</th><th>cost (quote)</th></tr>${m.entries.map((e) => `<tr><td>${e.direction === "up" ? "+" : "−"}${e.pct} %</td><td>${e.ticks}</td><td>${e.reached ? "yes" : "no"}</td><td>${fmt(e.amountInHuman, e.inputToken === "quote" ? 0 : 4)} ${e.inputToken}</td><td>${fmt(e.costQuoteHuman)}</td></tr>`).join("")}</table></div>`;
+      <div class="tablewrap"><table><tr><th>move</th><th>ticks</th><th>reached</th><th>capital</th><th>cost (${unit})</th></tr>${m.entries.map((e) => `<tr><td>${e.direction === "up" ? "+" : "−"}${e.pct} %</td><td>${e.ticks}</td><td>${e.reached ? "yes" : "no"}</td><td>${fmt(e.amountInHuman, e.inputToken === "quote" ? 0 : 4)} ${e.inputToken === "quote" ? unit : baseLabel}</td><td>${fmt(e.costQuoteHuman)}</td></tr>`).join("")}</table></div>
+      <div class="safe">
+        <p class="safe-line">Largest settlement this pool can safely carry right now, if nobody pushes back: <b>${amount(safe)} ${unit}</b>${atLeast} <span class="nowrap">(binding move: ${moveOf(bnd)})</span></p>
+        <p>Why: of SafeSettle's twelve moves (0.5 % to 20 %, both ways), the cheapest to fake per ${unit} it earns is ${asset} ${moveOf(bnd)}: <b>${amount(toHuman(bnd.cost))} ${unit}</b> in fees there and straight back, shifting every payout on this price by ${fmt(bnd.gain * 100, 1)} % of its size, so above ${amount(safe)} ${unit} settling the fake pays for itself.</p>
+        <p class="meta">SafeSettle refuses any settlement whose total exposure on this price is at or above this line. “Nobody pushes back” is <code>arbReversionSeconds = 0</code>, the case while the mint window is closed; with arbitrage open the attacker must re-push after every pull-back and the bound is higher. Computed as <code>CostModel.maxSafeExposure</code> is, from exact swaps through the lens${hooked ? "; on a hooked pool the exact swaps include the hook’s own charges, which the contract’s view walk does not see" : ""}.</p>
+      </div>
+      <details><summary>All twelve moves: cost to fake ÷ what it earns</summary>
+        <div class="tablewrap"><table><tr><th>${asset} move</th><th>ticks</th><th>cost to fake (${unit})</th><th>earns per 1 ${unit} settling</th><th>break-even exposure (${unit})</th></tr>${rungs.map((r) => `<tr${r === bnd ? ' class="binding"' : ""}><td>${moveOf(r)}${r === bnd ? " ◀ binding" : ""}</td><td>${r.ticks}</td><td>${amount(toHuman(r.cost))}</td><td>${fmt(r.gain, 4)}</td><td>${amount(toHuman(r.exposure))}${r.complete ? "" : " (at least)"}</td></tr>`).join("")}</table></div>
+      </details>
+      <details><summary>Δ calibration for a HakariOracleHook on this pool</summary>
+        <p>Suggested Δ: <b>${d ? d.suggestedDelta : "not calibrated (run npm run calibrate)"}</b>${d ? ` <span class="meta">(p99 tick move of ${d.swapBlocks} swap blocks; max ${d.perSwapBlock.max})</span>` : ""}. Δ clips each observation of the truncated TWAP that the hook reports alongside the raw one; SafeSettle's decision above does not use it.</p>
+      </details>`;
   } catch (e) {
-    out.innerHTML = `<span class="err">${e.shortMessage ?? e.message}</span>`;
+    out.innerHTML = `<p class="err">Could not measure: ${esc(e.shortMessage ?? e.message)}</p><p class="meta">Check the pool key (currency0 sorts below currency1; fee, tickSpacing and hooks exactly as created) and which side is the quote. If the key is right, the public RPC may be busy: press Measure again.</p>`;
   } finally {
     b.disabled = false;
   }
