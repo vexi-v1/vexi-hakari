@@ -3,12 +3,20 @@ pragma solidity ^0.8.26;
 
 import {HakariDeployers} from "../utils/HakariDeployers.sol";
 import {PushCostLens} from "../../src/PushCostLens.sol";
+import {CostModel} from "../../src/CostModel.sol";
 import {IHooks} from "@uniswap/v4-core/src/interfaces/IHooks.sol";
 import {IPoolManager} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
 import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
 import {PoolKey} from "@uniswap/v4-core/src/types/PoolKey.sol";
 import {TickMath} from "@uniswap/v4-core/src/libraries/TickMath.sol";
 import {StateLibrary} from "@uniswap/v4-core/src/libraries/StateLibrary.sol";
+
+/// @dev Calls CostModel.maxSafeExposure (a library) from outside.
+contract MaxSafeHarness {
+    function bound(PushCostLens lens, PoolKey calldata key, bool quoteIsCurrency0) external view returns (CostModel.Bound memory) {
+        return CostModel.maxSafeExposure(lens, key, 0, 60, 0, quoteIsCurrency0, 64);
+    }
+}
 
 /// @dev Writes test/fixtures/walk.json: a pool built from known positions, its slot0, and the lens's
 ///      depthToMove answers for a ladder of pushes, so the TypeScript port in gauge/src/v4math.ts can be
@@ -72,6 +80,21 @@ contract WalkFixtureTest is HakariDeployers {
             sqOut = vm.serializeString(sq, vm.toString(ticks[i]), vm.toString(uint256(TickMath.getSqrtPriceAtTick(ticks[i]))));
         }
         vm.serializeString(json, "sqrtPrices", sqOut);
+        // the contract's bound with nobody pushing back, both quote sides, for the gauge's mirror to match
+        MaxSafeHarness harness = new MaxSafeHarness();
+        string memory ms = "maxSafe";
+        string memory msOut;
+        for (uint256 q; q < 2; q++) {
+            bool quote0 = q == 0;
+            CostModel.Bound memory b = harness.bound(lens, k, quote0);
+            string memory side = quote0 ? "quote0" : "quote1";
+            vm.serializeString(side, "exposure", vm.toString(b.maxSafeExposure));
+            vm.serializeInt(side, "ticks", int256(b.ticks));
+            vm.serializeString(side, "cost", vm.toString(b.cost));
+            string memory sideOut = vm.serializeBool(side, "up", b.up);
+            msOut = vm.serializeString(ms, side, sideOut);
+        }
+        vm.serializeString(json, "maxSafe", msOut);
         string memory out = vm.serializeString(json, "pushes", pushOut);
         vm.writeJson(out, "test/fixtures/walk.json");
     }

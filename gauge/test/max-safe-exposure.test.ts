@@ -24,3 +24,29 @@ test("gain per unit: up is 1.0001^x − 1, down is 1 − 1.0001^−x", () => {
   assert.ok(Math.abs(gainPerUnit(953, true) - 0.1) < 0.001);
   assert.ok(Math.abs(gainPerUnit(953, false) - 0.0909) < 0.001);
 });
+
+// Written by `forge test --match-contract WalkFixture`: CostModel.maxSafeExposure (nobody pushing back) on the
+// fixture pool, both quote sides. The gauge's mirror must agree with the contract, not just with itself.
+import { readFileSync } from "node:fs";
+import { poolStateFromPositions as fromPositions } from "../src/v4math.ts";
+
+test("the gauge's bound equals CostModel.maxSafeExposure on the same pool", () => {
+  const fx = JSON.parse(readFileSync(new URL("../../test/fixtures/walk.json", import.meta.url), "utf8"));
+  assert.ok(fx.maxSafe, "fixture carries the contract's bound (run forge test --match-contract WalkFixture)");
+  const positions = Object.values(fx.positions as Record<string, any>).map((p) => ({
+    tickLower: Number(p.tickLower),
+    tickUpper: Number(p.tickUpper),
+    liquidity: BigInt(p.liquidity),
+  }));
+  const state = fromPositions(positions, BigInt(fx.sqrtPriceX96));
+  for (const [side, quote0] of [["quote0", true], ["quote1", false]] as const) {
+    const sol = fx.maxSafe[side];
+    const ts = maxSafeExposure(state, quote0, Number(fx.fee));
+    const solExposure = Number(BigInt(sol.exposure));
+    assert.ok(Math.abs(ts.exposure / solExposure - 1) < 1e-6, `${side}: ${ts.exposure} vs ${solExposure}`);
+    assert.equal(ts.ticks, Number(sol.ticks), `${side}: binding move`);
+    // Solidity reports the tick direction; the gauge the asset's. With the quote as currency0 they are opposite.
+    const solAssetUp = quote0 ? !sol.up : sol.up;
+    assert.equal(ts.stockUp, solAssetUp, `${side}: binding direction`);
+  }
+});
