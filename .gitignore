@@ -17,3 +17,4 @@ web/node_modules/
 # local scratch
 .DS_Store
 /tmp/
+gauge/cache/

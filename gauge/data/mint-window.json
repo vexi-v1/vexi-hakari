@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-09-25T12:50:40.553Z",
+  "rule": "closed Sat 02:00 → Mon 02:00 Europe/Berlin",
+  "symbols": [
+    {
+      "symbol": "TSLA",
+      "at": "2026-09-25T12:50:37.848Z",
+      "mintWindowClosed": false,
+      "arbOpen": true,
+      "capabilities": {
+        "market": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        },
+        "extended": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        },
+        "overnight": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        }
+      },
+      "apiError": null
+    },
+    {
+      "symbol": "NVDA",
+      "at": "2026-09-25T12:50:38.781Z",
+      "mintWindowClosed": false,
+      "arbOpen": true,
+      "capabilities": {
+        "market": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        },
+        "extended": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        },
+        "overnight": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        }
+      },
+      "apiError": null
+    },
+    {
+      "symbol": "HIMS",
+      "at": "2026-09-25T12:50:39.434Z",
+      "mintWindowClosed": false,
+      "arbOpen": true,
+      "capabilities": {
+        "market": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        },
+        "extended": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        },
+        "overnight": {
+          "whole": "TRADING_STATUS_TRADABLE",
+          "fractional": "TRADING_STATUS_TRADABLE"
+        }
+      },
+      "apiError": null
+    }
+  ]
+}

@@ -6,7 +6,7 @@
   "description": "HAKARI gauge: cost ladders, delta calibration and the HIMS weekend replay from Robinhood Chain 4663 (read-only)",
   "license": "MIT",
   "scripts": {
-    "test": "node --test --import tsx test/",
+    "test": "node --import tsx --test 'test/*.test.ts'",
     "ladder": "tsx src/ladder.ts",
     "calibrate": "tsx src/calibrate.ts",
     "hims": "tsx src/hims-replay.ts",
