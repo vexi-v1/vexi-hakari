@@ -178,6 +178,9 @@ while the mint window is closed. This flag is where the gauge is trusted; the RE
 
 ## 4. Cost model v0
 
+> **Superseded (2026-09-26)** by cost model v1 in `src/CostModel.sol` (max safe exposure over a ladder of moves,
+> both ways, held over the window); see README § "What it is".
+
 Written with its assumptions, to be refined later.
 
 To move a `W`-second window's raw TWAP by `x` ticks, the attacker must hold the pool `d` ticks
@@ -196,6 +199,11 @@ This yields a **maximum safe open interest** directly:
 protocols use to cap supply by liquidity.
 
 ## 5. Demo script (~3 min; video 2–4 min, no TTS)
+
+> **Superseded (2026-09-26).** This is the H0 plan. `SafeSettle` v1 no longer chooses between the raw and the
+> truncated TWAP by `costToFake < gainIfFaked`; it prices the largest exposure the pool can safely carry and settles
+> on the raw TWAP only below it, refusing otherwise. See README § "What the review found, and what changed" and the
+> HIMS weekend replayed through both rules (`gauge/data/hims-hook-replay.json`, `npm run hims:hook`).
 
 1. **0:00–0:30 The problem.** Web: what a 5 % push of TSLA/USDG costs in USDG right now. Cut
    to the HIMS replay: the same number falls to almost nothing on the weekend while the pool
