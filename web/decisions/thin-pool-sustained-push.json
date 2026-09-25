@@ -1,7 +1,7 @@
 {
-  "arbOpen": false,
+  "arbReversionSeconds": 0,
   "costComplete": true,
-  "costToFake": "822239396895",
+  "costToFake": "731090652993",
   "gainIfFaked": "264893907132936289",
   "notional": "1000000000000000000",
   "pool": "local 18/18, L=1e15, fee 0.3%",

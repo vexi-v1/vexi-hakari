@@ -13,7 +13,8 @@
     "mint-window": "tsx src/mint-window.ts",
     "export-lens": "tsx src/export-lens.ts",
     "discover": "tsx src/discover.ts",
-    "weekend": "tsx src/weekend.ts"
+    "weekend": "tsx src/weekend.ts",
+    "charts": "tsx src/charts.ts"
   },
   "dependencies": {
     "@types/node": "^26.6.2",

@@ -211,6 +211,8 @@ contract ShadowPoolForkTest is Test {
         _record("tsla-shaped-weekday", weekday, WEEKDAY_REVERSION, notional);
         assertGt(weekend.rawTick, weekend.truncTick + 100, "truncation held the line");
         assertFalse(weekend.usedRaw, "with arbitrage closed the fake is cheap: settle truncated");
-        assertGt(weekday.costToFake, weekend.costToFake * 5, "with arbitrage open, holding costs every second");
+        // one push plus at least one re-push, and a wider push only costs more fees: at least twice the weekend cost.
+        // Whether that crosses the gain depends on the live book, so the weekday decision is logged, not asserted.
+        assertGe(weekday.costToFake, weekend.costToFake * 2, "with arbitrage open, holding the push costs re-pushes");
     }
 }
