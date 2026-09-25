@@ -268,6 +268,7 @@ move back across the gap it was pushed through, so a held push shows up as a low
 | [Uniswap, "Uniswap v3 TWAP Oracles in Proof of Stake"](https://blog.uniswap.org/uniswap-v3-oracles) (Oct 2022) | Multi-block manipulation cost for major pairs | The same question for thin pools whose arbitrage switches off on a schedule |
 | Panoptic's truncated oracle ([Uniswap, "Uniswap v4 Truncated Oracle Hook"](https://blog.uniswap.org/uniswap-v4-truncated-oracle-hook), Dec 2023), OpenZeppelin `BaseOracleHook` | Clip each observation to ±Δ | We build on it and expose both series; the decision is not a choice between them (a held push makes them agree) but a bound from the pool's depth |
 | Panoptic v2 safe mode ([`RiskEngine.isSafeMode`](https://github.com/code-423n4/2025-12-panoptic/blob/main/contracts/RiskEngine.sol)) | Turns conservative when spot, fast and slow EMAs diverge | Divergence is not our trigger, since a held push makes the series converge; depth is |
+| [GapGuard](https://github.com/Bytethebuilder/gapguard) (Robinhood Chain, Sep 2026) | A v4 hook that charges its own pool a surcharge and caps each swap's move while the NYSE calendar says the market is closed; its `HimsReplay` test uses the same HIMS/BONER weekend | A bound for anyone reading any pool's price, from the book at the moment of settlement rather than the calendar: on the 2026-09-18 weekend all 13 stock pools held while minting was closed, so a calendar rule refuses what depth would have trusted |
 | `V4Quoter` | Quote a swap by amount via unlock + revert | The same pattern to a price limit, plus a view path for callers already inside an unlock |
 
 Chaos Labs and Gauntlet answer our question off-chain and set a cap ahead of time; HAKARI answers it on-chain,
@@ -281,7 +282,7 @@ did not.
 git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari && cd vexi-hakari
 forge test --no-match-path 'test/fork/*'          # 44 tests, no RPC
 script/record-fork-tests.sh                       # 5 fork tests on real pools (public RPC, ~6 min), URLs masked
-cd gauge && npm ci && npm test                    # 74 tests (3 skip without `npm run squeeze`'s caches); the walk and the bound are pinned to the Solidity ones
+cd gauge && npm ci && npm test                    # 78 tests (3 skip without `npm run squeeze`'s caches); the walk and the bound are pinned to the Solidity ones
 npm run discover                                  # the deepest USDG pool of 30 stock tokens
 npm run weekend -- 2026-09-18                     # rebuild a weekend for every one of them
 npm run hims && npm run ladder && npm run calibrate && npm run charts
