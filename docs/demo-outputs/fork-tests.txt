@@ -1,0 +1,36 @@
+Ran 2 tests for test/fork/PushCostLens.fork.t.sol:PushCostLensForkTest
+[FAIL: lens push bought ~10 TSLA: 8064910292144200977 !~= 10000000000000000000 (max delta: 2.0000000000000000%, real delta: 19.3508970785579902%)] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 171811)
+Logs:
+  block 72260349
+  start tick -216868
+  ticks moved by 10 TSLA 3
+  manual net USDG (6 dec) -26778713
+  lens amountOut TSLA (18 dec) 8064910292144200977
+  lens cost USDG (6 dec) 21596401
+  pre-hackathon figure at block 71,937,777: -26.560259 USDG
+[PASS] test_depthToMove_agreesWithQuotePush_onTheRealPool() (gas: 1391942)
+Logs:
+  push up ticks / USDG needed / round-trip cost 50 44708456093 311967921
+  push up ticks / USDG needed / round-trip cost 200 134166625709 933328999
+  push up ticks / USDG needed / round-trip cost 1000 212877726908 1470551436
+Suite result: FAILED. 1 passed; 1 failed; 0 skipped; finished in 10.68s (8.55s CPU time)
+Ran 2 tests for test/fork/ShadowPool.fork.t.sol:ShadowPoolForkTest
+[PASS] test_shadowPool_hasTheRealPoolsDepth() (gas: 849226)
+Logs:
+  shadow pool mirrors TSLA/USDG at block 72260349
+[PASS] test_sustainedPush_onTslaShapedBook_inUsdg() (gas: 1647345)
+Logs:
+  USDG spent holding +5% (6 dec) 181738114139
+  raw TWAP tick -216380
+  truncated TWAP tick (delta = 3) -216849
+  gain if faked, USDG (6 dec) 4801474468
+  cost to fake, weekend (arb closed), USDG 176444230
+  cost to fake, weekday (arb open), USDG 1000358532
+  weekend: used raw? false
+  weekday: used raw? false
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 114.22s (63.61ms CPU time)
+Ran 2 test suites in 114.23s (124.90s CPU time): 3 tests passed, 1 failed, 0 skipped (4 total tests)
+Failing tests:
+Encountered 1 failing test in test/fork/PushCostLens.fork.t.sol:PushCostLensForkTest
+[FAIL: lens push bought ~10 TSLA: 8064910292144200977 !~= 10000000000000000000 (max delta: 2.0000000000000000%, real delta: 19.3508970785579902%)] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 171811)
+Encountered a total of 1 failing tests, 3 tests succeeded
