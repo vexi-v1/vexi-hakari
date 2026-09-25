@@ -1,36 +1,32 @@
 Ran 2 tests for test/fork/PushCostLens.fork.t.sol:PushCostLensForkTest
-[PASS] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 173783)
+[PASS] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 173839)
 Logs:
-  block 72306810
-  start tick -217180
-  ticks moved by 10 TSLA 6
-  manual net USDG (6 dec) -25959381
+  block 72308997
+  start tick -217209
+  ticks moved by 10 TSLA 8
+  manual net USDG (6 dec) -25885799
   lens amountOut TSLA (18 dec) 10000000000000000000
-  lens cost USDG (6 dec) 25959381
+  lens cost USDG (6 dec) 25885799
   pre-hackathon figure at block 71,937,777: -26.560259 USDG
-[PASS] test_depthToMove_agreesWithQuotePush_onTheRealPool() (gas: 1214437)
+[PASS] test_depthToMove_agreesWithQuotePush_onTheRealPool() (gas: 1216080)
 Logs:
-  push up ticks / USDG needed / round-trip cost 50 34155849371 238295691
-  push up ticks / USDG needed / round-trip cost 200 163502276695 1136435930
-  push up ticks / USDG needed / round-trip cost 1000 427211695354 2940145683
-Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 11.56s (9.85s CPU time)
+  push up ticks / USDG needed / round-trip cost 50 30985125936 216182089
+  push up ticks / USDG needed / round-trip cost 200 159770471987 1110265279
+  push up ticks / USDG needed / round-trip cost 1000 443447188362 3050039369
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 10.76s (9.39s CPU time)
 Ran 2 tests for test/fork/ShadowPool.fork.t.sol:ShadowPoolForkTest
-[PASS] test_shadowPool_hasTheRealPoolsDepth() (gas: 876498)
+[PASS] test_shadowPool_hasTheRealPoolsDepth() (gas: 876622)
 Logs:
-  shadow pool mirrors TSLA/USDG at block 72306810
-[FAIL: with arbitrage open, holding costs every second: 4870052940 <= 10119282875] test_sustainedPush_onTslaShapedBook_inUsdg() (gas: 2059793)
+  shadow pool mirrors TSLA/USDG at block 72308997
+[PASS] test_sustainedPush_onTslaShapedBook_inUsdg() (gas: 2010560)
 Logs:
-  USDG spent holding +5% (6 dec) 353174516003
-  raw TWAP tick -216692
-  truncated TWAP tick (delta = 3) -217161
+  USDG spent holding +5% (6 dec) 359981719101
+  raw TWAP tick -216721
+  truncated TWAP tick (delta = 3) -217190
   gain if faked, USDG (6 dec) 4801474468
-  cost to fake, weekend (arb closed), USDG 2023856575
-  cost to fake, weekday (arb open), USDG 4870052940
+  cost to fake, weekend (arb closed), USDG 2070059251
+  cost to fake, weekday (arb open), USDG 5069940122
   weekend: used raw? false
   weekday: used raw? true
-Suite result: FAILED. 1 passed; 1 failed; 0 skipped; finished in 109.08s (15.17ms CPU time)
-Ran 2 test suites in 109.09s (120.64s CPU time): 3 tests passed, 1 failed, 0 skipped (4 total tests)
-Failing tests:
-Encountered 1 failing test in test/fork/ShadowPool.fork.t.sol:ShadowPoolForkTest
-[FAIL: with arbitrage open, holding costs every second: 4870052940 <= 10119282875] test_sustainedPush_onTslaShapedBook_inUsdg() (gas: 2059793)
-Encountered a total of 1 failing tests, 3 tests succeeded
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 95.95s (11.38ms CPU time)
+Ran 2 test suites in 95.95s (106.71s CPU time): 4 tests passed, 0 failed, 0 skipped (4 total tests)

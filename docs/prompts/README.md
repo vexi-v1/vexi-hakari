@@ -5,9 +5,9 @@ the repository. This directory is that record.
 
 | File | What |
 | --- | --- |
-| `2026-09-25-spec-zh.md` | The original spec, in Traditional Chinese, as handed to the AI at H0. `SPEC.md` at the repo root is its English translation. The internal "after the hackathon" half of the same document is about our other project and is not part of this submission. |
-| `log.md` | Every prompt that shaped the work after H0, appended as the session goes, with the time and what came out of it. |
+| `2026-09-25-spec-zh.md` | The original spec, in Traditional Chinese, as handed to the AI at H0. `SPEC.md` at the repo root is its English translation. The same document had a second part: a post-hackathon plan for connecting this work to our other project. It gave no instructions for this build and no code here came from it, so it is not included. |
+| `log.md` | Every instruction that shaped the work after the spec, in order, with what came out of it. |
 
-Tooling: Claude Code (Anthropic) driven by one human. The human decided what to build (the
-spec), what to cut, and reviewed every contract and test; the AI wrote code, tests and docs
-under `AGENTS.md`. See `README.md` § "AI disclosure" for the per-file split.
+Tooling: Claude Code (Anthropic) driven by one human. The human wrote the spec, made every decision
+recorded in `log.md`, and ordered the reviews; the AI wrote the code, tests and docs under `AGENTS.md`.
+See `README.md` § "AI disclosure".

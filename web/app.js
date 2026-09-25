@@ -20,12 +20,14 @@ const erc20Abi = parseAbi(["function decimals() view returns (uint8)", "function
 const client = createPublicClient({ transport: http(RPC) });
 const load = (p) => fetch(p).then((r) => (r.ok ? r.json() : null)).catch(() => null);
 
-const [ladder, hims, delta, mint, lensArtifact] = await Promise.all([
+const WEEKEND = "2026-09-18";
+const [ladder, hims, delta, mint, lensArtifact, weekend] = await Promise.all([
   load("../gauge/data/ladder.json"),
   load("../gauge/data/hims-replay.json"),
   load("../gauge/data/delta.json"),
   load("../gauge/data/mint-window.json"),
   load("lens-artifact.json"),
+  load(`../gauge/data/weekend-${WEEKEND}.json`),
 ]);
 const decisionFiles = ["thin-pool-sustained-push", "deep-pool-genuine-surge", "tsla-shaped-weekend", "tsla-shaped-weekday"];
 const decisions = (await Promise.all(decisionFiles.map((f) => load(`decisions/${f}.json`)))).filter(Boolean);
@@ -35,15 +37,15 @@ $("meta").textContent = ladder ? `snapshot at block ${Number(ladder.block).toLoc
 // ───────── 1. cost ladder ─────────
 function renderLadder(data) {
   const t = $("ladder");
-  const head = `<tr><th>pool</th><th>price (USDG)</th><th>in-range liquidity</th>${PCTS.map((p) => `<th>+${p}% cost</th><th>+${p}% capital</th>`).join("")}${PCTS.map((p) => `<th>−${p}% cost</th>`).join("")}</tr>`;
+  const head = `<tr><th>pool</th><th>price (USDG)</th>${PCTS.map((p) => `<th>+${p}% cost</th><th>+${p}% capital</th>`).join("")}${PCTS.map((p) => `<th>−${p}% cost</th>`).join("")}</tr>`;
   const rows = data.pools.map((p) => {
     const cell = (pct, dir, key) => {
       const e = p.entries.find((x) => x.pct === pct && x.direction === dir);
       if (!e) return "<td>—</td>";
       if (key === "cost") return `<td title="${e.ticks} ticks">${fmt(e.costQuoteHuman)}</td>`;
-      return `<td>${e.inputToken === "quote" ? fmt(e.amountInHuman, 0) : fmt(e.amountInHuman, 2) + " base"}</td>`;
+      return `<td>${e.inputToken === "quote" ? fmt(e.amountInHuman, 0) : fmt(e.amountInHuman, 2) + " stock"}</td>`;
     };
-    return `<tr><td>${p.name}${p.stockSymbol ? ` <span class="meta">stock</span>` : ""}</td><td>${fmt(p.priceQuote, 4)}</td><td>${BigInt(p.liquidity).toString().length} digits</td>${PCTS.map((pct) => cell(pct, "up", "cost") + cell(pct, "up", "cap")).join("")}${PCTS.map((pct) => cell(pct, "down", "cost")).join("")}</tr>`;
+    return `<tr><td>${p.name}${p.stockSymbol ? ` <span class="meta">stock</span>` : ""}</td><td>${fmt(p.priceQuote, 4)}</td>${PCTS.map((pct) => cell(pct, "up", "cost") + cell(pct, "up", "cap")).join("")}${PCTS.map((pct) => cell(pct, "down", "cost")).join("")}</tr>`;
   });
   t.innerHTML = head + rows.join("");
   $("ladder-meta").textContent = `block ${Number(data.block).toLocaleString()} · ${new Date(data.timestamp * 1000).toUTCString()}`;
@@ -163,6 +165,16 @@ if (hims) {
   $("hims-table").innerHTML = `<tr><th>block</th><th>time (UTC)</th><th>mint window</th><th>USDG/HIMS</th><th>HIMS in pool</th><th>USDG in pool</th><th>live positions</th><th>+10 % capital (USDG)</th><th>+10 % cost (USDG)</th><th>+85 % capital (USDG)</th><th>rebuilt L = Swap L</th></tr>` + pts.map((p) => `<tr><td>${Number(p.block).toLocaleString()}</td><td>${p.time.slice(0, 19).replace("T", " ")}</td><td><span class="pill ${p.mintWindowClosed ? "closed" : "open"}">${p.mintWindowClosed ? "closed" : "open"}</span></td><td>${fmt(p.usdgPerHims, 4)}</td><td>${fmt(p.himsPrincipal)}</td><td>${fmt(p.usdgPrincipal, 0)}</td><td>${p.livePositions}</td><td>${fmt(p.pushUp10.usdgIn, 0)}</td><td>${fmt(p.pushUp10.roundTripCostUsdg)}</td><td>${fmt(p.pushUp85.usdgIn, 0)}</td><td>${p.liquidityMatches ? "yes" : "NO"}</td></tr>`).join("");
 }
 
+// ───────── weekend, every stock pool ─────────
+if (weekend) {
+  const rows = weekend.series.filter((r) => r.fridayCostUp10 && r.weekendMinCostUp10).sort((a, b) => a.weekendOverFriday - b.weekendOverFriday);
+  $("weekend-fig").innerHTML = `<img src="../docs/img/weekend-${WEEKEND}.svg" alt="Friday vs weekend cost to push each stock pool 10 %" style="width:100%;height:auto;border-radius:10px">` +
+    `<div class="tablewrap"><table><tr><th>stock</th><th>Friday +10 % cost</th><th>weekend minimum</th><th>weekend ÷ Friday</th><th>rebuild = chain</th></tr>` +
+    rows.map((r) => `<tr><td>${r.symbol}</td><td>${fmt(r.fridayCostUp10)}</td><td>${fmt(r.weekendMinCostUp10)}</td><td>×${fmt(r.weekendOverFriday, 2)}</td><td>${r.allLiquidityMatches ? "yes" : "no"}</td></tr>`).join("") + `</table></div>`;
+} else {
+  $("weekend-lead").textContent += " (run npm run discover and npm run weekend -- " + WEEKEND + " in gauge/)";
+}
+
 // ───────── 3. paste a pool ─────────
 const presets = [
   { name: "TSLA/USDG", id: "0x8517f8071ae5b831b738052f12125e8e3d6c158b78728aa44ce3b25e5104d32e", currency0: "0x322f0929c4625ed5bad873c95208d54e1c003b2d", currency1: "0x5fc5360d0400a0fd4f2af552add042d716f1d168", fee: 3000, tickSpacing: 60, hooks: "0x0000000000000000000000000000000000000000", quoteIsCurrency0: false, stock: "TSLA" },
@@ -205,7 +217,7 @@ $("measure").onclick = async () => {
       <p><b>${preset?.name ?? "pool"}</b> <code>${m.id}</code> · block ${Number(block.number).toLocaleString()}</p>
       <p>price <b>${fmt(m.priceQuote, 4)}</b> quote · LP fee ${m.lpFee} pips, protocol fee ${m.protocolFee ? `on (${m.protocolFee & 0xfff}/${m.protocolFee >> 12} pips)` : "off"} · in-range liquidity <code>${m.liquidity}</code></p>
       <p>Push +5 % right now: <b>${fmt(five.costQuoteHuman)}</b> quote of fees, tying up <b>${fmt(five.amountInHuman, 0)}</b> ${five.inputToken}.
-      ${preset?.stock ? ` Robinhood mint/redeem window: <span class="pill ${closed ? "closed" : "open"}">${closed ? "closed — fenced, arbOpen=false" : "open — arbOpen=true"}</span>` : " Not a stock token: no mint window, arbOpen follows the market."}</p>
+      ${preset?.stock ? ` Robinhood mint/redeem window: <span class="pill ${closed ? "closed" : "open"}">${closed ? "closed: nobody can arbitrage, pass arbReversionSeconds = 0" : "open: pass a measured reversion time"}</span>` : " Not a stock token: no mint window; the reversion time follows the market."}</p>
       <p>Suggested Δ for a HakariOracleHook on this pool: <b>${d ? d.suggestedDelta : "not calibrated (run npm run calibrate)"}</b>${d ? ` <span class="meta">(p99 of ${d.swapBlocks} swap blocks; max ${d.perSwapBlock.max})</span>` : ""}</p>
       <div class="tablewrap"><table><tr><th>move</th><th>ticks</th><th>reached</th><th>capital</th><th>cost (quote)</th></tr>${m.entries.map((e) => `<tr><td>${e.direction === "up" ? "+" : "−"}${e.pct} %</td><td>${e.ticks}</td><td>${e.reached ? "yes" : "no"}</td><td>${fmt(e.amountInHuman, e.inputToken === "quote" ? 0 : 4)} ${e.inputToken}</td><td>${fmt(e.costQuoteHuman)}</td></tr>`).join("")}</table></div>`;
   } catch (e) {
@@ -216,8 +228,10 @@ $("measure").onclick = async () => {
 };
 
 // ───────── 4. decisions ─────────
-$("decisions").innerHTML = `<tr><th>scenario</th><th>pool</th><th>arb open</th><th>raw tick</th><th>truncated tick</th><th>gap</th><th>cost to fake</th><th>gain if faked</th><th>settled on</th></tr>` +
-  (decisions.length ? decisions.map((d) => `<tr><td>${d.scenario}</td><td>${d.pool}</td><td>${d.arbOpen ? "yes" : "no"}</td><td>${d.rawTick}</td><td>${d.truncTick}</td><td>${Math.abs(Number(d.rawTick) - Number(d.truncTick))}</td><td>${BigInt(d.costToFake).toLocaleString("en-US")}${d.costComplete ? "" : " (at least)"}</td><td>${BigInt(d.gainIfFaked).toLocaleString("en-US")}</td><td><span class="pill ${d.usedRaw ? "raw" : "trunc"}">${d.usedRaw ? "raw" : "truncated"}</span></td></tr>`).join("") : `<tr><td colspan="9">run forge test --match-contract ThreeLayers (and ShadowPool on a fork) to fill this</td></tr>`);
+const decUnit = (d) => (d.scenario.startsWith("tsla") ? { dec: 6, unit: "USDG" } : { dec: 18, unit: "tokens" });
+const human = (v, d) => { const { dec, unit } = decUnit(d); const x = Number(BigInt(v)) / 10 ** dec; return `${x < 0.01 ? x.toExponential(2) : fmt(x, 2)} ${unit}`; };
+$("decisions").innerHTML = `<tr><th>scenario</th><th>pool</th><th>arbitrage pulls back</th><th>raw tick</th><th>truncated tick</th><th>gap</th><th>cost to fake</th><th>gain if faked</th><th>settled on</th></tr>` +
+  (decisions.length ? decisions.map((d) => `<tr><td>${d.scenario}</td><td>${d.pool}</td><td>${Number(d.arbReversionSeconds) > 0 ? `every ${d.arbReversionSeconds} s` : "never (closed)"}</td><td>${d.rawTick}</td><td>${d.truncTick}</td><td>${Math.abs(Number(d.rawTick) - Number(d.truncTick))}</td><td>${human(d.costToFake, d)}${d.costComplete ? "" : " (at least)"}</td><td>${human(d.gainIfFaked, d)}</td><td><span class="pill ${d.usedRaw ? "raw" : "trunc"}">${d.usedRaw ? "raw" : "truncated"}</span></td></tr>`).join("") : `<tr><td colspan="9">run forge test --match-contract ThreeLayers (and ShadowPool on a fork) to fill this</td></tr>`);
 
 // ───────── 5. delta ─────────
 if (delta) $("delta").innerHTML = `<tr><th>pool</th><th>swaps in window</th><th>swap blocks</th><th>p50 move</th><th>p90</th><th>p99</th><th>max</th><th>suggested Δ</th></tr>` + delta.pools.map((p) => `<tr><td>${p.name}</td><td>${p.swaps}</td><td>${p.swapBlocks}</td><td>${p.perSwapBlock.p50}</td><td>${p.perSwapBlock.p90}</td><td>${p.perSwapBlock.p99}</td><td>${p.perSwapBlock.max}</td><td><b>${p.suggestedDelta}</b></td></tr>`).join("");
