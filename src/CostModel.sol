@@ -8,39 +8,47 @@ import {FixedPoint96} from "@uniswap/v4-core/src/libraries/FixedPoint96.sol";
 import {PushCostLens} from "./PushCostLens.sol";
 
 /// @title CostModel v0
-/// @notice What it costs to move a W-second raw TWAP by x ticks, and what that move is worth to an attacker.
-/// @dev To move the TWAP by x the attacker holds the pool d ticks off-price for s seconds with d·s ≥ x·W, s ≤ W.
-///      cost(d, s) = roundTrip(d) + (arbOpen ? s × roundTrip(d) : 0): one push, plus one re-push per second
-///      while arbitrageurs keep pulling it back. With arbitrage closed (a fenced weekend stock) the holding cost
-///      is ~0 and d = x is optimal. With arbitrage open a wider, shorter push may be cheaper when liquidity thins
-///      away from the price, so a small ladder of d is tried. Everything is a conservative lower bound: the
-///      round trip counts fees only (an exact retrace has no impact loss) and the walk is capped.
-///      The walk starts from the pool's *current* price in the direction of the raw/truncated gap.
+/// @notice What it costs to move a W-second raw TWAP by x ticks away from the truncated (honest) price, and what that
+///         move is worth to an attacker.
+/// @dev To move the TWAP by x the attacker holds the pool d ticks off the honest price for s seconds with d·s ≥ x·W.
+///      cost(d, s) = roundTrip(honest → honest ± d) × (1 + re-pushes), re-pushes = ⌈s / arbReversionSeconds⌉.
+///      - The walk is over the stretch the attacker had to cross — from the truncated price to where it held the
+///        pool — through the liquidity in the pool now. It is not measured from wherever the pool sits at settlement.
+///      - arbReversionSeconds = 0: nobody pulls the price back (a fenced weekend stock); holding is free and d = x.
+///        Then the cost is fees only on an exact retrace: a lower bound for the liquidity the pool has right now.
+///      - arbReversionSeconds > 0: arbitrageurs pull the price back once per that many seconds and the attacker
+///        re-pushes each time; a wider, shorter push (d = 2x, 4x, 8x) is tried too. This term is only as good as the
+///        reversion time the caller asserts. Asserting a faster reversion than the market delivers overstates the
+///        cost and makes the raw price look safer than it is, so callers should pass a slow, measured bound.
+///      - The walk is capped at `maxSteps` segments; `complete = false` means "at least this".
 library CostModel {
     uint256 internal constant LADDER = 4; // d = x, 2x, 4x, 8x
 
     function costToFake(
         PushCostLens lens,
         PoolKey calldata key,
+        int24 truncTick,
         int24 x,
         bool up,
         uint32 window,
-        bool arbOpen,
+        uint32 arbReversionSeconds,
         bool quoteIsCurrency0,
         uint256 maxSteps
     ) internal view returns (uint256 best, bool complete) {
         int24 d = x;
-        uint256 rungs = arbOpen ? LADDER : 1;
+        uint256 rungs = arbReversionSeconds == 0 ? 1 : LADDER;
         for (uint256 i; i < rungs; i++) {
-            (, uint256 in0, uint256 in1, bool ok) = lens.roundTripCost(key, d, up, maxSteps);
+            int24 heldAt = up ? truncTick + d : truncTick - d;
+            (, uint256 in0, uint256 in1, bool ok) = lens.roundTripCostBetween(key, truncTick, heldAt, maxSteps);
             uint256 roundTrip = quoteIsCurrency0 ? in0 : in1;
-            uint256 holdSeconds = arbOpen ? _ceilDiv(uint256(uint24(x)) * window, uint256(uint24(d))) : 0;
-            uint256 cost = roundTrip * (1 + holdSeconds);
+            uint256 holdSeconds = _ceilDiv(uint256(uint24(x)) * window, uint256(uint24(d)));
+            uint256 repushes = arbReversionSeconds == 0 ? 0 : _ceilDiv(holdSeconds, arbReversionSeconds);
+            uint256 cost = roundTrip * (1 + repushes);
             if (i == 0 || cost < best) {
                 best = cost;
                 complete = ok;
             }
-            if (d > TickMath.MAX_TICK / 2) break;
+            if (d > TickMath.MAX_TICK / 4) break;
             d *= 2;
         }
     }

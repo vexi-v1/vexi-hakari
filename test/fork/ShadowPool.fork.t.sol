@@ -35,6 +35,8 @@ contract ShadowPoolForkTest is Test {
     /// @dev gauge/data/delta.json: p99 tick move per swap block on TSLA/USDG over the last 300k blocks
     int24 constant TSLA_DELTA = 3;
     uint32 constant WINDOW = 10;
+    /// @dev Assumption, not a measurement: on a weekday arbitrageurs pull TSLA/USDG back once every 5 s.
+    uint32 constant WEEKDAY_REVERSION = 5;
 
     PoolKey real;
     PoolKey shadow;
@@ -137,11 +139,11 @@ contract ShadowPoolForkTest is Test {
         return (next, false);
     }
 
-    function _record(string memory scenario, SafeSettle.Decision memory d, bool arbOpen, uint256 notional) internal {
+    function _record(string memory scenario, SafeSettle.Decision memory d, uint32 arbReversionSeconds, uint256 notional) internal {
         string memory row = scenario;
         vm.serializeString(row, "scenario", scenario);
         vm.serializeString(row, "pool", string(abi.encodePacked("TSLA/USDG profile at block ", vm.toString(block.number), ", delta 3, notional 100,000 USDG")));
-        vm.serializeBool(row, "arbOpen", arbOpen);
+        vm.serializeUint(row, "arbReversionSeconds", arbReversionSeconds);
         vm.serializeString(row, "notional", vm.toString(notional));
         vm.serializeInt(row, "rawTick", int256(d.rawTick));
         vm.serializeInt(row, "truncTick", int256(d.truncTick));
@@ -196,8 +198,8 @@ contract ShadowPoolForkTest is Test {
 
         // 100,000 USDG of payout riding on this settlement
         uint256 notional = 100_000e6;
-        SafeSettle.Decision memory weekend = settle.settlePrice(shadow, WINDOW, notional, false, false);
-        SafeSettle.Decision memory weekday = settle.settlePrice(shadow, WINDOW, notional, false, true);
+        SafeSettle.Decision memory weekend = settle.settlePrice(shadow, WINDOW, notional, false, 0);
+        SafeSettle.Decision memory weekday = settle.settlePrice(shadow, WINDOW, notional, false, WEEKDAY_REVERSION);
         console2.log("raw TWAP tick", weekend.rawTick);
         console2.log("truncated TWAP tick (delta = 3)", weekend.truncTick);
         console2.log("gain if faked, USDG (6 dec)", weekend.gainIfFaked);
@@ -205,8 +207,8 @@ contract ShadowPoolForkTest is Test {
         console2.log("cost to fake, weekday (arb open), USDG", weekday.costToFake);
         console2.log("weekend: used raw?", weekend.usedRaw);
         console2.log("weekday: used raw?", weekday.usedRaw);
-        _record("tsla-shaped-weekend", weekend, false, notional);
-        _record("tsla-shaped-weekday", weekday, true, notional);
+        _record("tsla-shaped-weekend", weekend, 0, notional);
+        _record("tsla-shaped-weekday", weekday, WEEKDAY_REVERSION, notional);
         assertGt(weekend.rawTick, weekend.truncTick + 100, "truncation held the line");
         assertFalse(weekend.usedRaw, "with arbitrage closed the fake is cheap: settle truncated");
         assertGt(weekday.costToFake, weekend.costToFake * 5, "with arbitrage open, holding costs every second");

@@ -161,6 +161,16 @@ contract PushCostLens is IUnlockCallback {
 
     // ───────────────────────── view tick walk ─────────────────────────
 
+    /// @dev State of a view walk along the curve: where it is, the liquidity in range there, and what it has summed.
+    struct Walk {
+        uint160 sqrtP;
+        int24 tick;
+        uint128 liquidity;
+        uint256 netIn; // input token, net of fee
+        uint256 amountOut;
+        uint256 steps;
+    }
+
     /// @notice Input needed (fees included) to move the price by `ticks`, walking at most `maxSteps` bitmap segments.
     /// @return amountIn   input token, gross of the swap fee
     /// @return amountOut  output token that would come out
@@ -172,44 +182,34 @@ contract PushCostLens is IUnlockCallback {
         returns (uint256 amountIn, uint256 amountOut, uint256 feePaid, bool complete)
     {
         if (ticks <= 0) revert ZeroTicks();
-        PoolId id = key.toId();
-        (uint160 sqrtP, int24 tick, uint24 protocolFee, uint24 lpFee) = poolManager.getSlot0(id);
-        bool zeroForOne = !up;
-        uint24 swapFee = _swapFee(protocolFee, lpFee, zeroForOne);
-        uint160 target = TickMath.getSqrtPriceAtTick(_targetTick(tick, ticks, up));
-        uint128 liquidity = poolManager.getLiquidity(id);
-        uint256 netIn;
+        (Walk memory w, uint24 protocolFee, uint24 lpFee) = _startWalk(key.toId());
+        uint160 target = TickMath.getSqrtPriceAtTick(_targetTick(w.tick, ticks, up));
+        complete = _walkTo(key.toId(), key.tickSpacing, w, target, maxSteps);
+        (amountIn, feePaid) = _gross(w.netIn, _swapFee(protocolFee, lpFee, !up));
+        amountOut = w.amountOut;
+    }
 
-        for (uint256 step; step < maxSteps && sqrtP != target; step++) {
-            (int24 next, bool initialized) =
-                TickBitmapView.nextInitializedTickWithinOneWord(poolManager, id, tick, key.tickSpacing, zeroForOne);
-            if (next < TickMath.MIN_TICK) next = TickMath.MIN_TICK;
-            if (next > TickMath.MAX_TICK) next = TickMath.MAX_TICK;
-            uint160 sqrtNext = TickMath.getSqrtPriceAtTick(next);
-            uint160 sqrtStep = zeroForOne ? (sqrtNext < target ? target : sqrtNext) : (sqrtNext > target ? target : sqrtNext);
-            if (liquidity > 0) {
-                if (zeroForOne) {
-                    netIn += SqrtPriceMath.getAmount0Delta(sqrtStep, sqrtP, liquidity, true);
-                    amountOut += SqrtPriceMath.getAmount1Delta(sqrtStep, sqrtP, liquidity, false);
-                } else {
-                    netIn += SqrtPriceMath.getAmount1Delta(sqrtP, sqrtStep, liquidity, true);
-                    amountOut += SqrtPriceMath.getAmount0Delta(sqrtP, sqrtStep, liquidity, false);
-                }
-            }
-            sqrtP = sqrtStep;
-            if (sqrtStep == sqrtNext) {
-                if (initialized) {
-                    (, int128 liquidityNet) = poolManager.getTickLiquidity(id, next);
-                    liquidity = LiquidityMath.addDelta(liquidity, zeroForOne ? -liquidityNet : liquidityNet);
-                }
-                tick = zeroForOne ? next - 1 : next;
-            } else {
-                tick = TickMath.getTickAtSqrtPrice(sqrtP);
-            }
+    /// @notice Input needed to move the price from `fromTick` to `toTick` through the pool's liquidity as it is now,
+    ///         wherever the pool's price currently sits. This is the question to ask about a manipulation that is
+    ///         already in place: what did it cost to get from the honest price to here?
+    /// @dev Walks from the current price to `fromTick` without counting, then counts from `fromTick` to `toTick`.
+    ///      Both legs share `maxSteps`.
+    function depthBetween(PoolKey calldata key, int24 fromTick, int24 toTick, uint256 maxSteps)
+        external
+        view
+        returns (uint256 amountIn, uint256 amountOut, uint256 feePaid, bool complete)
+    {
+        if (fromTick == toTick) revert ZeroTicks();
+        PoolId id = key.toId();
+        (Walk memory w, uint24 protocolFee, uint24 lpFee) = _startWalk(id);
+        if (!_walkTo(id, key.tickSpacing, w, TickMath.getSqrtPriceAtTick(_clampTick(fromTick)), maxSteps)) {
+            return (0, 0, 0, false);
         }
-        complete = sqrtP == target;
-        amountIn = netIn == 0 ? 0 : FullMath.mulDivRoundingUp(netIn, 1e6, 1e6 - swapFee);
-        feePaid = amountIn - netIn;
+        w.netIn = 0;
+        w.amountOut = 0;
+        complete = _walkTo(id, key.tickSpacing, w, TickMath.getSqrtPriceAtTick(_clampTick(toTick)), maxSteps);
+        (amountIn, feePaid) = _gross(w.netIn, _swapFee(protocolFee, lpFee, toTick < fromTick));
+        amountOut = w.amountOut;
     }
 
     /// @notice Cost of pushing by `ticks` and selling back, in the input token, from the view walk.
@@ -223,8 +223,29 @@ contract PushCostLens is IUnlockCallback {
         uint256 amountOut;
         uint256 feePaid;
         (, amountOut, feePaid, complete) = this.depthToMove(key, ticks, up, maxSteps);
-        (uint160 sqrtStart,, uint24 protocolFee, uint24 lpFee) = poolManager.getSlot0(key.toId());
-        bool zeroForOne = !up;
+        (uint160 sqrtStart,,,) = poolManager.getSlot0(key.toId());
+        (cost, costInCurrency0, costInCurrency1) = _roundTrip(key.toId(), feePaid, amountOut, !up, sqrtStart);
+    }
+
+    /// @notice `roundTripCost` for the stretch from `fromTick` to `toTick`, valued at `fromTick`'s price.
+    function roundTripCostBetween(PoolKey calldata key, int24 fromTick, int24 toTick, uint256 maxSteps)
+        external
+        view
+        returns (uint256 cost, uint256 costInCurrency0, uint256 costInCurrency1, bool complete)
+    {
+        uint256 amountOut;
+        uint256 feePaid;
+        (, amountOut, feePaid, complete) = this.depthBetween(key, fromTick, toTick, maxSteps);
+        uint160 sqrtStart = TickMath.getSqrtPriceAtTick(_clampTick(fromTick));
+        (cost, costInCurrency0, costInCurrency1) = _roundTrip(key.toId(), feePaid, amountOut, toTick < fromTick, sqrtStart);
+    }
+
+    function _roundTrip(PoolId id, uint256 feePaid, uint256 amountOut, bool zeroForOne, uint160 sqrtStart)
+        private
+        view
+        returns (uint256 cost, uint256 in0, uint256 in1)
+    {
+        (,, uint24 protocolFee, uint24 lpFee) = poolManager.getSlot0(id);
         uint24 backFee = _swapFee(protocolFee, lpFee, !zeroForOne);
         uint256 backFeeInOutputToken = FullMath.mulDivRoundingUp(amountOut, backFee, 1e6);
         // value the output-token fee in the input token at the start price
@@ -232,16 +253,70 @@ contract PushCostLens is IUnlockCallback {
             ? _mulSqrtPriceSquared(backFeeInOutputToken, sqrtStart, false) // input is currency0: currency1 → currency0
             : _mulSqrtPriceSquared(backFeeInOutputToken, sqrtStart, true); // input is currency1: currency0 → currency1
         cost = feePaid + backFeeInInputToken;
-        (costInCurrency0, costInCurrency1) = _valueAt(cost, zeroForOne, sqrtStart);
+        (in0, in1) = _valueAt(cost, zeroForOne, sqrtStart);
+    }
+
+    function _startWalk(PoolId id) private view returns (Walk memory w, uint24 protocolFee, uint24 lpFee) {
+        (w.sqrtP, w.tick, protocolFee, lpFee) = poolManager.getSlot0(id);
+        w.liquidity = poolManager.getLiquidity(id);
+    }
+
+    /// @dev Move `w` to `target` segment by segment, as `Pool.swap` would, summing what the move takes and gives.
+    ///      Tick convention is `Pool.swap`'s: landing on a boundary going down leaves `tick = boundary - 1`, so a
+    ///      later walk in the other direction re-crosses that boundary and restores the liquidity.
+    function _walkTo(PoolId id, int24 tickSpacing, Walk memory w, uint160 target, uint256 maxSteps)
+        private
+        view
+        returns (bool reached)
+    {
+        bool zeroForOne = target < w.sqrtP;
+        while (w.steps < maxSteps && w.sqrtP != target) {
+            (int24 next, bool initialized) =
+                TickBitmapView.nextInitializedTickWithinOneWord(poolManager, id, w.tick, tickSpacing, zeroForOne);
+            if (next < TickMath.MIN_TICK) next = TickMath.MIN_TICK;
+            if (next > TickMath.MAX_TICK) next = TickMath.MAX_TICK;
+            uint160 sqrtNext = TickMath.getSqrtPriceAtTick(next);
+            uint160 sqrtStep = zeroForOne ? (sqrtNext < target ? target : sqrtNext) : (sqrtNext > target ? target : sqrtNext);
+            if (w.liquidity > 0) {
+                if (zeroForOne) {
+                    w.netIn += SqrtPriceMath.getAmount0Delta(sqrtStep, w.sqrtP, w.liquidity, true);
+                    w.amountOut += SqrtPriceMath.getAmount1Delta(sqrtStep, w.sqrtP, w.liquidity, false);
+                } else {
+                    w.netIn += SqrtPriceMath.getAmount1Delta(w.sqrtP, sqrtStep, w.liquidity, true);
+                    w.amountOut += SqrtPriceMath.getAmount0Delta(w.sqrtP, sqrtStep, w.liquidity, false);
+                }
+            }
+            w.sqrtP = sqrtStep;
+            if (sqrtStep == sqrtNext) {
+                if (initialized) {
+                    (, int128 liquidityNet) = poolManager.getTickLiquidity(id, next);
+                    w.liquidity = LiquidityMath.addDelta(w.liquidity, zeroForOne ? -liquidityNet : liquidityNet);
+                }
+                w.tick = zeroForOne ? next - 1 : next;
+            } else {
+                w.tick = TickMath.getTickAtSqrtPrice(w.sqrtP);
+            }
+            w.steps++;
+        }
+        reached = w.sqrtP == target;
+    }
+
+    function _gross(uint256 netIn, uint24 swapFee) private pure returns (uint256 amountIn, uint256 feePaid) {
+        amountIn = netIn == 0 ? 0 : FullMath.mulDivRoundingUp(netIn, 1e6, 1e6 - swapFee);
+        feePaid = amountIn - netIn;
     }
 
     // ───────────────────────── helpers ─────────────────────────
 
-    function _targetTick(int24 tick, int24 ticks, bool up) private pure returns (int24 target) {
-        target = up ? tick + ticks : tick - ticks;
-        // a swap's price limit must be strictly inside (MIN_SQRT_PRICE, MAX_SQRT_PRICE)
-        if (target <= TickMath.MIN_TICK) target = TickMath.MIN_TICK + 1;
-        if (target >= TickMath.MAX_TICK) target = TickMath.MAX_TICK - 1;
+    function _targetTick(int24 tick, int24 ticks, bool up) private pure returns (int24) {
+        return _clampTick(up ? tick + ticks : tick - ticks);
+    }
+
+    /// @dev A swap's price limit must be strictly inside (MIN_SQRT_PRICE, MAX_SQRT_PRICE).
+    function _clampTick(int24 t) private pure returns (int24) {
+        if (t <= TickMath.MIN_TICK) return TickMath.MIN_TICK + 1;
+        if (t >= TickMath.MAX_TICK) return TickMath.MAX_TICK - 1;
+        return t;
     }
 
     /// @dev Same combination `Pool.swap` uses: the protocol fee for this direction folded into the LP fee.

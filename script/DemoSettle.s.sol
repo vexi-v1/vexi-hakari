@@ -37,7 +37,7 @@ contract DemoSettle is Script {
         uint256 key = vm.envUint("HAKARI_DEPLOYER_KEY");
         vm.startBroadcast(key);
         // 1,000,000 quote units riding on the settlement; weekend (arbitrage closed)
-        SafeSettle.Decision memory d = settle.settle(pool, window, 1_000_000e18, false, false);
+        SafeSettle.Decision memory d = settle.settle(pool, window, 1_000_000e18, false, 0);
         vm.stopBroadcast();
 
         console2.log("window (s)", window);

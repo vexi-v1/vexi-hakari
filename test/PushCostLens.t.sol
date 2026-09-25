@@ -118,6 +118,43 @@ contract PushCostLensTest is HakariDeployers {
         }
     }
 
+    function test_depthBetween_fromTheCurrentPrice_matchesDepthToMove() public {
+        // start price is exactly tick 0 (SQRT_PRICE_1_1), so "from tick 0" and "from here" are the same walk
+        for (uint256 dir; dir < 2; dir++) {
+            bool up = dir == 0;
+            (uint256 a, uint256 o, uint256 f, bool c) = lens.depthToMove(key, 700, up, 64);
+            (uint256 a2, uint256 o2, uint256 f2, bool c2) = lens.depthBetween(key, 0, up ? int24(700) : int24(-700), 64);
+            assertEq(a2, a);
+            assertEq(o2, o);
+            assertEq(f2, f);
+            assertEq(c2, c);
+        }
+    }
+
+    function test_depthBetween_startsFromTheGivenPrice_notFromWhereThePoolSits() public {
+        (uint256 honest,,,) = lens.depthToMove(key, 400, true, 64);
+        // an attacker has pushed the pool deep into the thin wing
+        swapToPrice(key, false, TickMath.getSqrtPriceAtTick(3000));
+        (uint256 fromHere,,,) = lens.depthToMove(key, 400, true, 64);
+        (uint256 fromHonest,,, bool complete) = lens.depthBetween(key, 0, 400, 64);
+        assertTrue(complete);
+        assertEq(fromHonest, honest, "same segment of the curve, same answer, wherever the pool is now");
+        assertLt(fromHere, honest / 3, "the thin wing is several times cheaper: the wrong place to measure");
+        // and back down again: a walk that crosses the current price in the other direction
+        swapToPrice(key, true, TickMath.getSqrtPriceAtTick(-2000));
+        (uint256 again,,,) = lens.depthBetween(key, 0, 400, 64);
+        assertEq(again, honest);
+    }
+
+    function test_roundTripCostBetween_fromTheCurrentPrice_matchesRoundTripCost() public {
+        (uint256 cost, uint256 in0, uint256 in1, bool complete) = lens.roundTripCost(key, 700, true, 64);
+        (uint256 cost2, uint256 b0, uint256 b1, bool complete2) = lens.roundTripCostBetween(key, 0, 700, 64);
+        assertEq(cost2, cost);
+        assertEq(b0, in0);
+        assertEq(b1, in1);
+        assertEq(complete2, complete);
+    }
+
     function test_depthToMove_stepCapReportsIncomplete() public {
         (,, , bool complete) = lens.depthToMove(key, 3000, true, 1);
         assertFalse(complete, "one step cannot cross the core boundary and reach 3000 ticks");

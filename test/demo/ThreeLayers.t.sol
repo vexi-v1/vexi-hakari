@@ -19,6 +19,8 @@ contract ThreeLayersTest is HakariDeployers {
 
     int24 constant DELTA = 100;
     uint32 constant WINDOW = 10;
+    /// @dev Demo assumption for an open market: arbitrageurs pull the price back once every 5 s.
+    uint32 constant ARB_REVERSION = 5;
     HakariOracleHook hook;
     PushCostLens lens;
     SafeSettle settle;
@@ -81,7 +83,7 @@ contract ThreeLayersTest is HakariDeployers {
             poke(key);
         }
         vm.warp(t0 + WINDOW + 1);
-        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, false);
+        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, 0);
         console2.log("raw TWAP", d.rawTick);
         console2.log("truncated TWAP", d.truncTick);
         console2.log("cost to fake (quote units)", d.costToFake);
@@ -89,7 +91,7 @@ contract ThreeLayersTest is HakariDeployers {
         console2.log("used raw?", d.usedRaw);
         assertFalse(d.usedRaw);
         assertLt(d.costToFake, d.gainIfFaked);
-        _record("thin-pool-sustained-push", "local 18/18, L=1e15, fee 0.3%", false, 1e18, d);
+        _record("thin-pool-sustained-push", "local 18/18, L=1e15, fee 0.3%", 0, 1e18, d);
     }
 
     /// Layer 3, the other way. A deep pool, arbitrage open, a real move: the raw series is trusted and the
@@ -103,7 +105,7 @@ contract ThreeLayersTest is HakariDeployers {
             swapToPrice(key, false, TickMath.getSqrtPriceAtTick(honest + int24(int256(s)) * 300));
         }
         vm.warp(t0 + WINDOW + 1);
-        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, true);
+        SafeSettle.Decision memory d = settle.settlePrice(key, WINDOW, 1e18, false, ARB_REVERSION);
         console2.log("raw TWAP", d.rawTick);
         console2.log("truncated TWAP", d.truncTick);
         console2.log("cost to fake (quote units)", d.costToFake);
@@ -111,7 +113,7 @@ contract ThreeLayersTest is HakariDeployers {
         console2.log("used raw?", d.usedRaw);
         assertGt(d.rawTick, d.truncTick + TOLERANCE(), "the series disagree: truncation is lagging");
         assertTrue(d.usedRaw, "but faking this would cost more than it pays, so the move is real");
-        _record("deep-pool-genuine-surge", "local 18/18, L=1e21, fee 0.3%", true, 1e18, d);
+        _record("deep-pool-genuine-surge", "local 18/18, L=1e21, fee 0.3%", ARB_REVERSION, 1e18, d);
     }
 
     function TOLERANCE() internal view returns (int24) {
@@ -119,11 +121,11 @@ contract ThreeLayersTest is HakariDeployers {
     }
 
     /// @dev The web page's decision log: one row per scenario, appended by each test that settles.
-    function _record(string memory scenario, string memory pool, bool arbOpen, uint256 notional, SafeSettle.Decision memory d) internal {
+    function _record(string memory scenario, string memory pool, uint32 arbReversionSeconds, uint256 notional, SafeSettle.Decision memory d) internal {
         string memory row = scenario;
         vm.serializeString(row, "scenario", scenario);
         vm.serializeString(row, "pool", pool);
-        vm.serializeBool(row, "arbOpen", arbOpen);
+        vm.serializeUint(row, "arbReversionSeconds", arbReversionSeconds);
         vm.serializeString(row, "notional", vm.toString(notional));
         vm.serializeInt(row, "rawTick", int256(d.rawTick));
         vm.serializeInt(row, "truncTick", int256(d.truncTick));
