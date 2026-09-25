@@ -186,8 +186,8 @@ in-repo evidence.
 | Panoptic's truncated oracle, OpenZeppelin `BaseOracleHook` | Clip each observation to ±Δ | We build on it: both series exposed, Δ calibrated per pool, the choice between them priced |
 | `V4Quoter` | Quote a swap by amount via unlock + revert | The same pattern to a price limit, plus a view path for callers already inside an unlock |
 
-What is new here is the combination on v4, and a measured case: the stock-token weekend, when the cost of
-faking a price falls by two orders of magnitude on a schedule anyone can read.
+What is new here is the combination on v4, and a measured case: a stock-token weekend on which the cost of
+faking a price fell two orders of magnitude in four hours, next to a rebuilt weekend on which it did not.
 
 ## Run it
 
