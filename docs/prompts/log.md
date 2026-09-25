@@ -115,3 +115,31 @@ README gets back three caveats the merge dropped: the per-point liquidity check,
 the Δ sample window. It also gains one new limitation: the walk cap is shared with the leg back to the
 truncated price, and when that leg exhausts it, the rule settles truncated. The AI disclosure now says two
 people directed the work, as `log.md` shows.
+
+## 2026-09-26 01:00 — Abner: does it actually solve the problem?
+
+> 真的有解決到問題嗎　詳細解釋
+> ("Does it really solve the problem? Explain in detail.")
+
+Output: an adversarial check of the settlement rule, run outside the repo against `src/` at `c508ed2`.
+
+Three probe tests use the `ThreeLayers` setup:
+- a push held until the two series converge settles on raw with no cost check;
+- a liquidity wall added and removed in separate transactions flips truncated to raw and is withdrawn minus 1 wei;
+- a genuine surge on a thin pool settles truncated.
+
+A replay of the real HIMS/USDG swaps of 2026-08-30/31 through the hook's observation rule settles at 43–52 USDG
+at the peak. Arithmetic on the committed TSLA-shaped decisions shows the weekday/weekend contrast depends on
+the notional and on the asserted 5-second reversion.
+
+## 2026-09-26 01:20 — Abner: record the conclusions as work to do
+
+> 這些結論要列為需要做的事項，更新相關文件　commit and push
+> ("List these conclusions as things to do, update the related docs, commit and push.")
+
+Output:
+- README: the headline now says HAKARI measured the HIMS weekend but its demo rule would not have stopped the
+  payout, and the TSLA table states what it depends on.
+- Limitations adds convergence, the HIMS replay, the wall across transactions, per-call gain and thin-pool lag.
+- Next lists the fixes: fence-aware settlement, pricing agreement from an anchor, gain from open interest,
+  time-weighted liquidity, tests for each limit.

@@ -11,7 +11,9 @@ Sunday 2026-08-30 was Robinhood Chain's busiest day ever: $270.6M of stock-token
 minted or redeemed, so nobody could arbitrage. By 23:53 UTC, with minting still closed, pushing the HIMS/USDG
 v4 pool 10 % higher cost **12 USDG** in fees (it had cost 1,351 four hours earlier). When minting reopened
 the pool stood at **54.50 USDG**; the stock had closed Friday at **28.84**. Any lending market, perp or option
-settling on that pool would have paid out on a fake price.
+settling on that pool would have paid out on a price no arbitrage could correct. The hundredfold fall in the cost
+to push is what HAKARI measures. Its demo settlement rule would **not** have stopped that payout: replaying the
+weekend's real swaps through the hook's rule settles at 43–52 USDG (see [Limitations](#limitations)).
 
 ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · MIT ·
 [`FEEDBACK.md`](FEEDBACK.md) · spec [`SPEC.md`](SPEC.md) · prompts [`docs/prompts/`](docs/prompts/)
@@ -41,6 +43,11 @@ block 72,308,997):
 | Weekend: nobody can arbitrage | 2,070 USDG | 4,801 USDG | **truncated** (don't pay on it) |
 | Weekday: arbitrage pulls back every 5 s | 5,070 USDG | 4,801 USDG | **raw** (a real move; truncation would only lag) |
 
+The contrast rests on two inputs. The answers differ only for settlements between about 43,000 and 106,000
+USDG (below that both days settle raw, above it both settle truncated). The 5-second reversion is also an
+assumption, not a measurement: at 10 seconds or slower, the weekday cost is 2 × 2,070 = 4,140 USDG and both
+days settle truncated.
+
 ### Was HIMS a one-off?
 
 ![Every stock pool, the weekend of 2026-09-18: Friday's cost to push +10 % vs the cheapest moment while minting was closed](docs/img/weekend-2026-09-18.svg)
@@ -55,7 +62,9 @@ So a closed mint window does not make a pool cheap to push. It removes the force
 back, and on 08-30 the price left the LPs' ranges and the HIMS inventory moved to another pool. That can
 happen on a given weekend, and most weekends it doesn't. This is why HAKARI measures at settlement instead
 of reading the calendar: a calendar rule would pay truncation's lag every weekend, including the ones where the
-book held. `npm run weekend -- <friday>` rebuilds any weekend.
+book held. Measuring at settlement is not enough on its own, though: once a push has been held long enough for
+the two series to agree, there is nothing left to price (see [Limitations](#limitations)). `npm run weekend -- <friday>`
+rebuilds any weekend.
 
 ## Where the Uniswap integration is
 
@@ -163,13 +172,39 @@ in-repo evidence.
   good as the reversion time the caller asserts; a faster one than the market delivers overstates the cost
   and makes the raw price look safer. Pass a slow, measured bound. That input, and the mint-window flag, are
   where `SafeSettle` trusts an off-chain gauge.
-- **A liquidity wall held across blocks** inflates the cost to fake. `SafeSettle` refuses to answer inside an
-  unlock, which stops the free version (add, ask, remove in one transaction). A wall that stays for real
-  exposes its capital to every trader while it stands, but this is not stopped.
-- **The honest reference is the truncated TWAP**, which itself drifts toward a held push, Δ per observation.
-  Pricing from it understates the cost, which is the safe direction.
-- **Just-in-time liquidity across blocks.** The cost is read from the liquidity present at settlement; the hook
-  keeps no liquidity history. v1: have the hook record time-weighted liquidity (new flags, new salt, new pool).
+- **Converged series are not checked.** When the raw and truncated TWAPs agree within `TOLERANCE_TICKS` (10),
+  `SafeSettle` uses raw and prices nothing. Truncation moves Δ per *observation*, not per second. With nobody
+  pushing back, an attacker who holds a push and makes one dust swap per second catches the truncated series up
+  in x/Δ observations; one window later, both series agree on the fake. On the `ThreeLayers` thin pool (+3,000
+  ticks, Δ = 100, 10-second window), holding for 10 s settles truncated (650), but holding for 42 s settles on raw
+  3,000 with cost 0. On a fenced pool, where holding is free, truncation buys x/Δ seconds, not safety. Before
+  that point, pricing from the truncated TWAP only understates the cost, which is the safe direction.
+- **The HIMS weekend, replayed through the rule.** We fed the 3,220 real HIMS/USDG swaps between 19:40 and 00:43
+  UTC on 2026-08-30/31 (1,687 distinct seconds, so 1,687 observations) through the hook's observation rule, as
+  if the pool had carried the hook. At the 54.50 peak:
+  - Δ = 10: the truncated TWAP reads 48–50 USDG over 10/30/60-minute windows. At 30 minutes the two series
+    agree within 6 ticks, so raw 48.21 would be used unchecked.
+  - Δ = 3: it reads 43–44.
+
+  Whichever series `SafeSettle` picks, it settles between 43 and 52 USDG, nowhere near the 28.84 close. A
+  five-hour drift is well within what truncation lets through.
+- **A liquidity wall across transactions** inflates the cost to fake. `SafeSettle` refuses to answer inside an
+  unlock, which stops add-ask-remove in one transaction. It does not stop three separate transactions, which can
+  sit in the same block. On the thin pool above:
+  - A wall added below the held price flipped the decision from truncated to raw.
+  - Its owner withdrew everything but 1 wei.
+  - It needs roughly the gain divided by twice the swap fee (~175× the gain at 0.3 %), all of it returned.
+
+  The hook keeps no liquidity history. v1: record time-weighted liquidity in the hook (new flags, new salt,
+  new pool), so a wall must stand for the whole window.
+- **The gain is per call.** `notionalAtStake` is one settlement's notional; an attacker earns on every
+  position, and every protocol, settling on the same price. Take ten 100,000-USDG settlements on the TSLA-shaped
+  weekday case: each one sees cost 5,070 > gain 4,801 and settles raw, while the attacker earns 48,015. Exposure
+  across protocols is not visible on-chain at all.
+- **On a thin pool a genuine move lags too.** When faking is cheap, the rule cannot tell a real move from a fake.
+  A genuine surge on the thin pool (raw 1,650, truncated 550) settles truncated, exactly as plain truncation
+  would. The trade-off is resolved only where faking is expensive relative to the notional: deep pools, small
+  settlements.
 - **View mode sees stored fees only.** `depthToMove` / `roundTripCost` fold in the LP and protocol fee from
   `slot0`; hook-taken charges and per-swap fee overrides appear only in the exact `quotePush`. Measured in
   review on BONER/HIMS (dynamic fee, hooked): view ≈ 0.066 × exact.
@@ -231,6 +266,16 @@ and the review's fixes are in the history. The pace of the commit history is the
 
 ## Next
 
+- **Fence-aware settlement.** While mint/redeem is closed and the measured cost to push is low, do not accept
+  converged series: settle on the last pre-fence TWAP, or refuse. The gauge already has the schedule and the
+  cost.
+- **Price the agreement too.** Measure the cost from an older anchor (a long-window truncated TWAP) even when
+  the two series agree, so a push held until they converge is still priced.
+- **Gain from open interest.** The integrator passes the total exposure settling on that pool at that time,
+  not one settlement's notional.
+- **Time-weighted liquidity in the hook**, so a liquidity wall has to stand for the window.
+- **Tests for every limit above.** Add the review's probes (convergence, wall across transactions, thin-pool
+  surge) as tests, and ship the HIMS replay through the hook's rule as a `gauge` script.
 - Measure the arbitrage reversion time per pool from the `Swap` stream, instead of taking it as an input.
 - `n_max`: the largest open interest a venue can safely write against a pool, straight from the ladder.
 - Upstream: a `StateLibrary` tick walker and a two-series oracle getter (`FEEDBACK.md` § 3, § 7).
