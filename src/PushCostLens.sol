@@ -275,6 +275,7 @@ contract PushCostLens is IUnlockCallback {
                 compressed++;
                 int16 wordPos = int16(compressed >> 8);
                 uint8 bitPos = uint8(uint24(compressed));
+                // forge-lint: disable-next-line(incorrect-shift)
                 uint256 mask = ~((1 << bitPos) - 1);
                 uint256 masked = poolManager.getTickBitmap(id, wordPos) & mask;
                 initialized = masked != 0;
