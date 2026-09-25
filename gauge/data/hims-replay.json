@@ -1,0 +1,206 @@
+{
+  "pool": "HIMS/USDG",
+  "poolId": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
+  "initializeBlock": "41738721",
+  "replayEndBlock": "50772447",
+  "modifyLiquidityLogs": 1998,
+  "nyseCloseFriday": 28.84,
+  "points": [
+    {
+      "block": "50265277",
+      "timestamp": 1788118800,
+      "time": "2026-08-30T19:40:00.000Z",
+      "mintWindowClosed": true,
+      "lastSwapBlock": "50257557",
+      "lastSwapTx": "0x6ef57c84f51fb64889ee29b8c97108f402d934e765397d4c71641d787ff58b69",
+      "sqrtPriceX96": "14616380645813079504561117435786507",
+      "tick": 242518,
+      "usdgPerHims": 29.381873076741986,
+      "swapFeePips": 9991,
+      "livePositions": 83,
+      "activeLiquidity": "1064940216329620533",
+      "activeLiquidityAtLastSwap": "1064749822668128445",
+      "swapEventLiquidity": "1064749822668128445",
+      "liquidityMatches": true,
+      "liquidityDriftSinceSwap": "190393661492088",
+      "himsPrincipal": "2606.368537420655052538",
+      "usdgPrincipal": "68978.712067",
+      "pushUp10": {
+        "ticks": 953,
+        "usdgIn": "68674.906979",
+        "himsOut": "2265.846313873781628526",
+        "roundTripCostUsdg": "1351.27991",
+        "complete": true
+      },
+      "pushDown10": {
+        "ticks": 953,
+        "himsIn": "2027.998586008872631999",
+        "usdgOut": "57785.327422",
+        "roundTripCostHims": "39.911032795727726661",
+        "complete": true
+      },
+      "pushUp85": {
+        "ticks": 6152,
+        "usdgIn": "79663.391034",
+        "complete": true
+      }
+    },
+    {
+      "block": "50415299",
+      "timestamp": 1788134016,
+      "time": "2026-08-30T23:53:36.000Z",
+      "mintWindowClosed": true,
+      "lastSwapBlock": "50414862",
+      "lastSwapTx": "0x8803c39a980af13cb3aa71f59cff160e1c42f23cb7b5b162b49c369440b2eff3",
+      "sqrtPriceX96": "12044305932641492002563580381515189",
+      "tick": 238647,
+      "usdgPerHims": 43.27086837282613,
+      "swapFeePips": 9991,
+      "livePositions": 74,
+      "activeLiquidity": "1920915748500146",
+      "activeLiquidityAtLastSwap": "1920915748500146",
+      "swapEventLiquidity": "1920915748500146",
+      "liquidityMatches": true,
+      "liquidityDriftSinceSwap": "0",
+      "himsPrincipal": "66.562239598187687587",
+      "usdgPrincipal": "130186.44505",
+      "pushUp10": {
+        "ticks": 953,
+        "usdgIn": "623.575894",
+        "himsOut": "13.60160422285160097",
+        "roundTripCostUsdg": "12.110382",
+        "complete": true
+      },
+      "pushDown10": {
+        "ticks": 953,
+        "himsIn": "22.491129039426471967",
+        "usdgOut": "912.896356",
+        "roundTripCostHims": "0.435491513220567924",
+        "complete": true
+      },
+      "pushUp85": {
+        "ticks": 6152,
+        "usdgIn": "3708.22221",
+        "complete": true
+      }
+    },
+    {
+      "block": "50444948",
+      "timestamp": 1788137010,
+      "time": "2026-08-31T00:43:30.000Z",
+      "mintWindowClosed": false,
+      "lastSwapBlock": "50444880",
+      "lastSwapTx": "0x800c7f3bf034ddf2bf40056f92bae014647bccaafb307caf99621ab5e368c1dc",
+      "sqrtPriceX96": "10732309225910160511468732993114585",
+      "tick": 236340,
+      "usdgPerHims": 54.49702726804313,
+      "swapFeePips": 9991,
+      "livePositions": 70,
+      "activeLiquidity": "2027577432991291",
+      "activeLiquidityAtLastSwap": "2027577432991291",
+      "swapEventLiquidity": "2027577432991291",
+      "liquidityMatches": true,
+      "liquidityDriftSinceSwap": "0",
+      "himsPrincipal": "32.427850803786169918",
+      "usdgPrincipal": "126252.325684",
+      "pushUp10": {
+        "ticks": 953,
+        "usdgIn": "690.908505",
+        "himsOut": "11.986992681114766175",
+        "roundTripCostUsdg": "13.429542",
+        "complete": true
+      },
+      "pushDown10": {
+        "ticks": 953,
+        "himsIn": "14.890155837454017859",
+        "usdgOut": "765.378199",
+        "roundTripCostHims": "0.289085182324566673",
+        "complete": true
+      },
+      "pushUp85": {
+        "ticks": 6152,
+        "usdgIn": "2056.548268",
+        "complete": true
+      }
+    },
+    {
+      "block": "50490000",
+      "timestamp": 1788141557,
+      "time": "2026-08-31T01:59:17.000Z",
+      "mintWindowClosed": false,
+      "lastSwapBlock": "50489797",
+      "lastSwapTx": "0x89b50390edcaa1ec3c256029d0a87de7e59924db3775df0b4c052781061d89c6",
+      "sqrtPriceX96": "14633946287572959649508867339678541",
+      "tick": 242542,
+      "usdgPerHims": 29.311379213613915,
+      "swapFeePips": 9991,
+      "livePositions": 72,
+      "activeLiquidity": "649256272366125911",
+      "activeLiquidityAtLastSwap": "649256272366125911",
+      "swapEventLiquidity": "649256272366125911",
+      "liquidityMatches": true,
+      "liquidityDriftSinceSwap": "0",
+      "himsPrincipal": "2035.626254889390844215",
+      "usdgPrincipal": "51769.643331",
+      "pushUp10": {
+        "ticks": 953,
+        "usdgIn": "44201.729984",
+        "himsOut": "1451.733055499087709839",
+        "roundTripCostUsdg": "866.759495",
+        "complete": true
+      },
+      "pushDown10": {
+        "ticks": 953,
+        "himsIn": "1206.185147374957240466",
+        "usdgOut": "34121.123322",
+        "roundTripCostHims": "23.681432625683269816",
+        "complete": true
+      },
+      "pushUp85": {
+        "ticks": 6152,
+        "usdgIn": "64031.166964",
+        "complete": true
+      }
+    },
+    {
+      "block": "50772447",
+      "timestamp": 1788170042,
+      "time": "2026-08-31T09:54:02.000Z",
+      "mintWindowClosed": false,
+      "lastSwapBlock": "50772068",
+      "lastSwapTx": "0x40327f42c1e56e4fdec4c1f73ddc5c8449e2c44477a894e012ecafa4af66218b",
+      "sqrtPriceX96": "14591975882691817955900260490894736",
+      "tick": 242485,
+      "usdgPerHims": 29.480236353922628,
+      "swapFeePips": 9991,
+      "livePositions": 84,
+      "activeLiquidity": "972790350893554942",
+      "activeLiquidityAtLastSwap": "972790350893554942",
+      "swapEventLiquidity": "972790350893554942",
+      "liquidityMatches": true,
+      "liquidityDriftSinceSwap": "0",
+      "himsPrincipal": "2566.932420545531192192",
+      "usdgPrincipal": "92808.374323",
+      "pushUp10": {
+        "ticks": 953,
+        "usdgIn": "66579.03147",
+        "himsOut": "2178.364163085226251184",
+        "roundTripCostUsdg": "1306.800039",
+        "complete": true
+      },
+      "pushDown10": {
+        "ticks": 953,
+        "himsIn": "2566.429397664017513644",
+        "usdgOut": "73315.291184",
+        "roundTripCostHims": "50.488116136925060615",
+        "complete": true
+      },
+      "pushUp85": {
+        "ticks": 6152,
+        "usdgIn": "80025.805454",
+        "complete": true
+      }
+    }
+  ],
+  "generatedAt": "2026-09-25T12:54:31.003Z"
+}

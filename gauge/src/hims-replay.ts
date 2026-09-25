@@ -22,9 +22,15 @@ const byOrder = (a: RawLog, b: RawLog) => (BigInt(a.blockNumber) < BigInt(b.bloc
 
 /** Fold ModifyLiquidity logs up to and including `block` into live positions. Exported for the test. */
 export function positionsAt(logs: RawLog[], block: bigint): Position[] {
+  return positionsBefore(logs, block + 1n, 0);
+}
+
+/** Positions as they stood just before log (`block`, `logIndex`): everything earlier in log order. */
+export function positionsBefore(logs: RawLog[], block: bigint, logIndex: number): Position[] {
   const map = new Map<string, Position>();
   for (const l of [...logs].sort(byOrder)) {
-    if (BigInt(l.blockNumber) > block) break;
+    const b = BigInt(l.blockNumber);
+    if (b > block || (b === block && l.logIndex >= logIndex)) break;
     const key = `${l.args.sender}|${l.args.tickLower}|${l.args.tickUpper}|${l.args.salt}`;
     const p = map.get(key) ?? { tickLower: Number(l.args.tickLower), tickUpper: Number(l.args.tickUpper), liquidity: 0n };
     p.liquidity += BigInt(l.args.liquidityDelta);
@@ -92,7 +98,11 @@ export async function main() {
     const positions = positionsAt(mods, block);
     const sqrtP = BigInt(swap.args.sqrtPriceX96);
     const state = poolStateFromPositions(positions, sqrtP);
-    const liquidityMatches = state.liquidity === BigInt(swap.args.liquidity);
+    // cross-check the reconstruction where the chain itself reported liquidity: right after the last swap
+    // (positions as of that log, i.e. everything before it plus nothing after) must equal the event's field
+    const atSwap = poolStateFromPositions(positionsBefore(mods, BigInt(swap.blockNumber), swap.logIndex), sqrtP);
+    const liquidityMatches = atSwap.liquidity === BigInt(swap.args.liquidity);
+    const liquidityDriftSinceSwap = state.liquidity - atSwap.liquidity;
     const fee = Number(swap.args.fee); // what the pool charged at the time (LP + protocol)
     // v4 price = HIMS per USDG (raw). USDG per HIMS = 1/price scaled by decimals.
     const raw = Number(sqrtP) / 2 ** 96;
@@ -116,8 +126,10 @@ export async function main() {
       swapFeePips: fee,
       livePositions: positions.length,
       activeLiquidity: state.liquidity.toString(),
+      activeLiquidityAtLastSwap: atSwap.liquidity.toString(),
       swapEventLiquidity: swap.args.liquidity,
       liquidityMatches,
+      liquidityDriftSinceSwap: liquidityDriftSinceSwap.toString(),
       himsPrincipal: formatUnits(himsPrincipal, 18),
       usdgPrincipal: formatUnits(usdgPrincipal, 6),
       pushUp10: { ticks: ticks10, usdgIn: formatUnits(up10.amountIn, 6), himsOut: formatUnits(up10.amountOut, 18), roundTripCostUsdg: formatUnits(up10.cost, 6), complete: up10.complete },

@@ -1,0 +1,92 @@
+{
+  "method": "99th percentile of |tick move| between consecutive swap blocks over the lookback (Panoptic); Δ = that, rounded up",
+  "lookbackBlocks": "300000",
+  "head": "72241326",
+  "generatedAt": "2026-09-25T12:53:21.754Z",
+  "pools": [
+    {
+      "name": "TSLA/USDG",
+      "id": "0x8517f8071ae5b831b738052f12125e8e3d6c158b78728aa44ce3b25e5104d32e",
+      "fromBlock": "71941326",
+      "toBlock": "72241326",
+      "swaps": 132,
+      "swapBlocks": 109,
+      "perSwapBlock": {
+        "p50": 0,
+        "p90": 2,
+        "p99": 3,
+        "max": 5
+      },
+      "perSecond": {
+        "sampled": 109,
+        "p50": 0,
+        "p99": 2,
+        "max": 3
+      },
+      "suggestedDelta": 3
+    },
+    {
+      "name": "NVDA/USDG",
+      "id": "0x3bb34a44f1b2b5f32c034c38a53065a521a47b199700fa9bd19d60985ff24bf1",
+      "fromBlock": "71941326",
+      "toBlock": "72241326",
+      "swaps": 96,
+      "swapBlocks": 94,
+      "perSwapBlock": {
+        "p50": 0,
+        "p90": 2,
+        "p99": 10,
+        "max": 10
+      },
+      "perSecond": {
+        "sampled": 94,
+        "p50": 0,
+        "p99": 2,
+        "max": 2
+      },
+      "suggestedDelta": 10
+    },
+    {
+      "name": "HIMS/USDG",
+      "id": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
+      "fromBlock": "71941326",
+      "toBlock": "72241326",
+      "swaps": 6,
+      "swapBlocks": 6,
+      "perSwapBlock": {
+        "p50": 5,
+        "p90": 10,
+        "p99": 10,
+        "max": 10
+      },
+      "perSecond": {
+        "sampled": 6,
+        "p50": 0.03225806451612903,
+        "p99": 1.6666666666666667,
+        "max": 1.6666666666666667
+      },
+      "suggestedDelta": 10
+    },
+    {
+      "name": "AI/USDG (memecoin)",
+      "id": "0x508ab5b7a7b447598017eba58530c2a2a5d647b8074a2dc85aa533dfbed4d543",
+      "fromBlock": "71941326",
+      "toBlock": "72241326",
+      "swaps": 63,
+      "swapBlocks": 63,
+      "perSwapBlock": {
+        "p50": 27,
+        "p90": 56,
+        "p99": 193,
+        "max": 193
+      },
+      "perSecond": {
+        "sampled": 63,
+        "p50": 0.22,
+        "p99": 34,
+        "max": 34
+      },
+      "suggestedDelta": 193
+    }
+  ]
+}

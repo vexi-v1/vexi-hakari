@@ -13,8 +13,8 @@ import {SqrtPriceMath} from "@uniswap/v4-core/src/libraries/SqrtPriceMath.sol";
 import {LiquidityMath} from "@uniswap/v4-core/src/libraries/LiquidityMath.sol";
 import {FullMath} from "@uniswap/v4-core/src/libraries/FullMath.sol";
 import {FixedPoint96} from "@uniswap/v4-core/src/libraries/FixedPoint96.sol";
-import {BitMath} from "@uniswap/v4-core/src/libraries/BitMath.sol";
 import {ProtocolFeeLibrary} from "@uniswap/v4-core/src/libraries/ProtocolFeeLibrary.sol";
+import {TickBitmapView} from "./libraries/TickBitmapView.sol";
 
 /// @title PushCostLens
 /// @notice What it costs to push a Uniswap v4 pool's price by `ticks` and sell straight back.
@@ -167,7 +167,8 @@ contract PushCostLens is IUnlockCallback {
         uint256 netIn;
 
         for (uint256 step; step < maxSteps && sqrtP != target; step++) {
-            (int24 next, bool initialized) = _nextInitializedTick(id, tick, key.tickSpacing, zeroForOne);
+            (int24 next, bool initialized) =
+                TickBitmapView.nextInitializedTickWithinOneWord(poolManager, id, tick, key.tickSpacing, zeroForOne);
             if (next < TickMath.MIN_TICK) next = TickMath.MIN_TICK;
             if (next > TickMath.MAX_TICK) next = TickMath.MAX_TICK;
             uint160 sqrtNext = TickMath.getSqrtPriceAtTick(next);
@@ -252,38 +253,5 @@ contract PushCostLens is IUnlockCallback {
             return FullMath.mulDiv(FullMath.mulDiv(amount, sqrtP, FixedPoint96.Q96), sqrtP, FixedPoint96.Q96);
         }
         return FullMath.mulDiv(FullMath.mulDiv(amount, FixedPoint96.Q96, sqrtP), FixedPoint96.Q96, sqrtP);
-    }
-
-    /// @dev `TickBitmap.nextInitializedTickWithinOneWord`, reading the word through extsload.
-    function _nextInitializedTick(PoolId id, int24 tick, int24 tickSpacing, bool lte)
-        private
-        view
-        returns (int24 next, bool initialized)
-    {
-        unchecked {
-            int24 compressed = tick / tickSpacing;
-            if (tick < 0 && tick % tickSpacing != 0) compressed--;
-            if (lte) {
-                int16 wordPos = int16(compressed >> 8);
-                uint8 bitPos = uint8(uint24(compressed));
-                uint256 mask = type(uint256).max >> (uint256(type(uint8).max) - bitPos);
-                uint256 masked = poolManager.getTickBitmap(id, wordPos) & mask;
-                initialized = masked != 0;
-                next = initialized
-                    ? (compressed - int24(uint24(bitPos - BitMath.mostSignificantBit(masked)))) * tickSpacing
-                    : (compressed - int24(uint24(bitPos))) * tickSpacing;
-            } else {
-                compressed++;
-                int16 wordPos = int16(compressed >> 8);
-                uint8 bitPos = uint8(uint24(compressed));
-                // forge-lint: disable-next-line(incorrect-shift)
-                uint256 mask = ~((1 << bitPos) - 1);
-                uint256 masked = poolManager.getTickBitmap(id, wordPos) & mask;
-                initialized = masked != 0;
-                next = initialized
-                    ? (compressed + int24(uint24(BitMath.leastSignificantBit(masked) - bitPos))) * tickSpacing
-                    : (compressed + int24(uint24(type(uint8).max - bitPos))) * tickSpacing;
-            }
-        }
     }
 }

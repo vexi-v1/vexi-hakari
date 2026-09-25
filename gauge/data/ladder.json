@@ -1,0 +1,325 @@
+{
+  "chainId": 4663,
+  "block": "72241051",
+  "timestamp": 1790340747,
+  "generatedAt": "2026-09-25T12:52:33.302Z",
+  "pcts": [
+    1,
+    5,
+    10
+  ],
+  "pools": [
+    {
+      "name": "TSLA/USDG",
+      "id": "0x8517f8071ae5b831b738052f12125e8e3d6c158b78728aa44ce3b25e5104d32e",
+      "stockSymbol": "TSLA",
+      "priceQuote": 381.3027879360309,
+      "tick": -216886,
+      "lpFee": 3000,
+      "protocolFee": 2048500,
+      "liquidity": "758804761174417539",
+      "entries": [
+        {
+          "pct": 1,
+          "direction": "up",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "72173902812",
+          "amountInHuman": "72173.902812",
+          "costQuote": "502962825",
+          "costQuoteHuman": "502.962825"
+        },
+        {
+          "pct": 5,
+          "direction": "up",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "183977194407",
+          "amountInHuman": "183977.194407",
+          "costQuote": "1275256726",
+          "costQuoteHuman": "1275.256726"
+        },
+        {
+          "pct": 10,
+          "direction": "up",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "215283934962",
+          "amountInHuman": "215283.934962",
+          "costQuote": "1486832776",
+          "costQuoteHuman": "1486.832776"
+        },
+        {
+          "pct": 1,
+          "direction": "down",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "211057129225209320103",
+          "amountInHuman": "211.057129225209320103",
+          "costQuote": "560765404",
+          "costQuoteHuman": "560.765404"
+        },
+        {
+          "pct": 5,
+          "direction": "down",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "812753408381069316227",
+          "amountInHuman": "812.753408381069316227",
+          "costQuote": "2141917922",
+          "costQuoteHuman": "2141.917922"
+        },
+        {
+          "pct": 10,
+          "direction": "down",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "1330485667474274523593",
+          "amountInHuman": "1330.485667474274523593",
+          "costQuote": "3473887158",
+          "costQuoteHuman": "3473.887158"
+        }
+      ]
+    },
+    {
+      "name": "NVDA/USDG",
+      "id": "0x3bb34a44f1b2b5f32c034c38a53065a521a47b199700fa9bd19d60985ff24bf1",
+      "stockSymbol": "NVDA",
+      "priceQuote": 225.9144376044435,
+      "tick": 222119,
+      "lpFee": 3000,
+      "protocolFee": 2048500,
+      "liquidity": "516592584721956245",
+      "entries": [
+        {
+          "pct": 1,
+          "direction": "down",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "175539129830529893297",
+          "amountInHuman": "175.539129830529893297",
+          "costQuote": "276350889",
+          "costQuoteHuman": "276.350889"
+        },
+        {
+          "pct": 5,
+          "direction": "down",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "844022682720416503530",
+          "amountInHuman": "844.02268272041650353",
+          "costQuote": "1316249581",
+          "costQuoteHuman": "1316.249581"
+        },
+        {
+          "pct": 10,
+          "direction": "down",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "1545251348166726117216",
+          "amountInHuman": "1545.251348166726117216",
+          "costQuote": "2385514391",
+          "costQuoteHuman": "2385.514391"
+        },
+        {
+          "pct": 1,
+          "direction": "up",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "39119253002",
+          "amountInHuman": "39119.253002",
+          "costQuote": "272596987",
+          "costQuoteHuman": "272.596987"
+        },
+        {
+          "pct": 5,
+          "direction": "up",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "185401361942",
+          "amountInHuman": "185401.361942",
+          "costQuote": "1279856625",
+          "costQuoteHuman": "1279.856625"
+        },
+        {
+          "pct": 10,
+          "direction": "up",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "293856814153",
+          "amountInHuman": "293856.814153",
+          "costQuote": "2012615645",
+          "costQuoteHuman": "2012.615645"
+        }
+      ]
+    },
+    {
+      "name": "HIMS/USDG",
+      "id": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
+      "stockSymbol": "HIMS",
+      "priceQuote": 29.356620596438525,
+      "tick": 242527,
+      "lpFee": 9000,
+      "protocolFee": 4097000,
+      "liquidity": "325744815448622133",
+      "entries": [
+        {
+          "pct": 1,
+          "direction": "down",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "309832558046659601283",
+          "amountInHuman": "309.832558046659601283",
+          "costQuote": "180395686",
+          "costQuoteHuman": "180.395686"
+        },
+        {
+          "pct": 5,
+          "direction": "down",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "1470547956041682499249",
+          "amountInHuman": "1470.547956041682499249",
+          "costQuote": "848291023",
+          "costQuoteHuman": "848.291023"
+        },
+        {
+          "pct": 10,
+          "direction": "down",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "2580694553741390700996",
+          "amountInHuman": "2580.694553741390700996",
+          "costQuote": "1474755614",
+          "costQuoteHuman": "1474.755614"
+        },
+        {
+          "pct": 1,
+          "direction": "up",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "8559568356",
+          "amountInHuman": "8559.568356",
+          "costQuote": "169776870",
+          "costQuoteHuman": "169.77687"
+        },
+        {
+          "pct": 5,
+          "direction": "up",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "36765467989",
+          "amountInHuman": "36765.467989",
+          "costQuote": "722693241",
+          "costQuoteHuman": "722.693241"
+        },
+        {
+          "pct": 10,
+          "direction": "up",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "58607112971",
+          "amountInHuman": "58607.112971",
+          "costQuote": "1142992630",
+          "costQuoteHuman": "1142.99263"
+        }
+      ]
+    },
+    {
+      "name": "AI/USDG (memecoin)",
+      "id": "0x508ab5b7a7b447598017eba58530c2a2a5d647b8074a2dc85aa533dfbed4d543",
+      "stockSymbol": null,
+      "priceQuote": 0.2379922016162746,
+      "tick": -290680,
+      "lpFee": 25000,
+      "protocolFee": 4097000,
+      "liquidity": "23682487633894484",
+      "entries": [
+        {
+          "pct": 1,
+          "direction": "up",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "59403968",
+          "amountInHuman": "59.403968",
+          "costQuote": "3038662",
+          "costQuoteHuman": "3.038662"
+        },
+        {
+          "pct": 5,
+          "direction": "up",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "250406564",
+          "amountInHuman": "250.406564",
+          "costQuote": "12699715",
+          "costQuoteHuman": "12.699715"
+        },
+        {
+          "pct": 10,
+          "direction": "up",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "quote",
+          "amountIn": "470862546",
+          "amountInHuman": "470.862546",
+          "costQuote": "23623896",
+          "costQuoteHuman": "23.623896"
+        },
+        {
+          "pct": 1,
+          "direction": "down",
+          "ticks": 100,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "250015850902090451966",
+          "amountInHuman": "250.015850902090451966",
+          "costQuote": "3043654",
+          "costQuoteHuman": "3.043654"
+        },
+        {
+          "pct": 5,
+          "direction": "down",
+          "ticks": 488,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "1207022942656189719478",
+          "amountInHuman": "1207.022942656189719478",
+          "costQuote": "14560856",
+          "costQuoteHuman": "14.560856"
+        },
+        {
+          "pct": 10,
+          "direction": "down",
+          "ticks": 953,
+          "reached": true,
+          "inputToken": "base",
+          "amountIn": "2340299749205274760703",
+          "amountInHuman": "2340.299749205274760703",
+          "costQuote": "27927285",
+          "costQuoteHuman": "27.927285"
+        }
+      ]
+    }
+  ]
+}
