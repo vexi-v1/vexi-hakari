@@ -158,7 +158,7 @@ export async function getLogsChunked(
   return logs;
 }
 
-function serializeLog(l: Log & { args?: any; eventName?: string }) {
+export function serializeLog(l: Log & { args?: any; eventName?: string }) {
   const args: Record<string, string | boolean> = {};
   for (const [k, v] of Object.entries(l.args ?? {})) args[k] = typeof v === "bigint" ? v.toString() : (v as any);
   return {

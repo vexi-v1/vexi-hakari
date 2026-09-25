@@ -1,7 +1,7 @@
 // Rebuild a v4 pool at any past block from its own logs: positions from ModifyLiquidity, the price and the
 // pool's reported liquidity from the last Swap at or before the block. The public RPC keeps logs but not old
 // state, so this is how a past weekend is priced. The walk is v4math.ts, pinned to PushCostLens.depthToMove.
-import { getLogsChunked, mainnet, POOL_MANAGER, withRetry } from "./chain.ts";
+import { getLogsChunked, mainnet, POOL_MANAGER, readCache, serializeLog, withRetry, writeCache } from "./chain.ts";
 import { poolManagerEvents } from "./abi.ts";
 import { poolStateFromPositions, roundTripCost, type PoolState, type Position } from "./v4math.ts";
 
@@ -30,16 +30,30 @@ export function positionsBefore(logs: RawLog[], block: bigint, logIndex: number)
   return [...map.values()].filter((p) => p.liquidity > 0n);
 }
 
-/** Every ModifyLiquidity of `poolId` from `fromBlock` to `toBlock`. One topic-filtered query when it fits. */
+/**
+ * Every ModifyLiquidity of `poolId` from `fromBlock` to `toBlock`: one topic-filtered query when it fits, halving the
+ * range whenever the RPC refuses it (the public endpoint caps a query at 10,000 logs). Cached as a whole.
+ */
 export async function modifyLiquidityLogs(client: Client, poolId: `0x${string}`, fromBlock: bigint, toBlock: bigint, cacheFile: string) {
-  return (await getLogsChunked(
-    client,
-    { address: POOL_MANAGER, event: poolManagerEvents.ModifyLiquidity, args: { id: poolId } },
-    fromBlock,
-    toBlock,
-    cacheFile,
-    { window: toBlock - fromBlock + 1n },
-  )) as RawLog[];
+  const cached = readCache(cacheFile) as RawLog[] | undefined;
+  if (cached) return cached;
+  const logs: RawLog[] = [];
+  const fetchRange = async (from: bigint, to: bigint, depth: number): Promise<void> => {
+    try {
+      const chunk = await withRetry(`ModifyLiquidity ${from}-${to}`, () =>
+        client.getLogs({ address: POOL_MANAGER, event: poolManagerEvents.ModifyLiquidity, args: { id: poolId }, fromBlock: from, toBlock: to }),
+      2);
+      for (const l of chunk as any[]) logs.push(serializeLog(l));
+    } catch (e) {
+      if (to <= from || depth > 20) throw e;
+      const mid = from + (to - from) / 2n;
+      await fetchRange(from, mid, depth + 1);
+      await fetchRange(mid + 1n, to, depth + 1);
+    }
+  };
+  await fetchRange(fromBlock, toBlock, 0);
+  writeCache(cacheFile, logs);
+  return logs;
 }
 
 /** The last Swap of `poolId` at or before `block`, searching back in widening windows. */
