@@ -14,7 +14,7 @@ the pool stood at **54.50 USDG**; the stock had closed Friday at **28.84**. Any 
 settling on that pool would have paid out on a price no arbitrage could correct. HAKARI measures it: the largest
 settlement the pool could safely carry fell from **7,259 USDG** at 19:40 to **115 USDG** at 23:53, and `SafeSettle`
 refuses anything above that line. Our first rule, which chose between the raw and the truncated TWAP, would not
-have: replaying the weekend's swaps through it settles at 43–52 USDG. An internal review showed why, and the rule
+have: replaying the weekend's swaps through it ([`gauge/data/hims-hook-replay.json`](gauge/data/hims-hook-replay.json), `npm run hims:hook`) settles at 43–50 USDG at 00:43:30, and up to 51.70 during the squeeze. An internal review showed why, and the rule
 changed ([What the review found](#what-the-review-found-and-what-changed)).
 
 **See it minute by minute:** [`web/squeeze/`](web/squeeze/) replays the weekend from Robinhood Chain's own logs —
@@ -31,7 +31,7 @@ ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · 
 | **`PushCostLens`** | What it costs to push any v4 pool to a price and sell straight back. **Exact mode** runs real swaps to a price limit inside `unlock` and reverts with the answer (the V4Quoter pattern, with a price limit V4Quoter lacks). **View mode** walks the tick bitmap through `StateLibrary`, from any starting price, so a contract already inside an unlock can still ask. Needs no deployment: inject its bytecode with an `eth_call` state override. | [`src/PushCostLens.sol`](src/PushCostLens.sol) |
 | **`HakariOracleHook`** | OpenZeppelin's truncated oracle hook plus `twaps()`: the raw **and** truncated TWAP in one call. Records before the first swap of each second, so a push undone in the same transaction is never seen. | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol) |
 | **`SafeSettle`** + **`CostModel`** | A demo settlement rule. For moves of 0.5–20 % (plus the gap between the two TWAPs), both ways from the price now, the lens prices holding the move over the window, re-pushing after every pull-back while arbitrage is open. Cost ÷ what the move earns per unit of exposure, minimised, is the **max safe exposure**. The total exposure settling on the price must be below it to settle on the raw TWAP; otherwise it refuses. Emits `Settled(id, raw, trunc, trusted, exposure, maxSafeExposure, bindingTicks, bindingUp)`. | [`src/SafeSettle.sol`](src/SafeSettle.sol), [`src/CostModel.sol`](src/CostModel.sol) |
-| **Gauge** (TypeScript) | Live cost ladder, Δ calibration from `Swap` events, any past weekend rebuilt from `ModifyLiquidity` logs, the Robinhood mint-window flag. | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
+| **Gauge** (TypeScript) | Live cost ladder, Δ calibration from `Swap` events, any past weekend rebuilt from `ModifyLiquidity` logs, the Robinhood mint-window flag, and the HIMS weekend replayed minute by minute through the hook and `SafeSettle` (`npm run hims:hook`). | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
 | **Web page** | Paste any pool → live cost to push it, fenced or not, suggested Δ. HIMS replay, every stock pool over a weekend, SafeSettle's decisions. | [`web/`](web/) — `python3 -m http.server 8790 --bind 127.0.0.1`, open <http://localhost:8790/web/> |
 
 ### Why not just truncate the oracle?

@@ -5,7 +5,10 @@
 // figure DeFiPrime, the earlier research and gauge/data/hims-replay.json reported is set next to ours with a verdict.
 // The collectors' exactness checks are carried into `checks`, beside integrity checks of the file itself. Two facts
 // the collectors did not keep (the last HIMS mint before the window; main-pool logs in the blocks that share the
-// window's last second) are fetched once and cached in cache/squeeze/build-extras.json. Read-only against 4663.
+// window's last second) are fetched once and cached in cache/squeeze/build-extras.json. HAKARI's own rules replayed
+// on the same minutes (squeeze/hakari-read.ts, npm run hims:hook -> cache/squeeze/out/hakari-1m.json and
+// gauge/data/hims-hook-replay.json) are merged as series.hakari plus a `hakari` block that says it is a counterfactual.
+// Read-only against 4663.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { decodeEventLog, formatUnits, toEventSelector } from "viem";
 import { MAINNET_RPCS, POOL_MANAGER, PUBLIC_MAINNET_RPC, readCache, redact, run, writeCache } from "../chain.ts";
@@ -27,7 +30,8 @@ const ZERO = "0x0000000000000000000000000000000000000000";
 const AI_USDG = "0x508ab5b7a7b447598017eba58530c2a2a5d647b8074a2dc85aa533dfbed4d543";
 const AI_BONER = "0x1f1778596d8c1ee3e1eaf64ea83a5e77063b142fa3ef59a7c81e520c516379bc";
 const MON_0954_BLOCK = 50_772_447;
-const MAX_BYTES = 1_500_000;
+// 1.5 MB before HAKARI's read; its 26 per-minute arrays (int24 ticks, gaps and packed picks, not prices) add ~0.35 MB
+const MAX_BYTES = 2_000_000;
 
 // ---- pure pieces (tested in test/squeeze-build.test.ts) ----
 
@@ -113,14 +117,21 @@ export function nonFinite(v: unknown, path = "$", out: string[] = []): string[] 
   return out;
 }
 
-/** Series (arrays, or groups of arrays one level down) whose length is not n. */
-export function badLengths(series: Record<string, unknown>, n: number): string[] {
+/** Series (arrays, or groups of arrays at any depth, as series.hakari nests them) whose length is not n. */
+export function badLengths(series: Record<string, unknown>, n: number, prefix = ""): string[] {
   const bad: string[] = [];
   for (const [k, v] of Object.entries(series)) {
-    if (Array.isArray(v)) { if (v.length !== n) bad.push(`${k} (${v.length})`); continue; }
-    for (const [kk, vv] of Object.entries(v as Record<string, unknown>)) if (!Array.isArray(vv) || vv.length !== n) bad.push(`${k}.${kk}`);
+    const path = prefix + k;
+    if (Array.isArray(v)) { if (v.length !== n) bad.push(`${path} (${v.length})`); }
+    else if (v && typeof v === "object") bad.push(...badLengths(v as Record<string, unknown>, n, `${path}.`));
+    else bad.push(path);
   }
   return bad;
+}
+/** Every array in a (nested) series group, with its dotted path. */
+export function seriesArrays(series: Record<string, unknown>, prefix = ""): [string, unknown[]][] {
+  return Object.entries(series).flatMap(([k, v]) =>
+    Array.isArray(v) ? [[prefix + k, v] as [string, unknown[]]] : v && typeof v === "object" ? seriesArrays(v as Record<string, unknown>, `${prefix}${k}.`) : []);
 }
 
 /** Bars with high < low, or with swaps whose (priced) close, i.e. the bar's last swap, lies outside [low, high]. */
@@ -161,6 +172,78 @@ export function floatSplitProblems(inA: readonly Num[], inB: readonly Num[], pm:
 /** JSON with one key per line and every array of plain values on one line (the 4,081-point series stay compact). */
 export function serialize(v: unknown): string {
   return JSON.stringify(v, null, 1).replace(/\[\n\s*([^[\]{}]*?)\n\s*\]/g, (_m, body: string) => `[${body.split(/,\n\s*/).join(",")}]`) + "\n";
+}
+
+// ---- HAKARI's read: squeeze/hakari-read.ts's per-minute file, reshaped for the page (pure, tested) ----
+
+/** The replay's grid of configurations (hakari-read.ts DEFAULT_CONFIG) and the one the page decides with. */
+export const HK = { deltas: [10, 3], windows: [600, 1800, 3600], exposures: [1_000, 10_000, 100_000], primary: { delta: 10, window: 1800 } } as const;
+
+/** v0's picks for the three exposures (0 = raw unchecked, 1 = raw, 2 = truncated) as one number: p1k + 3·p10k + 9·p100k. */
+export function packPicks(picks: readonly (number | null | undefined)[]): number | null {
+  if (picks.some((p) => p === null || p === undefined)) return null;
+  if (picks.some((p) => p !== 0 && p !== 1 && p !== 2)) throw new Error(`v0 pick out of range: ${picks.join(",")}`);
+  return picks.reduce<number>((s, p, e) => s + (p as number) * 3 ** e, 0);
+}
+/** The pick for exposure index e (0 = 1k, 1 = 10k, 2 = 100k) out of packPicks' number. */
+export const unpackPick = (code: number | null, e: number): number | null => (code === null ? null : Math.floor(code / 3 ** e) % 3);
+
+/** USDG per HIMS at a HIMS/USDG tick (USDG is currency0 with 6 decimals, HIMS 18), as hakari-read.ts prices ticks. */
+export const usdgPerHimsAtTick = (tick: number) => 1e12 / Math.pow(1.0001, tick);
+
+/**
+ * series.hakari from hakari-1m.json on the grid `t`: SafeSettle v1's ladder bound (nobody pushing back) and its binding
+ * move; for the primary configuration (Δ = 10, 30 min) the TWAP-gap bound where it binds and the three decisions; for
+ * every Δ and window the int24 TWAP ticks, as the raw tick and the gap raw - truncated, and v0's packed picks. Ticks,
+ * not prices: exact, and about a third of the bytes. `problems` lists anything that does not fit.
+ */
+export function hakariSeries(h: any, t: readonly number[]): { series: Record<string, any>; problems: string[] } {
+  const problems: string[] = [];
+  const n = t.length;
+  if (!Array.isArray(h?.t) || h.t.length !== n || h.t.some((x: number, k: number) => x !== t[k])) problems.push("hakari-1m.json is not on the data.json grid");
+  const need = (path: string, ints = false): Num[] => {
+    const a = path.split(".").reduce((o: any, k) => (o == null ? undefined : o[k]), h);
+    if (!Array.isArray(a) || a.length !== n) { problems.push(`${path} missing or not ${n} long`); return new Array(n).fill(null); }
+    if (ints && a.some((x: Num) => x !== null && !Number.isInteger(x))) problems.push(`${path} holds non-integers`);
+    return a;
+  };
+  const { delta: pd, window: pw } = HK.primary;
+  const decision: Record<string, Num[]> = {};
+  for (const e of HK.exposures) {
+    const a = need(`v1.decision.d${pd}.w${pw}.e${e}`);
+    if (a.some((x) => x !== null && x !== 0 && x !== 1)) problems.push(`v1.decision e${e} is not 0/1/null`);
+    decision[`e${e}`] = a;
+  }
+  const rawTick: Record<string, Num[]> = {}, gapTicks: Record<string, Record<string, Num[]>> = {}, v0Pick: Record<string, Record<string, Num[]>> = {};
+  for (const w of HK.windows) rawTick[`w${w}`] = need(`twapTick.raw.w${w}`, true);
+  for (const d of HK.deltas) {
+    gapTicks[`d${d}`] = {}; v0Pick[`d${d}`] = {};
+    for (const w of HK.windows) {
+      const raw = rawTick[`w${w}`], trunc = need(`twapTick.trunc.d${d}.w${w}`, true);
+      if (raw.some((x, k) => (x === null) !== (trunc[k] === null))) problems.push(`raw and truncated TWAP nulls differ at d${d} w${w}`);
+      gapTicks[`d${d}`][`w${w}`] = raw.map((x, k) => (x === null || trunc[k] === null ? null : x - trunc[k]!));
+      const picks = HK.exposures.map((e) => need(`v0.pick.d${d}.w${w}.e${e}`));
+      v0Pick[`d${d}`][`w${w}`] = raw.map((_x, k) => packPicks(picks.map((p) => p[k])));
+    }
+  }
+  // the page prices ticks itself: it must land on the replay's own prices (6 significant digits) at every minute
+  for (const w of HK.windows) {
+    const theirs = need(`twap.raw.w${w}`), off = rawTick[`w${w}`].filter((x, k) => (x === null ? theirs[k] !== null : sig6(usdgPerHimsAtTick(x)) !== theirs[k])).length;
+    if (off) problems.push(`raw TWAP w${w}: tick -> price differs from hakari-1m.json at ${off} minutes`);
+  }
+  return {
+    series: {
+      maxSafeUsdg: r6(need("v1.maxSafeExposureUsdg")),
+      bindingTicks: need("v1.bindingTicks", true),
+      bindingUp: need("v1.bindingStockUp", true),
+      gapBoundUsdg: r6(need(`v1.gapBoundUsdg.d${pd}.w${pw}`)),
+      decision,
+      rawTick,
+      gapTicks,
+      v0Pick,
+    },
+    problems,
+  };
 }
 
 // ---- the two facts fetched here (cached) ----
@@ -275,6 +358,13 @@ export async function main() {
     netHimsOutOfHimsUsdg: r6(hu.netHimsOutOfHimsUsdg), netHimsIntoBonerHims: r6(bh.netHimsIntoBonerHims),
     himsMinted: r6(ss.himsMinted), himsBurned: r6(ss.himsBurned),
   };
+
+  // 1b. HAKARI's read: its own rules replayed on the same minutes (a counterfactual: the pool never had the hook)
+  const hk = readCache(`${outDir}hakari-1m.json`) as any;
+  const hkSummary = readCache(new URL("../../data/hims-hook-replay.json", import.meta.url).pathname) as any;
+  const hkRead = hk && hkSummary ? hakariSeries(hk, t) : null;
+  if (hkRead) (series as Record<string, unknown>).hakari = hkRead.series;
+  else console.log("  (HAKARI's read not merged: run npm run hims:hook for gauge/cache/squeeze/out/hakari-1m.json and gauge/data/hims-hook-replay.json)");
 
   // 2. the moments
   const mints = (sev.mints as any[]).map((m) => ({ ...m, amount: Number(m.amount) }));
@@ -581,7 +671,7 @@ export async function main() {
   const sameAxis = JSON.stringify(t) === JSON.stringify(inv.t) && JSON.stringify(t) === JSON.stringify(ss.t);
   check("Time axis", t.length === n && tProblems.length === 0 && sameAxis, `${t.length} points, ${iso(t[0])} to ${iso(t.at(-1)!)} in 60 s steps${tProblems.length ? `; ${tProblems.join("; ")}` : ""}; swaps, inventory and supply grids ${sameAxis ? "share it" : "DIFFER"}`);
   const bad = badLengths(series, n);
-  check(`Every series has ${n} points`, bad.length === 0, bad.length ? `wrong: ${bad.join(", ")}` : `${Object.keys(series).length} series (OHLC groups counted once)`);
+  check(`Every series has ${n} points`, bad.length === 0, bad.length ? `wrong: ${bad.join(", ")}` : `${Object.keys(series).length} series (OHLC groups and series.hakari counted once), ${seriesArrays(series).length} arrays`);
   const k0bad = ["himsUsdg", "bonerHims", "bonerUsdgDirect"].flatMap((g) => ((series as any)[g].high[0] !== null || (series as any)[g].low[0] !== null ? [g] : []))
     .concat(["volUsdgHimsUsdg", "volHimsBonerHims", "volUsdgBonerUsdg", "swapsHimsUsdg", "swapsBonerHims", "swapsBonerUsdg", "netHimsOutOfHimsUsdg", "netHimsIntoBonerHims", "himsMinted", "himsBurned"].filter((s) => (series as any)[s][0] !== 0));
   check("Bars are null/0 at k = 0", k0bad.length === 0, k0bad.length ? `not empty at k = 0: ${k0bad.join(", ")}` : "high/low null, volumes, counts, flows, mints and burns 0");
@@ -612,6 +702,19 @@ export async function main() {
     + off(d2.himsPremiumPct, series.himsPremiumPct, (x) => 1e-3 * Math.max(1, Math.abs(x))) + off(d2.routeGapPct, series.routeGapPct, (x) => 5e-3 * Math.max(1, Math.abs(x)));
   const collectorVia = off(d.bonerUsdgViaHims, sw.derived.usdgPerBonerViaHims, (x) => Math.abs(x) * 1e-8);
   check("Derived series recompute from the rounded closes", derivedOff === 0 && collectorVia === 0, `${derivedOff} points off beyond rounding; BONER via HIMS equals pools-swaps.ts's own product at ${n - collectorVia}/${n} points`);
+  const hkS = hkRead?.series;
+  if (hkRead && hkS) {
+    check("HAKARI's read on the data grid", hkRead.problems.length === 0,
+      hkRead.problems.length ? hkRead.problems.join("; ") : `hakari-1m.json: ${seriesArrays(hkS).length} arrays of ${n} minutes on this grid; the page's tick -> USDG per HIMS equals the replay's raw TWAP prices at every minute`);
+    const own = hk.meta.checks as { name: string; pass: boolean }[];
+    check("HAKARI replay's own checks", own.length > 0 && own.every((c) => c.pass), own.map((c) => `${c.pass ? "pass" : "FAIL"}: ${c.name}`).join("; "));
+    check("HAKARI per-minute file and summary from one run", hk.meta.generatedAt === hkSummary.generatedAt, `hakari-1m.json ${hk.meta.generatedAt}, hims-hook-replay.json ${hkSummary.generatedAt}`);
+    const recount = HK.exposures.map((e) => (hkS.decision[`e${e}`] as Num[]).filter((x) => x === 0).length);
+    const theirs = HK.exposures.map((e) => hkSummary.weekend.v1RefusalsPrimary.byExposureUsdg[e].minutesRefused as number);
+    check("HAKARI refusals recounted from the arrays", recount.every((x, i) => x === theirs[i]), `Δ = 10, 30-minute TWAP: ${recount.map((x, i) => `${fmt(x, 0)} min at ${fmt(HK.exposures[i], 0)}`).join(", ")} USDG (summary ${theirs.join(" / ")})`);
+    const onGrid = (hkSummary.keyMoments as any[]).filter((m) => m.gridIndex !== null).map((m) => ({ id: m.id, theirs: m.maxSafeExposureUsdg, ours: hkS.maxSafeUsdg[m.gridIndex] }));
+    check("HAKARI key moments = the arrays", onGrid.every((m) => m.theirs === m.ours), onGrid.map((m) => `${m.id} ${m.ours} USDG${m.theirs === m.ours ? "" : ` (summary ${m.theirs})`}`).join(", "));
+  } else check("HAKARI's read merged", false, "gauge/cache/squeeze/out/hakari-1m.json or gauge/data/hims-hook-replay.json is missing: run npm run hims:hook, then this build");
 
   // 6. caveats
   const lm = extra.lastMint;
@@ -640,6 +743,77 @@ export async function main() {
       en: `The pool tapes end at block ${fmt(Number(WINDOW_END_BLOCK), 0)}, the first block at 14:00:00 UTC; blocks ${tail.range.split("-").map((b) => fmt(Number(b), 0)).join("–")} carry the same timestamp and hold ${sw_} main-pool swaps and ${lp} LP changes that the last minute does not include (the supply series does include them).`,
       zh: `各池的交易紀錄止於區塊 ${fmt(Number(WINDOW_END_BLOCK), 0)}（UTC 14:00:00 的第一個區塊）；區塊 ${tail.range.split("-").map((b) => fmt(Number(b), 0)).join("–")} 的時間戳相同，其中有 ${sw_} 筆主池交易與 ${lp} 筆流動性變動未計入最後一分鐘（流通量序列則有計入）。`,
     });
+  }
+
+  // 6b. HAKARI's read: what the page needs to say about it, carried with the numbers
+  let hakari: Record<string, unknown> | null = null;
+  if (hkRead && hkS) {
+    const P = HK.primary, kBase = barIndex(1_788_118_800), base = hkS.maxSafeUsdg[kBase] as number; // Sun 19:40, hims-replay point 1
+    const ref = hkSummary.weekend.v1RefusalsPrimary.byExposureUsdg, run1k = ref[1000].longestRun;
+    const decided = (hkS.decision.e1000 as Num[]).filter((x) => x !== null).length;
+    const kFirst = (hkS.rawTick[`w${P.window}`] as Num[]).findIndex((x) => x !== null);
+    const lim = hkSummary.oracle.layer1TickLimit, limTs = Date.parse(lim.swap.time) / 1000;
+    const m10k = ref[10000].minutesRefused as number, m1k = ref[1000].minutesRefused as number;
+    const rFrom = Date.parse(run1k.from) / 1000, rTo = Date.parse(run1k.to) / 1000;
+    const pct = (a: number, b: number) => fmt((a / b) * 100, 0);
+    hakari = {
+      counterfactual: true,
+      what: {
+        en: "What HAKARI's own rules would have read and decided at every minute, had HakariOracleHook been attached to HIMS/USDG. It was not: the pool was created without a hook (hooks = 0x0), so every figure here is a replay over the pool's real swaps and rebuilt positions, not something any contract read.",
+        zh: "如果 HIMS/USDG 掛上 HakariOracleHook，HAKARI 自己的規則每一分鐘會讀到什麼、做出什麼決定。實際上沒有：這個池子建立時沒有 hook（hooks = 0x0），所以這裡每個數字都是用池子真實的兌換與重建的部位重播出來的，不是任何合約讀到的值。",
+      },
+      produce: "cd gauge && npm run hims:hook (squeeze/hakari-read.ts: gauge/cache/squeeze/out/hakari-1m.json and gauge/data/hims-hook-replay.json), then npm run squeeze:build",
+      command: "npm run hims:hook",
+      code: "gauge/src/squeeze/hakari-read.ts",
+      summaryFile: "gauge/data/hims-hook-replay.json",
+      pool: { id: hk.meta.pool.id, hooks: hk.meta.pool.hooks, fee: hk.meta.pool.fee, tickSpacing: hk.meta.pool.tickSpacing, quote: hk.meta.pool.quote },
+      parameters: hk.meta.parameters,
+      encoding: {
+        maxSafeUsdg: "SafeSettle v1's max safe exposure with nobody pushing back (the ladder; the same for every Δ and window), USDG",
+        bindingTicks: "the ladder rung that sets it, in ticks; bindingUp: 1 = the move pushes HIMS up, 0 = down",
+        gapBoundUsdg: `Δ = ${P.delta}, ${P.window / 60}-minute TWAP: the bound where the gap between the two TWAPs, priced as one more move, is lower than the ladder's, else null. Effective bound = gapBoundUsdg ?? maxSafeUsdg. The per-minute file does not keep that move's direction`,
+        decision: `Δ = ${P.delta}, ${P.window / 60}-minute TWAP: e1000 / e10000 / e100000 = 1 trust the raw TWAP, 0 refuse, null = no TWAP over that window yet`,
+        rawTick: "HakariOracleHook.twaps' raw TWAP tick (int24) per window in seconds; USDG per HIMS = 1e12 / 1.0001^tick",
+        gapTicks: "raw minus truncated TWAP tick, per Δ and window: truncated tick = rawTick - gapTicks. USDG is currency0, so a negative gap means the raw price is above the truncated one",
+        v0Pick: "SafeSettle v0's choice per Δ and window, the three exposures packed as p1000 + 3·p10000 + 9·p100000, p = 0 raw (gap <= 10 ticks, unchecked), 1 raw (faking costs more than it earns), 2 truncated. v0 never refuses",
+      },
+      assumptions: hk.meta.assumptions,
+      caveats: [
+        {
+          en: "HAKARI's read is a replay, not a record. HIMS/USDG was created without a hook (hooks = 0x0), so no HAKARI contract ever read this pool; the HAKARI lanes replay HakariOracleHook's observations and SafeSettle's rules over the pool's real swaps and rebuilt positions, minute by minute.",
+          zh: "HAKARI 的判讀是重播，不是紀錄。HIMS/USDG 建立時沒有掛 hook（hooks = 0x0），從來沒有 HAKARI 合約讀過這個池子；HAKARI 的兩條軌道是把 HakariOracleHook 的觀測與 SafeSettle 的規則，逐分鐘套在這個池子真實的兌換與重建的部位上。",
+        },
+        {
+          en: "Max safe exposure assumes nobody pushes back (arbitrage reversion 0 s). That held while minting was closed, Sat 00:00 to Mon 00:43:30 UTC; before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative.",
+          zh: "最大安全曝險假設沒有人把價格拉回（套利回復時間 0 秒）。這在鑄造關閉期間（UTC 週六 00:00 到週一 00:43:30）成立；在那之前與之後都能套利，所以那段時間的上限偏低，拒絕結算是保守的判斷。",
+        },
+        {
+          en: `A 10,000 USDG settlement is refused in ${fmt(m10k, 0)} of ${fmt(decided, 0)} minutes because this pool's bound with nobody pushing back is about 7,000 USDG even on a quiet evening (${fmt(base, 2)} at Sun 19:40 UTC). That is the pool's normal depth, not the squeeze. 1,000 USDG is the exposure whose refusals isolate the squeeze: ${fmt(m1k, 0)} minutes, the longest from ${day(rFrom, "en")} ${hm(rFrom)} to ${day(rTo, "en")} ${hm(rTo)} UTC.`,
+          zh: `結算 10,000 USDG 時，${fmt(decided, 0)} 分鐘裡有 ${fmt(m10k, 0)} 分鐘被拒絕，因為即使在平靜的傍晚，這個池子在沒人拉回價格時的上限也只有約 7,000 USDG（UTC 週日 19:40 為 ${fmt(base, 2)}）。那是池子平常的深度，不是擠壓造成的。能單獨看出擠壓的是 1,000 USDG：共 ${fmt(m1k, 0)} 分鐘被拒絕，最長一段從 UTC ${day(rFrom, "zh")} ${hm(rFrom)} 到${day(rTo, "zh")} ${hm(rTo)}。`,
+        },
+        {
+          en: `Decisions and the gap bound use Δ = ${P.delta} (HIMS's p99 calibration) and a ${P.window / 60}-minute TWAP; the Oracle lane can switch to 10 or 60 minutes and Δ = 3. The hook's record starts at the last swap before the window (${iso(hk.meta.oracle.firstObservation.ts)}), so the first ${kFirst} minutes have no ${P.window / 60}-minute TWAP.`,
+          zh: `結算決定與價差上限使用 Δ = ${P.delta}（HIMS 的 p99 校準值）與 ${P.window / 60} 分鐘 TWAP；預言機軌道可切換為 10 或 60 分鐘，以及 Δ = 3。hook 的紀錄從觀察期間前最後一筆兌換開始（${iso(hk.meta.oracle.firstObservation.ts)}），所以前 ${kFirst} 分鐘還沒有 ${P.window / 60} 分鐘 TWAP。`,
+        },
+        {
+          en: `The ${hms(limTs)} swap that left slot0 at the tick limit (tick ${fmt(lim.swap.tickAfter, 0).replace("-", "−")}) was never recorded: the hook writes once per second, before that second's first swap, and a sale later in the same block brought the price back.`,
+          zh: `${hms(limTs)} 那筆把 slot0 推到 tick 極限（tick ${fmt(lim.swap.tickAfter, 0).replace("-", "−")}）的兌換從未被記錄：hook 每秒只寫一次，而且是在該秒第一筆兌換之前寫，同一個區塊稍後的一筆賣單又把價格拉了回來。`,
+        },
+      ],
+      oracle: {
+        firstObservation: hk.meta.oracle.firstObservation,
+        observationsWritten: hk.meta.oracle.observationsWritten,
+        swaps: hk.meta.oracle.swaps,
+        tickLimitSwap: { ts: limTs, block: lim.swap.block, logIndex: lim.swap.logIndex, tickAfter: lim.swap.tickAfter, recorded: lim.recorded, observationsAround: lim.observationsAround },
+      },
+      moments: (hkSummary.keyMoments as any[]).map((m) => ({
+        id: m.id, ts: m.ts, label: m.label, gridIndex: m.gridIndex, usdgPerHims: m.pool.usdgPerHims, maxSafeExposureUsdg: m.maxSafeExposureUsdg, binding: m.binding,
+        configs: Object.fromEntries(HK.windows.map((w) => [`d${P.delta}w${w}`, m.configs[`d${P.delta}w${w}`]])),
+      })),
+      weekend: hkSummary.weekend,
+      checks: hk.meta.checks,
+      generatedAt: hk.meta.generatedAt,
+    };
   }
 
   // 7. pools and the file
@@ -679,11 +853,12 @@ export async function main() {
     anchors,
     checks,
     caveats,
+    ...(hakari ? { hakari } : {}),
   };
   const nf = nonFinite(data);
   check("No NaN or Infinity", nf.length === 0, nf.length ? `at ${nf.slice(0, 5).join(", ")}` : "every number is finite; undefined values are null");
   const secretHosts = MAINNET_RPCS.filter((u) => u !== PUBLIC_MAINNET_RPC).map((u) => { try { return new URL(u).hostname; } catch { return u; } });
-  const sizeCheck = { name: "data.json under 1.5 MB", pass: true, detail: "" };
+  const sizeCheck = { name: `data.json under ${MAX_BYTES / 1e6} MB`, pass: true, detail: "" };
   const urlCheck = { name: "No RPC endpoint or key in the file", pass: true, detail: "" };
   checks.push(urlCheck, sizeCheck);
   let text = "";

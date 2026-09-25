@@ -21,19 +21,30 @@
        title / unit / sub   i18n keys
        height    {desk, tab, phone} plot height in px; phone: 'open' | 'collapsed'
        y         {scale: 'linear'|'log', fixed(): [lo, hi] | 'lane:<id>', fit: 'view'|'always', ticks(scale, h)}
-       series[]  {id, kind: 'line'|'band'|'area'|'stack'|'cum'|'step'|'flagStrip', key (dotted path into
+       series[]  {id, kind: 'line'|'band'|'area'|'stack'|'cum'|'ref'|'refs'|'flagStrip', key (dotted path into
                  data.series) or get(i) -> number|null, color (token name without --), width, dash:'nav',
-                 opacity, label (i18n key), watch: [story watch keys that light this lane]}
+                 opacity, label (i18n key, or a function returning the text), legend ('rect'|'wide'|false),
+                 watch: [story watch keys that light this lane]}
+                 'refs': values() -> [{v, label, emph}] solid reference lines (dashes stay "at NAV" only).
+                 'flagStrip': a state strip under the plot, h px tall; get(i) -> state, states(state) ->
+                 {fill, opacity, text}; axisLabel() -> the strip's left label. Text rides on every run
+                 wide enough for it, so the state never rests on colour alone.
+       controls  [{id, label (i18n key), options: [{v, t (text or function)}], get(), set(v)}] segmented
+                 buttons in the lane's legend row (set() re-renders; the lane's get() series re-derive)
        readout(i) -> [{v, l, color, dash}]   docked readout at the committed cursor (values lead)
        tip(i)     -> same shape, for the hover tooltip (defaults to readout)
-       table      {cols: [{h, get(i) -> string}]}  the Numbers view
-       marks(ctx), refs(ctx)  extra drawing (NAV line, notable swaps, event glyphs)
+       table      {cols: [{h (i18n key or function), get(i) -> string}]}  the Numbers view
+       marks(ctx) extra drawing for this lane: ctx = {L, g, sg, x, y, i0, i1, h, m, W, inView}
+                  (g unclipped, sg clipped to the plot); built-in lanes keep theirs in drawMarks
 
-     The HAKARI/Vexi settlement read (story.next) will ship as overlay.js
-     (window.SQUEEZE_OVERLAY = {version, stepSec: 60, fromTs, n: 4081,
-       series: {settlePrice: [], settleGapPct: [], fenced: [0|1]}, method, source})
-     loaded with one more classic <script src="overlay.js"> in index.html (and inlined by
-     build-web.mjs when present). Its lane is this single entry, pushed onto S.LANES:
+     HAKARI's own read of these minutes is two entries below, 'hakari' (SafeSettle v1's max safe
+     exposure and its decision) and 'oracle' (the hook's raw and truncated TWAPs and what v0 settled on),
+     fed from data.json's series.hakari (gauge: npm run hims:hook, then npm run squeeze:build). It is a
+     counterfactual replay (HIMS/USDG never had the hook) and the lanes say so. Any further read, e.g. a
+     settlement overlay shipped as overlay.js (window.SQUEEZE_OVERLAY = {version, stepSec: 60, fromTs,
+     n: 4081, series: {settlePrice: [], settleGapPct: [], fenced: [0|1]}, method, source}) loaded with one
+     more classic <script src="overlay.js"> in index.html (and inlined by build-web.mjs when present), is
+     still a single entry pushed onto S.LANES:
 
        S.LANES.push({ id: 'settle', group: 'price', after: 'price',
          when: function () { return !!(S.OV && S.OV.series && S.OV.series.settlePrice); },
@@ -72,6 +83,74 @@
     var e = S.extent(keys.map(S.ser), 0, S.N - 1, true);
     return e || [0.001, 1];
   }
+  function priceFixed() {
+    var e = S.extent([S.ser('himsUsdg.close')], 0, S.N - 1) || [S.NAV, S.NAV * 2];
+    var hi = Math.ceil((e[1] * 1.04) / (S.NAV * 0.25)) * S.NAV * 0.25;
+    return [Math.min(S.NAV * 0.9, e[0] * 0.98), hi];
+  }
+
+  // ---------- HAKARI's read (data.json series.hakari; a counterfactual replay, see data.hakari) ----------
+  // Page-level choices, shared by the 'hakari' and 'oracle' lanes and the chapter card: the settlement size
+  // (exposure) and, for the oracle lane, the TWAP window and the truncation Δ. Not persisted: every visit (and
+  // presenter mode, which hides the controls) starts at 1,000 USDG, 30 minutes, Δ 10, the sizes the story quotes.
+  // Decisions and the gap bound exist for the primary configuration only (Δ = 10, 30 min).
+  var EXPS = [1000, 10000, 100000];
+  S.HK_EXPS = EXPS;
+  S.hk = { exp: 1000, win: 1800, delta: 10 };
+  S.hkSet = function (patch) {
+    Object.keys(patch).forEach(function (k) { S.hk[k] = patch[k]; });
+    // series built with get() depend on these choices: drop their caches, then redraw
+    S.lanes.forEach(function (L) { (L.def.series || []).forEach(function (s) { if (!s.key) s._arr = null; }); });
+    S.laneTexts();
+    S.renderAll();
+  };
+  S.hkExpIdx = function () { var k = EXPS.indexOf(S.hk.exp); return k < 0 ? 0 : k; };
+  S.tickPrice = function (tk) { return tk == null ? null : 1e12 / Math.pow(1.0001, tk); }; // USDG per HIMS (USDG is currency0)
+  S.hkRawTick = function (i, w) { return S.val('hakari.rawTick.w' + (w || S.hk.win), i); };
+  S.hkGap = function (i, w, d) { return S.val('hakari.gapTicks.d' + (d || S.hk.delta) + '.w' + (w || S.hk.win), i); };
+  S.hkTruncTick = function (i, w, d) { var r = S.hkRawTick(i, w), g = S.hkGap(i, w, d); return r == null || g == null ? null : r - g; };
+  // v0's settlement price for exposure index e (default: the chosen one): raw unless it picked truncated
+  S.hkV0 = function (i, e, w, d) {
+    var code = S.val('hakari.v0Pick.d' + (d || S.hk.delta) + '.w' + (w || S.hk.win), i);
+    if (code == null) return null;
+    var p = Math.floor(code / Math.pow(3, e == null ? S.hkExpIdx() : e)) % 3;
+    return { pick: p, tick: p === 2 ? S.hkTruncTick(i, w, d) : S.hkRawTick(i, w), price: S.tickPrice(p === 2 ? S.hkTruncTick(i, w, d) : S.hkRawTick(i, w)) };
+  };
+  // v1's bound: the ladder (nobody pushing back), lower where the gap between the two TWAPs binds (Δ 10, 30 min)
+  S.hkBound = function (i) {
+    var ladder = S.val('hakari.maxSafeUsdg', i), gap = S.val('hakari.gapBoundUsdg', i);
+    return { ladder: ladder, gap: gap, eff: gap != null ? gap : ladder, ticks: S.val('hakari.bindingTicks', i), up: S.val('hakari.bindingUp', i) };
+  };
+  S.hkDecision = function (i, exp) { return S.val('hakari.decision.e' + (exp || S.hk.exp), i); };
+  S.hkDecisionText = function (dec) { return dec === 0 ? tr('hk.refuse') : (dec === 1 ? tr('hk.trust') : tr('hk.noTwap')); };
+  S.fmtExp = function (v) { return S.lang === 'zh' ? S.fmtInt(v) : S.fmtCompact(v); };
+  function hkStates(v) {
+    if (v === 0) return { fill: 'hakari', opacity: 0.88, text: tr('hk.refuse') };
+    if (v === 1) return { fill: 'pool-usd', opacity: 0.26, text: tr('hk.trust') };
+    return { fill: 'grid', opacity: 1, text: tr('hk.noTwap') };
+  }
+  function hkMoment(id) { var h = S.D && S.D.hakari; return h && h.moments ? h.moments.filter(function (m) { return m.id === id; })[0] : null; }
+  S.hkMoment = hkMoment;
+  // a dot and a direct label (value · time) at the Sun 19:40 baseline and at the lowest point in view
+  function baseAndMin(ctx, arr, fmt) {
+    var x = ctx.x, y = ctx.y, g = ctx.g, m = ctx.m, W = ctx.W;
+    if (ctx.inView(S.baseTs) && arr[S.baseI] != null) {
+      var bx = x(S.baseTs), by = y(arr[S.baseI]);
+      S.svg('circle', { cls: 'glyph dot', cx: bx, cy: by, r: 3.5 }, g);
+      var bt = S.svg('text', { cls: 'halo mark-label', x: bx - 6, y: by - 7, 'text-anchor': 'end' }, g);
+      if (bx - m.l < 110) { bt.setAttribute('x', bx + 6); bt.setAttribute('text-anchor', 'start'); }
+      bt.textContent = fmt(arr[S.baseI]) + ' · ' + S.fmtWdHM(S.baseTs);
+    }
+    var mn = Infinity, mj = -1;
+    for (var q = Math.max(ctx.i0, S.idx(S.view.d0)); q <= Math.min(ctx.i1, S.idx(S.view.d1)); q++) if (arr[q] != null && arr[q] < mn) { mn = arr[q]; mj = q; }
+    if (mj >= 0 && Math.abs(mj - S.baseI) > 5) {
+      var mx = x(S.t[mj]), my = y(mn);
+      S.svg('circle', { cls: 'glyph dot', cx: mx, cy: my, r: 3.5 }, g);
+      var mt = S.svg('text', { cls: 'halo mark-label strong', x: mx + 6, y: Math.min(my + 14, m.t + ctx.h - 4) }, g);
+      if (mx > W - m.r - 120) { mt.setAttribute('x', mx - 6); mt.setAttribute('text-anchor', 'end'); }
+      mt.textContent = fmt(mn) + ' · ' + S.fmtWdHM(S.t[mj]);
+    }
+  }
 
   S.LANES = [
     { id: 'moments', kind: 'events', group: null, height: { desk: 36, tab: 34, phone: 32 } },
@@ -80,11 +159,7 @@
       height: { desk: 180, tab: 170, phone: 150 }, phone: 'open', presenterWeight: 1.3,
       y: {
         scale: 'linear',
-        fixed: function () {
-          var e = S.extent([S.ser('himsUsdg.close')], 0, S.N - 1) || [S.NAV, S.NAV * 2];
-          var hi = Math.ceil((e[1] * 1.04) / (S.NAV * 0.25)) * S.NAV * 0.25;
-          return [Math.min(S.NAV * 0.9, e[0] * 0.98), hi];
-        },
+        fixed: priceFixed,
         fitKeys: ['himsUsdg.close'],
         ticks: 'nav'
       },
@@ -252,10 +327,120 @@
       ] },
       spark: 'pushUp10CostUsdg'
     },
+    {
+      // HAKARI's read, 1 of 2: SafeSettle v1's max safe exposure and its decision, minute by minute (replay)
+      id: 'hakari', group: 'hakari', title: 'lane.hakari', unit: 'unit.hakari', sub: 'sub.hakari',
+      height: { desk: 150, tab: 140, phone: 132 }, phone: 'open', presenterWeight: 1.1,
+      when: function () { return !!(S.ser('hakari.maxSafeUsdg') && S.ser('hakari.decision.e1000')); },
+      y: { scale: 'log', fixed: function () { return [10, 200000]; }, fitKeys: ['hakari.maxSafeUsdg', 'hakari.gapBoundUsdg'] },
+      series: [
+        { id: 'bound', kind: 'line', key: 'hakari.maxSafeUsdg', color: 'hakari', width: 2, label: 's.maxSafe', end: 'e.maxSafe', z: 3, watch: ['maxSafeExposure'] },
+        { id: 'eff', kind: 'line', get: function (i) { return S.hkBound(i).eff; }, color: 'hakari', width: 1.25, opacity: 0.55, label: 's.gapBound', z: 2 },
+        { id: 'sizes', kind: 'refs', legend: false, z: 0,
+          values: function () { return EXPS.map(function (v) { return { v: v, emph: v === S.hk.exp, label: tr('hk.settling', { v: S.fmtExp(v) }) }; }); } },
+        { id: 'decide', kind: 'flagStrip', h: 16, get: function (i) { return S.hkDecision(i); }, states: hkStates, legend: false, watch: ['hakariDecision'],
+          axisLabel: function () { return S.fmtExp(S.hk.exp); } }
+      ],
+      controls: [
+        { id: 'exp', label: 'ctl.exposure', prefix: 'ctl.settling', options: EXPS.map(function (v) { return { v: v, t: function () { return S.fmtExp(v); } }; }),
+          get: function () { return S.hk.exp; }, set: function (v) { S.hkSet({ exp: v }); } }
+      ],
+      readout: function (i) {
+        var b = S.hkBound(i), dec = S.hkDecision(i), out = [];
+        out.push({ v: b.eff == null ? '—' : S.fmtUsdg(b.eff) + ' USDG', l: tr('ro.maxSafe'), color: 'hakari' });
+        if (b.gap != null) out.push({ l: tr('ro.bindGap', { n: S.fmtInt(Math.abs(S.hkGap(i, 1800, 10))), v: S.fmtUsdg(b.ladder) }) });
+        else if (b.ticks != null) out.push({ l: tr('ro.bind', { n: S.fmtInt(b.ticks), d: tr(b.up ? 'ro.up' : 'ro.down') }) });
+        out.push({ v: S.hkDecisionText(dec), l: tr('ro.settlingV', { v: S.fmtInt(S.hk.exp) }), color: dec === 0 ? 'hakari' : (dec === 1 ? 'pool-usd' : null), rect: true });
+        return out;
+      },
+      table: { cols: [
+        { h: 's.maxSafe', get: function (i) { return S.fmtUsdg(S.val('hakari.maxSafeUsdg', i)); } },
+        { h: 'tbl.gapBound', get: function (i) { var g = S.val('hakari.gapBoundUsdg', i); return g == null ? '—' : S.fmtUsdg(g); } },
+        { h: 'tbl.binding', get: function (i) { var b = S.hkBound(i); if (b.gap != null) return tr('tbl.bindGap', { n: S.fmtInt(Math.abs(S.hkGap(i, 1800, 10))) }); return b.ticks == null ? '—' : S.fmtInt(b.ticks) + ' ' + tr(b.up ? 'ro.upShort' : 'ro.downShort'); } }
+      ].concat(EXPS.map(function (v) { return { h: function () { return tr('tbl.decide', { v: S.fmtExp(v) }); }, get: function (i) { return S.hkDecisionText(S.hkDecision(i, v)); } }; })) },
+      marks: function (ctx) {
+        var a = S.ser('hakari.maxSafeUsdg'); if (a) baseAndMin(ctx, a, function (v) { return S.fmtUsdg(v); });
+      },
+      spark: 'hakari.maxSafeUsdg'
+    },
+    {
+      // HAKARI's read, 2 of 2: the hook's two TWAPs over the same swaps, and what v0 would have settled on
+      id: 'oracle', group: 'hakari', title: 'lane.oracle', unit: 'unit.price', sub: 'sub.oracle',
+      height: { desk: 180, tab: 170, phone: 150 }, phone: 'collapsed', // the price lane's heights: same y ticks, read 1:1
+      when: function () { return !!(S.ser('hakari.rawTick.w1800') && S.ser('hakari.gapTicks.d10.w1800') && S.ser('hakari.v0Pick.d10.w1800')); },
+      y: { scale: 'linear', fixed: priceFixed, ticks: 'nav',
+        fitKeys: ['himsUsdg.close', function () { return S.seriesArr(S.laneSeries('oracle', 'raw')); }, function () { return S.seriesArr(S.laneSeries('oracle', 'trunc')); }] },
+      series: [
+        { id: 'v0', kind: 'line', get: function (i) { var p = S.hkV0(i); return p ? p.price : null; }, color: 'text-primary', width: 7, opacity: 0.16, legend: 'wide',
+          label: function () { return tr('s.v0', { v: S.fmtExp(S.hk.exp) }); }, z: 0, watch: ['v0Settle'] },
+        { id: 'spot', kind: 'line', key: 'himsUsdg.close', color: 'pool-usd', width: 1.25, opacity: 0.6, label: 's.close', z: 1 },
+        { id: 'trunc', kind: 'line', get: function (i) { return S.tickPrice(S.hkTruncTick(i)); }, color: 'ref', width: 1.5, z: 2, end: 'e.trunc',
+          label: function () { return tr('s.trunc', { d: S.hk.delta, w: S.hk.win / 60 }); } },
+        { id: 'raw', kind: 'line', get: function (i) { return S.tickPrice(S.hkRawTick(i)); }, color: 'hakari', width: 2, z: 3, end: 'e.raw',
+          label: function () { return tr('s.raw', { w: S.hk.win / 60 }); } },
+        { id: 'nav', kind: 'ref', value: nav, color: 'ref', dash: 'nav', width: 1.5, label: 's.nav' }
+      ],
+      controls: [
+        { id: 'win', label: 'ctl.window', options: [600, 1800, 3600].map(function (w) { return { v: w, t: function () { return tr('ctl.min', { m: w / 60 }); } }; }),
+          get: function () { return S.hk.win; }, set: function (v) { S.hkSet({ win: v }); } },
+        { id: 'delta', label: 'ctl.delta', options: [10, 3].map(function (d) { return { v: d, t: 'Δ ' + d }; }),
+          get: function () { return S.hk.delta; }, set: function (v) { S.hkSet({ delta: v }); } }
+      ],
+      readout: function (i) {
+        var raw = S.tickPrice(S.hkRawTick(i)), tr0 = S.tickPrice(S.hkTruncTick(i)), gap = S.hkGap(i), v0 = S.hkV0(i);
+        var out = [
+          { v: S.fmtUsdg2(S.val('himsUsdg.close', i)), l: tr('s.close'), color: 'pool-usd' },
+          { v: S.fmtUsdg2(raw), l: tr('ro.raw', { w: S.hk.win / 60 }), color: 'hakari' },
+          { v: S.fmtUsdg2(tr0), l: tr('ro.trunc', { d: S.hk.delta }), color: 'ref' }
+        ];
+        if (gap != null) out.push({ l: tr('ro.gap', { n: S.fmtInt(Math.abs(gap)) }) });
+        if (v0) out.push({ v: S.fmtUsdg2(v0.price), l: tr(v0.pick === 2 ? 'ro.v0trunc' : (v0.pick === 1 ? 'ro.v0raw' : 'ro.v0unchecked'), { v: S.fmtInt(S.hk.exp) }), color: 'text-primary' });
+        return out;
+      },
+      table: { cols: [
+        { h: 's.close', get: function (i) { return S.fmtUsdg2(S.val('himsUsdg.close', i)); } },
+        { h: function () { return tr('s.raw', { w: S.hk.win / 60 }); }, get: function (i) { return S.fmtUsdg2(S.tickPrice(S.hkRawTick(i))); } },
+        { h: function () { return tr('s.trunc', { d: S.hk.delta, w: S.hk.win / 60 }); }, get: function (i) { return S.fmtUsdg2(S.tickPrice(S.hkTruncTick(i))); } },
+        { h: 'tbl.gapTicks', get: function (i) { return S.fmtInt(S.hkGap(i)); } }
+      ].concat(EXPS.map(function (v, e) { return { h: function () { return tr('tbl.v0', { v: S.fmtExp(v) }); }, get: function (i) { var p = S.hkV0(i, e); return p ? S.fmtUsdg2(p.price) + (p.pick === 2 ? ' ' + tr('tbl.truncMark') : '') : '—'; } }; })) },
+      marks: function (ctx) {
+        var hk = S.D.hakari || {}, lim = hk.oracle && hk.oracle.tickLimitSwap, g = ctx.g, m = ctx.m, x = ctx.x, y = ctx.y, W = ctx.W;
+        var close = (S.view.d1 - S.view.d0) <= 12 * 3600;
+        if (lim && ctx.inView(lim.ts)) {
+          var lx = x(lim.ts), top = m.t + 1;
+          S.svg('line', { cls: 'mark-rule', x1: lx, x2: lx, y1: top, y2: m.t + ctx.h }, g);
+          S.svg('path', { cls: 'glyph ring', d: 'M' + lx + ',' + top + 'l4,6l-8,0z' }, g);
+          if (close) {
+            var right = lx < W - m.r - 230;
+            var lt = S.svg('text', { cls: 'halo mark-label', x: right ? lx + 7 : lx - 7, y: top + 9, 'text-anchor': right ? 'start' : 'end' }, g);
+            lt.textContent = tr('mk.unseen', { t: S.fmtHMS(lim.ts) });
+          }
+        }
+        var mo = hkMoment('mon-004330'), c = mo && mo.configs ? mo.configs['d10w' + S.hk.win] : null;
+        if (mo && c && S.hk.delta === 10 && close && ctx.inView(mo.ts)) {
+          var v0 = c.v0 && c.v0.settle ? c.v0.settle[String(S.hk.exp)] : null, pv = v0 == null ? null : (/^truncated/.test(v0) ? c.usdgPerHims.trunc : c.usdgPerHims.raw);
+          if (pv != null && pv >= y.d[0] && pv <= y.d[1]) {
+            // the label sits in the plot's top band (the lines run through the dot), tied to it by a leader
+            var mx = x(mo.ts), my = y(pv), rt = mx < W - m.r - 250, ly = m.t + 24;
+            S.svg('path', { cls: 'leader', d: 'M' + mx.toFixed(1) + ',' + (my - 5).toFixed(1) + 'V' + (ly + 4) }, g);
+            S.svg('circle', { cls: 'glyph dot', cx: mx, cy: my, r: 3.5 }, g);
+            var t2 = S.svg('text', { cls: 'halo mark-label strong', x: rt ? mx + 5 : mx - 5, y: ly, 'text-anchor': rt ? 'start' : 'end' }, g);
+            t2.textContent = tr('mk.v0at', { t: S.fmtHMS(mo.ts), r: S.fmtUsdg2(c.usdgPerHims.raw), u: S.fmtUsdg2(c.usdgPerHims.trunc), n: S.fmtInt(Math.abs(c.twapTicks.gap)), v: S.fmtUsdg2(pv) });
+          }
+        }
+      },
+      spark: null
+    },
     { id: 'social', kind: 'social', group: 'social', title: 'lane.social', unit: 'unit.social',
       height: { desk: 48, tab: 48, phone: 48 }, phone: 'open',
       when: function () { return !!(S.SO && (Array.isArray(S.SO.hourly) || Array.isArray(S.SO.posts))); } }
   ];
+
+  S.laneSeries = function (laneId, seriesId) {
+    var d = S.LANES.filter(function (x) { return x.id === laneId; })[0];
+    return d ? (d.series || []).filter(function (x) { return x.id === seriesId; })[0] || null : null;
+  };
+  S.sLabel = function (s) { return typeof s.label === 'function' ? s.label() : tr(s.label); };
 
   // Watch key -> lane id (the chapter card lights these lanes with "in this chapter").
   S.laneWatch = function (L) {
@@ -320,6 +505,25 @@
       var meta = S.el('div', { cls: 'lane-meta' });
       L.legendEl = S.el('div', { cls: 'lane-legend' });
       L.subEl = S.el('p', { cls: 'lane-sub' });
+      L.ctls = [];
+      if (d.controls && d.controls.length) {
+        var ctlRow = S.el('div', { cls: 'lane-ctls' });
+        d.controls.forEach(function (c) {
+          var wrap = S.el('span', { cls: 'lane-ctl' });
+          var pre = c.prefix ? S.el('span', { cls: 'ctl-pre' }) : null;
+          var seg = S.el('div', { cls: 'seg small', role: 'group', id: 'ctl-' + d.id + '-' + c.id });
+          var btns = c.options.map(function (o) {
+            var b = S.el('button', { type: 'button', id: 'ctl-' + d.id + '-' + c.id + '-' + o.v, 'aria-pressed': 'false' });
+            b.addEventListener('click', function () { if (c.get() !== o.v) c.set(o.v); });
+            seg.appendChild(b);
+            return { o: o, b: b };
+          });
+          S.append(wrap, [pre, seg]);
+          ctlRow.appendChild(wrap);
+          L.ctls.push({ c: c, seg: seg, pre: pre, btns: btns });
+        });
+        meta.appendChild(ctlRow);
+      }
       S.append(meta, [L.legendEl, L.subEl]);
       L.metaEl = meta;
       L.sparkEl = S.el('div', { cls: 'lane-spark', 'aria-hidden': 'true', hidden: true });
@@ -381,21 +585,35 @@
       var sub = d.sub ? tr(d.sub, { t: S.fmtWdHM(S.view && S.state ? S.routeOrigin() : S.W0) }) : '';
       if (d._missing && d._missing.length) sub = tr('err.series', { k: d._missing.join(', ') });
       L.subEl.textContent = sub;
+      (L.ctls || []).forEach(function (k) {
+        k.seg.setAttribute('aria-label', tr(k.c.label));
+        if (k.pre) k.pre.textContent = tr(k.c.prefix);
+        k.btns.forEach(function (x) {
+          x.b.textContent = typeof x.o.t === 'function' ? x.o.t() : (T_HAS(x.o.t) ? tr(x.o.t) : x.o.t);
+          x.b.setAttribute('aria-pressed', k.c.get() === x.o.v ? 'true' : 'false');
+        });
+      });
       S.clear(L.legendEl);
       (d.series || []).forEach(function (s) {
+        if (s.legend === false) return;
         if (s.kind === 'stack') {
           s.layers.forEach(function (l) { L.legendEl.appendChild(S.el('span', { cls: 'lg' }, [S.el('i', { cls: 'key-rect', style: 'background:var(--' + l.fill + ')' }), tr(l.label)])); });
           return;
         }
         var k = s.legend === 'rect' ? S.el('i', { cls: 'key-rect', style: 'background:var(--' + s.color + ');opacity:.35' })
-          : S.el('i', { cls: 'key-line' + (s.dash ? ' dash' : ''), style: s.dash ? null : 'background:var(--' + s.color + ')' });
-        L.legendEl.appendChild(S.el('span', { cls: 'lg' }, [k, tr(s.label)]));
+          : S.el('i', { cls: 'key-line' + (s.dash ? ' dash' : '') + (s.legend === 'wide' ? ' wide' : '') + (s.opacity && s.opacity < 0.7 && s.legend !== 'wide' ? ' faint' : ''), style: s.dash ? null : 'background:var(--' + s.color + ')' });
+        L.legendEl.appendChild(S.el('span', { cls: 'lg' }, [k, S.sLabel(s)]));
+      });
+      (d.series || []).forEach(function (s) {
+        if (s.kind !== 'flagStrip' || !s.states) return;
+        [0, 1].forEach(function (v) { var st = s.states(v); L.legendEl.appendChild(S.el('span', { cls: 'lg' }, [S.el('i', { cls: 'key-rect', style: 'background:var(--' + st.fill + ');opacity:' + st.opacity }), st.text])); });
       });
       if (d.kind === 'social') S.socialLegend(L);
     });
     S.$$('.group-label').forEach(function (g) { g.textContent = tr(g.getAttribute('data-i18n')); });
   };
   S.$$ = function (sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); };
+  function T_HAS(k) { return typeof k === 'string' && tr(k) !== k; }
 
   // ---------- y scale per lane ----------
   function yScale(L, i0, i1, h, top) {
@@ -408,7 +626,7 @@
       var e0 = cumExtent(L, Math.max(i0, routeI0()), i1); lo = Math.min(0, e0[0]); hi = Math.max(0, e0[1]);
       var pad = (hi - lo) * 0.1 || 1; lo -= lo < 0 ? pad : 0; hi += pad;
     } else if (fit && y.fitKeys) {
-      var e = S.extent(y.fitKeys.map(S.ser), i0, i1, y.scale === 'log');
+      var e = S.extent(y.fitKeys.map(function (k) { return typeof k === 'function' ? k() : S.ser(k); }), i0, i1, y.scale === 'log');
       if (!e) e = y.fixed();
       if (y.scale === 'log') { lo = S.floor125(e[0]); hi = S.ceil125(e[1]); if (hi / lo < 2.5) { lo = e[0] / 1.15; hi = e[1] * 1.15; } }
       else { var p = (e[1] - e[0]) * 0.08 || e[1] * 0.05 || 1; lo = y.zero ? 0 : e[0] - p; hi = e[1] + p; }
@@ -441,6 +659,9 @@
     if (d.y.scale === 'log') {
       var t = S.ticks125(dm[0], dm[1]);
       if (t.length > Math.max(3, Math.floor(h / 22))) t = S.ticks125(dm[0], dm[1], 1);
+      // short plots (presenter mode): every other decade, keeping the top one
+      var room = Math.max(2, Math.floor(h / 16));
+      if (t.length > room) { var stepK = Math.ceil(t.length / room); t = t.filter(function (v, k) { return (t.length - 1 - k) % stepK === 0; }); }
       return t.map(function (val) { return { v: val, a: fmtTick(d, val) }; });
     }
     var n = Math.max(2, Math.floor(h / (phone ? 40 : 30)));
@@ -466,13 +687,16 @@
     L.plotEl.style.height = H + 'px';
     if (d._missing && d._missing.length) { svg.setAttribute('height', 40); L.plotEl.style.height = '40px'; return; }
     var x = S.xs, i0 = Math.max(0, S.idx(S.view.d0) - 1), i1 = Math.min(S.N - 1, S.idx(S.view.d1) + 1);
+    // a flagStrip series takes a band under the plot; the y scale and the grid use what is left
+    var strip = (d.series || []).filter(function (s) { return s.kind === 'flagStrip'; })[0], full = h, stripH = 0;
+    if (strip) { stripH = full < 100 ? 12 : (strip.h || 16); h = full - stripH - (full < 100 ? 4 : 6); }
     var y = yScale(L, i0, i1, h, m.t);
     L.y = y; L.W = W; L.H = H;
     var clipId = 'clip-' + d.id;
     var defs = S.svg('defs', null, svg);
     var cp = S.svg('clipPath', { id: clipId }, defs);
     S.svg('rect', { x: m.l, y: m.t - 1, width: Math.max(0, W - m.l - m.r), height: h + 2 }, cp);
-    drawBackground(svg, x, m.t, h, W, m);
+    drawBackground(svg, x, m.t, full, W, m);
     // grid
     var g = S.svg('g', { cls: 'grid' }, svg);
     S.timeTicks(S.view.d0, S.view.d1, W - m.l - m.r).ticks.forEach(function (t) { var xx = Math.round(x(t)) + 0.5; S.svg('line', { x1: xx, x2: xx, y1: m.t, y2: m.t + h }, g); });
@@ -486,10 +710,13 @@
     });
     if (d.y.zero && y.d[0] < 0) { var zy = Math.round(y(0)) + 0.5; S.svg('line', { cls: 'zero', x1: m.l, x2: W - m.r, y1: zy, y2: zy }, svg); }
     if (d.id === 'route') { var zr = Math.round(y(0)) + 0.5; S.svg('line', { cls: 'zero', x1: m.l, x2: W - m.r, y1: zr, y2: zr }, svg); }
-    drawEventVerticals(svg, x, m.t, h, m, W);
+    drawEventVerticals(svg, x, m.t, full, m, W);
     var sg = S.svg('g', { 'clip-path': 'url(#' + clipId + ')' }, svg);
     var ends = [];
-    d.series.slice().sort(function (a, b) { return (a.z || 0) - (b.z || 0); }).forEach(function (s) { drawSeries(L, s, sg, x, y, i0, i1, h, m, ends); });
+    d.series.slice().sort(function (a, b) { return (a.z || 0) - (b.z || 0); }).forEach(function (s) {
+      if (s.kind === 'flagStrip') drawStrip(L, s, svg, x, m.t + full - stripH, m, W, stripH);
+      else drawSeries(L, s, sg, x, y, i0, i1, h, m, ends);
+    });
     drawMarks(L, svg, sg, x, y, i0, i1, h, m, W);
     if (S.layout.mode !== 'phone') drawEndLabels(svg, ends, W, m, h);
     svg.setAttribute('aria-label', tr(d.title) + '. ' + tr(d.unit) + '.');
@@ -529,7 +756,24 @@
       var yy = y(val);
       S.svg('line', { cls: 'ref-line', x1: m.l, x2: L.W - m.r, y1: yy, y2: yy }, g);
       var lab = S.svg('text', { cls: 'halo ref-label', x: m.l + 6, y: yy - 5 }, g);
-      lab.textContent = tr(s.label);
+      lab.textContent = S.sLabel(s);
+      return;
+    }
+    if (s.kind === 'refs') {
+      // the emphasised line's label first; another label goes above or below its line, or is left out if both clash
+      var placed = [];
+      s.values().sort(function (a, b) { return (b.emph ? 1 : 0) - (a.emph ? 1 : 0); }).forEach(function (r) {
+        if (r.v < y.d[0] || r.v > y.d[1]) return;
+        var ry = Math.round(y(r.v)) + 0.5;
+        S.svg('line', { cls: 'xref' + (r.emph ? ' emph' : ''), x1: m.l, x2: L.W - m.r, y1: ry, y2: ry }, g);
+        var cands = (ry - m.t < 14 ? [ry + 12, ry - 4] : [ry - 4, ry + 12]).filter(function (ly) {
+          return ly - 9 >= m.t && ly <= m.t + h && placed.every(function (p) { return Math.abs(p - ly) >= 12; });
+        });
+        if (!cands.length) return;
+        placed.push(cands[0]);
+        var rt = S.svg('text', { cls: 'halo xref-label' + (r.emph ? ' emph' : ''), x: L.W - m.r - 4, y: cands[0], 'text-anchor': 'end' }, g);
+        rt.textContent = r.label;
+      });
       return;
     }
     if (s.kind === 'band') {
@@ -560,12 +804,35 @@
     if (s.end) {
       var j = Math.min(i1, S.idx(S.view.d1)); while (j > i0 && arr[j] == null) j--;
       if (arr[j] != null && isFinite(y(arr[j]))) {
-        var txt = typeof s.end === 'string' && s.end.indexOf('e.') === 0 ? tr(s.end) : tr(s.label);
+        var txt = typeof s.end === 'string' && s.end.indexOf('e.') === 0 ? tr(s.end) : S.sLabel(s);
         if (s.end === 'hims') txt = S.fmtHims(S.val('himsInHimsUsdg', j)) + ' HIMS';
         else if (s.end === 'usdg') txt = S.fmtUsdg(arr[j]) + ' USDG';
         ends.push({ y: y(arr[j]), text: txt, color: s.color, dash: s.dash });
       }
     }
+  }
+  // A state strip (e.g. SafeSettle's trust / refuse per minute): one rect per run of equal states, the state's
+  // word inside every run wide enough to hold it, and the strip's own label in the y-axis margin.
+  function drawStrip(L, s, svg, x, top, m, W, hh) {
+    var g = S.svg('g', { cls: 'strip' }, svg), arr = S.seriesArr(s);
+    hh = hh || s.h || 16;
+    if (!arr) return;
+    var j0 = S.idx(S.view.d0), j1 = S.idx(S.view.d1), cw = S.lang === 'zh' ? 11.5 : 6.4;
+    function run(a, b, v) {
+      var xa = S.clamp(x(S.t[a]), m.l, W - m.r), xb = S.clamp(x(S.t[b] + S.step), m.l, W - m.r);
+      if (xb - xa < 0.25) return;
+      var st = s.states(v);
+      S.svg('rect', { x: xa.toFixed(1), y: top, width: (xb - xa).toFixed(1), height: hh, fill: 'var(--' + st.fill + ')', 'fill-opacity': st.opacity }, g);
+      if (st.text && xb - xa >= st.text.length * cw + 10) {
+        var t = S.svg('text', { cls: 'halo strip-label', x: ((xa + xb) / 2).toFixed(1), y: top + hh / 2 + 4, 'text-anchor': 'middle' }, g);
+        t.textContent = st.text;
+      }
+    }
+    var from = j0, cur = arr[j0] == null ? null : arr[j0];
+    for (var k = j0 + 1; k <= j1; k++) { var v = arr[k] == null ? null : arr[k]; if (v !== cur) { run(from, k - 1, cur); from = k; cur = v; } }
+    run(from, j1, cur);
+    S.svg('rect', { cls: 'strip-frame', x: m.l + 0.5, y: top + 0.5, width: Math.max(0, W - m.l - m.r - 1), height: hh - 1 }, g);
+    if (s.axisLabel) { var al = S.svg('text', { cls: 'strip-axis', x: m.l - 8, y: top + hh / 2 + 4, 'text-anchor': 'end' }, g); al.textContent = s.axisLabel(); }
   }
   function drawStack(L, s, g, x, y, i0, i1, m) {
     var layers = s.layers, base = new Array(S.N);
@@ -612,6 +879,7 @@
   // Marks: notable swaps, peak, off-scale highs, burns and mints, the fence bracket, cost labels.
   function drawMarks(L, svg, sg, x, y, i0, i1, h, m, W) {
     var id = L.def.id, g = S.svg('g', { cls: 'marks' }, svg), inView = function (t) { return t >= S.view.d0 && t <= S.view.d1; };
+    if (typeof L.def.marks === 'function') { L.def.marks({ L: L, g: g, sg: sg, x: x, y: y, i0: i0, i1: i1, h: h, m: m, W: W, inView: inView }); return; }
     if (id === 'price') {
       (S.D.notableSwaps || []).forEach(function (s) {
         var pool = s.pool || s.poolRole; if (pool && pool !== 'himsUsdg') return;
@@ -700,7 +968,7 @@
     var log = L.def.y && L.def.y.scale === 'log';
     var x = S.linear(S.view.d0, S.view.d1, 0, W), y = log ? S.log(Math.max(e[0], 1e-12), Math.max(e[1], e[0] * 1.01), H - 2, 2) : S.linear(e[0], e[1] === e[0] ? e[0] + 1 : e[1], H - 2, 2);
     var svg = S.svg('svg', { width: W, height: H }, el);
-    var col = (L.def.series[0] && L.def.series[0].color) || 'text-secondary';
+    var col = L.def.sparkColor || (L.def.series[0] && L.def.series[0].color) || 'text-secondary';
     if (L.def.id === 'float') col = 'pool-boner';
     if (L.def.id === 'inventory') col = 'pool-usd';
     S.svg('path', { d: S.linePath(a, i0, i1, x, y), fill: 'none', stroke: 'var(--' + col + ')', 'stroke-width': 1.5 }, svg);
@@ -802,7 +1070,7 @@
     var tb = S.el('table', { cls: 'num-table' });
     var thead = S.el('thead'), hr = S.el('tr');
     hr.appendChild(S.el('th', { text: tr('tbl.time') + ' (' + S.zoneLabel() + ')' }));
-    d.table.cols.forEach(function (c) { hr.appendChild(S.el('th', { text: c.hz ? (S.lang === 'zh' ? c.hz : c.h) : tr(c.h) })); });
+    d.table.cols.forEach(function (c) { hr.appendChild(S.el('th', { text: typeof c.h === 'function' ? c.h() : (c.hz ? (S.lang === 'zh' ? c.hz : c.h) : tr(c.h)) })); });
     thead.appendChild(hr); tb.appendChild(thead);
     var tbody = S.el('tbody'); L.rows = [];
     idxs.forEach(function (i) {

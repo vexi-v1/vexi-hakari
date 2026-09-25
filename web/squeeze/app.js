@@ -264,7 +264,14 @@
     volUsdgHimsUsdg: { c: 'pool-usd', f: function (i) { return S.fmtUsdg(S.sumRange('volUsdgHimsUsdg', i - 9, i)) + ' USDG ' + tr('ro.10min'); } },
     volHimsBonerHims: { c: 'pool-boner', f: function (i) { return S.fmtHims(S.sumRange('volHimsBonerHims', i - 9, i)) + ' HIMS ' + tr('ro.10min'); } },
     himsMinted: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsMinted', S.idxFloor(c.fromTs) + 1, i) || 0; return '+' + S.fmtHims(n) + ' HIMS'; } },
-    himsBurned: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsBurned', S.idxFloor(c.fromTs) + 1, i) || 0; return (n ? '−' : '') + S.fmtHims(n) + ' HIMS'; } }
+    himsBurned: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsBurned', S.idxFloor(c.fromTs) + 1, i) || 0; return (n ? '−' : '') + S.fmtHims(n) + ' HIMS'; } },
+    // HAKARI's read (a counterfactual replay: series.hakari)
+    maxSafeExposure: { c: 'hakari', f: function (i) { var v = S.val('hakari.maxSafeUsdg', i); return v == null ? '—' : S.fmtUsdg(v) + ' USDG'; }, raw: 'hakari.maxSafeUsdg' },
+    hakariDecision: { need: 'hakari.decision.e1000', c: 'hakari', cf: function (i) { var d = S.hkDecision(i); return d === 0 ? 'hakari' : (d === 1 ? 'pool-usd' : null); }, rect: true, f: function (i) { var d = S.hkDecision(i); return (d === 0 ? tr('w.refuses') : d === 1 ? tr('w.trusts') : tr('hk.noTwap')) + (d == null ? '' : ' ' + S.fmtInt(S.hk.exp) + ' USDG'); } },
+    v0Settle: { need: 'hakari.v0Pick.d10.w1800', c: 'text-primary', f: function (i) {
+      var p = S.hkV0(i), c = S.val('himsUsdg.close', i); if (!p || p.price == null) return '—';
+      return S.fmtUsdg2(p.price) + ' USDG' + (c ? ' · ' + tr('w.vsPool', { p: S.fmtPct((p.price / c - 1) * 100) }) : '');
+    } }
   };
   var warned = {};
   function updateWatch(i) {
@@ -277,8 +284,10 @@
     keys.forEach(function (k) {
       var w = WATCH[k];
       if (!w) { if (!warned[k]) { warned[k] = 1; try { console.warn('[squeeze] unknown watch key', k); } catch (e) { /* no console */ } } return; }
+      if ((w.need && !S.ser(w.need)) || (w.raw && w.raw.indexOf('hakari.') === 0 && !S.ser(w.raw))) return; // HAKARI's read not in this data.json
       var row = S.el('li', { cls: 'watch-row' });
-      row.appendChild(S.el('i', { cls: (w.rect ? 'key-rect' : 'key-line') + (w.dash ? ' dash' : ''), style: w.c && !w.dash ? 'background:var(--' + w.c + ')' : null, 'aria-hidden': 'true' }));
+      var col = w.cf ? w.cf(i) : w.c;
+      row.appendChild(S.el('i', { cls: (w.rect ? 'key-rect' : 'key-line') + (w.dash ? ' dash' : ''), style: col && !w.dash ? 'background:var(--' + col + ')' : null, 'aria-hidden': 'true' }));
       row.appendChild(S.el('strong', { cls: 'wv', text: w.f(i, c) }));
       var lab = w.since ? tr(k === 'himsMinted' ? 'ro.mintedSince' : 'ro.burnedSince', { t: S.fmtHM(c.fromTs) }) : tr('w.' + k);
       row.appendChild(S.el('span', { cls: 'wl', text: lab }));
@@ -291,10 +300,11 @@
   }
   // One place to look per chapter: a sentence above the triangle caption (i18n look.<id>) and a "look here" tag
   // on one lane. Only that lane is flagged; the watch readouts above still list every watched series.
-  var LOOK_LANE = { overview: 'cost', friday: 'float', redeem: 'float', fence: 'price', climb: 'float', peak: 'cost', reopen: 'price', mint: 'price', aftermath: 'boner' };
-  S.lookLane = function (id) { return LOOK_LANE[id] || null; };
+  // peak and reopen look at HAKARI's read (so presenter mode shows it first); mint at the oracle lane (v0 goes stale)
+  var LOOK_LANE = { overview: 'cost', friday: 'float', redeem: 'float', fence: 'price', climb: 'float', peak: 'hakari', reopen: 'hakari', mint: 'oracle', aftermath: 'boner' };
+  S.lookLane = function (id) { var l = LOOK_LANE[id]; return l && S.lanesById && !S.lanesById[l] ? null : (l || null); };
   function markLook() {
-    var id = S.state.chapterId, lane = LOOK_LANE[id];
+    var id = S.state.chapterId, lane = S.lookLane(id);
     S.lanes.forEach(function (L) { if (!L.watchDot) return; var on = L.id === lane; L.watchDot.hidden = !on; L.watchTag.hidden = !on; });
     var el = $('tri-look'); if (!el) return;
     var key = 'look.' + id, txt = tr(key);
@@ -486,7 +496,7 @@
   };
   S.presLayout = function () {
     if (!S.state.presenting) return;
-    var c = S.chapterById(S.state.chapterId), keys = c ? (c.watch || []) : null, lit = [], look = LOOK_LANE[S.state.chapterId];
+    var c = S.chapterById(S.state.chapterId), keys = c ? (c.watch || []) : null, lit = [], look = S.lookLane(S.state.chapterId);
     S.lanes.forEach(function (L) {
       if (L.def.kind === 'events' || L.def.kind === 'social') return;
       var on = keys ? S.laneWatch(L.def).some(function (k) { return keys.indexOf(k) >= 0; }) : ['price', 'float', 'cost'].indexOf(L.id) >= 0;
@@ -705,7 +715,9 @@
     }
     if (ST && S.D) {
       var s3 = sec('hakari', 'sec.hakari');
-      s3.appendChild(S.el('p', { cls: 'prose', text: S.L(ST.hakari) }));
+      // story.hakari paragraphs (blank-line separated): the cost pair follows the first, the max-safe-exposure pair the second
+      var paras = S.L(ST.hakari).split(/\n\s*\n/), para = function (k) { if (paras[k]) s3.appendChild(S.el('p', { cls: 'prose' }, [S.rich(paras[k])])); };
+      para(0);
       var up = S.ser('pushUp10CostUsdg');
       if (up) {
         var a0 = up[S.baseI], ti = S.idx(S.hakariTs), b0 = up[ti];
@@ -716,13 +728,34 @@
         if (mn < Infinity) hero.appendChild(S.el('p', { cls: 'hh-sub', text: tr('hakari.min', { v: S.fmtUsdg(mn), t: S.fmtWdHM(S.t[mj]) + ' ' + S.zoneLabel() }) }));
         s3.appendChild(hero);
       }
+      para(1);
+      var ms = S.ser('hakari.maxSafeUsdg'), dec = S.ser('hakari.decision.e1000');
+      if (ms && dec) {
+        var m0 = ms[S.baseI], lo = Infinity, lj = 0, nref = 0;
+        for (var r = S.idx(S.fenceFrom); r < S.idx(S.firstMintTs || S.W1); r++) if (ms[r] != null && ms[r] < lo) { lo = ms[r]; lj = r; }
+        for (var r2 = 0; r2 < S.N; r2++) if (dec[r2] === 0) nref++;
+        var hero2 = S.el('div', { cls: 'hakari-hero' });
+        hero2.appendChild(S.el('p', { cls: 'hh-pair' }, [S.el('span', { cls: 'hh-v', text: S.fmtUsdg(m0) }), S.el('span', { cls: 'hh-arrow', text: '→' }), S.el('i', { cls: 'key-line', style: 'background:var(--hakari)', 'aria-hidden': 'true' }), S.el('span', { cls: 'hh-v', text: S.fmtUsdg(lo) }), S.el('span', { cls: 'hh-u', text: tr('hakari.mseUnit') })]));
+        hero2.appendChild(S.el('p', { cls: 'hh-sub', text: tr('hakari.mseSub', { a: S.fmtWdHM(S.baseTs), b: S.fmtWdHM(S.t[lj]), z: S.zoneLabel(), m: S.fmtInt(nref) }) }));
+        var jump = S.el('a', { href: '#lane-hakari', cls: 'to-ch', text: '→ ' + tr('hakari.toLanes') });
+        jump.addEventListener('click', function (ev) { var t = $('lane-hakari'); if (!t) return; ev.preventDefault(); t.scrollIntoView({ behavior: S.reducedMotion() ? 'auto' : 'smooth', block: 'center' }); });
+        hero2.appendChild(S.el('p', { cls: 'hh-sub' }, [jump]));
+        s3.appendChild(hero2);
+      }
+      for (var pk = 2; pk < paras.length; pk++) para(pk);
       var gl = S.el('p'); gl.appendChild(S.link((window.SQZ_BACK ? window.SQZ_BACK : '../index.html#hims-price'), tr('hakari.link'))); s3.appendChild(gl);
       host.appendChild(s3);
     }
     if (S.SO) host.appendChild(socialSection());
     if (ST && ST.next) {
       var s4 = sec('next', 'sec.next');
-      s4.appendChild(S.el('p', { cls: 'prose', text: S.L(ST.next) + ' ' + tr('next.lane') }));
+      var np = S.el('p', { cls: 'prose', text: S.L(ST.next) + ' ' });
+      if (S.lanesById && S.lanesById.hakari) {
+        var na = S.el('a', { href: '#lane-hakari', text: tr('next.lane') });
+        na.addEventListener('click', function (ev) { var t = $('lane-hakari'); if (!t) return; ev.preventDefault(); t.scrollIntoView({ behavior: S.reducedMotion() ? 'auto' : 'smooth', block: 'center' }); });
+        np.appendChild(na);
+      }
+      s4.appendChild(np);
       host.appendChild(s4);
     }
     if (ST && ST.glossary) {
@@ -921,6 +954,27 @@
       [['m.window', tr('m.windowText', { a: S.isoUTC(S.W0).replace('T', ' ').replace('Z', ''), b: S.isoUTC(S.W1).replace('T', ' ').replace('Z', ''), fb: S.fmtInt(w.fromBlock), tb: S.fmtInt(w.toBlock), step: S.step, n: S.fmtInt(S.N) })],
         ['m.prices', tr('m.pricesText')], ['m.inventory', tr('m.inventoryText')], ['m.supply', tr('m.supplyText')], ['m.cost', tr('m.costText')]]
         .forEach(function (p) { me.appendChild(S.el('p', { cls: 'prose small' }, [S.el('strong', { text: tr(p[0]) + '. ' }), p[1]])); });
+      var HK = D.hakari;
+      if (HK) {
+        var hp = S.el('p', { cls: 'prose small', id: 'ref-hakari' }, [S.el('strong', { text: tr('m.hakari') + '. ' }), S.L(HK.what) + ' ' + tr('m.hakariText') + ' ']);
+        hp.appendChild(S.link('../../' + (HK.summaryFile || 'gauge/data/hims-hook-replay.json'), (HK.summaryFile || 'gauge/data/hims-hook-replay.json').split('/').pop()));
+        hp.appendChild(document.createTextNode(' · ' + tr('m.hakariCmd') + ' '));
+        hp.appendChild(S.el('code', { text: 'cd gauge && ' + (HK.command || 'npm run hims:hook') + ' && npm run squeeze:build' }));
+        hp.appendChild(document.createTextNode(' · '));
+        hp.appendChild(S.link('../../' + (HK.code || 'gauge/src/squeeze/hakari-read.ts'), (HK.code || 'gauge/src/squeeze/hakari-read.ts').split('/').pop()));
+        me.appendChild(hp);
+        me.appendChild(S.el('h4', { text: tr('m.hakariAssume') }));
+        var hl = S.el('ul', { cls: 'plain small' });
+        (HK.caveats || []).forEach(function (c) { hl.appendChild(S.el('li', { text: S.L(c) })); });
+        me.appendChild(hl);
+        if (HK.assumptions && HK.assumptions.length) {
+          var ad = S.el('details', { cls: 'numbers-used' });
+          ad.appendChild(S.el('summary', { text: tr('m.hakariFull', { n: HK.assumptions.length }) }));
+          var al = S.el('ol', { cls: 'plain small', lang: 'en' });
+          HK.assumptions.forEach(function (a) { al.appendChild(S.el('li', { text: a })); });
+          ad.appendChild(al); me.appendChild(ad);
+        }
+      }
       var checks = D.checks || [];
       if (checks.length) {
         me.appendChild(S.el('h4', { text: tr('m.checks') }));
@@ -936,7 +990,8 @@
     var cv = S.el('div', { cls: 'ref-block', id: 'ref-caveats' });
     cv.appendChild(S.el('h3', { text: tr('ref.caveats') }));
     var seen = {}, cu = S.el('ul', { cls: 'caveats' });
-    ((D && D.caveats) || []).concat((ST && ST.caveats) || []).concat((S.SO && S.SO.limits) ? [] : []).forEach(function (c) {
+    var hkCav = D && D.hakari && D.hakari.caveats ? [D.hakari.caveats[0], D.hakari.caveats[2]].filter(Boolean) : [];
+    ((D && D.caveats) || []).concat(hkCav).concat((ST && ST.caveats) || []).concat((S.SO && S.SO.limits) ? [] : []).forEach(function (c) {
       var key = (c.en || String(c)).trim(); if (seen[key]) return; seen[key] = 1;
       cu.appendChild(S.el('li', { text: S.L(c) }));
     });

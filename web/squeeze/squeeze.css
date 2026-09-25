@@ -81,6 +81,8 @@ button, select { font: inherit; color: inherit; }
 .speed { height: 32px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-1); padding: 0 6px; font-size: 13px; }
 .key-line { display: inline-block; width: 12px; height: 2px; border-radius: 1px; vertical-align: middle; margin-right: 6px; flex: none; }
 .key-line.dash { background: repeating-linear-gradient(90deg, var(--ref) 0 4px, transparent 4px 7px); height: 1.5px; }
+.key-line.wide { height: 6px; opacity: .3; border-radius: 3px; }
+.key-line.faint { opacity: .55; }
 .key-rect { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px; margin-right: 6px; flex: none; }
 
 /* ------------------------------------------------------------------ top bar */
@@ -191,6 +193,12 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .hero-unit { font-size: 15px; color: var(--text-secondary); }
 .hero-delta { font-size: 13px; color: var(--text-secondary); min-height: 1.4em; }
 .hero-spark { height: 40px; margin-top: 6px; }
+/* HAKARI's max safe exposure beside the push cost (a replay; the label says so), kept compact so the stage keeps its height */
+.hero-mse { margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--line); }
+.hero-num2 { margin: 1px 0 0 !important; line-height: 1.25; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 4px; }
+.hero-value2 { font-size: 22px; font-weight: 650; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.hero-unit2 { font-size: 13px; color: var(--text-secondary); margin-right: 4px; }
+.hero-delta2 { font-size: 12px; color: var(--text-secondary); }
 .panel-h { font-family: var(--display); font-stretch: 85%; font-weight: 650; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin: 0 0 6px; }
 .pools-legend, .float-rows { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 4px; font-size: 13px; }
 .pools-legend li, .float-rows li { display: flex; align-items: baseline; gap: 6px; }
@@ -273,6 +281,10 @@ body.playing .chev { animation: march 1.2s linear infinite; }
 .lg { display: inline-flex; align-items: center; white-space: nowrap; }
 .lg-glyph { margin-right: 5px; overflow: visible; }
 .lane-sub { margin: 0; font-size: 12px; color: var(--text-tertiary); flex: 1 1 280px; line-height: 1.4; }
+.lane-ctls { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; flex: 0 0 auto; }
+.lane-ctl { display: inline-flex; align-items: center; gap: 6px; }
+.ctl-pre { font-size: 12px; color: var(--text-secondary); }
+.lane-ctls .seg.small button { font-variant-numeric: tabular-nums; }
 .lane-plot { position: relative; touch-action: pan-y; cursor: crosshair; margin-top: 2px; user-select: none; -webkit-user-select: none; }
 .lane-plot svg, .moments-plot svg { display: block; overflow: hidden; }
 .lane-spark { height: 24px; margin-top: 4px; }
@@ -298,6 +310,15 @@ svg text { font-family: var(--sans); font-size: 11px; fill: var(--text-tertiary)
 .glyph.ring { fill: var(--surface-1); stroke: var(--text-primary); stroke-width: 1.5; }
 .mark-label { fill: var(--text-secondary); }
 .mark-label.strong { fill: var(--text-primary); font-weight: 600; }
+.mark-rule { stroke: var(--line-strong); stroke-width: 1; }
+/* HAKARI lane: settlement sizes (solid; dashes stay "at NAV") and the trust / refuse strip */
+.xref { stroke: var(--line-strong); stroke-width: 1; }
+.xref.emph { stroke: var(--text-primary); stroke-width: 1.25; }
+.xref-label { fill: var(--text-tertiary); }
+.xref-label.emph { fill: var(--text-primary); font-weight: 600; }
+.strip-frame { fill: none; stroke: var(--line); stroke-width: 1; }
+.strip-label { fill: var(--text-primary); font-weight: 600; }
+.strip-axis { fill: var(--text-secondary); font-weight: 600; }
 .rug { stroke: var(--text-primary); stroke-width: 1; opacity: .55; }
 .bracket { stroke: var(--text-secondary); fill: none; stroke-width: 1; }
 .end-labels text { fill: var(--text-secondary); }
@@ -373,6 +394,7 @@ table { border-collapse: collapse; font-variant-numeric: tabular-nums; }
 .sec h4 { font-size: 13px; margin: 18px 0 6px; color: var(--text-secondary); }
 .prose { max-width: 66ch; margin: 0 0 12px; }
 .prose.small { font-size: 14px; }
+ul.plain.small, ol.plain.small { font-size: 14px; max-width: 66ch; margin-bottom: 12px; }
 .mechanism { margin: 0; padding-left: 26px; display: grid; gap: 12px; max-width: 72ch; font-size: 17px; line-height: 1.5; }
 .mechanism li::marker { font-family: var(--display); font-weight: 700; font-stretch: 85%; }
 .roles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 0; }
@@ -456,7 +478,7 @@ ul.plain { margin: 0; padding-left: 18px; display: grid; gap: 6px; max-width: 72
   .more-btn { display: inline; margin-bottom: 8px; }
   .pools { display: none !important; }
   .hero { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: end; }
-  .hero-label, .hero-spark { grid-column: 1 / -1; }
+  .hero-label, .hero-spark, .hero-mse { grid-column: 1 / -1; }
   .hero-value { font-size: 36px; }
   .chips { gap: 4px; margin-top: 8px; }
   .clock { padding-bottom: 8px; }
