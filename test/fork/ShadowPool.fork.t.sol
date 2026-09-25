@@ -192,12 +192,26 @@ contract ShadowPoolForkTest is DecisionLog {
         _record("tsla-shaped-weekend", pool, 0, LONG_WINDOW, exposure, 6, "USDG", weekend);
         _record("tsla-shaped-weekday-12s", pool, 12, LONG_WINDOW, exposure, 6, "USDG", weekday12);
         _record("tsla-shaped-weekday-60s", pool, 60, LONG_WINDOW, exposure, 6, "USDG", weekday60);
+        // Gas of one settlement on a real book, storage cold as it would be on-chain (settle() adds an event).
+        uint256 gasWeekend = _coldGas(0, exposure);
+        uint256 gasWeekday = _coldGas(12, exposure);
+        console2.log("gas, settlePrice, weekend (1 rung per move)", gasWeekend);
+        console2.log("gas, settlePrice, weekday (3 rungs per move)", gasWeekday);
+        assertLt(gasWeekday, 30_000_000, "fits a block");
         // Which side of 100,000 each lands on depends on the live book, so the decisions are logged. The ratios are
         // derivable: a push held 1,800 s at d = x, 2x, 4x (hold 1,800 / 900 / 450 s) pays 1 + ⌈hold / R⌉ round trips,
         // and a longer push never costs less than a shorter one. R = 60 s: at least 9 round trips (the 4x rung),
         // so ≥ 9 × the weekend bound. R = 12 s against 60 s: 39/9, 76/16, 151/31 per rung, so ≥ 4.3×.
         assertGe(weekday60.maxSafeExposure, weekend.maxSafeExposure * 9, "a 30-minute hold against arbitrage pays at least 9 round trips");
         assertGe(weekday12.maxSafeExposure * 9, weekday60.maxSafeExposure * 39, "faster arbitrage: at least 39/9 as many");
+    }
+
+    function _coldGas(uint32 reversion, uint256 exposure) internal returns (uint256 used) {
+        vm.cool(address(MANAGER));
+        vm.cool(address(hook));
+        uint256 before = gasleft();
+        settle.settlePrice(shadow, LONG_WINDOW, exposure, false, reversion);
+        used = before - gasleft();
     }
 
     /// The weekend attack on the same book: hold +5 % with a dust swap a second. With nobody pushing back the pool is

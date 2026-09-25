@@ -1,49 +1,51 @@
 Ran 2 tests for test/fork/PushCostLens.fork.t.sol:PushCostLensForkTest
-[PASS] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 174031)
+[PASS] test_G1_tenTslaRoundTrip_matchesTheLensAtTheSameBlock() (gas: 172365)
 Logs:
-  block 72409810
-  start tick -217116
+  block 72419444
+  start tick -217115
   ticks moved by 10 TSLA 4
-  manual net USDG (6 dec) -26124117
+  manual net USDG (6 dec) -26126663
   lens amountOut TSLA (18 dec) 10000000000000000000
-  lens cost USDG (6 dec) 26124117
+  lens cost USDG (6 dec) 26126663
   pre-hackathon figure at block 71,937,777: -26.560259 USDG
-[PASS] test_depthToMove_agreesWithQuotePush_onTheRealPool() (gas: 1261664)
+[PASS] test_depthToMove_agreesWithQuotePush_onTheRealPool() (gas: 1261504)
 Logs:
-  push up ticks / USDG needed / round-trip cost 50 45264732454 315817883
-  push up ticks / USDG needed / round-trip cost 200 166565647205 1158127280
-  push up ticks / USDG needed / round-trip cost 1000 386853181317 2665623600
-Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 23.07s (21.59s CPU time)
+  push up ticks / USDG needed / round-trip cost 50 45302103932 316078387
+  push up ticks / USDG needed / round-trip cost 200 166425859125 1157155407
+  push up ticks / USDG needed / round-trip cost 1000 386019168868 2659907760
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 24.60s (22.24s CPU time)
 Ran 3 tests for test/fork/ShadowPool.fork.t.sol:ShadowPoolForkTest
-[PASS] test_heldPushOnTslaShapedBook_weekend_isRefused() (gas: 2146520)
+[PASS] test_heldPushOnTslaShapedBook_weekend_isRefused() (gas: 2146584)
 Logs:
-  held +5 % for 10 s on a weekend, raw TWAP -216628
-  truncated TWAP -217097
+  held +5 % for 10 s on a weekend, raw TWAP -216627
+  truncated TWAP -217096
   decision
-    max safe exposure, USDG (6 dec) 2611673296
+    max safe exposure, USDG (6 dec) 2606636939
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 522238537
+    cost to fake it, USDG (6 dec) 521231451
     trusted for 100,000 USDG? false
-[PASS] test_shadowPool_hasTheRealPoolsDepth() (gas: 889132)
+[PASS] test_shadowPool_hasTheRealPoolsDepth() (gas: 889900)
 Logs:
-  shadow pool mirrors TSLA/USDG at block 72409810
-[PASS] test_tslaShapedBook_maxSafeExposure_weekendVsWeekday() (gas: 9181528)
+  shadow pool mirrors TSLA/USDG at block 72419444
+[PASS] test_tslaShapedBook_maxSafeExposure_weekendVsWeekday() (gas: 14362926)
 Logs:
-  TSLA/USDG book at block 72409810
+  TSLA/USDG book at block 72419444
   weekend (nobody pushes back)
-    max safe exposure, USDG (6 dec) 12114040527
+    max safe exposure, USDG (6 dec) 12088548046
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 2422362250
+    cost to fake it, USDG (6 dec) 2417264692
     trusted for 100,000 USDG? false
   weekday, arbitrage every 12 s
-    max safe exposure, USDG (6 dec) 487477508215
+    max safe exposure, USDG (6 dec) 486467066074
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 97477560102
+    cost to fake it, USDG (6 dec) 97275508863
     trusted for 100,000 USDG? true
   weekday, arbitrage every 60 s
-    max safe exposure, USDG (6 dec) 112494809588
+    max safe exposure, USDG (6 dec) 112261630632
     binding move (ticks) 1823
-    cost to fake it, USDG (6 dec) 22494821562
+    cost to fake it, USDG (6 dec) 22448194353
     trusted for 100,000 USDG? true
-Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 199.32s (37.69ms CPU time)
-Ran 2 test suites in 199.32s (222.39s CPU time): 5 tests passed, 0 failed, 0 skipped (5 total tests)
+  gas, settlePrice, weekend (1 rung per move) 1049669
+  gas, settlePrice, weekday (3 rungs per move) 4123047
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 225.84s (77.94ms CPU time)
+Ran 2 test suites in 225.84s (250.44s CPU time): 5 tests passed, 0 failed, 0 skipped (5 total tests)
