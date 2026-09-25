@@ -14,7 +14,9 @@
     "export-lens": "tsx src/export-lens.ts",
     "discover": "tsx src/discover.ts",
     "weekend": "tsx src/weekend.ts",
-    "charts": "tsx src/charts.ts"
+    "charts": "tsx src/charts.ts",
+    "squeeze": "tsx src/squeeze/run-all.ts",
+    "squeeze:build": "tsx src/squeeze/build.ts"
   },
   "dependencies": {
     "@types/node": "^26.6.2",

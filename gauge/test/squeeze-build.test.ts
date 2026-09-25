@@ -1,0 +1,156 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import {
+  argExt, badLengths, derive, floatSplitProblems, gridProblems, matchLevel, mintClusters, nonFinite, ohlcProblems, serialize, settledAt, sig6, spikeProblems, worst,
+} from "../src/squeeze/build.ts";
+
+const near = (a: number | null, b: number, rel = 1e-12) => assert.ok(a !== null && Math.abs(a - b) <= Math.abs(b) * rel, `${a} vs ${b}`);
+
+test("sig6 keeps 6 significant digits, drops trailing zeros, and maps non-finite to null", () => {
+  assert.equal(sig6(28.84), 28.84);
+  assert.equal(sig6(1_234_567), 1_234_570);
+  assert.equal(sig6(0.000123456789), 0.000123457);
+  assert.equal(sig6(16_126.813), 16_126.8);
+  assert.equal(sig6(0.1 + 0.2), 0.3);
+  assert.equal(JSON.stringify(sig6(1351.27991)), "1351.28");
+  assert.equal(JSON.stringify(sig6(8.336506876706168e23)), "8.33651e+23");
+  assert.equal(Object.is(sig6(-0), -0), false);
+  for (const x of [NaN, Infinity, -Infinity, null, undefined]) assert.equal(sig6(x as any), null);
+});
+
+test("derived cross-prices: via HIMS, at NAV, premium and route gap, with nulls carried", () => {
+  const himsUsdg = [28.84, 57.68, null, 30];
+  const bonerHims = [0.0001, 0.0002, 0.0003, null];
+  const bonerUsdg = [0.002884, 0.01, 0.01, 0.01];
+  const d = derive(himsUsdg, bonerHims, bonerUsdg, 28.84);
+  near(d.bonerUsdgViaHims[0], 0.002884);
+  near(d.bonerUsdgViaHims[1], 0.011536);
+  assert.equal(d.bonerUsdgViaHims[2], null);
+  assert.equal(d.bonerUsdgViaHims[3], null);
+  near(d.bonerUsdAtNav[1], 0.005768);
+  assert.equal(d.bonerUsdAtNav[3], null);
+  near(d.himsPremiumPct[1]!, 100); // twice the NYSE close
+  assert.equal(Math.abs(d.himsPremiumPct[0]!) < 1e-12, true);
+  assert.equal(d.himsPremiumPct[2], null);
+  assert.equal(Math.abs(d.routeGapPct[0]!) < 1e-9, true); // both routes agree
+  near(d.routeGapPct[1]!, 15.36, 1e-9); // BONER dearer through HIMS than in the direct pool
+  assert.equal(derive([30], [0.001], [0], 28.84).routeGapPct[0], null); // no division by a zero quote
+});
+
+test("anchor verdicts follow the reference's own precision", () => {
+  assert.equal(matchLevel(28.171735, 28.17, { decimals: 2 }), "exact");
+  assert.equal(matchLevel(16_126.813, 16_126.8, { decimals: 1 }), "exact");
+  assert.equal(matchLevel(12_689.0517, 12_689.1, { decimals: 1 }), "exact");
+  assert.equal(matchLevel(28.2, 28.17, { decimals: 2 }), "close");
+  assert.equal(matchLevel(30, 28.17, { decimals: 2 }), "differs");
+  assert.equal(matchLevel(0.00356171, 0.0036, { sig: 2 }), "exact");
+  assert.equal(matchLevel(0.0146577, 0.0147, { sig: 3 }), "exact");
+  assert.equal(matchLevel(12_877.3, 13_100, { sig: 3, closeRel: 0.05 }), "close");
+  assert.equal(matchLevel(null, 1), "differs");
+  assert.equal(matchLevel(NaN, 1), "differs");
+  assert.equal(worst(["exact", "close", "exact"]), "close");
+  assert.equal(worst(["exact", "differs", "close"]), "differs");
+  assert.equal(worst(["exact"]), "exact");
+});
+
+test("mint clusters split on gaps and add up", () => {
+  const m = (ts: number, amount: number) => ({ ts, amount });
+  const c = mintClusters([m(1000, 1), m(1500, 2), m(2400, 3), m(3400, 4), m(3401, 5)], 900);
+  assert.deepEqual(c.map((x) => [x.first.ts, x.last.ts, x.count, x.total]), [[1000, 2400, 3, 6], [3400, 3401, 2, 9]]);
+  assert.equal(mintClusters([], 900).length, 0);
+  assert.equal(mintClusters([m(5, 1), m(1, 1)], 3).length, 2); // sorted by time first
+});
+
+test("settledAt: within the band and never above the ceiling afterwards", () => {
+  const x = [50, 20, 1, 12, 1.5, 3, 9, 0.5, null, 2];
+  assert.equal(settledAt(x, 0, 2, 10), 4); // index 3 (12%) is the last time it tops 10%
+  assert.equal(settledAt(x, 5, 2, 10), 7);
+  assert.equal(settledAt([5, 4, 3], 0, 2, 10), -1);
+  assert.equal(settledAt([1, 11], 0, 2, 10), -1);
+});
+
+test("argExt ignores nulls and honours the range", () => {
+  const x = [3, null, 1, 7, 1];
+  assert.equal(argExt(x, false), 2);
+  assert.equal(argExt(x, true), 3);
+  assert.equal(argExt(x, true, 0, 3), 0);
+  assert.equal(argExt([null, null], true), -1);
+});
+
+test("integrity checks catch bad grids, lengths, non-finite numbers, OHLC and float-split violations", () => {
+  assert.deepEqual(gridProblems([0, 60, 120], 0, 120, 60), []);
+  assert.equal(gridProblems([0, 60, 130], 0, 130, 60).length, 1);
+  assert.equal(gridProblems([60, 120], 0, 120, 60).length, 1);
+  assert.deepEqual(badLengths({ a: [1, 2], g: { close: [1, 2], high: [null, 1] } }, 2), []);
+  assert.deepEqual(badLengths({ a: [1], g: { close: [1, 2], high: 3 } }, 2), ["a (1)", "g.high"]);
+  assert.deepEqual(nonFinite({ a: [1, NaN], b: { c: Infinity, d: null, e: "x" } }), ["$.a[1]", "$.b.c"]);
+  const close = [10, 11, 12, 12], high = [null, 11.5, 12, null], low = [null, 10.5, 11, null];
+  assert.deepEqual(ohlcProblems({ close, high, low }, [0, 2, 1, 0]), []);
+  assert.deepEqual(ohlcProblems({ close: [10, 13], high: [null, 12], low: [null, 11] }, [0, 1]), [1]);
+  assert.deepEqual(ohlcProblems({ close: [10, 11], high: [null, 10], low: [null, 12] }, [0, 1]), [1]);
+  assert.deepEqual(floatSplitProblems([1, 5], [2, 6], [3, 10], [4, 10]), [1]);
+  assert.deepEqual(floatSplitProblems([1], [2], [5], [4]), [0]);
+  assert.deepEqual(floatSplitProblems([1], [2], [3.00001], [3]), []); // rounding slack
+});
+
+test("spikeProblems flags a high or low far beyond both neighbouring closes", () => {
+  const close = [0.0085, 0.0111, 0.012, 0.012];
+  // the BONER/USDG bar ending 23:20 before the fix: 14.096 against closes of 0.0085 and 0.0111
+  assert.deepEqual(spikeProblems({ close, high: [null, 14.096, 0.013, null], low: [null, 0.0085, 0.011, null] }), [1]);
+  assert.deepEqual(spikeProblems({ close, high: [null, 0.012, 0.013, null], low: [null, 0.0085, 0.011, null] }), []);
+  // a low far under both closes, and the factor itself
+  assert.deepEqual(spikeProblems({ close: [10, 10], high: [null, 10], low: [null, 1.9] }), [1]);
+  assert.deepEqual(spikeProblems({ close: [10, 10], high: [null, 10], low: [null, 2.1] }), []);
+  assert.deepEqual(spikeProblems({ close: [10, 10], high: [null, 30], low: [null, 10] }, 2), [1]);
+  // the bar may reach 5x of the larger close: a real move between the two closes is not a spike
+  assert.deepEqual(spikeProblems({ close: [10, 40], high: [null, 45], low: [null, 9] }), []);
+  // no closes, no verdict
+  assert.deepEqual(spikeProblems({ close: [null, 10], high: [null, 1000], low: [null, 1] }), []);
+});
+
+test("serialize puts plain arrays on one line and round-trips", () => {
+  const v = { t: [1, 2, 3], s: { a: [null, 0.5] }, e: [{ id: "x", label: { en: "a [b]", zh: "c" } }] };
+  const text = serialize(v);
+  assert.ok(text.includes('"t": [1,2,3]'));
+  assert.ok(text.includes('"a": [null,0.5]'));
+  assert.deepEqual(JSON.parse(text), v);
+});
+
+// the published file, when it has been built: shape per the page contract
+const dataFile = new URL("../../web/squeeze/data.json", import.meta.url).pathname;
+test("web/squeeze/data.json follows the contract", { skip: !existsSync(dataFile) && "not built yet (npm run squeeze:build)" }, () => {
+  const text = readFileSync(dataFile, "utf8");
+  const d = JSON.parse(text);
+  assert.equal(d.version, 1);
+  assert.equal(d.chain.id, 4663);
+  assert.equal(d.t.length, 4081);
+  assert.deepEqual(gridProblems(d.t, d.window.fromTs, d.window.toTs, d.window.stepSec), []);
+  assert.deepEqual(badLengths(d.series, 4081), []);
+  for (const k of ["himsUsdg", "bonerHims", "bonerUsdgDirect"]) assert.deepEqual(Object.keys(d.series[k]), ["close", "high", "low"]);
+  for (const k of ["bonerUsdgViaHims", "bonerUsdAtNav", "himsPremiumPct", "routeGapPct", "himsSupply", "himsInPoolManager", "himsInHimsUsdg", "usdgInHimsUsdg", "himsInBonerHims", "bonerInBonerHims", "usdgInBonerUsdg", "bonerInBonerUsdg", "liqHimsUsdg", "liqBonerHims", "pushUp10CostUsdg", "pushUp10CapitalUsdg", "pushDown10CostUsdg", "volUsdgHimsUsdg", "volHimsBonerHims", "volUsdgBonerUsdg", "swapsHimsUsdg", "swapsBonerHims", "swapsBonerUsdg", "netHimsOutOfHimsUsdg", "netHimsIntoBonerHims", "himsMinted", "himsBurned"]) {
+    assert.ok(Array.isArray(d.series[k]), k);
+  }
+  for (const k of ["swapsHimsUsdg", "swapsBonerHims", "swapsBonerUsdg"]) assert.ok(d.series[k].every((x: number) => Number.isInteger(x)), k);
+  for (const k of ["himsUsdg", "bonerHims", "bonerUsdgDirect"]) assert.deepEqual(spikeProblems(d.series[k]), [], `${k}: high/low beyond 5x of the neighbouring closes`);
+  // post-swap pool prices are not called trades or prices paid; each notable swap carries what it paid on average
+  const peak = d.events.find((e: any) => e.id === "peak-swap");
+  assert.ok(/post-swap pool price/.test(peak.label.en) && /成交後池價/.test(peak.label.zh) && !/Highest trade|最高成交價/.test(peak.label.en + peak.label.zh), peak.label.en);
+  for (const n of d.notableSwaps) assert.ok("avgUsdgPerHims" in n || "avgPrice" in n, n.tx);
+  for (const x of Object.values(d.series).flatMap((v: any) => (Array.isArray(v) ? v : Object.values(v).flat()))) {
+    if (typeof x === "number" && !Number.isInteger(x)) assert.equal(x, Number(x.toPrecision(6)));
+  }
+  for (const e of d.events) {
+    assert.ok(["burn", "mint", "mintCluster", "reopen", "nyse", "peak", "arb", "note"].includes(e.kind), e.kind);
+    assert.ok(e.label.en && e.label.zh, e.id);
+  }
+  assert.equal(new Set(d.events.map((e: any) => e.id)).size, d.events.length);
+  for (const a of d.anchors) assert.ok(["exact", "close", "differs"].includes(a.match) && a.reference.source && a.note, a.label);
+  for (const c of d.caveats) assert.ok(c.en && c.zh);
+  assert.ok(d.checks.length > 0 && d.checks.every((c: any) => typeof c.pass === "boolean" && c.name && c.detail));
+  assert.ok(Buffer.byteLength(text) <= 1_500_000);
+  const urls = text.match(/https?:\/\/[^\s"',)]+/g) ?? [];
+  assert.ok(urls.every((u) => u.startsWith("https://robinhoodchain.blockscout.com") || u.startsWith("https://defiprime.com/")), urls.join(" "));
+  const js = readFileSync(dataFile.replace(/\.json$/, ".js"), "utf8");
+  assert.equal(js, `window.SQUEEZE_DATA = ${text.trimEnd()};\n`);
+});
