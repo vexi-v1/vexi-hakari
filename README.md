@@ -17,6 +17,10 @@ refuses anything above that line. Our first rule, which chose between the raw an
 have: replaying the weekend's swaps through it settles at 43–52 USDG. An internal review showed why, and the rule
 changed ([What the review found](#what-the-review-found-and-what-changed)).
 
+**See it minute by minute:** [`web/squeeze/`](web/squeeze/) replays the weekend from Robinhood Chain's own logs —
+HIMS, BONER and USDG prices and pool inventories, the float, HAKARI's cost to push, and what X said at the time, in
+English and 繁中 (data and checks: [`gauge/src/squeeze/`](gauge/src/squeeze/), `npm run squeeze`).
+
 ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · MIT ·
 [`FEEDBACK.md`](FEEDBACK.md) · spec [`SPEC.md`](SPEC.md) · prompts [`docs/prompts/`](docs/prompts/)
 
