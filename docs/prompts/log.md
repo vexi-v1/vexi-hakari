@@ -103,3 +103,15 @@ listed, `127.0.0.1`, `npm ci`) inside the rewritten README and FEEDBACK. His rev
 `gainIfFaked` used the tick's direction where the quote is currency0; that is fixed in `fced71c` and
 `SafeSettle` was redeployed. The limitations his audit reproduced (walk start, same-transaction
 liquidity) are fixed in code in `d93a700`; the cross-block one remains and is listed.
+
+## 2026-09-26 00:25 — Abner: review the fixes, keep going
+
+> 繼續近一步的更新
+> ("Carry on with the next round of updates.")
+
+Output: a review of the fixes merged at `a36f2d4`. The offline suites were re-run (33 forge, 17 gauge), and
+the 46630 addresses, explorer verification and the new `Settled` tx were checked against the chain. The
+README gets back three caveats the merge dropped: the per-point liquidity check, the ladder snapshot, and
+the Δ sample window. It also gains one new limitation: the walk cap is shared with the leg back to the
+truncated price, and when that leg exhausts it, the rule settles truncated. The AI disclosure now says two
+people directed the work, as `log.md` shows.

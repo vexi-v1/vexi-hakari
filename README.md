@@ -111,8 +111,9 @@ USDG for 10.000000 TSLA ([`test/fork/PushCostLens.fork.t.sol`](test/fork/PushCos
 follows the chain head, because the public RPC does not keep old state, so the test asserts agreement
 within 0.1 % rather than a fixed figure. Output saved in [`docs/demo-outputs/`](docs/demo-outputs/).
 
-**The HIMS weekend**, rebuilt from 1,998 `ModifyLiquidity` logs. At every point the rebuilt active liquidity
-equals the last `Swap` event's own `liquidity` field ([`gauge/data/hims-replay.json`](gauge/data/hims-replay.json)):
+**The HIMS weekend**, rebuilt from 1,998 `ModifyLiquidity` logs. At each point's last `Swap`, the rebuilt
+active liquidity equals that event's own `liquidity` field ([`gauge/data/hims-replay.json`](gauge/data/hims-replay.json)).
+"HIMS in pool" is curve principal excluding fees, not the reserves you could sell into:
 
 | Block | Time (UTC) | Mint window | USDG/HIMS | HIMS in pool | Cost to push +10 % |
 |---|---|---|---|---|---|
@@ -123,7 +124,8 @@ equals the last `Swap` event's own `liquidity` field ([`gauge/data/hims-replay.j
 | 50,772,447 | Mon 09:54 | open | 29.48 | 2,567 | 1,307 USDG |
 
 **Cost ladder**, mainnet 4663, block 72,241,051 ([`gauge/data/ladder.json`](gauge/data/ladder.json)). Pushing
-the stock *up*; fees lost / capital needed, in USDG:
+the stock *up*; fees lost / capital needed, in USDG. A snapshot: the book moves (TSLA's +5 % cost ranged about
+1.3k–2.3k USDG within an hour on 2026-09-25), and the web page's **Refresh live** re-measures at the head:
 
 | Pool | Price | +1 % | +5 % | +10 % |
 |---|---|---|---|---|
@@ -134,7 +136,9 @@ the stock *up*; fees lost / capital needed, in USDG:
 The "0.3 %" pools on this chain charge 0.35 %: the protocol fee is on (`FEEDBACK.md` § 5).
 
 **Δ calibration**: p99 tick move between consecutive swap blocks over the 300k blocks up to
-72,241,326 ([`gauge/data/delta.json`](gauge/data/delta.json)): TSLA 3, NVDA 10, HIMS 10, AI memecoin 193. One hook
+72,241,326 ([`gauge/data/delta.json`](gauge/data/delta.json)): TSLA 3, NVDA 10, HIMS 10, AI memecoin 193. That
+window is ≈ 8.4 h on 2026-09-25 (04:27–12:53 UTC, before the NYSE open) with n = 132 / 96 / 6 / 63 swaps, so
+HIMS is indicative only; it is per swap *block*, while the oracle writes at most once per *second*. One hook
 carries one Δ, so a stock-grade and a memecoin-grade hook are two deployments.
 
 ## The three layers, as tests
@@ -172,7 +176,10 @@ in-repo evidence.
 - **Caller inputs.** `window`, `notional`, the quote side and `arbReversionSeconds` come from the integrator,
   and `settle` is permissionless: a `Settled` log is only as meaningful as the caller who emitted it.
 - **One Δ per hook**, fixed at deployment, and the hook only covers pools created with it. The walk is capped
-  (`MAX_WALK_STEPS`); past the cap the cost is reported as "at least this".
+  (`MAX_WALK_STEPS`); past the cap the cost is reported as "at least this" (`costComplete = false`). The cap is
+  shared with the uncounted walk from the current price back to the truncated one: if that leg alone exhausts
+  it, `depthBetween` returns zero and the rule settles truncated. That errs on the safe side against a fake,
+  but a genuine move across many initialized ticks will lag as plain truncation would.
 - **`SafeSettle` is a demo rule**, not a product. The contribution is the measurement and the two-series
   hook; the rule is meant to be replaced.
 
@@ -216,10 +223,11 @@ the first `SafeSettle` from `798ab19` (`0x64890652…B150`), replaced after the 
 
 ## AI disclosure
 
-Most of the code, tests and docs here were written by an AI agent (Claude Code), test-first, directed by one
-human. The human wrote the spec ([`docs/prompts/2026-09-25-spec-zh.md`](docs/prompts/2026-09-25-spec-zh.md),
-translated as `SPEC.md`), made every decision in [`docs/prompts/log.md`](docs/prompts/log.md), and ordered an
-internal review whose fixes are in the history. The pace of the commit history is the agent's.
+Most of the code, tests and docs here were written by AI agents (Claude Code), test-first, directed by the two
+of us, each from our own machine. Eric wrote the spec ([`docs/prompts/2026-09-25-spec-zh.md`](docs/prompts/2026-09-25-spec-zh.md),
+translated as `SPEC.md`) and directed the build; Abner joined at 22:24 JST and directed the internal review
+and the docs passes. Every instruction from either of us is in [`docs/prompts/log.md`](docs/prompts/log.md),
+and the review's fixes are in the history. The pace of the commit history is the agents'.
 
 ## Next
 
