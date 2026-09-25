@@ -1,0 +1,3833 @@
+{
+  "friday": "2026-09-18",
+  "generatedAt": "2026-09-25T15:12:59.297Z",
+  "method": "each pool rebuilt from its ModifyLiquidity logs at each point; price and reported liquidity from the last Swap at or before it; cost = fees on pushing the stock ±10 % and selling straight back",
+  "points": [
+    {
+      "time": "2026-09-18T20:00:00.000Z",
+      "block": "66493888",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-19T02:00:00.000Z",
+      "block": "66708460",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-19T08:00:00.000Z",
+      "block": "66922700",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-19T14:00:00.000Z",
+      "block": "67137028",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-19T20:00:00.000Z",
+      "block": "67351744",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-20T02:00:00.000Z",
+      "block": "67566068",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-20T08:00:00.000Z",
+      "block": "67779105",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-20T14:00:00.000Z",
+      "block": "67993060",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-20T20:00:00.000Z",
+      "block": "68208376",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-20T23:45:00.000Z",
+      "block": "68342354",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-21T01:00:00.000Z",
+      "block": "68386911",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-21T02:00:00.000Z",
+      "block": "68422586",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-21T08:00:00.000Z",
+      "block": "68636820",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-21T14:00:00.000Z",
+      "block": "68851638",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-21T20:00:00.000Z",
+      "block": "69067283",
+      "mintWindowClosed": false
+    }
+  ],
+  "series": [
+    {
+      "symbol": "SPY",
+      "id": "0xfe2a80bb5618fd14984b92ca6d45bf5ba67443ddb1435e28b2e48df2fc1526cd",
+      "fee": 3000,
+      "modifyLiquidityLogs": 7566,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 762.4111154873988,
+          "livePositions": 471,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 33272.595433,
+            "capitalUsdg": 4787180.26738,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 28073.346248,
+            "capitalUsdg": 4033547.015169,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.4676558263047,
+          "livePositions": 467,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 32128.267605,
+            "capitalUsdg": 4623063.941812,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 25861.498305,
+            "capitalUsdg": 3716518.43726,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.4993747552048,
+          "livePositions": 462,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 31567.700109,
+            "capitalUsdg": 4542543.880726,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 25478.676105,
+            "capitalUsdg": 3661687.627657,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.4801723943276,
+          "livePositions": 459,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 32117.307503,
+            "capitalUsdg": 4622512.94273,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 25366.627559,
+            "capitalUsdg": 3645582.586247,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.4961289937057,
+          "livePositions": 453,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 32052.473835,
+            "capitalUsdg": 4613181.262264,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 25272.796683,
+            "capitalUsdg": 3631949.080764,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.5250571297231,
+          "livePositions": 452,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 32219.406836,
+            "capitalUsdg": 4636969.429895,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 26393.707015,
+            "capitalUsdg": 3792631.951924,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.5428800054358,
+          "livePositions": 452,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 31800.513183,
+            "capitalUsdg": 4576784.371445,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 25049.052297,
+            "capitalUsdg": 3599671.909616,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.5856515806605,
+          "livePositions": 450,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 30051.324198,
+            "capitalUsdg": 4325874.207228,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 24260.654617,
+            "capitalUsdg": 3486758.712084,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.5672919604667,
+          "livePositions": 447,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 30317.697946,
+            "capitalUsdg": 4364087.63314,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 24742.454307,
+            "capitalUsdg": 3555825.719206,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 762.6589765953624,
+          "livePositions": 446,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 29914.385981,
+            "capitalUsdg": 4306097.149882,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 25141.413397,
+            "capitalUsdg": 3613144.744138,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 763.0400916377363,
+          "livePositions": 444,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 28253.30991,
+            "capitalUsdg": 4067297.885775,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 26816.389613,
+            "capitalUsdg": 3853835.66324,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 763.3925918194747,
+          "livePositions": 445,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 26717.445718,
+            "capitalUsdg": 3846553.616137,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 28343.768105,
+            "capitalUsdg": 4073330.543266,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 764.6921477023608,
+          "livePositions": 448,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 23002.49443,
+            "capitalUsdg": 3311905.506169,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 30168.406209,
+            "capitalUsdg": 4337202.446325,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 766.0348414196075,
+          "livePositions": 450,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 19442.518565,
+            "capitalUsdg": 2800615.461649,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 32643.717811,
+            "capitalUsdg": 4695703.984777,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 773.0232278567066,
+          "livePositions": 471,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 9817.088052,
+            "capitalUsdg": 1414954.07839,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 44415.919194,
+            "capitalUsdg": 6402587.631097,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 33272.595433,
+      "weekendMinCostUp10": 29914.385981,
+      "weekendOverFriday": 0.8990698078013684
+    },
+    {
+      "symbol": "META",
+      "id": "0x5875d407a42965b0e768c8925cea290e06fa50603ef34fc99eb92a1050e6ae36",
+      "fee": 3000,
+      "modifyLiquidityLogs": 4947,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 668.1906556598802,
+          "livePositions": 240,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 13053.376202,
+            "capitalUsdg": 1894046.853401,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 9160.192842,
+            "capitalUsdg": 1334244.562156,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 667.9448883195599,
+          "livePositions": 244,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 12903.466053,
+            "capitalUsdg": 1871706.178898,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 12843.473443,
+            "capitalUsdg": 1863161.235574,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 668.2805330818401,
+          "livePositions": 247,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 12280.983616,
+            "capitalUsdg": 1782213.434382,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13435.124161,
+            "capitalUsdg": 1948189.987134,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 668.7544729384745,
+          "livePositions": 248,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 11472.930714,
+            "capitalUsdg": 1666189.366361,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 14260.364315,
+            "capitalUsdg": 2066872.831636,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 668.9516205955266,
+          "livePositions": 243,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 10912.921099,
+            "capitalUsdg": 1585668.640417,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13778.86228,
+            "capitalUsdg": 1997971.746495,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 668.9826186853576,
+          "livePositions": 241,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 10850.333888,
+            "capitalUsdg": 1576663.916832,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13810.233466,
+            "capitalUsdg": 2002499.851464,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 668.8251370061801,
+          "livePositions": 237,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 10909.857358,
+            "capitalUsdg": 1585136.475201,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 12678.818939,
+            "capitalUsdg": 1840074.942969,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 668.8829161291096,
+          "livePositions": 236,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 10867.50866,
+            "capitalUsdg": 1579030.62123,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13164.149035,
+            "capitalUsdg": 1909628.603705,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 669.1744795117619,
+          "livePositions": 226,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 10998.578665,
+            "capitalUsdg": 1597761.511228,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 10232.410491,
+            "capitalUsdg": 1489316.133786,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 669.6363186387956,
+          "livePositions": 224,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 10597.246783,
+            "capitalUsdg": 1539909.250971,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 10205.336856,
+            "capitalUsdg": 1485668.431313,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 672.4820992875019,
+          "livePositions": 226,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 9564.208204,
+            "capitalUsdg": 1389784.351591,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11804.450836,
+            "capitalUsdg": 1716148.063999,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 672.8785609809497,
+          "livePositions": 226,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 9275.655599,
+            "capitalUsdg": 1348188.131902,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 12078.689127,
+            "capitalUsdg": 1755671.637164,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 680.9208082804863,
+          "livePositions": 224,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 7148.445762,
+            "capitalUsdg": 1037926.908071,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11433.484491,
+            "capitalUsdg": 1666185.882225,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 708.7279781162676,
+          "livePositions": 211,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2302.696924,
+            "capitalUsdg": 332936.399064,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 12693.576597,
+            "capitalUsdg": 1860368.172352,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 744.6081267214506,
+          "livePositions": 198,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 7189.629453,
+            "capitalUsdg": 1045309.643244,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13236.473018,
+            "capitalUsdg": 1940280.170053,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 13053.376202,
+      "weekendMinCostUp10": 10597.246783,
+      "weekendOverFriday": 0.811839528640592
+    },
+    {
+      "symbol": "MSTR",
+      "id": "0xd54e725de99633dae34f6d3eeec4196027c7c05d92b1cbeb0052a65d7b2b3197",
+      "fee": 2004,
+      "modifyLiquidityLogs": 124,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "missing": "no swap yet"
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 156.17077747402493,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2004,
+          "up10": {
+            "costUsdg": 41.936798,
+            "capitalUsdg": 10474.290723,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 0.007384,
+            "capitalUsdg": 1.844141,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 156.93786979045154,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2004,
+          "up10": {
+            "costUsdg": 42.147977,
+            "capitalUsdg": 10527.035252,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 0.029004,
+            "capitalUsdg": 7.243706,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 157.21561901141902,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2004,
+          "up10": {
+            "costUsdg": 0.003321,
+            "capitalUsdg": 0.829405,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 0.078136,
+            "capitalUsdg": 19.610038,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 157.21561901141902,
+          "livePositions": 0,
+          "liquidityMatches": true,
+          "swapFeePips": 2004,
+          "up10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 157.21561901141902,
+          "livePositions": 0,
+          "liquidityMatches": true,
+          "swapFeePips": 2004,
+          "up10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 157.21561901141902,
+          "livePositions": 0,
+          "liquidityMatches": true,
+          "swapFeePips": 2004,
+          "up10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 157.21561901141902,
+          "livePositions": 0,
+          "liquidityMatches": true,
+          "swapFeePips": 2004,
+          "up10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 0,
+            "capitalUsdg": 0,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 41.936798,
+      "weekendMinCostUp10": 41.936798,
+      "weekendOverFriday": 1
+    },
+    {
+      "symbol": "GLD",
+      "id": "0xfe281bbfa9aa658c1aa9c2ad1b0c62c4286f96c7cb1074296b54e869935a7a3a",
+      "fee": 8388608,
+      "modifyLiquidityLogs": 11737,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 401.79268483290264,
+          "livePositions": 343,
+          "liquidityMatches": true,
+          "swapFeePips": 2500,
+          "up10": {
+            "costUsdg": 5414.610184,
+            "capitalUsdg": 1098842.998363,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4736.465634,
+            "capitalUsdg": 960336.520943,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 401.9506622942612,
+          "livePositions": 340,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 12947.16354,
+            "capitalUsdg": 1096593.945217,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11548.679631,
+            "capitalUsdg": 977334.012479,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 402.0237339645935,
+          "livePositions": 339,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 13117.761507,
+            "capitalUsdg": 1111073.20722,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11948.706496,
+            "capitalUsdg": 1011203.823836,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 402.0448469784716,
+          "livePositions": 338,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 13076.774429,
+            "capitalUsdg": 1107568.329069,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11965.521595,
+            "capitalUsdg": 1012581.23767,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 402.11129286596537,
+          "livePositions": 336,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 12979.982292,
+            "capitalUsdg": 1099195.768346,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 12101.343129,
+            "capitalUsdg": 1023730.634458,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 401.9995360642425,
+          "livePositions": 336,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 13091.876082,
+            "capitalUsdg": 1108561.823489,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11935.953666,
+            "capitalUsdg": 1009685.615748,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 401.9645596498184,
+          "livePositions": 334,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 12921.145716,
+            "capitalUsdg": 1094063.654897,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11660.249435,
+            "capitalUsdg": 986542.663907,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 401.8827251787076,
+          "livePositions": 332,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 13042.411691,
+            "capitalUsdg": 1104262.638161,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11553.715799,
+            "capitalUsdg": 977507.18837,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 401.91487183674207,
+          "livePositions": 332,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 12985.238545,
+            "capitalUsdg": 1099427.47875,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11579.646136,
+            "capitalUsdg": 979700.374153,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 401.9987940673828,
+          "livePositions": 332,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 12924.340743,
+            "capitalUsdg": 1094215.460978,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11784.63745,
+            "capitalUsdg": 996906.915197,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 401.9980463669638,
+          "livePositions": 332,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 12976.757829,
+            "capitalUsdg": 1098598.383874,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11810.246222,
+            "capitalUsdg": 999046.669735,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 401.9807896416318,
+          "livePositions": 331,
+          "liquidityMatches": true,
+          "swapFeePips": 6000,
+          "up10": {
+            "costUsdg": 12995.586981,
+            "capitalUsdg": 1100173.531689,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11759.603607,
+            "capitalUsdg": 994761.408896,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 399.2202739830443,
+          "livePositions": 327,
+          "liquidityMatches": true,
+          "swapFeePips": 2500,
+          "up10": {
+            "costUsdg": 6098.954864,
+            "capitalUsdg": 1237896.763418,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3858.112568,
+            "capitalUsdg": 781731.195287,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 399.5745539733727,
+          "livePositions": 325,
+          "liquidityMatches": true,
+          "swapFeePips": 2500,
+          "up10": {
+            "costUsdg": 6037.390412,
+            "capitalUsdg": 1224992.733003,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3954.869952,
+            "capitalUsdg": 801317.626255,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 398.5803430405561,
+          "livePositions": 326,
+          "liquidityMatches": true,
+          "swapFeePips": 2500,
+          "up10": {
+            "costUsdg": 6350.063725,
+            "capitalUsdg": 1288847.27088,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3645.451608,
+            "capitalUsdg": 738492.439206,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 5414.610184,
+      "weekendMinCostUp10": 12921.145716,
+      "weekendOverFriday": 2.3863482830549043
+    },
+    {
+      "symbol": "CRCL",
+      "id": "0x5177eac8c2176468bbf15e44081e151d35c2e7d068e96d3db94f496a4dc944b2",
+      "fee": 1500,
+      "modifyLiquidityLogs": 130,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 91.88088545056684,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 28.082012,
+            "capitalUsdg": 8144.311839,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 34.486951,
+            "capitalUsdg": 10028.031435,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 92.21410787090613,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 26.938568,
+            "capitalUsdg": 7808.68612,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 50.955118,
+            "capitalUsdg": 14710.097549,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 91.83172975156751,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 33.144014,
+            "capitalUsdg": 9584.368335,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 45.951269,
+            "capitalUsdg": 13280.718357,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 91.93092180780467,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 29.671823,
+            "capitalUsdg": 8594.339304,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 49.076953,
+            "capitalUsdg": 14169.758858,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 92.09564464095604,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 27.294899,
+            "capitalUsdg": 7913.71883,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 50.915697,
+            "capitalUsdg": 14695.432393,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 91.84608447216702,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 32.64388,
+            "capitalUsdg": 9441.760832,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 46.386845,
+            "capitalUsdg": 13404.36078,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 89.72725255418779,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 48.470572,
+            "capitalUsdg": 13996.549308,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 33.73002,
+            "capitalUsdg": 9811.213088,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 90.18788172404707,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 42.808053,
+            "capitalUsdg": 12374.344394,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 39.442038,
+            "capitalUsdg": 11438.031741,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 91.4451381520456,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 30.378663,
+            "capitalUsdg": 8811.974315,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 63.252617,
+            "capitalUsdg": 18313.328491,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 91.48518503232786,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 29.138335,
+            "capitalUsdg": 8458.198824,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 46.691119,
+            "capitalUsdg": 13584.313543,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 92.83420146748698,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 25.06882,
+            "capitalUsdg": 7258.65411,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 44.549741,
+            "capitalUsdg": 12970.494997,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 91.25984977076747,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 30.977945,
+            "capitalUsdg": 8992.443919,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 47.113283,
+            "capitalUsdg": 13702.432739,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 92.06557811389905,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 28.334463,
+            "capitalUsdg": 8212.299393,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 45.738111,
+            "capitalUsdg": 13305.539236,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 95.43333646973154,
+          "livePositions": 7,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 17.750157,
+            "capitalUsdg": 5119.90989,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 32.089947,
+            "capitalUsdg": 9332.710226,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 94.27738424202217,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 1762,
+          "up10": {
+            "costUsdg": 20.818432,
+            "capitalUsdg": 6014.540837,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 32.353049,
+            "capitalUsdg": 9407.512357,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 28.082012,
+      "weekendMinCostUp10": 26.938568,
+      "weekendOverFriday": 0.9592819773739859
+    },
+    {
+      "symbol": "TSLA",
+      "id": "0x8517f8071ae5b831b738052f12125e8e3d6c158b78728aa44ce3b25e5104d32e",
+      "fee": 3000,
+      "modifyLiquidityLogs": 4251,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 364.3169598871875,
+          "livePositions": 157,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3280.491433,
+            "capitalUsdg": 477484.211667,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3408.986253,
+            "capitalUsdg": 496787.768568,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 364.4989588372743,
+          "livePositions": 157,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3263.665569,
+            "capitalUsdg": 474991.881741,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3426.800999,
+            "capitalUsdg": 499326.648311,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 364.4875375852884,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3044.184375,
+            "capitalUsdg": 443276.734914,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2754.396557,
+            "capitalUsdg": 402212.022022,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 364.42577492364325,
+          "livePositions": 163,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3085.605759,
+            "capitalUsdg": 449294.559599,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2774.979559,
+            "capitalUsdg": 405187.534398,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 364.4414547432666,
+          "livePositions": 165,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3091.743514,
+            "capitalUsdg": 450180.774242,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2786.919027,
+            "capitalUsdg": 406919.705761,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 364.5844905881889,
+          "livePositions": 166,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3071.843187,
+            "capitalUsdg": 447295.759281,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2813.168233,
+            "capitalUsdg": 410713.912657,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 363.9706183425466,
+          "livePositions": 166,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3175.516402,
+            "capitalUsdg": 462361.181104,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2719.995355,
+            "capitalUsdg": 397291.057419,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 363.83075777352417,
+          "livePositions": 165,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3178.324122,
+            "capitalUsdg": 462758.986049,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2672.564497,
+            "capitalUsdg": 390394.505886,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 363.80622583297105,
+          "livePositions": 163,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3185.025888,
+            "capitalUsdg": 463738.28476,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2669.260243,
+            "capitalUsdg": 389914.993994,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 364.21627160831315,
+          "livePositions": 163,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2989.37369,
+            "capitalUsdg": 435520.928289,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2588.491137,
+            "capitalUsdg": 378348.932466,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 365.7130726519966,
+          "livePositions": 164,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2877.23895,
+            "capitalUsdg": 418964.46698,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2915.165284,
+            "capitalUsdg": 425384.45086,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 366.06371219983237,
+          "livePositions": 163,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2804.661155,
+            "capitalUsdg": 408404.805529,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2974.020151,
+            "capitalUsdg": 433882.337828,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 367.14566596270316,
+          "livePositions": 163,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2583.438531,
+            "capitalUsdg": 376138.851417,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3058.387155,
+            "capitalUsdg": 446030.764218,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 376.5141328847128,
+          "livePositions": 160,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1559.456006,
+            "capitalUsdg": 226329.579972,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3539.101302,
+            "capitalUsdg": 516677.6484,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 374.7252078742311,
+          "livePositions": 163,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1608.993659,
+            "capitalUsdg": 232517.358307,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3055.281413,
+            "capitalUsdg": 446213.389492,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 3280.491433,
+      "weekendMinCostUp10": 2989.37369,
+      "weekendOverFriday": 0.9112578865253205
+    },
+    {
+      "symbol": "AAPL",
+      "id": "0xc748f4671a867db48b552f6b7650bf3255e05f80f00e3f7aad1b17ccb7898fdb",
+      "fee": 3000,
+      "modifyLiquidityLogs": 5154,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 336.54502463472,
+          "livePositions": 192,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1711.26931,
+            "capitalUsdg": 248354.372774,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3353.528098,
+            "capitalUsdg": 489669.157511,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 336.21455692908586,
+          "livePositions": 194,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1754.925038,
+            "capitalUsdg": 254712.527167,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3876.110152,
+            "capitalUsdg": 564538.323439,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 335.20135200105875,
+          "livePositions": 194,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2108.761814,
+            "capitalUsdg": 305714.192617,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3930.907621,
+            "capitalUsdg": 571948.845063,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 335.1037737627164,
+          "livePositions": 193,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2151.618608,
+            "capitalUsdg": 311882.994122,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3869.41567,
+            "capitalUsdg": 563100.336096,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 335.09839675316016,
+          "livePositions": 193,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2155.135639,
+            "capitalUsdg": 312389.257597,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4151.568787,
+            "capitalUsdg": 604124.080784,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 334.96579771595594,
+          "livePositions": 193,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2234.974713,
+            "capitalUsdg": 323872.098312,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4076.134052,
+            "capitalUsdg": 593253.183364,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 334.9269408073588,
+          "livePositions": 191,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1919.938656,
+            "capitalUsdg": 278765.473592,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3451.609744,
+            "capitalUsdg": 503683.84867,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 334.6499360451259,
+          "livePositions": 190,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1653.550458,
+            "capitalUsdg": 240237.221889,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3076.361368,
+            "capitalUsdg": 449231.824936,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 334.0910412789446,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1720.181747,
+            "capitalUsdg": 249940.895604,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3022.016493,
+            "capitalUsdg": 441251.619476,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 334.52126151549277,
+          "livePositions": 190,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1667.337413,
+            "capitalUsdg": 242244.994978,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3061.898454,
+            "capitalUsdg": 447111.038635,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 334.83620441906373,
+          "livePositions": 190,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1628.779371,
+            "capitalUsdg": 236634.56645,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3088.785833,
+            "capitalUsdg": 451058.027119,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 335.17299859159675,
+          "livePositions": 190,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1587.615361,
+            "capitalUsdg": 230646.774666,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3119.294429,
+            "capitalUsdg": 455541.417762,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 334.36706977487154,
+          "livePositions": 186,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1685.988088,
+            "capitalUsdg": 244961.723138,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3019.698632,
+            "capitalUsdg": 440905.836397,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 335.05513860235834,
+          "livePositions": 185,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1608.696988,
+            "capitalUsdg": 233704.469229,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 3034.695417,
+            "capitalUsdg": 443238.274622,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 338.6067311713558,
+          "livePositions": 182,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1017.957233,
+            "capitalUsdg": 147793.501178,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2951.584522,
+            "capitalUsdg": 431356.547448,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 1711.26931,
+      "weekendMinCostUp10": 1653.550458,
+      "weekendOverFriday": 0.9662713217243404
+    },
+    {
+      "symbol": "GOOGL",
+      "id": "0xd4ecb79fdc521d7725d22b33ed43cb4e47aa96bfad76aa29577e3151f723ac5e",
+      "fee": 3000,
+      "modifyLiquidityLogs": 4491,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 350.40210366426106,
+          "livePositions": 173,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3056.567222,
+            "capitalUsdg": 441375.755031,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 5083.18669,
+            "capitalUsdg": 740337.832875,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.255775574823,
+          "livePositions": 174,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3206.663135,
+            "capitalUsdg": 462929.292054,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4900.498471,
+            "capitalUsdg": 714004.778922,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.2536497372918,
+          "livePositions": 174,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3208.448678,
+            "capitalUsdg": 463186.268724,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4898.688134,
+            "capitalUsdg": 713743.469462,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.2488389284535,
+          "livePositions": 172,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 3110.439804,
+            "capitalUsdg": 449120.970288,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4886.775548,
+            "capitalUsdg": 712006.070571,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.4318145844113,
+          "livePositions": 172,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2971.910295,
+            "capitalUsdg": 429191.153635,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 5069.264236,
+            "capitalUsdg": 738360.267802,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 351.5611668286495,
+          "livePositions": 170,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2137.656316,
+            "capitalUsdg": 309259.323373,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6016.338004,
+            "capitalUsdg": 874754.18159,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.2513396865246,
+          "livePositions": 169,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2366.384468,
+            "capitalUsdg": 342463.710313,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4850.060229,
+            "capitalUsdg": 706822.508572,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.24135888926327,
+          "livePositions": 168,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2334.622043,
+            "capitalUsdg": 337897.736799,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4658.177943,
+            "capitalUsdg": 678705.584338,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.2072961778836,
+          "livePositions": 168,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2047.225994,
+            "capitalUsdg": 296810.400553,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4655.453645,
+            "capitalUsdg": 678359.378713,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 350.17438782995566,
+          "livePositions": 168,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2053.983881,
+            "capitalUsdg": 297789.26158,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4672.794571,
+            "capitalUsdg": 680871.850205,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 350.4855370915467,
+          "livePositions": 172,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1989.914362,
+            "capitalUsdg": 288509.928537,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4702.259152,
+            "capitalUsdg": 685228.797533,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 350.7529835978054,
+          "livePositions": 172,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1934.623457,
+            "capitalUsdg": 280504.074418,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 4749.651761,
+            "capitalUsdg": 692189.121009,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 351.0618824553793,
+          "livePositions": 170,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1882.707066,
+            "capitalUsdg": 272954.131074,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 5133.382464,
+            "capitalUsdg": 747975.85745,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 353.75787174355986,
+          "livePositions": 171,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1789.051141,
+            "capitalUsdg": 259152.272132,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6031.005198,
+            "capitalUsdg": 878457.086747,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 355.5574420867415,
+          "livePositions": 169,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1509.7658,
+            "capitalUsdg": 218750.175892,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 5105.899199,
+            "capitalUsdg": 745427.951727,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 3056.567222,
+      "weekendMinCostUp10": 2047.225994,
+      "weekendOverFriday": 0.6697794765529288
+    },
+    {
+      "symbol": "PLTR",
+      "id": "0xee430ee1003e1985e1828a01b9a20dad67ad4302994fe2abb4a173de4ac54623",
+      "fee": 10000,
+      "modifyLiquidityLogs": 4047,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 175.65796746215042,
+          "livePositions": 127,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4898.522436,
+            "capitalUsdg": 227615.541133,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 9042.988677,
+            "capitalUsdg": 420700.968467,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.10373543240385,
+          "livePositions": 131,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4998.414986,
+            "capitalUsdg": 232141.501883,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 9126.768762,
+            "capitalUsdg": 424517.453975,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.18382037553727,
+          "livePositions": 131,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4921.97695,
+            "capitalUsdg": 228613.520893,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 9095.040206,
+            "capitalUsdg": 423118.558618,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.0907298712581,
+          "livePositions": 132,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 5001.702569,
+            "capitalUsdg": 232295.617993,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 9004.057687,
+            "capitalUsdg": 418868.277686,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.6739861931596,
+          "livePositions": 130,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 5014.352723,
+            "capitalUsdg": 232762.477259,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6543.476322,
+            "capitalUsdg": 304097.039013,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.7269130610677,
+          "livePositions": 126,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4940.733927,
+            "capitalUsdg": 229377.167084,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6426.431366,
+            "capitalUsdg": 298706.281638,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.79716877016622,
+          "livePositions": 125,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 5023.675211,
+            "capitalUsdg": 233171.072534,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6629.160828,
+            "capitalUsdg": 308057.757208,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.56368112998857,
+          "livePositions": 126,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 5224.066173,
+            "capitalUsdg": 242445.790797,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6495.029514,
+            "capitalUsdg": 301808.868279,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.585025665625,
+          "livePositions": 124,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4996.062697,
+            "capitalUsdg": 231886.993738,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6279.045246,
+            "capitalUsdg": 291770.810374,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 176.85339185244234,
+          "livePositions": 124,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4934.912539,
+            "capitalUsdg": 229009.966041,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6633.975164,
+            "capitalUsdg": 308196.737844,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 176.9410700870989,
+          "livePositions": 124,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4871.463143,
+            "capitalUsdg": 226074.320631,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6698.068811,
+            "capitalUsdg": 311178.880093,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 177.00315684988672,
+          "livePositions": 124,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4827.618657,
+            "capitalUsdg": 224047.672369,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6742.54489,
+            "capitalUsdg": 313247.076326,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 176.98735679242728,
+          "livePositions": 122,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4830.142931,
+            "capitalUsdg": 224166.933151,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6718.255573,
+            "capitalUsdg": 312123.737365,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 179.2054031528335,
+          "livePositions": 119,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 2948.619569,
+            "capitalUsdg": 137481.582526,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 5451.676793,
+            "capitalUsdg": 254394.982,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 181.46308483324765,
+          "livePositions": 115,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4552.015067,
+            "capitalUsdg": 211294.526207,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 6155.180493,
+            "capitalUsdg": 286402.043468,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 4898.522436,
+      "weekendMinCostUp10": 4921.97695,
+      "weekendOverFriday": 1.0047880793252326
+    },
+    {
+      "symbol": "SPCX",
+      "id": "0xcb6ffbcc84359535c2cc0a5688c0a76520ea6e0a4820fddd3ac8d7880e576370",
+      "fee": 10000,
+      "modifyLiquidityLogs": 13654,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 152.97964369954656,
+          "livePositions": 289,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 7067.784711,
+            "capitalUsdg": 328418.389048,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13168.335466,
+            "capitalUsdg": 616084.902558,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 152.973601661922,
+          "livePositions": 288,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 7066.730746,
+            "capitalUsdg": 328367.512303,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13158.679713,
+            "capitalUsdg": 615627.262512,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.35768659522597,
+          "livePositions": 288,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6759.50736,
+            "capitalUsdg": 314034.850585,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13248.288593,
+            "capitalUsdg": 619854.885488,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.3971693050645,
+          "livePositions": 288,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6791.569008,
+            "capitalUsdg": 315487.947656,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13427.048372,
+            "capitalUsdg": 628257.969153,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.38524039372203,
+          "livePositions": 287,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6803.936346,
+            "capitalUsdg": 316078.294426,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13394.317468,
+            "capitalUsdg": 626712.247295,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.3619393534546,
+          "livePositions": 284,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6807.577878,
+            "capitalUsdg": 316244.399166,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 13381.829573,
+            "capitalUsdg": 626131.027774,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.34707548338534,
+          "livePositions": 283,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6027.406627,
+            "capitalUsdg": 280198.186195,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11450.748259,
+            "capitalUsdg": 535636.170345,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.36777117464695,
+          "livePositions": 281,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6011.000894,
+            "capitalUsdg": 279430.673191,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11318.496649,
+            "capitalUsdg": 529447.548908,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.36166410717686,
+          "livePositions": 280,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6015.819766,
+            "capitalUsdg": 279655.621968,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11314.002308,
+            "capitalUsdg": 529231.668713,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 153.3452426119747,
+          "livePositions": 281,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6027.940688,
+            "capitalUsdg": 280220.388235,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11310.883024,
+            "capitalUsdg": 529082.216766,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 153.3439978472669,
+          "livePositions": 281,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6028.932561,
+            "capitalUsdg": 280266.858672,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11309.820018,
+            "capitalUsdg": 529031.451745,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 153.33445108088063,
+          "livePositions": 282,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6034.85348,
+            "capitalUsdg": 280542.103953,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11311.777603,
+            "capitalUsdg": 529126.158865,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 153.34066133838382,
+          "livePositions": 283,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 6031.028806,
+            "capitalUsdg": 280364.986766,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 11306.62906,
+            "capitalUsdg": 528879.380921,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 154.52316364637568,
+          "livePositions": 275,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4644.485098,
+            "capitalUsdg": 216012.842092,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 9838.362626,
+            "capitalUsdg": 460283.681548,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 153.4818592523109,
+          "livePositions": 268,
+          "liquidityMatches": true,
+          "swapFeePips": 10990,
+          "up10": {
+            "costUsdg": 4995.741251,
+            "capitalUsdg": 232484.05127,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 8592.954934,
+            "capitalUsdg": 401834.264792,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 7067.784711,
+      "weekendMinCostUp10": 6011.000894,
+      "weekendOverFriday": 0.8504787765598933
+    },
+    {
+      "symbol": "NVDA",
+      "id": "0x3bb34a44f1b2b5f32c034c38a53065a521a47b199700fa9bd19d60985ff24bf1",
+      "fee": 3000,
+      "modifyLiquidityLogs": 10041,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 221.8362389261317,
+          "livePositions": 220,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2508.034096,
+            "capitalUsdg": 366589.187128,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2208.396329,
+            "capitalUsdg": 322870.830491,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 222.09255397887893,
+          "livePositions": 221,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2497.393555,
+            "capitalUsdg": 364973.769409,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2234.065018,
+            "capitalUsdg": 326612.95685,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 222.0297311153953,
+          "livePositions": 221,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2503.67771,
+            "capitalUsdg": 365897.024505,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2234.891348,
+            "capitalUsdg": 326728.606563,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 222.07341344729534,
+          "livePositions": 220,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2505.065417,
+            "capitalUsdg": 366099.457102,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2240.747085,
+            "capitalUsdg": 327590.97877,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 222.7716204359378,
+          "livePositions": 221,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2459.965854,
+            "capitalUsdg": 359388.718482,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2503.681916,
+            "capitalUsdg": 366072.266452,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 222.72126673256255,
+          "livePositions": 221,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2462.89338,
+            "capitalUsdg": 359821.22353,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2501.935794,
+            "capitalUsdg": 365818.325202,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 221.27550382921441,
+          "livePositions": 220,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2573.042701,
+            "capitalUsdg": 376180.405324,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2410.431278,
+            "capitalUsdg": 352344.65124,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 221.16310529365208,
+          "livePositions": 220,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2581.902869,
+            "capitalUsdg": 377498.127062,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2403.058202,
+            "capitalUsdg": 351259.2069,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 220.8047223489013,
+          "livePositions": 218,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2595.472239,
+            "capitalUsdg": 379550.37124,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2364.94897,
+            "capitalUsdg": 345660.542967,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 221.72492873857462,
+          "livePositions": 218,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2526.84566,
+            "capitalUsdg": 369343.105571,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2425.307288,
+            "capitalUsdg": 354540.53345,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 222.65550199826518,
+          "livePositions": 218,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2455.433735,
+            "capitalUsdg": 358740.611334,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2484.189564,
+            "capitalUsdg": 363214.505459,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 223.5048587069602,
+          "livePositions": 218,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2388.942255,
+            "capitalUsdg": 348905.987045,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2537.689829,
+            "capitalUsdg": 371089.05522,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 223.508767035767,
+          "livePositions": 217,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2386.141953,
+            "capitalUsdg": 348500.477124,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2529.641047,
+            "capitalUsdg": 369919.197259,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 224.02185986301419,
+          "livePositions": 216,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2342.185776,
+            "capitalUsdg": 342020.475582,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2566.479292,
+            "capitalUsdg": 375336.651289,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 227.78953187880094,
+          "livePositions": 218,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 2019.03729,
+            "capitalUsdg": 294561.610295,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 2816.071326,
+            "capitalUsdg": 412209.643213,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 2508.034096,
+      "weekendMinCostUp10": 2459.965854,
+      "weekendOverFriday": 0.9808342948460459
+    },
+    {
+      "symbol": "MSFT",
+      "id": "0x9194a557b6a6bb2236b49ea7e2bbccec5d3eeb705aef00903be4b3de1d949579",
+      "fee": 3000,
+      "modifyLiquidityLogs": 2959,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 494.48954966562786,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1153.817536,
+            "capitalUsdg": 167355.06841,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1240.958292,
+            "capitalUsdg": 180571.405532,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.946148644707,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1132.673236,
+            "capitalUsdg": 164259.255115,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1261.88954,
+            "capitalUsdg": 183643.945589,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.9426931667608,
+          "livePositions": 76,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1329.018597,
+            "capitalUsdg": 192419.954324,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1373.257351,
+            "capitalUsdg": 199602.760916,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.86008433378254,
+          "livePositions": 76,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1336.877595,
+            "capitalUsdg": 193558.895073,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1365.142399,
+            "capitalUsdg": 198426.110123,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.8000511179476,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1144.18021,
+            "capitalUsdg": 165933.233226,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1257.615985,
+            "capitalUsdg": 183009.029785,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.5060624993313,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1153.669055,
+            "capitalUsdg": 167322.366143,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1246.387171,
+            "capitalUsdg": 181368.1948,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.3026056162391,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1162.709398,
+            "capitalUsdg": 168646.627381,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1236.806987,
+            "capitalUsdg": 179962.840956,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.1536815254775,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1169.317635,
+            "capitalUsdg": 169614.766748,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1229.8028,
+            "capitalUsdg": 178935.570353,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 494.1772872169537,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1168.336647,
+            "capitalUsdg": 169471.266811,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1230.852444,
+            "capitalUsdg": 179089.30802,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 495.40539237275533,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1113.751463,
+            "capitalUsdg": 161478.504316,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1288.694773,
+            "capitalUsdg": 187577.605815,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 495.2706950207946,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1119.81818,
+            "capitalUsdg": 162366.635668,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1282.277902,
+            "capitalUsdg": 186635.218283,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 495.27036399556107,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1119.833714,
+            "capitalUsdg": 162368.911981,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1282.261564,
+            "capitalUsdg": 186632.817229,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 495.62583315375076,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1104.042249,
+            "capitalUsdg": 160058.170915,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1297.594785,
+            "capitalUsdg": 188879.960577,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 494.34606612070763,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 1160.843075,
+            "capitalUsdg": 168373.222631,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1238.878307,
+            "capitalUsdg": 180266.541528,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 499.7381843147899,
+          "livePositions": 73,
+          "liquidityMatches": true,
+          "swapFeePips": 3499,
+          "up10": {
+            "costUsdg": 910.829686,
+            "capitalUsdg": 131883.537699,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1479.672213,
+            "capitalUsdg": 215557.770479,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 1153.817536,
+      "weekendMinCostUp10": 1113.751463,
+      "weekendOverFriday": 0.9652752088177659
+    },
+    {
+      "symbol": "HIMS",
+      "id": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
+      "fee": 9000,
+      "modifyLiquidityLogs": 4194,
+      "allLiquidityMatches": true,
+      "rows": [
+        {
+          "time": "2026-09-18T20:00:00.000Z",
+          "block": "66493888",
+          "mintWindowClosed": false,
+          "priceUsdg": 27.986645536606176,
+          "livePositions": 70,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1857.830129,
+            "capitalUsdg": 95348.780665,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1431.14458,
+            "capitalUsdg": 73237.582701,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T02:00:00.000Z",
+          "block": "66708460",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.188364091530193,
+          "livePositions": 71,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1776.112403,
+            "capitalUsdg": 91113.766969,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1825.689531,
+            "capitalUsdg": 93345.858893,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T08:00:00.000Z",
+          "block": "66922700",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.164959124377795,
+          "livePositions": 72,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1811.287285,
+            "capitalUsdg": 92903.729028,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1814.289691,
+            "capitalUsdg": 92747.951307,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T14:00:00.000Z",
+          "block": "67137028",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.146032337214745,
+          "livePositions": 72,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1928.880346,
+            "capitalUsdg": 98946.633885,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1852.885984,
+            "capitalUsdg": 94717.145821,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-19T20:00:00.000Z",
+          "block": "67351744",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.093273232353287,
+          "livePositions": 72,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1976.021233,
+            "capitalUsdg": 101352.444661,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1786.088721,
+            "capitalUsdg": 91287.211148,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T02:00:00.000Z",
+          "block": "67566068",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.115321785931414,
+          "livePositions": 72,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1956.60662,
+            "capitalUsdg": 100361.579456,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1814.189568,
+            "capitalUsdg": 92729.764961,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T08:00:00.000Z",
+          "block": "67779105",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.03222276807531,
+          "livePositions": 72,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 2031.871653,
+            "capitalUsdg": 104207.544359,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1708.592415,
+            "capitalUsdg": 87311.274864,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T14:00:00.000Z",
+          "block": "67993060",
+          "mintWindowClosed": true,
+          "priceUsdg": 27.973863799178666,
+          "livePositions": 70,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 2064.152717,
+            "capitalUsdg": 105859.172082,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1628.753003,
+            "capitalUsdg": 83214.435682,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T20:00:00.000Z",
+          "block": "68208376",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.028439698174154,
+          "livePositions": 71,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 2033.197959,
+            "capitalUsdg": 104264.068484,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1719.356888,
+            "capitalUsdg": 87844.110983,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-20T23:45:00.000Z",
+          "block": "68342354",
+          "mintWindowClosed": true,
+          "priceUsdg": 28.028195593126622,
+          "livePositions": 71,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 2038.795432,
+            "capitalUsdg": 104547.000507,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1726.650602,
+            "capitalUsdg": 88212.39972,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T01:00:00.000Z",
+          "block": "68386911",
+          "mintWindowClosed": false,
+          "priceUsdg": 28.028195593126622,
+          "livePositions": 71,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 2038.795432,
+            "capitalUsdg": 104547.000507,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1726.650602,
+            "capitalUsdg": 88212.39972,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T02:00:00.000Z",
+          "block": "68422586",
+          "mintWindowClosed": false,
+          "priceUsdg": 28.028195593126622,
+          "livePositions": 71,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 2038.795432,
+            "capitalUsdg": 104547.000507,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1726.650602,
+            "capitalUsdg": 88212.39972,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T08:00:00.000Z",
+          "block": "68636820",
+          "mintWindowClosed": false,
+          "priceUsdg": 27.966440593693154,
+          "livePositions": 70,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 2079.864077,
+            "capitalUsdg": 106658.685866,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1630.194857,
+            "capitalUsdg": 83283.759417,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T14:00:00.000Z",
+          "block": "68851638",
+          "mintWindowClosed": false,
+          "priceUsdg": 28.411591614852107,
+          "livePositions": 77,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1540.683166,
+            "capitalUsdg": 79121.568703,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1923.669967,
+            "capitalUsdg": 98500.211032,
+            "complete": true
+          }
+        },
+        {
+          "time": "2026-09-21T20:00:00.000Z",
+          "block": "69067283",
+          "mintWindowClosed": false,
+          "priceUsdg": 29.178022020300205,
+          "livePositions": 68,
+          "liquidityMatches": true,
+          "swapFeePips": 9991,
+          "up10": {
+            "costUsdg": 1215.948971,
+            "capitalUsdg": 62327.75082,
+            "complete": true
+          },
+          "down10": {
+            "costUsdg": 1972.731685,
+            "capitalUsdg": 101430.706494,
+            "complete": true
+          }
+        }
+      ],
+      "fridayCostUp10": 1857.830129,
+      "weekendMinCostUp10": 1776.112403,
+      "weekendOverFriday": 0.9560144252564224
+    }
+  ]
+}

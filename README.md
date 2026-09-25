@@ -41,6 +41,22 @@ block 72,308,997):
 | Weekend: nobody can arbitrage | 2,070 USDG | 4,801 USDG | **truncated** (don't pay on it) |
 | Weekday: arbitrage pulls back every 5 s | 5,070 USDG | 4,801 USDG | **raw** (a real move; truncation would only lag) |
 
+### Was HIMS a one-off?
+
+![Every stock pool, the weekend of 2026-09-18: Friday's cost to push +10 % vs the cheapest moment while minting was closed](docs/img/weekend-2026-09-18.svg)
+
+We rebuilt the 12 deepest Robinhood stock pools plus HIMS for the weekend of 2026-09-18 → 21, from Friday's
+US close to Monday, every six hours and around the mint reopening: 187 points, and at every one the rebuilt
+liquidity equals the chain's own `Swap` record ([`gauge/data/weekend-2026-09-18.json`](gauge/data/weekend-2026-09-18.json)).
+**Nothing collapsed.** The cheapest moment while minting was closed cost between 0.67× (GOOGL) and 2.4× (GLD)
+of Friday's figure; HIMS 0.96×. On 2026-08-30 it was 0.009×.
+
+So a closed mint window does not make a pool cheap to push. It removes the force that would push a price
+back, and on 08-30 the price left the LPs' ranges and the HIMS inventory moved to another pool. That can
+happen on a given weekend, and most weekends it doesn't. This is why HAKARI measures at settlement instead
+of reading the calendar: a calendar rule would pay truncation's lag every weekend, including the ones where the
+book held. `npm run weekend -- <friday>` rebuilds any weekend.
+
 ## Where the Uniswap integration is
 
 Everything runs against the **official v4 PoolManager** `0x8366a39CC670B4001A1121B8F6A443A643e40951`
