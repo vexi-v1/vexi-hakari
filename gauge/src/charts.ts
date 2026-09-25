@@ -71,7 +71,7 @@ export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio
     .map((r: any) => ({ ...r, fri: r.fridayMaxSafeExposure, wk: r.weekendMinMaxSafeExposure, ratio: r.weekendMinMaxSafeExposure / r.fridayMaxSafeExposure }))
     .sort((a: any, b: any) => a.ratio - b.ratio);
   const W = 900, rowH = 30, top = 112, L = 90, R = 150;
-  const H = top + rows.length * rowH + (himsRef ? 78 : 60);
+  const H = top + rows.length * rowH + (himsRef ? 100 : 80);
   const all = rows.flatMap((r: any) => [r.fri, r.wk]);
   const lo = Math.pow(10, Math.floor(Math.log10(Math.max(0.01, Math.min(...all)))));
   const hi = Math.pow(10, Math.ceil(Math.log10(Math.max(...all))));
@@ -86,14 +86,15 @@ export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio
   rows.forEach((r: any, i: number) => {
     const cy = top + i * rowH + rowH / 2;
     const hl = r.symbol === "HIMS";
-    s += `<text x="${L - 12}" y="${cy + 4}" font-size="13" text-anchor="end" font-weight="${hl ? 700 : 500}" fill="${C.ink}">${esc(r.symbol)}</text>`;
+    s += `<text x="${L - 12}" y="${cy + 4}" font-size="13" text-anchor="end" font-weight="${hl ? 700 : 500}" fill="${C.ink}">${esc(r.symbol)}${r.hooked ? " †" : ""}</text>`;
     s += `<line x1="${x(r.fri)}" x2="${x(r.wk)}" y1="${cy}" y2="${cy}" stroke="${C.muted}" stroke-width="2"/>`;
     s += `<circle cx="${x(r.fri)}" cy="${cy}" r="6" fill="${C.friday}" stroke="${C.card}" stroke-width="2"/>`;
     s += `<circle cx="${x(r.wk)}" cy="${cy}" r="6" fill="${C.weekend}" stroke="${C.card}" stroke-width="2"/>`;
     s += `<text x="${W - R + 8}" y="${cy + 4}" font-size="12" fill="${C.ink2}">×${fmt(r.ratio, r.ratio < 1 ? 2 : 1)}</text>`;
   });
-  if (himsRef) s += `<text x="24" y="${H - 36}" font-size="12" fill="${C.ink}">For comparison, HIMS on Sunday 2026-08-30: ${fmt(himsRef.from)} → ${fmt(himsRef.to)} USDG (×${himsRef.ratio.toFixed(3)}).</text>`;
-  s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">SafeSettle's bound with nobody pushing back. ×N = weekend minimum ÷ Friday. Data: gauge/data/weekend-${d.friday}.json</text>`;
+  if (himsRef) s += `<text x="24" y="${H - 54}" font-size="12" fill="${C.ink}">For comparison, HIMS on Sunday 2026-08-30: ${fmt(himsRef.from)} → ${fmt(himsRef.to)} USDG (×${himsRef.ratio.toFixed(3)}).</text>`;
+  s += `<text x="24" y="${H - 34}" font-size="11" fill="${C.muted}">SafeSettle's bound with nobody pushing back. ×N = weekend minimum ÷ Friday. Data: gauge/data/weekend-${d.friday}.json</text>`;
+  if (rows.some((r: any) => r.hooked)) s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">† Hooked pool: the hook's own charges are not in the bound, which may read high.</text>`;
   return s + "</svg>";
 }
 

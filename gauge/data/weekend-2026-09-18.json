@@ -1,6 +1,6 @@
 {
   "friday": "2026-09-18",
-  "generatedAt": "2026-09-25T17:39:16.184Z",
+  "generatedAt": "2026-09-25T17:51:36.658Z",
   "method": "each pool rebuilt from its ModifyLiquidity logs at each point; price and reported liquidity from the last Swap at or before it; cost = fees on pushing the stock ±10 % and selling straight back",
   "points": [
     {
@@ -84,6 +84,8 @@
       "symbol": "SPY",
       "id": "0xfe2a80bb5618fd14984b92ca6d45bf5ba67443ddb1435e28b2e48df2fc1526cd",
       "fee": 3000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 7566,
       "allLiquidityMatches": true,
       "rows": [
@@ -398,6 +400,8 @@
       "symbol": "META",
       "id": "0x5875d407a42965b0e768c8925cea290e06fa50603ef34fc99eb92a1050e6ae36",
       "fee": 3000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 4947,
       "allLiquidityMatches": true,
       "rows": [
@@ -712,6 +716,8 @@
       "symbol": "MSTR",
       "id": "0xd54e725de99633dae34f6d3eeec4196027c7c05d92b1cbeb0052a65d7b2b3197",
       "fee": 2004,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 124,
       "allLiquidityMatches": true,
       "rows": [
@@ -906,6 +912,8 @@
       "symbol": "GLD",
       "id": "0xfe281bbfa9aa658c1aa9c2ad1b0c62c4286f96c7cb1074296b54e869935a7a3a",
       "fee": 8388608,
+      "hooks": "0xb608a78761f179f7c56f15e7d13921b92f00a080",
+      "hooked": true,
       "modifyLiquidityLogs": 11737,
       "allLiquidityMatches": true,
       "rows": [
@@ -1220,6 +1228,8 @@
       "symbol": "CRCL",
       "id": "0x5177eac8c2176468bbf15e44081e151d35c2e7d068e96d3db94f496a4dc944b2",
       "fee": 1500,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 130,
       "allLiquidityMatches": true,
       "rows": [
@@ -1534,6 +1544,8 @@
       "symbol": "TSLA",
       "id": "0x8517f8071ae5b831b738052f12125e8e3d6c158b78728aa44ce3b25e5104d32e",
       "fee": 3000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 4251,
       "allLiquidityMatches": true,
       "rows": [
@@ -1848,6 +1860,8 @@
       "symbol": "AAPL",
       "id": "0xc748f4671a867db48b552f6b7650bf3255e05f80f00e3f7aad1b17ccb7898fdb",
       "fee": 3000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 5154,
       "allLiquidityMatches": true,
       "rows": [
@@ -2162,6 +2176,8 @@
       "symbol": "GOOGL",
       "id": "0xd4ecb79fdc521d7725d22b33ed43cb4e47aa96bfad76aa29577e3151f723ac5e",
       "fee": 3000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 4491,
       "allLiquidityMatches": true,
       "rows": [
@@ -2476,6 +2492,8 @@
       "symbol": "PLTR",
       "id": "0xee430ee1003e1985e1828a01b9a20dad67ad4302994fe2abb4a173de4ac54623",
       "fee": 10000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 4047,
       "allLiquidityMatches": true,
       "rows": [
@@ -2790,6 +2808,8 @@
       "symbol": "SPCX",
       "id": "0xcb6ffbcc84359535c2cc0a5688c0a76520ea6e0a4820fddd3ac8d7880e576370",
       "fee": 10000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 13654,
       "allLiquidityMatches": true,
       "rows": [
@@ -3104,6 +3124,8 @@
       "symbol": "NVDA",
       "id": "0x3bb34a44f1b2b5f32c034c38a53065a521a47b199700fa9bd19d60985ff24bf1",
       "fee": 3000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 10041,
       "allLiquidityMatches": true,
       "rows": [
@@ -3418,6 +3440,8 @@
       "symbol": "MSFT",
       "id": "0x9194a557b6a6bb2236b49ea7e2bbccec5d3eeb705aef00903be4b3de1d949579",
       "fee": 3000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 2959,
       "allLiquidityMatches": true,
       "rows": [
@@ -3732,6 +3756,8 @@
       "symbol": "HIMS",
       "id": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
       "fee": 9000,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "hooked": false,
       "modifyLiquidityLogs": 4194,
       "allLiquidityMatches": true,
       "rows": [

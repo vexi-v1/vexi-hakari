@@ -174,7 +174,8 @@ if (weekend) {
     .map((r) => ({ ...r, ratio: r.weekendMinMaxSafeExposure / r.fridayMaxSafeExposure })).sort((a, b) => a.ratio - b.ratio);
   $("weekend-fig").innerHTML = `<img src="../docs/img/weekend-${WEEKEND}.svg" alt="Friday vs weekend: the largest settlement each stock pool could carry" style="width:100%;height:auto;border-radius:10px">` +
     `<div class="tablewrap"><table><tr><th>stock</th><th>Friday max safe exposure</th><th>weekend minimum</th><th>weekend ÷ Friday</th><th>Friday +10 % cost</th><th>rebuild = chain</th></tr>` +
-    rows.map((r) => `<tr><td>${r.symbol}</td><td>${fmt(r.fridayMaxSafeExposure, 0)}</td><td>${fmt(r.weekendMinMaxSafeExposure, 0)}</td><td>×${fmt(r.ratio, 2)}</td><td>${fmt(r.fridayCostUp10)}</td><td>${r.allLiquidityMatches ? "yes" : "no"}</td></tr>`).join("") + `</table></div>`;
+    rows.map((r) => `<tr><td>${r.symbol}${r.hooked ? " †" : ""}</td><td>${fmt(r.fridayMaxSafeExposure, 0)}</td><td>${fmt(r.weekendMinMaxSafeExposure, 0)}</td><td>×${fmt(r.ratio, 2)}</td><td>${fmt(r.fridayCostUp10)}</td><td>${r.allLiquidityMatches ? "yes" : "no"}</td></tr>`).join("") + `</table></div>` +
+    (rows.some((r) => r.hooked) ? `<p class="meta">† Hooked pool: the hook's own charges are not in the bound, which may read high.</p>` : "");
 } else {
   $("weekend-lead").textContent += " (run npm run discover and npm run weekend -- " + WEEKEND + " in gauge/)";
 }

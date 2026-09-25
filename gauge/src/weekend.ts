@@ -87,7 +87,7 @@ export async function main() {
     const minClosed = ok.filter((r) => r.mintWindowClosed).reduce((m: any, r: any) => (!m || r.up10.costUsdg < m.up10.costUsdg ? r : m), undefined);
     const ratio = fri && minClosed ? minClosed.up10.costUsdg / fri.up10.costUsdg : null;
     const minSafeClosed = ok.filter((r) => r.mintWindowClosed).reduce((m: number, r: any) => Math.min(m, r.maxSafeExposureUsdg), Infinity);
-    series.push({ symbol: p.symbol, id: p.id, fee: p.fee, modifyLiquidityLogs: mods.length, allLiquidityMatches: ok.every((r) => r.liquidityMatches), rows, fridayCostUp10: fri?.up10.costUsdg ?? null, weekendMinCostUp10: minClosed?.up10.costUsdg ?? null, weekendOverFriday: ratio, fridayMaxSafeExposure: fri?.maxSafeExposureUsdg ?? null, weekendMinMaxSafeExposure: Number.isFinite(minSafeClosed) ? minSafeClosed : null });
+    series.push({ symbol: p.symbol, id: p.id, fee: p.fee, hooks: p.hooks, hooked: p.hooks !== "0x0000000000000000000000000000000000000000", modifyLiquidityLogs: mods.length, allLiquidityMatches: ok.every((r) => r.liquidityMatches), rows, fridayCostUp10: fri?.up10.costUsdg ?? null, weekendMinCostUp10: minClosed?.up10.costUsdg ?? null, weekendOverFriday: ratio, fridayMaxSafeExposure: fri?.maxSafeExposureUsdg ?? null, weekendMinMaxSafeExposure: Number.isFinite(minSafeClosed) ? minSafeClosed : null });
     console.log(p.symbol.padEnd(6), "Fri +10% cost", fri?.up10.costUsdg.toFixed(2), "→ weekend min", minClosed?.up10.costUsdg.toFixed(2), ratio !== null ? `(×${ratio.toFixed(3)})` : "", ok.every((r) => r.liquidityMatches) ? "" : "(LIQUIDITY MISMATCH)");
   }
   writeData(new URL(`../data/weekend-${friday}.json`, import.meta.url).pathname, {
