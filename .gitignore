@@ -12,6 +12,7 @@ web/node_modules/
 # secrets: never committed, never printed
 .env
 .env.*
+!.env.example
 *.key
 
 # local scratch
