@@ -2,7 +2,7 @@
 // between consecutive swap blocks; the 99th percentile is the suggested maxAbsTickDelta for a
 // HakariOracleHook on a pool like this. Also reported per second, using block timestamps, since the
 // oracle writes at most once per second. Writes data/delta.json.
-import { getLogsChunked, mainnet, POOL_MANAGER, writeData } from "./chain.ts";
+import { getLogsChunked, mainnet, POOL_MANAGER, writeData, run } from "./chain.ts";
 import { poolManagerEvents } from "./abi.ts";
 import { POOLS, type PoolInfo } from "./pools.ts";
 
@@ -84,4 +84,4 @@ export async function main() {
   console.log("wrote data/delta.json");
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main().catch((e) => { console.error(e); process.exit(1); });
+if (import.meta.url === `file://${process.argv[1]}`) run(main);

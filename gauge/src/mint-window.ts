@@ -4,7 +4,7 @@
 //     i.e. 02:43 CEST);
 //  2. the official asset API's tradingCapabilities (market / extended / overnight).
 // Writes data/mint-window.json when run directly.
-import { writeData } from "./chain.ts";
+import { writeData, run } from "./chain.ts";
 
 const ASSETS_URL = "https://api.robinhood.com/rhj/assets";
 
@@ -60,4 +60,4 @@ export async function main() {
   writeData(new URL("../data/mint-window.json", import.meta.url).pathname, { generatedAt: new Date().toISOString(), rule: "closed Sat 02:00 → Mon 02:00 Europe/Berlin", symbols: out });
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main().catch((e) => { console.error(e); process.exit(1); });
+if (import.meta.url === `file://${process.argv[1]}`) run(main);

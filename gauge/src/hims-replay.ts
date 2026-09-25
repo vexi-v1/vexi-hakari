@@ -4,7 +4,7 @@
 // is computed by the same walk PushCostLens does on-chain (gauge/src/v4math.ts, checked against it).
 // Writes data/hims-replay.json. Raw logs are cached under gauge/cache/ (git-ignored).
 import { formatUnits } from "viem";
-import { getLogsChunked, mainnet, POOL_MANAGER, readCache, writeCache, writeData } from "./chain.ts";
+import { getLogsChunked, mainnet, POOL_MANAGER, readCache, writeCache, writeData, run } from "./chain.ts";
 import { poolManagerEvents } from "./abi.ts";
 import { HIMS_USDG, ticksForPct } from "./pools.ts";
 import { amount0Of, amount1Of, poolStateFromPositions, roundTripCost, walk, type Position } from "./v4math.ts";
@@ -16,28 +16,8 @@ const END_BLOCK = 50_772_447n;
 export const POINTS = [50_265_277n, 50_415_299n, 50_444_948n, 50_490_000n, 50_772_447n];
 const cacheDir = new URL("../cache/hims/", import.meta.url).pathname;
 
-interface RawLog { blockNumber: string; logIndex: number; transactionHash: string; args: Record<string, string> }
-
-const byOrder = (a: RawLog, b: RawLog) => (BigInt(a.blockNumber) < BigInt(b.blockNumber) ? -1 : BigInt(a.blockNumber) > BigInt(b.blockNumber) ? 1 : a.logIndex - b.logIndex);
-
-/** Fold ModifyLiquidity logs up to and including `block` into live positions. Exported for the test. */
-export function positionsAt(logs: RawLog[], block: bigint): Position[] {
-  return positionsBefore(logs, block + 1n, 0);
-}
-
-/** Positions as they stood just before log (`block`, `logIndex`): everything earlier in log order. */
-export function positionsBefore(logs: RawLog[], block: bigint, logIndex: number): Position[] {
-  const map = new Map<string, Position>();
-  for (const l of [...logs].sort(byOrder)) {
-    const b = BigInt(l.blockNumber);
-    if (b > block || (b === block && l.logIndex >= logIndex)) break;
-    const key = `${l.args.sender}|${l.args.tickLower}|${l.args.tickUpper}|${l.args.salt}`;
-    const p = map.get(key) ?? { tickLower: Number(l.args.tickLower), tickUpper: Number(l.args.tickUpper), liquidity: 0n };
-    p.liquidity += BigInt(l.args.liquidityDelta);
-    map.set(key, p);
-  }
-  return [...map.values()].filter((p) => p.liquidity > 0n);
-}
+import { byOrder, positionsAt, positionsBefore, type RawLog } from "./replay.ts";
+export { positionsAt, positionsBefore } from "./replay.ts";
 
 async function lastSwapBefore(client: ReturnType<typeof mainnet>, block: bigint): Promise<RawLog> {
   const step = 20_000n;
@@ -152,4 +132,4 @@ export async function main() {
   console.log("wrote data/hims-replay.json");
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main().catch((e) => { console.error(e); process.exit(1); });
+if (import.meta.url === `file://${process.argv[1]}`) run(main);

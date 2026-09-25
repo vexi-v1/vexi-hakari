@@ -11,7 +11,9 @@
     "calibrate": "tsx src/calibrate.ts",
     "hims": "tsx src/hims-replay.ts",
     "mint-window": "tsx src/mint-window.ts",
-    "export-lens": "tsx src/export-lens.ts"
+    "export-lens": "tsx src/export-lens.ts",
+    "discover": "tsx src/discover.ts",
+    "weekend": "tsx src/weekend.ts"
   },
   "dependencies": {
     "@types/node": "^26.6.2",

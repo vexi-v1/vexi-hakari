@@ -1,7 +1,7 @@
 // Cost ladder: for each pool, what a 1 % / 5 % / 10 % push (each way) costs right now on mainnet 4663.
 // Writes data/ladder.json. Read-only (eth_call with a state override, see lens.ts).
 import { formatUnits } from "viem";
-import { mainnet, STATE_VIEW, writeData } from "./chain.ts";
+import { mainnet, STATE_VIEW, writeData, run } from "./chain.ts";
 import { stateViewAbi } from "./abi.ts";
 import { lensRuntimeCode, quotePushLadder } from "./lens.ts";
 import { POOLS, ticksForPct, type PoolInfo } from "./pools.ts";
@@ -70,4 +70,4 @@ export async function main() {
   console.log("wrote data/ladder.json at block", block.number.toString());
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main().catch((e) => { console.error(e); process.exit(1); });
+if (import.meta.url === `file://${process.argv[1]}`) run(main);
