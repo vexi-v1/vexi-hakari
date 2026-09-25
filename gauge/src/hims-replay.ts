@@ -16,7 +16,7 @@ const END_BLOCK = 50_772_447n;
 export const POINTS = [50_265_277n, 50_415_299n, 50_444_948n, 50_490_000n, 50_772_447n];
 const cacheDir = new URL("../cache/hims/", import.meta.url).pathname;
 
-import { byOrder, positionsAt, positionsBefore, type RawLog } from "./replay.ts";
+import { byOrder, maxSafeExposure, positionsAt, positionsBefore, type RawLog } from "./replay.ts";
 export { positionsAt, positionsBefore } from "./replay.ts";
 
 async function lastSwapBefore(client: ReturnType<typeof mainnet>, block: bigint): Promise<RawLog> {
@@ -115,6 +115,11 @@ export async function main() {
       pushUp10: { ticks: ticks10, usdgIn: formatUnits(up10.amountIn, 6), himsOut: formatUnits(up10.amountOut, 18), roundTripCostUsdg: formatUnits(up10.cost, 6), complete: up10.complete },
       pushDown10: { ticks: ticks10, himsIn: formatUnits(down10.amountIn, 18), usdgOut: formatUnits(down10.amountOut, 6), roundTripCostHims: formatUnits(down10.cost, 18), complete: down10.complete },
       pushUp85: { ticks: ticks85, usdgIn: formatUnits(up85.amountIn, 6), complete: up85.complete },
+      // SafeSettle's bound with nobody pushing back: the largest total exposure this pool could carry
+      maxSafeExposureUsdg: (() => {
+        const b = maxSafeExposure(state, true, fee);
+        return { usdg: b.exposure / 1e6, bindingTicks: b.ticks, bindingStockUp: b.stockUp, bindingCostUsdg: Number(b.cost) / 1e6 };
+      })(),
     });
     console.log(block.toString(), new Date(Number(header.timestamp) * 1000).toISOString(), "USDG/HIMS", usdgPerHims.toFixed(4), "HIMS principal", formatUnits(himsPrincipal, 18), "push +10% costs USDG", formatUnits(up10.cost, 6), liquidityMatches ? "(liquidity matches Swap)" : "(LIQUIDITY MISMATCH)");
   }

@@ -43,6 +43,12 @@
         "ticks": 6152,
         "usdgIn": "79663.391034",
         "complete": true
+      },
+      "maxSafeExposureUsdg": {
+        "usdg": 7258.815143346441,
+        "bindingTicks": 1823,
+        "bindingStockUp": true,
+        "bindingCostUsdg": 1451.495869
       }
     },
     {
@@ -82,6 +88,12 @@
         "ticks": 6152,
         "usdgIn": "3708.22221",
         "complete": true
+      },
+      "maxSafeExposureUsdg": {
+        "usdg": 115.18994774903908,
+        "bindingTicks": 1823,
+        "bindingStockUp": true,
+        "bindingCostUsdg": 23.03375
       }
     },
     {
@@ -121,6 +133,12 @@
         "ticks": 6152,
         "usdgIn": "2056.548268",
         "complete": true
+      },
+      "maxSafeExposureUsdg": {
+        "usdg": 123.86014827658722,
+        "bindingTicks": 1823,
+        "bindingStockUp": true,
+        "bindingCostUsdg": 24.767471
       }
     },
     {
@@ -160,6 +178,12 @@
         "ticks": 6152,
         "usdgIn": "64031.166964",
         "complete": true
+      },
+      "maxSafeExposureUsdg": {
+        "usdg": 5310.342869067709,
+        "bindingTicks": 1823,
+        "bindingStockUp": false,
+        "bindingCostUsdg": 884.921414
       }
     },
     {
@@ -199,8 +223,14 @@
         "ticks": 6152,
         "usdgIn": "80025.805454",
         "complete": true
+      },
+      "maxSafeExposureUsdg": {
+        "usdg": 7009.2635997993275,
+        "bindingTicks": 1823,
+        "bindingStockUp": true,
+        "bindingCostUsdg": 1401.594745
       }
     }
   ],
-  "generatedAt": "2026-09-25T12:54:31.003Z"
+  "generatedAt": "2026-09-25T17:31:13.162Z"
 }

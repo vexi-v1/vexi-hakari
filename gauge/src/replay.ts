@@ -120,3 +120,28 @@ export async function blockAtOrAfter(client: Client, ts: number, lo = 1n, hi?: b
   const b = await get(loB);
   return { number: loB, timestamp: Number(b.timestamp) };
 }
+
+/** CostModel.ladder(): ≈ 0.5 %, 1 %, 2 %, 5 %, 10 %, 20 %. */
+export const LADDER = [50, 100, 200, 488, 953, 1823];
+
+/** What a payout moves per unit of exposure when the asset moves x ticks: up 1.0001^x − 1, down 1 − 1.0001^−x. */
+export function gainPerUnit(x: number, assetUp: boolean): number {
+  return assetUp ? Math.pow(1.0001, x) - 1 : 1 - Math.pow(1.0001, -x);
+}
+
+/**
+ * CostModel.maxSafeExposure with nobody pushing back (arbReversionSeconds = 0, a fenced weekend): for every move on
+ * the ladder, both ways, the cost of an exact push-and-retrace over what it earns per unit of exposure; the smallest
+ * ratio, in the quote's raw units. With no re-pushes the window does not matter.
+ */
+export function maxSafeExposure(state: PoolState, quoteIsCurrency0: boolean, swapFee: number) {
+  let best = { exposure: Infinity, ticks: 0, stockUp: true, cost: 0n, complete: true };
+  for (const x of LADDER) {
+    for (const stockUp of [true, false]) {
+      const r = pushCostInQuote(state, x, stockUp, quoteIsCurrency0, swapFee);
+      const exposure = Number(r.costQuote) / gainPerUnit(x, stockUp);
+      if (exposure < best.exposure) best = { exposure, ticks: x, stockUp, cost: r.costQuote, complete: r.complete };
+    }
+  }
+  return best;
+}
