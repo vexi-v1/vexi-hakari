@@ -1,0 +1,188 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+import {Test, console2} from "forge-std/Test.sol";
+import {MockERC20} from "solmate/src/test/utils/mocks/MockERC20.sol";
+import {IPoolManager} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
+import {IHooks} from "@uniswap/v4-core/src/interfaces/IHooks.sol";
+import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
+import {Currency} from "@uniswap/v4-core/src/types/Currency.sol";
+import {PoolKey} from "@uniswap/v4-core/src/types/PoolKey.sol";
+import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
+import {StateLibrary} from "@uniswap/v4-core/src/libraries/StateLibrary.sol";
+import {TickMath} from "@uniswap/v4-core/src/libraries/TickMath.sol";
+import {ModifyLiquidityParams, SwapParams} from "@uniswap/v4-core/src/types/PoolOperation.sol";
+import {PoolSwapTest} from "@uniswap/v4-core/src/test/PoolSwapTest.sol";
+import {PoolModifyLiquidityTest} from "@uniswap/v4-core/src/test/PoolModifyLiquidityTest.sol";
+import {HakariOracleHook} from "../../src/HakariOracleHook.sol";
+import {PushCostLens} from "../../src/PushCostLens.sol";
+import {SafeSettle} from "../../src/SafeSettle.sol";
+import {TickBitmapView} from "../../src/libraries/TickBitmapView.sol";
+
+/// @notice SPEC.md § 3.2's shadow pool: on a fork of Robinhood Chain 4663, a new pool on the *official*
+///         PoolManager with HakariOracleHook attached, seeded with the exact liquidity profile of the real
+///         TSLA/USDG pool (read tick by tick through the bitmap). Then the sustained-push attack and
+///         SafeSettle's decision, in USDG, on a TSLA-shaped book. Run: forge test --match-contract ShadowPool -vv
+contract ShadowPoolForkTest is Test {
+    using PoolIdLibrary for PoolKey;
+    using StateLibrary for IPoolManager;
+
+    IPoolManager constant MANAGER = IPoolManager(0x8366a39CC670B4001A1121B8F6A443A643e40951);
+    address constant TSLA = 0x322F0929c4625eD5bAd873c95208D54E1c003b2d;
+    address constant USDG = 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
+    int24 constant SPACING = 60;
+    uint256 constant SEGMENTS_EACH_WAY = 40;
+    /// @dev gauge/data/delta.json: p99 tick move per swap block on TSLA/USDG over the last 300k blocks
+    int24 constant TSLA_DELTA = 3;
+    uint32 constant WINDOW = 10;
+
+    PoolKey real;
+    PoolKey shadow;
+    PoolId shadowId;
+    HakariOracleHook hook;
+    PushCostLens lens;
+    SafeSettle settle;
+    PoolSwapTest swapRouter;
+    PoolModifyLiquidityTest lpRouter;
+    uint256 t0;
+
+    function setUp() public {
+        string memory rpc = vm.envOr("RH_MAINNET_RPC", string(""));
+        if (bytes(rpc).length == 0) rpc = "https://rpc.mainnet.chain.robinhood.com";
+        vm.createSelectFork(rpc);
+        real = PoolKey({currency0: Currency.wrap(TSLA), currency1: Currency.wrap(USDG), fee: 3000, tickSpacing: SPACING, hooks: IHooks(address(0))});
+
+        swapRouter = new PoolSwapTest(MANAGER);
+        lpRouter = new PoolModifyLiquidityTest(MANAGER);
+        lens = new PushCostLens(MANAGER);
+        address hookAddr = address(uint160(Hooks.AFTER_INITIALIZE_FLAG | Hooks.BEFORE_SWAP_FLAG) ^ (0x7777 << 20));
+        deployCodeTo("HakariOracleHook.sol:HakariOracleHook", abi.encode(MANAGER, TSLA_DELTA), hookAddr);
+        hook = HakariOracleHook(hookAddr);
+        settle = new SafeSettle(hook, lens);
+
+        // two fresh tokens standing in for TSLA (currency0, 18 dec) and USDG (currency1, 6 dec)
+        MockERC20 a = new MockERC20("shadow TSLA", "sTSLA", 18);
+        MockERC20 b = new MockERC20("shadow USDG", "sUSDG", 6);
+        (MockERC20 c0, MockERC20 c1) = address(a) < address(b) ? (a, b) : (b, a);
+        for (uint256 i; i < 2; i++) {
+            MockERC20 t = i == 0 ? c0 : c1;
+            t.mint(address(this), type(uint160).max);
+            t.approve(address(swapRouter), type(uint256).max);
+            t.approve(address(lpRouter), type(uint256).max);
+        }
+        shadow = PoolKey({currency0: Currency.wrap(address(c0)), currency1: Currency.wrap(address(c1)), fee: 3000, tickSpacing: SPACING, hooks: IHooks(hookAddr)});
+        shadowId = shadow.toId();
+
+        (uint160 sqrtP,,,) = MANAGER.getSlot0(real.toId());
+        MANAGER.initialize(shadow, sqrtP);
+        hook.increaseObservationCardinalityNext(64, shadowId);
+        _mirrorLiquidity();
+        t0 = block.timestamp;
+    }
+
+    /// @dev Copy the real pool's liquidity profile: one position per segment between initialized ticks.
+    function _mirrorLiquidity() internal {
+        PoolId realId = real.toId();
+        (, int24 tick,,) = MANAGER.getSlot0(realId);
+        uint128 liquidity = MANAGER.getLiquidity(realId);
+
+        // boundaries of the segment holding the current tick
+        (int24 lower,) = _boundary(realId, tick, true);
+        (int24 upper,) = _boundary(realId, tick, false);
+        _seed(lower, upper, liquidity);
+
+        // upward segments
+        uint128 l = liquidity;
+        int24 from = upper;
+        for (uint256 i; i < SEGMENTS_EACH_WAY; i++) {
+            (, int128 net) = MANAGER.getTickLiquidity(realId, from);
+            l = uint128(int128(l) + net);
+            (int24 to, bool found) = _boundary(realId, from, false);
+            if (!found) break;
+            _seed(from, to, l);
+            from = to;
+        }
+        // downward segments
+        l = liquidity;
+        int24 hi = lower;
+        for (uint256 i; i < SEGMENTS_EACH_WAY; i++) {
+            (, int128 net) = MANAGER.getTickLiquidity(realId, hi);
+            l = uint128(int128(l) - net);
+            (int24 lo, bool found) = _boundary(realId, hi - 1, true);
+            if (!found) break;
+            _seed(lo, hi, l);
+            hi = lo;
+        }
+    }
+
+    /// @dev Next initialized tick strictly above `tick` (lte=false) or at/below it (lte=true), searching word by word.
+    function _boundary(PoolId id, int24 tick, bool lte) internal view returns (int24 next, bool found) {
+        int24 t = tick;
+        for (uint256 w; w < 64; w++) {
+            bool initialized;
+            (next, initialized) = TickBitmapView.nextInitializedTickWithinOneWord(MANAGER, id, t, SPACING, lte);
+            if (initialized) return (next, true);
+            if (next <= TickMath.MIN_TICK || next >= TickMath.MAX_TICK) return (next, false);
+            t = lte ? next - 1 : next;
+        }
+        return (next, false);
+    }
+
+    function _seed(int24 lower, int24 upper, uint128 liquidity) internal {
+        if (liquidity == 0 || lower >= upper) return;
+        lpRouter.modifyLiquidity(shadow, ModifyLiquidityParams({tickLower: lower, tickUpper: upper, liquidityDelta: int256(uint256(liquidity)), salt: 0}), "");
+    }
+
+    function _swapTo(bool zeroForOne, uint160 limit) internal {
+        swapRouter.swap(shadow, SwapParams({zeroForOne: zeroForOne, amountSpecified: -int256(uint256(type(uint112).max)), sqrtPriceLimitX96: limit}), PoolSwapTest.TestSettings(false, false), "");
+    }
+
+    function _poke() internal {
+        swapRouter.swap(shadow, SwapParams({zeroForOne: true, amountSpecified: -1, sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1}), PoolSwapTest.TestSettings(false, false), "");
+    }
+
+    function test_shadowPool_hasTheRealPoolsDepth() public {
+        int24[3] memory ladder = [int24(100), 488, 953];
+        for (uint256 i; i < ladder.length; i++) {
+            for (uint256 d; d < 2; d++) {
+                bool up = d == 0;
+                (uint256 inR, uint256 outR, uint256 feeR,) = lens.depthToMove(real, ladder[i], up, 256);
+                (uint256 inS, uint256 outS, uint256 feeS,) = lens.depthToMove(shadow, ladder[i], up, 256);
+                // the real pool carries a 500-pip protocol fee the shadow does not; compare the curve amounts
+                assertApproxEqRel(inS - feeS, inR - feeR, 0.0005e18, "same net input");
+                assertApproxEqRel(outS, outR, 0.0005e18, "same output");
+            }
+        }
+        console2.log("shadow pool mirrors TSLA/USDG at block", block.number);
+    }
+
+    /// The weekend attack on a TSLA-shaped book: hold the price 5 % up for the window, then settle.
+    function test_sustainedPush_onTslaShapedBook_inUsdg() public {
+        (, int24 honest,,) = MANAGER.getSlot0(shadowId);
+        // 488 ticks = +5 %: pushing the v4 price (USDG per TSLA) up means buying TSLA with USDG
+        uint256 usdgBefore = MockERC20(Currency.unwrap(shadow.currency1)).balanceOf(address(this));
+        _swapTo(false, TickMath.getSqrtPriceAtTick(honest + 488));
+        for (uint256 s = 1; s <= WINDOW; s++) {
+            vm.warp(t0 + s);
+            _poke();
+        }
+        vm.warp(t0 + WINDOW + 1);
+        uint256 usdgSpent = usdgBefore - MockERC20(Currency.unwrap(shadow.currency1)).balanceOf(address(this));
+        console2.log("USDG spent holding +5% (6 dec)", usdgSpent);
+
+        // 100,000 USDG of payout riding on this settlement
+        uint256 notional = 100_000e6;
+        SafeSettle.Decision memory weekend = settle.settlePrice(shadow, WINDOW, notional, false, false);
+        SafeSettle.Decision memory weekday = settle.settlePrice(shadow, WINDOW, notional, false, true);
+        console2.log("raw TWAP tick", weekend.rawTick);
+        console2.log("truncated TWAP tick (delta = 3)", weekend.truncTick);
+        console2.log("gain if faked, USDG (6 dec)", weekend.gainIfFaked);
+        console2.log("cost to fake, weekend (arb closed), USDG", weekend.costToFake);
+        console2.log("cost to fake, weekday (arb open), USDG", weekday.costToFake);
+        console2.log("weekend: used raw?", weekend.usedRaw);
+        console2.log("weekday: used raw?", weekday.usedRaw);
+        assertGt(weekend.rawTick, weekend.truncTick + 100, "truncation held the line");
+        assertFalse(weekend.usedRaw, "with arbitrage closed the fake is cheap: settle truncated");
+        assertGt(weekday.costToFake, weekend.costToFake * 5, "with arbitrage open, holding costs every second");
+    }
+}
