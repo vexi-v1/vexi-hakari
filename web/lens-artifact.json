@@ -502,8 +502,79 @@
         }
       ],
       "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "roundTripCosts",
+      "inputs": [
+        {
+          "name": "key",
+          "type": "tuple",
+          "internalType": "struct PoolKey",
+          "components": [
+            {
+              "name": "currency0",
+              "type": "address",
+              "internalType": "Currency"
+            },
+            {
+              "name": "currency1",
+              "type": "address",
+              "internalType": "Currency"
+            },
+            {
+              "name": "fee",
+              "type": "uint24",
+              "internalType": "uint24"
+            },
+            {
+              "name": "tickSpacing",
+              "type": "int24",
+              "internalType": "int24"
+            },
+            {
+              "name": "hooks",
+              "type": "address",
+              "internalType": "contract IHooks"
+            }
+          ]
+        },
+        {
+          "name": "widths",
+          "type": "int24[]",
+          "internalType": "int24[]"
+        },
+        {
+          "name": "up",
+          "type": "bool",
+          "internalType": "bool"
+        },
+        {
+          "name": "maxSteps",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "costInCurrency0",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        },
+        {
+          "name": "costInCurrency1",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        },
+        {
+          "name": "complete",
+          "type": "bool[]",
+          "internalType": "bool[]"
+        }
+      ],
+      "stateMutability": "view"
     }
   ],
   "solc": "0.8.26+commit.8a97fa7a",
-  "exportedAt": "2026-09-25T19:44:36.874Z"
+  "exportedAt": "2026-09-25T19:36:21.934Z"
 }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HAKARI gauge</title>
+<title>HAKARI: what it costs to fake a price</title>
 <link rel="icon" href="data:,">
 <meta name="description" content="What it costs to fake a Uniswap v4 price on Robinhood Chain: live cost ladder, the HIMS weekend replay, and SafeSettle's decisions.">
 <style>
@@ -75,6 +75,7 @@
   .cta a { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text-primary); text-decoration: none; }
   .cta a b { font-size: 16px; }
   .cta a span { font-size: 13px; color: var(--text-secondary); }
+  .cta a code { white-space: nowrap; }
   .cta a.primary { background: var(--text-primary); color: var(--surface-1); border-color: transparent; }
   .cta a.primary span { color: color-mix(in oklab, var(--surface-1) 80%, transparent); }
   .cta a:hover { border-color: var(--text-muted); }
@@ -86,21 +87,33 @@
   .nowrap { white-space: nowrap; }
   #measure-out code { overflow-wrap: anywhere; }
   tr.binding td { font-weight: 600; }
+  a { color: var(--series-1); }
+  .verify { margin: 0 0 8px; }
+  .chartwrap { overflow-x: auto; }
+  @media (max-width: 720px) { #weekend-fig .chartwrap img { min-width: 640px; } }
+  #decisions td:first-child { white-space: normal; min-width: 24ch; }
+  /* the weekend chart is a light SVG image (shared with the README): in dark mode, a deliberate paper card */
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) #weekend-fig img { opacity: .92; border: 1px solid var(--line); } }
+  :root[data-theme="dark"] #weekend-fig img { opacity: .92; border: 1px solid var(--line); }
 </style>
 </head>
 <body>
 <main>
   <h1>HAKARI (秤) — what it costs to fake a price</h1>
-  <p class="lead">HAKARI measures what it would cost to fake a Uniswap v4 pool's price right now, turns that into the largest settlement the price can safely carry, and refuses to settle above it.</p>
+  <p class="lead">HAKARI measures what it would cost to fake a Uniswap v4 pool's price right now, turns that into the largest settlement (a loan, a perp, an option payout) the price can safely carry, and refuses to settle above it.</p>
   <nav class="cta" aria-label="Start here">
-    <a class="primary" href="squeeze/"><b>Replay the HIMS weekend</b><span>Minute by minute from Robinhood Chain's logs: prices, the float, the cost to push, what X said (English / 繁中)</span></a>
-    <a href="#measure-live"><b>Measure a pool live</b><span>Any v4 pool on mainnet 4663, read-only: no wallet, nothing deployed</span></a>
-    <a href="https://explorer.testnet.chain.robinhood.com/tx/0xb2ca68bf6b448ffabe9eb8732524f21d6bd463477eb416331249ee591ac0ee88" target="_blank" rel="noopener"><b>See the on-chain refusal ↗</b><span>SafeSettle's <code>Settled</code> event with trusted = false, on testnet 46630</span></a>
+    <a class="primary" href="squeeze/"><b>Replay the HIMS weekend</b><span>HIMS, a tokenized stock, closed Friday at 28.84; with minting shut, its v4 pool's minute close hit 71.23. Minute by minute from Robinhood Chain's logs (English / 繁中)</span></a>
+    <a href="#measure-live"><b>Measure a pool live</b><span>Any v4 pool on Robinhood Chain mainnet, read-only: no wallet, nothing deployed</span></a>
+    <a href="https://explorer.testnet.chain.robinhood.com/tx/0xb2ca68bf6b448ffabe9eb8732524f21d6bd463477eb416331249ee591ac0ee88?tab=logs" target="_blank" rel="noopener"><b>See the on-chain refusal ↗</b><span>A thin pool pushed +35 %: 1,000,000 tokens asked to settle, 0.0000032 safe → <code>Settled(trusted = false)</code>, testnet 46630</span></a>
   </nav>
-  <p class="meta" id="meta">loading…</p>
+  <p class="meta verify">Verified on testnet 46630:
+    <a href="https://explorer.testnet.chain.robinhood.com/address/0x68435Bf7A1c207A62E0C3acc6884383B2B273561?tab=contract" target="_blank" rel="noopener">SafeSettle</a> ·
+    <a href="https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080?tab=contract" target="_blank" rel="noopener">HakariOracleHook</a> ·
+    <a href="https://explorer.testnet.chain.robinhood.com/address/0x4E73CcC9Aed21FFBf3F69d9Dd92f9F33F39669E5?tab=contract" target="_blank" rel="noopener">PushCostLens</a> ·
+    <a href="https://github.com/vexi-v1/vexi-hakari">source</a></p>
 
   <h2>1 · The HIMS weekend, replayed from events</h2>
-  <p class="lead">Sunday 2026-08-30, Robinhood's busiest day on-chain ($270.6M of stock-token volume, per SQD) and a day with no minting. With nobody able to arbitrage, the cost to push HIMS/USDG 10 % fell from 1,351 USDG at 19:40 UTC to 12 USDG at 23:53 UTC, by when the pool already read 43.27 against a 28.84 NYSE close. It peaked at 54.50 as minting reopened, and fell back to 29.31 after the first mint. The largest settlement the pool could safely carry fell from 7,259 USDG to 115: SafeSettle would have refused anything above that. Positions rebuilt from every <code>ModifyLiquidity</code> log; at each point the rebuilt liquidity equals the last <code>Swap</code> event's own liquidity field.</p>
+  <p class="lead">Sunday 2026-08-30, Robinhood's busiest day on-chain ($270.6M of stock-token volume, per SQD) and a day with no minting. With nobody able to arbitrage, the cost to push HIMS/USDG 10 % fell from 1,351 USDG at 19:40 UTC to 12 USDG at 23:53 UTC, by when the pool already read 43.27 against a 28.84 NYSE close. The minute close peaked at 71.23 at 23:31; the pool still stood at 54.50 when the first mint landed (00:43), and fell back to 29.31 after it. The largest settlement the pool could safely carry fell from 7,259 USDG at 19:40 to 115 at 23:53 (20 at its minute-level low, 23:25: see the <a href="squeeze/">replay</a>): SafeSettle would have refused anything above that. Positions rebuilt from every <code>ModifyLiquidity</code> log; at each point the rebuilt liquidity equals the last <code>Swap</code> event's own liquidity field.</p>
   <figure id="hims-price"></figure>
   <figure id="hims-cost"></figure>
   <div class="tablewrap"><table id="hims-table"></table></div>
@@ -110,7 +123,7 @@
   <figure id="weekend-fig"></figure>
 
   <h2 id="measure-live">3 · Measure any pool, right now</h2>
-  <p class="lead">Any v4 pool on the official PoolManager, read-only against Robinhood Chain mainnet 4663. The page simulates <code>PushCostLens</code>'s deployment, injects its bytecode at a throwaway address with an <code>eth_call</code> state override, and pushes the live pool there and back inside that call: no wallet, no transaction, nothing deployed. From those costs it computes the largest settlement the pool can safely carry, the number <code>SafeSettle</code> decides on.</p>
+  <p class="lead">Any v4 pool on the official PoolManager, read-only against Robinhood Chain mainnet 4663. The page simulates <code>PushCostLens</code>'s deployment, injects its bytecode at a throwaway address with an <code>eth_call</code> state override, and pushes the live pool there and back inside that call: no wallet, no transaction, nothing deployed. It also walks the pool's ticks the way <code>SafeSettle</code> does and computes the largest settlement the pool can safely carry, the number <code>SafeSettle</code> decides on.</p>
   <div class="card">
     <div class="row">
       <label>preset <select id="preset"></select></label>

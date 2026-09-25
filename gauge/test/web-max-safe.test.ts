@@ -27,14 +27,17 @@ test("the web page's max safe exposure equals the gauge's and CostModel's on the
   const state = poolStateFromPositions(positions, BigInt(fx.sqrtPriceX96));
   const fee = Number(fx.fee);
   const s = state.sqrtPriceX96;
-  // PushCostLens._valueAt: the cost is in the input token (token1 pushing up, token0 pushing down), valued at the start
-  const quotes = (up: boolean) =>
-    LADDER.map((x) => {
+  // PushCostLens._valueAt: the cost is in the input token (token1 pushing up, token0 pushing down), valued at the start.
+  // Shaped as the page receives PushCostLens.roundTripCosts(key, LADDER, up, steps): [costInCurrency0[], costInCurrency1[], complete[]].
+  const quotes = (up: boolean) => {
+    const rs = LADDER.map((x) => {
       const r = roundTripCost(state, x, up, fee, fee);
       const costInCurrency1 = up ? r.cost : mulDiv(mulDiv(r.cost, s, Q96), s, Q96);
       const costInCurrency0 = up ? mulDiv(mulDiv(r.cost, Q96, s), Q96, s) : r.cost;
-      return { costInCurrency0, costInCurrency1, sqrtPriceReached: r.sqrtPriceReached, sqrtPriceTarget: r.complete ? r.sqrtPriceReached : -1n };
+      return { costInCurrency0, costInCurrency1, complete: r.complete };
     });
+    return [rs.map((r) => r.costInCurrency0), rs.map((r) => r.costInCurrency1), rs.map((r) => r.complete)];
+  };
   for (const [side, quote0] of [["quote0", true], ["quote1", false]] as const) {
     const w = web.maxSafeFromQuotes(quotes(true), quotes(false), LADDER, quote0);
     const g = maxSafeExposure(state, quote0, fee);

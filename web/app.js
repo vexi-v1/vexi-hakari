@@ -38,7 +38,8 @@ const decisionFiles = [
 ];
 const decisions = (await Promise.all(decisionFiles.map((f) => load(`decisions/${f}.json`)))).filter(Boolean);
 
-$("meta").textContent = ladder ? `snapshot at block ${Number(ladder.block).toLocaleString()} · ${new Date(ladder.timestamp * 1000).toUTCString()}` : "no snapshot found (run npm run ladder in gauge/)";
+// the snapshot's block and time are shown with §4's table (renderLadder), not in the hero
+if (!ladder) $("ladder-meta").textContent = "no snapshot found (run npm run ladder in gauge/)";
 
 // ───────── 1. cost ladder ─────────
 function renderLadder(data) {
@@ -60,22 +61,26 @@ if (ladder) renderLadder(ladder);
 
 // ───────── max safe exposure (pure: no DOM, no network; gauge/test/web-max-safe.test.ts runs this block in node) ─────────
 // CostModel.maxSafeExposure with nobody pushing back (arbReversionSeconds = 0: a stock token while the mint window is
-// closed), from the lens's exact quotes. For every ladder move x, both tick directions: the round trip of pushing the
-// price x ticks and selling straight back, in the quote, ÷ what that move earns per unit of exposure. The smallest ratio
-// is the bound, in the quote's raw units. Same as gauge/src/replay.ts maxSafeExposure, which is pinned to the Solidity.
-const LADDER = [50, 100, 200, 488, 953, 1823]; // CostModel.ladder(): ≈ 0.5, 1, 2, 5, 10, 20 %
+// closed), from the same view walk the contract runs: PushCostLens.roundTripCosts(key, LADDER, up, MAX_WALK_STEPS), once
+// per tick direction. For every ladder move x, both tick directions: the round trip of pushing the price x ticks and
+// selling straight back, in the quote, ÷ what that move earns per unit of exposure. The smallest ratio is the bound, in
+// the quote's raw units; `complete` false means the walk hit its step cap, so the bound is "at least this". Same as
+// gauge/src/replay.ts maxSafeExposure, which is pinned to the Solidity.
+const LADDER = [50, 100, 200, 488, 953, 1823]; // CostModel.ladder(): 50 to 1,823 ticks, +0.5 to +20 % up, −0.5 to −16.7 % down
+const MAX_WALK_STEPS = 256; // SafeSettle.MAX_WALK_STEPS, shared by the six widths of one walk
 const gainPerUnit = (x, assetUp) => (assetUp ? Math.pow(1.0001, x) - 1 : 1 - Math.pow(1.0001, -x));
-function maxSafeFromQuotes(quotesUp, quotesDown, ticks, quoteIsCurrency0) {
+// walkUp / walkDown: roundTripCosts(key, ticks, up, …) as decoded, [costInCurrency0[], costInCurrency1[], complete[]]
+function maxSafeFromQuotes(walkUp, walkDown, ticks, quoteIsCurrency0) {
   let binding;
   const rungs = [];
   ticks.forEach((x, i) => {
     for (const up of [true, false]) {
-      const q = (up ? quotesUp : quotesDown)[i];
+      const [in0, in1, ok] = up ? walkUp : walkDown;
       // the payout follows the asset; with the quote as currency0 the asset moves against the tick
       const assetUp = quoteIsCurrency0 ? !up : up;
-      const cost = BigInt(quoteIsCurrency0 ? q.costInCurrency0 : q.costInCurrency1);
+      const cost = BigInt(quoteIsCurrency0 ? in0[i] : in1[i]);
       const gain = gainPerUnit(x, assetUp);
-      const r = { ticks: x, up, assetUp, cost, gain, exposure: Number(cost) / gain, complete: BigInt(q.sqrtPriceReached) === BigInt(q.sqrtPriceTarget) };
+      const r = { ticks: x, up, assetUp, cost, gain, exposure: Number(cost) / gain, complete: Boolean(ok[i]) };
       rungs.push(r);
       if (!binding || r.exposure < binding.exposure) binding = r;
     }
@@ -94,16 +99,21 @@ async function lens() {
   lensCode = data;
   return data;
 }
-async function quoteLadder(key, ticks, up, blockNumber) {
+async function lensCall(functionName, args, blockNumber) {
   const code = await lens();
-  const data = encodeFunctionData({ abi: lensArtifact.abi, functionName: "quotePushLadder", args: [key, ticks, up] });
+  const data = encodeFunctionData({ abi: lensArtifact.abi, functionName, args });
   const { data: out } = await client.call({ to: LENS_AT, data, blockNumber, stateOverride: [{ address: LENS_AT, code }] });
-  return decodeFunctionResult({ abi: lensArtifact.abi, functionName: "quotePushLadder", data: out });
+  return decodeFunctionResult({ abi: lensArtifact.abi, functionName, data: out });
 }
+const quoteLadder = (key, ticks, up, blockNumber) => lensCall("quotePushLadder", [key, ticks, up], blockNumber);
+const walkLadder = (key, ticks, up, blockNumber) => lensCall("roundTripCosts", [key, ticks, up, BigInt(MAX_WALK_STEPS)], blockNumber);
+// Moves past SafeSettle's ladder, asset up (+30, +50, +100 %): priced for the page only, never part of the bound.
+const BEYOND = [2624, 4055, 6932];
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 // Three round trips, each one JSON-RPC batch: (the caller's block), the pool + its tokens + the lens code, then the
-// whole ladder pushed both ways (two quotePushLadder eth_calls). The +1/5/10 % entries are rungs of the same ladder.
-async function measurePool(key, quoteIsCurrency0, blockNumber, progress = () => {}) {
+// ladder both ways, twice: exact swaps (two quotePushLadder eth_calls: the +1/5/10 % rows) and the view walk SafeSettle
+// runs (two roundTripCosts eth_calls: the bound). With `beyond`, one more exact quotePushLadder past the ladder.
+async function measurePool(key, quoteIsCurrency0, blockNumber, progress = () => {}, { beyond = false } = {}) {
   const id = keyId(key);
   const quoteToken = quoteIsCurrency0 ? key.currency0 : key.currency1;
   const decimalsOf = (a) => (a === ZERO_ADDRESS ? 18 : client.readContract({ address: a, abi: erc20Abi, functionName: "decimals" }));
@@ -117,8 +127,15 @@ async function measurePool(key, quoteIsCurrency0, blockNumber, progress = () => 
     lens(),
   ]);
   if (sqrtPriceX96 === 0n) throw new Error("pool not initialized: check the key");
-  progress(`pushing the price ${LADDER.length} distances up and ${LADDER.length} down through the lens, then straight back (2 eth_calls)`);
-  const [qsUp, qsDown] = await Promise.all([quoteLadder(key, LADDER, true, blockNumber), quoteLadder(key, LADDER, false, blockNumber)]);
+  progress(`pushing the price ${LADDER.length} distances each way through the lens and straight back, and walking the same ${LADDER.length} as SafeSettle does (${beyond ? 5 : 4} eth_calls)`);
+  // asset up is tick up when the quote is currency1, tick down when it is currency0
+  const [qsUp, qsDown, walkUp, walkDown, past] = await Promise.all([
+    quoteLadder(key, LADDER, true, blockNumber),
+    quoteLadder(key, LADDER, false, blockNumber),
+    walkLadder(key, LADDER, true, blockNumber),
+    walkLadder(key, LADDER, false, blockNumber),
+    beyond ? quoteLadder(key, BEYOND, !quoteIsCurrency0, blockNumber).catch(() => null) : null,
+  ]);
   const quoteDec = Number(quoteIsCurrency0 ? d0 : d1);
   const baseDec = Number(quoteIsCurrency0 ? d1 : d0);
   const entries = [];
@@ -130,13 +147,21 @@ async function measurePool(key, quoteIsCurrency0, blockNumber, progress = () => 
       const quoteUp = quoteIsCurrency0 ? !up : up;
       const costQuote = quoteIsCurrency0 ? q.costInCurrency0 : q.costInCurrency1;
       const inputIsQuote = quoteIsCurrency0 ? q.zeroForOne : !q.zeroForOne;
-      entries.push({ pct, direction: quoteUp ? "up" : "down", ticks: LADDER[i], reached: q.sqrtPriceReached === q.sqrtPriceTarget, inputToken: inputIsQuote ? "quote" : "base", amountInHuman: formatUnits(q.amountIn, inputIsQuote ? quoteDec : baseDec), costQuoteHuman: formatUnits(costQuote, quoteDec) });
+      // move: the asset's actual move for these ticks (−5 % nominal is 488 ticks down, −4.8 %), as the bound's table labels it
+      const move = `${quoteUp ? "+" : "−"}${fmt(gainPerUnit(LADDER[i], quoteUp) * 100, 1)} %`;
+      entries.push({ pct, direction: quoteUp ? "up" : "down", move, ticks: LADDER[i], reached: q.sqrtPriceReached === q.sqrtPriceTarget, inputToken: inputIsQuote ? "quote" : "base", amountInHuman: formatUnits(q.amountIn, inputIsQuote ? quoteDec : baseDec), costQuoteHuman: formatUnits(costQuote, quoteDec) });
     });
   }
-  const bound = maxSafeFromQuotes(qsUp, qsDown, LADDER, quoteIsCurrency0);
+  entries.sort((a, b) => (a.direction === b.direction ? a.pct - b.pct : a.direction === "up" ? -1 : 1));
+  const bound = maxSafeFromQuotes(walkUp, walkDown, LADDER, quoteIsCurrency0);
+  const pastLadder = past?.map((q, i) => {
+    const cost = BigInt(quoteIsCurrency0 ? q.costInCurrency0 : q.costInCurrency1);
+    const gain = gainPerUnit(BEYOND[i], true);
+    return { ticks: BEYOND[i], gain, cost, exposure: Number(cost) / gain, reached: q.sqrtPriceReached === q.sqrtPriceTarget };
+  });
   const raw = Number(sqrtPriceX96) / 2 ** 96;
   const p1per0 = raw * raw * 10 ** (Number(d0) - Number(d1));
-  return { id, tick, lpFee, protocolFee, liquidity: liquidity.toString(), priceQuote: quoteIsCurrency0 ? 1 / p1per0 : p1per0, entries, bound, quoteDec, quoteSymbol };
+  return { id, tick, lpFee, protocolFee, liquidity: liquidity.toString(), priceQuote: quoteIsCurrency0 ? 1 / p1per0 : p1per0, entries, bound, pastLadder, quoteDec, quoteSymbol };
 }
 function keyId(key) {
   const enc = encodeAbiParameters([{ type: "address" }, { type: "address" }, { type: "uint24" }, { type: "int24" }, { type: "address" }], [key.currency0, key.currency1, key.fee, key.tickSpacing, key.hooks]);
@@ -166,23 +191,25 @@ $("refresh").onclick = async () => {
 };
 
 // ───────── 2. HIMS replay ─────────
-function chart(el, { width = 960, height = 260, pad = { l: 56, r: 24, t: 20, b: 44 } }, draw, caption) {
-  const svg = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${caption}" style="width:100%;height:auto">${draw({ width, height, pad, iw: width - pad.l - pad.r, ih: height - pad.t - pad.b })}</svg>`;
-  el.innerHTML = svg + `<figcaption>${caption}</figcaption>`;
+// On a phone the chart keeps a 560-unit canvas at 1:1 and scrolls sideways (.chartwrap) instead of shrinking its text.
+function chart(el, { width = el.clientWidth && el.clientWidth < 720 ? 560 : 960, height = 260, pad = { l: 56, r: 24, t: 20, b: 44 } }, draw, caption) {
+  const svg = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${caption}" style="width:100%;height:auto;min-width:${width < 960 ? width : 0}px">${draw({ width, height, pad, iw: width - pad.l - pad.r, ih: height - pad.t - pad.b })}</svg>`;
+  el.innerHTML = `<div class="chartwrap">${svg}</div><figcaption>${caption}</figcaption>`;
 }
 if (hims) {
   const pts = hims.points;
-  const x = (i, g) => g.pad.l + (i / (pts.length - 1)) * g.iw;
+  // band layout: each point sits mid-band, so the first and last labels and bars stay inside the plot
+  const x = (i, g) => g.pad.l + ((i + 0.5) / pts.length) * g.iw;
   const labels = pts.map((p) => new Date(p.timestamp * 1000).toISOString().slice(5, 16).replace("T", " ") + "Z");
   chart($("hims-price"), {}, (g) => {
     const vals = pts.map((p) => p.usdgPerHims);
-    const lo = Math.min(hims.nyseCloseFriday, ...vals) * 0.9;
+    const lo = Math.min(hims.nyseCloseFriday, ...vals) * 0.85;
     const hi = Math.max(...vals) * 1.05;
     const y = (v) => g.pad.t + (1 - (v - lo) / (hi - lo)) * g.ih;
     const ticks = [30, 40, 50];
     let s = ticks.map((t) => `<line class="grid" x1="${g.pad.l}" x2="${g.pad.l + g.iw}" y1="${y(t)}" y2="${y(t)}"/><text x="${g.pad.l - 8}" y="${y(t) + 4}" text-anchor="end">${t}</text>`).join("");
     s += `<line class="axis" x1="${g.pad.l}" x2="${g.pad.l + g.iw}" y1="${g.pad.t + g.ih}" y2="${g.pad.t + g.ih}"/>`;
-    s += `<line class="nyse" x1="${g.pad.l}" x2="${g.pad.l + g.iw}" y1="${y(hims.nyseCloseFriday)}" y2="${y(hims.nyseCloseFriday)}"/><text x="${g.pad.l + g.iw}" y="${y(hims.nyseCloseFriday) - 6}" text-anchor="end">NYSE close ${hims.nyseCloseFriday}</text>`;
+    s += `<line class="nyse" x1="${g.pad.l}" x2="${g.pad.l + g.iw}" y1="${y(hims.nyseCloseFriday)}" y2="${y(hims.nyseCloseFriday)}"/><text x="${g.pad.l + 6}" y="${y(hims.nyseCloseFriday) + 16}" text-anchor="start">NYSE close ${hims.nyseCloseFriday}</text>`;
     s += `<polyline class="price" points="${pts.map((p, i) => `${x(i, g)},${y(p.usdgPerHims)}`).join(" ")}"/>`;
     pts.forEach((p, i) => {
       s += `<circle class="price-dot" r="5" cx="${x(i, g)}" cy="${y(p.usdgPerHims)}"><title>${labels[i]} · ${fmt(p.usdgPerHims, 4)} USDG · mint window ${p.mintWindowClosed ? "closed" : "open"}</title></circle>`;
@@ -209,14 +236,15 @@ if (hims) {
     });
     return s;
   }, "Round-trip cost of pushing HIMS +10 %, in USDG, from the rebuilt pool at each point. It collapses ~100× while the mint window is shut and nobody can arbitrage.");
-  $("hims-table").innerHTML = `<tr><th>block</th><th>time (UTC)</th><th>mint window</th><th>USDG/HIMS</th><th>HIMS in pool</th><th>USDG in pool</th><th>live positions</th><th>+10 % capital (USDG)</th><th>+10 % cost (USDG)</th><th>+85 % capital (USDG)</th><th>max safe exposure (USDG)</th><th>rebuilt L = Swap L</th></tr>` + pts.map((p) => `<tr><td>${Number(p.block).toLocaleString()}</td><td>${p.time.slice(0, 19).replace("T", " ")}</td><td><span class="pill ${p.mintWindowClosed ? "closed" : "open"}">${p.mintWindowClosed ? "closed" : "open"}</span></td><td>${fmt(p.usdgPerHims, 4)}</td><td>${fmt(p.himsPrincipal)}</td><td>${fmt(p.usdgPrincipal, 0)}</td><td>${p.livePositions}</td><td>${fmt(p.pushUp10.usdgIn, 0)}</td><td>${fmt(p.pushUp10.roundTripCostUsdg)}</td><td>${fmt(p.pushUp85.usdgIn, 0)}</td><td><b>${fmt(p.maxSafeExposureUsdg.usdg, 0)}</b></td><td>${p.liquidityMatches ? "yes" : "NO"}</td></tr>`).join("");
+  // the headline column (max safe exposure) and the price come first, so they stay in view without scrolling the table
+  $("hims-table").innerHTML = `<tr><th>block</th><th>time (UTC)</th><th>mint window</th><th>max safe exposure (USDG)</th><th>USDG/HIMS</th><th>+10 % cost (USDG)</th><th>+10 % capital (USDG)</th><th>HIMS in pool</th><th>USDG in pool</th><th>live positions</th><th>+85 % capital (USDG)</th><th>rebuilt L = Swap L</th></tr>` + pts.map((p) => `<tr><td>${Number(p.block).toLocaleString()}</td><td>${p.time.slice(0, 19).replace("T", " ")}</td><td><span class="pill ${p.mintWindowClosed ? "closed" : "open"}">${p.mintWindowClosed ? "closed" : "open"}</span></td><td><b>${fmt(p.maxSafeExposureUsdg.usdg, 0)}</b></td><td>${fmt(p.usdgPerHims, 4)}</td><td>${fmt(p.pushUp10.roundTripCostUsdg)}</td><td>${fmt(p.pushUp10.usdgIn, 0)}</td><td>${fmt(p.himsPrincipal)}</td><td>${fmt(p.usdgPrincipal, 0)}</td><td>${p.livePositions}</td><td>${fmt(p.pushUp85.usdgIn, 0)}</td><td>${p.liquidityMatches ? "yes" : "NO"}</td></tr>`).join("");
 }
 
 // ───────── weekend, every stock pool ─────────
 if (weekend) {
   const rows = weekend.series.filter((r) => r.fridayMaxSafeExposure && r.weekendMinMaxSafeExposure)
     .map((r) => ({ ...r, ratio: r.weekendMinMaxSafeExposure / r.fridayMaxSafeExposure })).sort((a, b) => a.ratio - b.ratio);
-  $("weekend-fig").innerHTML = `<img src="../docs/img/weekend-${WEEKEND}.svg" alt="Friday vs weekend: the largest settlement each stock pool could carry" style="width:100%;height:auto;border-radius:10px">` +
+  $("weekend-fig").innerHTML = `<div class="chartwrap"><img src="../docs/img/weekend-${WEEKEND}.svg" alt="Friday vs weekend: the largest settlement each stock pool could carry" style="width:100%;height:auto;border-radius:10px"></div>` +
     `<div class="tablewrap"><table><tr><th>stock</th><th>Friday max safe exposure</th><th>weekend minimum</th><th>weekend ÷ Friday</th><th>Friday +10 % cost</th><th>rebuild = chain</th></tr>` +
     rows.map((r) => `<tr><td>${r.symbol}${r.hooked ? " †" : ""}</td><td>${fmt(r.fridayMaxSafeExposure, 0)}</td><td>${fmt(r.weekendMinMaxSafeExposure, 0)}</td><td>×${fmt(r.ratio, 2)}</td><td>${fmt(r.fridayCostUp10)}</td><td>${r.allLiquidityMatches ? "yes" : "no"}</td></tr>`).join("") + `</table></div>` +
     (rows.some((r) => r.hooked) ? `<p class="meta">† Hooked pool: the hook's own charges are not in the bound, so it may read low (conservative).</p>` : "");
@@ -258,7 +286,7 @@ $("measure").onclick = async () => {
     const key = { currency0: $("c0").value.trim().toLowerCase(), currency1: $("c1").value.trim().toLowerCase(), fee: Number($("fee").value), tickSpacing: Number($("ts").value), hooks: $("hooks").value.trim().toLowerCase() };
     const quoteIsCurrency0 = $("quote").value === "0";
     const block = await client.getBlock();
-    const m = await measurePool(key, quoteIsCurrency0, block.number, (s) => say(`${s} at block ${Number(block.number).toLocaleString()}`));
+    const m = await measurePool(key, quoteIsCurrency0, block.number, (s) => say(`${s} at block ${Number(block.number).toLocaleString()}`), { beyond: true });
     const preset = presets.find((p) => p.id === m.id);
     const d = delta?.pools.find((p) => p.id === m.id);
     const closed = mintWindowClosed(new Date());
@@ -268,25 +296,47 @@ $("measure").onclick = async () => {
     const baseLabel = preset?.stock ?? "base";
     const toHuman = (raw) => Number(raw) / 10 ** m.quoteDec;
     const amount = (x) => (x !== 0 && Math.abs(x) < 0.01 ? x.toExponential(2) : fmt(x, x < 100 ? 2 : 0));
+    // a bound is shown rounded down, at the precision `amount` uses, so the page never shows a number SafeSettle refuses
+    const amountDown = (x) => {
+      if (x >= 100) return fmt(Math.floor(x), 0);
+      if (x >= 0.01) return fmt(Math.floor(x * 100) / 100, 2);
+      if (x <= 0) return fmt(0, 2);
+      const e = Math.floor(Math.log10(x));
+      return `${(Math.floor((x / 10 ** e) * 100) / 100).toFixed(2)}e${e}`;
+    };
     const moveOf = (r) => `${r.assetUp ? "+" : "−"}${fmt(r.gain * 100, 1)} %`;
     const bnd = m.bound.binding;
     const safe = toHuman(m.bound.exposure);
     const atLeast = bnd.complete ? "" : " (at least)";
     const hooked = key.hooks !== ZERO_ADDRESS;
     const rungs = [...m.bound.rungs].sort((a, b) => a.ticks - b.ticks || Number(b.assetUp) - Number(a.assetUp));
+    // SafeSettle's ladder stops at 1,823 ticks (+20 %). Past it a thin book can be cheaper to fake per unit earned: the
+    // exact pushes past the ladder say whether this pool is one (README § Limitations). They never change the bound.
+    const top = bnd.ticks === LADDER[LADDER.length - 1];
+    const past = (m.pastLadder ?? []).filter((r) => r.reached).reduce((a, r) => (!a || r.exposure < a.exposure ? r : a), null);
+    const pastLower = past && past.exposure < m.bound.exposure;
+    const limits = `<a href="https://github.com/vexi-v1/vexi-hakari#limitations">README § Limitations</a>`;
+    const pastNote = pastLower
+      ? `<p><b>Past the ladder.</b> ${top ? `SafeSettle's largest move (${moveOf(bnd)}) sets this line, and its ladder stops there.` : "SafeSettle's ladder stops at +20 %."} Past it this pool's liquidity thins, so a bigger fake costs less per ${unit} it earns: pushing ${asset} +${fmt(past.gain * 100, 0)} % costs <b>${amount(toHuman(past.cost))} ${unit}</b> here (exact swaps, outside SafeSettle's rule), so a fake that size pays for itself once about ${amount(toHuman(past.exposure))} ${unit} settles on this price. The true bound is lower than this line (${limits}).</p>`
+      : top
+        ? `<p class="meta">SafeSettle's largest move (${moveOf(bnd)}) sets this line, and its ladder stops there. ${m.pastLadder ? `On this pool a bigger fake (+30, +50, +100 %) is not cheaper per ${unit} it earns.` : `A bigger fake could be cheaper per ${unit} it earns if this pool's liquidity thins past it, and the true bound lower`} (${limits}).</p>`
+        : "";
     out.innerHTML = `
       <p><b>${preset?.name ?? "pool"}</b> <code>${m.id}</code> · block ${Number(block.number).toLocaleString()} · <span class="meta">measured in ${fmt((performance.now() - t0) / 1000, 1)} s</span></p>
+      <div class="safe">
+        <p class="safe-line">Largest settlement this pool can safely carry right now, if nobody pushes back: <b>${amountDown(safe)} ${unit}</b>${atLeast} <span class="nowrap">(binding move: ${moveOf(bnd)})</span></p>
+        ${pastNote}
+        <p>Why: of SafeSettle's twelve moves (50 to 1,823 ticks: +0.5 to +20 % up, −0.5 to −16.7 % down), the cheapest to fake per ${unit} it earns is ${asset} ${moveOf(bnd)}: <b>${amount(toHuman(bnd.cost))} ${unit}</b> in fees there and straight back, shifting every payout on this price by ${fmt(bnd.gain * 100, 1)} % of its size, so from about ${amountDown(safe)} ${unit} settling on it the fake pays for itself.</p>
+        <p class="meta">On a pool carrying HAKARI's hook, SafeSettle refuses any settlement whose total exposure on this price is at or above this line (lower still if the hook's two TWAPs disagree by more than 10 ticks). “Nobody pushes back” is <code>arbReversionSeconds = 0</code>, the case while the mint window is closed; with arbitrage open the attacker must re-push after every pull-back and the bound is higher. Computed as <code>CostModel.maxSafeExposure</code> computes it, from the same view walk (<code>PushCostLens.roundTripCosts</code>, ${MAX_WALK_STEPS} steps each way), rounded down; the exact swaps in the push costs below read slightly higher${hooked ? ". On a hooked pool the view walk does not see the hook’s own charges, so the bound may read low (conservative)" : ""}.</p>
+      </div>
       <p>price <b>${fmt(m.priceQuote, 4)}</b> ${unit} · LP fee ${m.lpFee} pips, protocol fee ${m.protocolFee ? `on (${m.protocolFee & 0xfff}/${m.protocolFee >> 12} pips)` : "off"} · in-range liquidity <code>${m.liquidity}</code></p>
       <p>Push +5 % right now: <b>${fmt(five.costQuoteHuman)}</b> ${unit} of fees, tying up <b>${fmt(five.amountInHuman, 0)}</b> ${five.inputToken === "quote" ? unit : baseLabel}.
       ${preset?.stock ? ` Robinhood mint/redeem window: <span class="pill ${closed ? "closed" : "open"}">${closed ? "closed: nobody can arbitrage, pass arbReversionSeconds = 0" : "open: pass a measured reversion time"}</span>` : " Not a stock token: no mint window; the reversion time follows the market."}</p>
-      <div class="tablewrap"><table><tr><th>move</th><th>ticks</th><th>reached</th><th>capital</th><th>cost (${unit})</th></tr>${m.entries.map((e) => `<tr><td>${e.direction === "up" ? "+" : "−"}${e.pct} %</td><td>${e.ticks}</td><td>${e.reached ? "yes" : "no"}</td><td>${fmt(e.amountInHuman, e.inputToken === "quote" ? 0 : 4)} ${e.inputToken === "quote" ? unit : baseLabel}</td><td>${fmt(e.costQuoteHuman)}</td></tr>`).join("")}</table></div>
-      <div class="safe">
-        <p class="safe-line">Largest settlement this pool can safely carry right now, if nobody pushes back: <b>${amount(safe)} ${unit}</b>${atLeast} <span class="nowrap">(binding move: ${moveOf(bnd)})</span></p>
-        <p>Why: of SafeSettle's twelve moves (0.5 % to 20 %, both ways), the cheapest to fake per ${unit} it earns is ${asset} ${moveOf(bnd)}: <b>${amount(toHuman(bnd.cost))} ${unit}</b> in fees there and straight back, shifting every payout on this price by ${fmt(bnd.gain * 100, 1)} % of its size, so above ${amount(safe)} ${unit} settling the fake pays for itself.</p>
-        <p class="meta">SafeSettle refuses any settlement whose total exposure on this price is at or above this line. “Nobody pushes back” is <code>arbReversionSeconds = 0</code>, the case while the mint window is closed; with arbitrage open the attacker must re-push after every pull-back and the bound is higher. Computed as <code>CostModel.maxSafeExposure</code> is, from exact swaps through the lens${hooked ? "; on a hooked pool the exact swaps include the hook’s own charges, which the contract’s view walk does not see" : ""}.</p>
-      </div>
+      <details><summary>Push costs both ways, from exact swaps (100, 488 and 953 ticks)</summary>
+        <div class="tablewrap"><table><tr><th>${asset} move</th><th>ticks</th><th>reached</th><th>capital</th><th>cost (${unit})</th></tr>${m.entries.map((e) => `<tr><td>${e.move}</td><td>${e.ticks}</td><td>${e.reached ? "yes" : "no"}</td><td>${fmt(e.amountInHuman, e.inputToken === "quote" ? 0 : 4)} ${e.inputToken === "quote" ? unit : baseLabel}</td><td>${fmt(e.costQuoteHuman)}</td></tr>`).join("")}</table></div>
+      </details>
       <details><summary>All twelve moves: cost to fake ÷ what it earns</summary>
-        <div class="tablewrap"><table><tr><th>${asset} move</th><th>ticks</th><th>cost to fake (${unit})</th><th>earns per 1 ${unit} settling</th><th>break-even exposure (${unit})</th></tr>${rungs.map((r) => `<tr${r === bnd ? ' class="binding"' : ""}><td>${moveOf(r)}${r === bnd ? " ◀ binding" : ""}</td><td>${r.ticks}</td><td>${amount(toHuman(r.cost))}</td><td>${fmt(r.gain, 4)}</td><td>${amount(toHuman(r.exposure))}${r.complete ? "" : " (at least)"}</td></tr>`).join("")}</table></div>
+        <div class="tablewrap"><table><tr><th>${asset} move</th><th>ticks</th><th>cost to fake (${unit})</th><th>earns per 1 ${unit} settling</th><th>break-even exposure (${unit})</th></tr>${rungs.map((r) => `<tr${r === bnd ? ' class="binding"' : ""}><td>${moveOf(r)}${r === bnd ? " ◀ binding" : ""}</td><td>${r.ticks}</td><td>${amount(toHuman(r.cost))}</td><td>${fmt(r.gain, 4)}</td><td>${amountDown(toHuman(r.exposure))}${r.complete ? "" : " (at least)"}</td></tr>`).join("")}</table></div>
       </details>
       <details><summary>Δ calibration for a HakariOracleHook on this pool</summary>
         <p>Suggested Δ: <b>${d ? d.suggestedDelta : "not calibrated (run npm run calibrate)"}</b>${d ? ` <span class="meta">(p99 tick move of ${d.swapBlocks} swap blocks; max ${d.perSwapBlock.max})</span>` : ""}. Δ clips each observation of the truncated TWAP that the hook reports alongside the raw one; SafeSettle's decision above does not use it.</p>
@@ -300,8 +350,9 @@ $("measure").onclick = async () => {
 
 // ───────── 4. decisions ─────────
 const human = (v, d) => { const x = Number(BigInt(v)) / 10 ** Number(d.quoteDecimals); return `${x !== 0 && x < 0.01 ? x.toExponential(1) : fmt(x, x < 100 ? 2 : 0)} ${d.unit}`; };
-$("decisions").innerHTML = `<tr><th>scenario</th><th>pool</th><th>window</th><th>arbitrage pulls back</th><th>raw / truncated tick</th><th>exposure</th><th>max safe exposure</th><th>binding move</th><th>decision</th></tr>` +
-  (decisions.length ? decisions.map((d) => `<tr><td>${d.scenario}</td><td>${d.pool}</td><td>${d.window} s</td><td>${Number(d.arbReversionSeconds) > 0 ? `every ${d.arbReversionSeconds} s` : "never (closed)"}</td><td>${d.rawTick} / ${d.truncTick}</td><td>${human(d.exposure, d)}</td><td>${human(d.maxSafeExposure, d)}${d.costComplete ? "" : " (at least)"}</td><td>${d.bindingUp ? "+" : "−"}${d.bindingTicks} ticks${d.bindingWidth != null && Number(d.bindingWidth) !== Number(d.bindingTicks) ? `, held by a push ${Number(d.bindingWidth).toLocaleString("en-US")} ticks wide` : ""}</td><td><span class="pill ${d.trusted ? "raw" : "trunc"}">${d.trusted ? "settle on raw" : "refuse"}</span></td></tr>`).join("") : `<tr><td colspan="9">run forge test --match-contract ThreeLayers (and script/record-fork-tests.sh) to fill this</td></tr>`);
+// decision, exposure and the bound first, so they stay in view without scrolling; the pool sits under the scenario name
+$("decisions").innerHTML = `<tr><th>scenario</th><th>decision</th><th>exposure</th><th>max safe exposure</th><th>binding move</th><th>arbitrage pulls back</th><th>window</th><th>raw / truncated tick</th></tr>` +
+  (decisions.length ? decisions.map((d) => `<tr><td><span class="nowrap">${d.scenario}</span><br><span class="meta">${d.pool}</span></td><td><span class="pill ${d.trusted ? "raw" : "trunc"}">${d.trusted ? "settle on raw" : "refuse"}</span></td><td>${human(d.exposure, d)}</td><td>${human(d.maxSafeExposure, d)}${d.costComplete ? "" : " (at least)"}</td><td>${d.bindingUp ? "+" : "−"}${d.bindingTicks} ticks${d.bindingWidth != null && Number(d.bindingWidth) !== Number(d.bindingTicks) ? `, held by a push ${Number(d.bindingWidth).toLocaleString("en-US")} ticks wide` : ""}</td><td>${Number(d.arbReversionSeconds) > 0 ? `every ${d.arbReversionSeconds} s` : "never (closed)"}</td><td>${d.window} s</td><td>${d.rawTick} / ${d.truncTick}</td></tr>`).join("") : `<tr><td colspan="8">run forge test --match-contract ThreeLayers (and script/record-fork-tests.sh) to fill this</td></tr>`);
 
 // ───────── 5. delta ─────────
 if (delta) $("delta").innerHTML = `<tr><th>pool</th><th>swaps in window</th><th>swap blocks</th><th>p50 move</th><th>p90</th><th>p99</th><th>max</th><th>suggested Δ</th></tr>` + delta.pools.map((p) => `<tr><td>${p.name}</td><td>${p.swaps}</td><td>${p.swapBlocks}</td><td>${p.perSwapBlock.p50}</td><td>${p.perSwapBlock.p90}</td><td>${p.perSwapBlock.p99}</td><td>${p.perSwapBlock.max}</td><td><b>${p.suggestedDelta}</b></td></tr>`).join("");

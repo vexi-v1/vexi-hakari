@@ -4,7 +4,8 @@ import { readFileSync } from "node:fs";
 import { writeData } from "./chain.ts";
 
 const artifact = JSON.parse(readFileSync(new URL("../../out/PushCostLens.sol/PushCostLens.json", import.meta.url), "utf8"));
-const abi = artifact.abi.filter((f: any) => ["quotePush", "quotePushToPrice", "quotePushLadder", "depthToMove", "roundTripCost"].includes(f.name));
+// roundTripCosts: the view walk CostModel.maxSafeExposure prices the ladder with; the page's live bound uses it too
+const abi = artifact.abi.filter((f: any) => ["quotePush", "quotePushToPrice", "quotePushLadder", "depthToMove", "roundTripCost", "roundTripCosts"].includes(f.name));
 writeData(new URL("../../web/lens-artifact.json", import.meta.url).pathname, {
   contract: "PushCostLens",
   creationBytecode: artifact.bytecode.object,
