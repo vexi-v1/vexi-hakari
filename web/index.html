@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HAKARI gauge</title>
+<meta name="description" content="What it costs to fake a Uniswap v4 price on Robinhood Chain: live cost ladder, the HIMS weekend replay, and SafeSettle's decisions.">
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --surface-2: #f1f0ec; --line: #d9d7d0;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #8a887f;
+    --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-8: #e34948;
+    --good: #008300; --serious: #e34948;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --surface-2: #242422; --line: #3a3936;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+      --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-8: #e66767;
+      --good: #4caf50; --serious: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --surface-2: #242422; --line: #3a3936;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-8: #e66767;
+    --good: #4caf50; --serious: #e66767;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface-1); color: var(--text-primary); font: 15px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 19px; margin: 40px 0 8px; }
+  p.lead { color: var(--text-secondary); margin: 0 0 8px; max-width: 70ch; }
+  .meta { color: var(--text-muted); font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--text-secondary); font-weight: 600; font-size: 13px; }
+  .tablewrap { overflow-x: auto; }
+  .card { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  label { display: flex; flex-direction: column; font-size: 13px; color: var(--text-secondary); gap: 4px; }
+  input, select, button { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); }
+  input { min-width: 22ch; }
+  button { cursor: pointer; background: var(--text-primary); color: var(--surface-1); border-color: transparent; }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill.raw { background: color-mix(in oklab, var(--series-1) 18%, transparent); color: var(--series-1); }
+  .pill.trunc { background: color-mix(in oklab, var(--series-2) 18%, transparent); color: var(--series-2); }
+  .pill.closed { background: color-mix(in oklab, var(--serious) 18%, transparent); color: var(--serious); }
+  .pill.open { background: color-mix(in oklab, var(--good) 18%, transparent); color: var(--good); }
+  figure { margin: 12px 0; }
+  figcaption { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+  svg text { font-size: 12px; fill: var(--text-secondary); }
+  svg .axis { stroke: var(--line); stroke-width: 1; }
+  svg .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+  svg .price { stroke: var(--series-1); stroke-width: 2; fill: none; }
+  svg .price-dot { fill: var(--series-1); stroke: var(--surface-1); stroke-width: 2; }
+  svg .nyse { stroke: var(--text-muted); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+  svg .cost { fill: var(--series-2); }
+  svg .label { fill: var(--text-primary); font-weight: 600; }
+  .legend { display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary); margin: 4px 0; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
+  code { font-size: 13px; background: var(--surface-2); padding: 1px 4px; border-radius: 4px; }
+  .err { color: var(--serious); }
+  details summary { cursor: pointer; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<main>
+  <h1>HAKARI (秤) — what it costs to fake a price</h1>
+  <p class="lead">A scale for any protocol that reads a price from a Uniswap v4 pool on Robinhood Chain: can this price be pushed right now, what would pushing it cost, and should it be trusted? Everything below is read-only against mainnet 4663; the lens runs through an <code>eth_call</code> state override, nothing is deployed there.</p>
+  <p class="meta" id="meta">loading…</p>
+
+  <h2>1 · Cost to push, right now</h2>
+  <p class="lead">Round-trip cost = what an attacker loses pushing the price by X and selling straight back (fees on both legs). Capital = the input the push needs, returned afterwards. In USDG.</p>
+  <div class="row"><button id="refresh">Refresh live from the chain</button><span class="meta" id="ladder-meta"></span></div>
+  <div class="tablewrap"><table id="ladder"></table></div>
+
+  <h2>2 · The HIMS weekend, replayed from events</h2>
+  <p class="lead">Sunday 2026-08-30: with Robinhood's mint/redeem window closed, HIMS/USDG went from 29.38 to 54.50 USDG while NYSE had closed at 28.84. Positions rebuilt from every <code>ModifyLiquidity</code> log; at each point the rebuilt active liquidity equals the last <code>Swap</code> event's own liquidity field.</p>
+  <figure id="hims-price"></figure>
+  <figure id="hims-cost"></figure>
+  <div class="tablewrap"><table id="hims-table"></table></div>
+
+  <h2>3 · Paste a pool</h2>
+  <p class="lead">Any v4 pool on the official PoolManager. The page simulates the lens's deployment, injects it with a state override, and asks it live.</p>
+  <div class="card">
+    <div class="row">
+      <label>preset <select id="preset"></select></label>
+      <label>currency0 <input id="c0"></label>
+      <label>currency1 <input id="c1"></label>
+      <label>fee (pips) <input id="fee" size="8"></label>
+      <label>tickSpacing <input id="ts" size="6"></label>
+      <label>hooks <input id="hooks"></label>
+      <label>quote is <select id="quote"><option value="1">currency1</option><option value="0">currency0</option></select></label>
+      <button id="measure">Measure</button>
+    </div>
+    <div id="measure-out" style="margin-top:12px"></div>
+  </div>
+
+  <h2>4 · SafeSettle's decisions</h2>
+  <p class="lead">Each row is one settlement in the test suite: the raw and truncated TWAP disagreed, the cost model priced the fake, and the contract chose. <span class="pill raw">raw</span> = a genuine move, truncation would only lag; <span class="pill trunc">truncated</span> = cheap to fake, do not pay on it.</p>
+  <div class="tablewrap"><table id="decisions"></table></div>
+
+  <h2>5 · Suggested Δ per pool</h2>
+  <p class="lead">99th percentile of the tick move between consecutive swap blocks over the last 300k blocks (Panoptic's calibration). One hook contract carries one Δ.</p>
+  <div class="tablewrap"><table id="delta"></table></div>
+
+  <p class="meta" style="margin-top:40px">ETHGlobal Tokyo 2026 · MIT · <a href="https://github.com/vexi-v1/vexi-hakari">source</a></p>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

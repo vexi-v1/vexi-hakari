@@ -1,0 +1,12 @@
+{
+  "arbOpen": true,
+  "costComplete": true,
+  "costToFake": "3153638677493050284",
+  "gainIfFaked": "116271931355636455",
+  "notional": "1000000000000000000",
+  "pool": "local 18/18, L=1e21, fee 0.3%",
+  "rawTick": 1650,
+  "scenario": "deep-pool-genuine-surge",
+  "truncTick": 550,
+  "usedRaw": true
+}

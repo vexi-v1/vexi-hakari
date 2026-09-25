@@ -74,6 +74,8 @@ contract ShadowPoolForkTest is Test {
         shadowId = shadow.toId();
 
         (uint160 sqrtP,,,) = MANAGER.getSlot0(real.toId());
+        // the public RPC sometimes answers a fresh fork with empty state; say so instead of failing later
+        require(sqrtP != 0, "RPC returned no state for TSLA/USDG: retry");
         MANAGER.initialize(shadow, sqrtP);
         hook.increaseObservationCardinalityNext(64, shadowId);
         _mirrorLiquidity();
@@ -126,6 +128,21 @@ contract ShadowPoolForkTest is Test {
             t = lte ? next - 1 : next;
         }
         return (next, false);
+    }
+
+    function _record(string memory scenario, SafeSettle.Decision memory d, bool arbOpen, uint256 notional) internal {
+        string memory row = scenario;
+        vm.serializeString(row, "scenario", scenario);
+        vm.serializeString(row, "pool", string(abi.encodePacked("TSLA/USDG profile at block ", vm.toString(block.number), ", delta 3, notional 100,000 USDG")));
+        vm.serializeBool(row, "arbOpen", arbOpen);
+        vm.serializeString(row, "notional", vm.toString(notional));
+        vm.serializeInt(row, "rawTick", int256(d.rawTick));
+        vm.serializeInt(row, "truncTick", int256(d.truncTick));
+        vm.serializeString(row, "costToFake", vm.toString(d.costToFake));
+        vm.serializeString(row, "gainIfFaked", vm.toString(d.gainIfFaked));
+        vm.serializeBool(row, "costComplete", d.costComplete);
+        string memory out = vm.serializeBool(row, "usedRaw", d.usedRaw);
+        vm.writeJson(out, string(abi.encodePacked("web/decisions/", scenario, ".json")));
     }
 
     function _seed(int24 lower, int24 upper, uint128 liquidity) internal {
@@ -181,6 +198,8 @@ contract ShadowPoolForkTest is Test {
         console2.log("cost to fake, weekday (arb open), USDG", weekday.costToFake);
         console2.log("weekend: used raw?", weekend.usedRaw);
         console2.log("weekday: used raw?", weekday.usedRaw);
+        _record("tsla-shaped-weekend", weekend, false, notional);
+        _record("tsla-shaped-weekday", weekday, true, notional);
         assertGt(weekend.rawTick, weekend.truncTick + 100, "truncation held the line");
         assertFalse(weekend.usedRaw, "with arbitrage closed the fake is cheap: settle truncated");
         assertGt(weekday.costToFake, weekend.costToFake * 5, "with arbitrage open, holding costs every second");

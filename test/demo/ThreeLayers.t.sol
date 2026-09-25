@@ -89,6 +89,7 @@ contract ThreeLayersTest is HakariDeployers {
         console2.log("used raw?", d.usedRaw);
         assertFalse(d.usedRaw);
         assertLt(d.costToFake, d.gainIfFaked);
+        _record("thin-pool-sustained-push", "local 18/18, L=1e15, fee 0.3%", false, 1e18, d);
     }
 
     /// Layer 3, the other way. A deep pool, arbitrage open, a real move: the raw series is trusted and the
@@ -110,9 +111,27 @@ contract ThreeLayersTest is HakariDeployers {
         console2.log("used raw?", d.usedRaw);
         assertGt(d.rawTick, d.truncTick + TOLERANCE(), "the series disagree: truncation is lagging");
         assertTrue(d.usedRaw, "but faking this would cost more than it pays, so the move is real");
+        _record("deep-pool-genuine-surge", "local 18/18, L=1e21, fee 0.3%", true, 1e18, d);
     }
 
     function TOLERANCE() internal view returns (int24) {
         return settle.TOLERANCE_TICKS();
+    }
+
+    /// @dev The web page's decision log: one row per scenario, appended by each test that settles.
+    function _record(string memory scenario, string memory pool, bool arbOpen, uint256 notional, SafeSettle.Decision memory d) internal {
+        string memory row = scenario;
+        vm.serializeString(row, "scenario", scenario);
+        vm.serializeString(row, "pool", pool);
+        vm.serializeBool(row, "arbOpen", arbOpen);
+        vm.serializeString(row, "notional", vm.toString(notional));
+        vm.serializeInt(row, "rawTick", int256(d.rawTick));
+        vm.serializeInt(row, "truncTick", int256(d.truncTick));
+        vm.serializeString(row, "costToFake", vm.toString(d.costToFake));
+        vm.serializeString(row, "gainIfFaked", vm.toString(d.gainIfFaked));
+        vm.serializeBool(row, "costComplete", d.costComplete);
+        string memory out = vm.serializeBool(row, "usedRaw", d.usedRaw);
+        string memory path = string(abi.encodePacked("web/decisions/", scenario, ".json"));
+        vm.writeJson(out, path);
     }
 }
