@@ -1,0 +1,27 @@
+Ran 3 tests for test/demo/ThreeLayers.t.sol:ThreeLayersTest
+[PASS] test_layer1_atomicPush_foolsSlot0_notTheHook() (gas: 673840)
+Logs:
+  naive settlement tick 499
+  honest tick -1
+  attacker net currency0 -74142741957802
+  attacker net currency1 -76015778694356
+  hook raw TWAP -1
+  hook truncated TWAP -1
+
+[PASS] test_layer2and3_sustainedPushOnThinPool_settlesTruncated() (gas: 1089478)
+Logs:
+  raw TWAP 3000
+  truncated TWAP 650
+  cost to fake (quote units) 822239396895
+  gain if faked (quote units) 264893907132936289
+  used raw? false
+
+[PASS] test_layer3_genuineSurgeOnDeepPool_settlesRaw() (gas: 1162455)
+Logs:
+  raw TWAP 1650
+  truncated TWAP 550
+  cost to fake (quote units) 3153638677493050284
+  gain if faked (quote units) 116271931355636455
+  used raw? true
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 6.21ms (7.86ms CPU time)
