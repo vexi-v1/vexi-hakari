@@ -179,3 +179,16 @@ archive `totalSupply`/`balanceOf`, HAKARI's cost to push +10 % on a one-minute g
 bilingual EN/繁中 chapters, a scrubbable timeline, the HIMS–BONER–USDG flow triangle, an "on X" lane from
 paraphrased posts with their claims checked against the chain). Built with Claude Code workflows; the data went
 through three adversarial verification passes and the page through four critique lenses.
+
+## 2026-09-26 03:10 — Abner: finish everything, commit as it lands
+
+> 這些內容完成，自動 commit and push，並且繼續審查與驗收。完成所有 Abner 該做的事情。讓整個故事合理有數據佐證，相關
+> demo 都夠引人入勝了解情況。參考過往得獎隊伍，優化各種展示以及說明。完成所有事
+> ("As things finish, commit and push automatically, and keep reviewing and accepting them. Do everything Abner
+> owns. Make the whole story reasonable and backed by data, and the demos engaging enough to understand what
+> happened. Look at past winning teams to improve every presentation and explanation. Finish everything.")
+
+Output so far: the squeeze dataset, page, X lane and their verification rounds landed as separate commits
+(`db5dd20` … `a5ac3a7`); todo A2, the HIMS weekend replayed through HakariOracleHook and SafeSettle v1/v0 per
+minute (`957a333`, `npm run hims:hook`). Items that need a person or both of us (repo visibility, Pages, the
+Uniswap feedback form, the video, the ETHGlobal submission) are prepared, not done.
