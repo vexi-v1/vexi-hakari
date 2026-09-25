@@ -158,6 +158,12 @@ wall across transactions stays as a known-limit test. Redeployed on 46630 and ve
 2026-09-18 weekend are priced as max safe exposure; `script/record-fork-tests.sh` records fork output on the public
 RPC with URLs masked.
 
+Follow-up commits under the same instruction: `dc4fc59` pins the gauge's max-safe-exposure mirror to
+`CostModel.maxSafeExposure` with a forge fixture; `05866c0` flags hooked pools in the gauge and the chart;
+`df1216e` records the gas of one settlement on the TSLA book and the fork figures, but its message also claims the
+README text, which the commit did not contain (the edit script failed and the commit ran anyway); `7b2331c` is
+that README text, committed a minute later. The history is left as it is.
+
 
 ## 2026-09-25 23:30 — Abner: the float squeeze, as a page to show people
 
@@ -192,3 +198,19 @@ Output so far: the squeeze dataset, page, X lane and their verification rounds l
 (`db5dd20` … `a5ac3a7`); todo A2, the HIMS weekend replayed through HakariOracleHook and SafeSettle v1/v0 per
 minute (`957a333`, `npm run hims:hook`). Items that need a person or both of us (repo visibility, Pages, the
 Uniswap feedback form, the video, the ETHGlobal submission) are prepared, not done.
+
+## 2026-09-26 03:48 — Eric: a new session takes over from the hand-off
+
+> (The hand-off prompt, in Chinese. It is kept out of the repo because it carries the submission runbook; in
+> short: a second review measured the real TSLA/USDG book with the lens and found that `CostModel` stopped
+> widening the push at 4× the move, so the README's two weekday "settle on raw" rows were wrong. Fix that first
+> with a failing test, re-measure, redeploy and verify; then the documentation defects the review listed. Do not
+> stop to ask unless something is wrong.)
+
+Output: `20e7d87` (every push width until no wider one can be cheaper; `PushCostLens.roundTripCosts` prices them
+all from one walk each way, which took gas from 23.8M to 1.9M on the TSLA book) and `44521a9` (each move's
+one-interval width exactly). On the TSLA book at block 72,481,549 the weekday bound is 25,269 USDG at 60 s and
+58,044 at 12 s: 100,000 is refused on a weekday too. The TSLA shadow pool now mirrors the whole book. Lens and
+`SafeSettle` redeployed from `44521a9` on 46630 and verified; the demo settlement was re-run against them. README,
+FEEDBACK (§ 7 rewritten for v1, § 10 new) and this log corrected as listed.
+

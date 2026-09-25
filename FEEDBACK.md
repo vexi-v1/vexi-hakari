@@ -69,12 +69,15 @@ per second" mental model is off by one.
 
 ## 7. The truncated-oracle family has no "both series" read
 
-`BaseOracleHook.observe` already returns the raw and truncated cumulatives side by side, which is
-exactly the signal a consumer needs to notice a push. Every adapter we found
-(`V3TruncatedOracleAdapter`, `OracleHookWithV3Adapters`) exposes one series in a v3-shaped interface.
-`HakariOracleHook.twaps(id, window)` is a 12-line wrapper returning both TWAP ticks; every decision in
-`SafeSettle` starts from their disagreement. Worth a first-class getter, and a sentence saying the
-two series are meant to be compared, not chosen between.
+`BaseOracleHook.observe` already returns the raw and truncated cumulatives side by side. Every adapter we
+found (`V3TruncatedOracleAdapter`, `OracleHookWithV3Adapters`) exposes one series in a v3-shaped interface.
+`HakariOracleHook.twaps(id, window)` is a 12-line wrapper returning both TWAP ticks. What the pair tells
+you is narrower than we first thought: a gap means a push is still in flight, but agreement proves
+nothing, because a push held with one dust swap a second catches the truncated series up and both then
+agree on the fake. Our first rule chose between the series by their gap and was beaten that way in review;
+`SafeSettle` now prices the gap as one more move a faker would pay for and decides on the pool's depth
+(README § What the review found). Worth a first-class getter, and a sentence in the docs saying what the
+gap does and does not tell you.
 
 ## 8. The v4 deployments page does not list Robinhood Chain testnet (46630)
 
@@ -91,3 +94,17 @@ used. We inject its runtime code with an `eth_call` state override (`{address: {
 mainnet pools directly, from Node and from the browser (`gauge/src/lens.ts`, `web/app.js`). That
 turns "deploy a quoter to every chain" into "ship bytecode", and it lets anyone measure a chain they
 cannot or should not write to. A paragraph in the quoter docs would spread the pattern.
+
+## 10. A v4 pool has no oracle unless it was created with one
+
+A v3 pool carried `observe()`. A v4 pool has a TWAP only if its creator attached an oracle hook, and the
+hook is part of the `PoolKey`, so a pool created without one can never gain it. On Robinhood Chain, 26 of
+the 28 deepest stock-token pools have no hook at all; the other two (GLD, AMZN) are dynamic-fee pools
+whose hooks carry the `beforeInitialize` and `beforeSwap` flags
+([`gauge/data/stock-pools.json`](gauge/data/stock-pools.json)). For the 26, the only on-chain price is
+`slot0`, the spot price one transaction can move (`test/demo/ThreeLayers.t.sol`, layer 1), unless someone
+creates a second pool with an oracle hook and it attracts liquidity of its own. That is why HAKARI's hook
+sits on a new pool, and why its HIMS replay is counterfactual: the real HIMS pool could never have had
+it. Nothing we read at pool creation said that choosing no hook means no manipulation-resistant price,
+ever. A sentence where pools are created, and a reference oracle hook per chain that creators can pick,
+would help.

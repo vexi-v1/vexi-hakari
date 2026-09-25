@@ -10,7 +10,7 @@ produced it is under `docs/prompts/`.
 2. **Hackathon provenance.** Code written before the hackathon started (2026-09-25 21:00 JST)
    is not pasted in. Knowledge and public on-chain data are reused; code is rewritten here.
    Public libraries are fine: `v4-core`, `uniswap-hooks` (OpenZeppelin), `forge-std`, `viem`.
-   Pre-existing work we build on is listed in `README.md` § "Pre-existing work".
+   Pre-existing work we build on is listed in `README.md` § "Provenance".
 3. **Secrets.** Never read, print or log a `.env` file or a private key. The 46630 deploy key
    lives only in an environment variable; it never appears in `argv` or in a log line.
 4. **Licence and language.** MIT, English. Commit continuously; a single last-day commit is
