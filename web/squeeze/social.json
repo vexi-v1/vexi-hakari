@@ -484,8 +484,8 @@
    },
    "kind": "pushback",
    "paraphrase": {
-    "en": "LONG's founder replies that a rising DEX price is not a squeeze on the real stock: minting stops for the weekend, and whoever can mint at the open will arbitrage it away.",
-    "zh": "LONG 創辦人回應：DEX 上的價格上漲不等於真實股票被軋空；週末停止鑄造，開盤時能鑄造的人會把價差套利掉。"
+    "en": "A LONG co-founder replies that a rising DEX price is not a squeeze on the real stock: minting stops for the weekend, and whoever can mint at the open will arbitrage it away.",
+    "zh": "LONG 共同創辦人回應：DEX 上的價格上漲不等於真實股票被軋空；週末停止鑄造，開盤時能鑄造的人會把價差套利掉。"
    },
    "metrics": {
     "likes": 55,
@@ -531,8 +531,8 @@
    },
    "kind": "meme",
    "paraphrase": {
-    "en": "About an hour before the dollar pool ran dry, a widely followed Ethereum developer who holds BONER says BONER squeezing HIMS shorts would be the wildest thing he has seen in crypto.",
-    "zh": "美元池見底前約一小時，這位知名的以太坊開發者（本身持有 BONER）說，若 BONER 真的軋到 HIMS 空頭，會是他在加密圈見過最誇張的事。"
+    "en": "About an hour before the dollar pool ran dry, a widely followed account says BONER squeezing HIMS shorts would be the wildest thing he has seen in crypto.",
+    "zh": "美元池見底前約一小時，一個追蹤者眾多的帳號說，若 BONER 真的軋到 HIMS 空頭，會是他在加密圈見過最誇張的事。"
    },
    "metrics": {
     "likes": 324,
@@ -658,8 +658,8 @@
      },
      "verdict": "supported",
      "note": {
-      "en": "The price had crossed 50 about ten minutes earlier. His $28.88 close differs slightly from the $28.84 used by DeFiPrime.",
-      "zh": "價格大約十分鐘前就已突破 50。他給的收盤價 28.88 與 DeFiPrime 採用的 28.84 略有差異。"
+      "en": "Minute closes first went above 50 at 23:24, eleven minutes earlier, and stayed mostly above it (brief dips to 44–47 at 23:26 and 23:33); a spike had first touched 55.7 at 22:33. His $28.88 close differs slightly from the $28.84 used by DeFiPrime.",
+      "zh": "分鐘收盤在 23:24 首次突破 50（發文前十一分鐘），之後大多維持在 50 以上（23:26 與 23:33 短暫跌到 44–47）；更早在 22:33 曾有一次短暫衝到 55.7。他給的收盤價 28.88 與 DeFiPrime 採用的 28.84 略有差異。"
      }
     }
    ]
@@ -679,8 +679,8 @@
    },
    "kind": "realtime",
    "paraphrase": {
-    "en": "Notes that the cheapest way to buy HIMS now often goes the long way round: through BONER, then the AI memecoin, then WETH, then USDG.",
-    "zh": "指出現在買 HIMS 最划算的路徑常常要繞一大圈：先經過 BONER，再到 AI 迷因幣、WETH，最後才是 USDG。"
+    "en": "Notes that the best-priced HIMS swap now often skips the dollar pool and hops through BONER, the AI memecoin and WETH to reach USDG.",
+    "zh": "指出現在 HIMS 的最佳兌換路徑常常不走美元池，而是經 BONER、AI 迷因幣與 WETH 繞到 USDG。"
    },
    "metrics": {
     "likes": 22,
@@ -990,8 +990,8 @@
    },
    "kind": "analysis",
    "paraphrase": {
-    "en": "Predicts the gap closes the moment the privileged issuer mints and sells: the minter profits and weekend buyers are left holding. Sammy disputes it; the first mint lands under a minute later.",
-    "zh": "預言價差會在具特權的發行方鑄造並賣出那一刻被吃掉：鑄造者賺錢，週末買家被套。Sammy 回說機制不是這樣；首筆鑄造在不到一分鐘後上鏈。"
+    "en": "Predicts the gap closes the moment whoever holds minting rights mints and sells: the minter profits and weekend buyers are left holding. The first mint lands 58 s later; Sammy disputes the idea a few minutes after that.",
+    "zh": "預言價差會在握有鑄造權的一方鑄造並賣出時被吃掉：鑄造者賺錢，週末買家被套。58 秒後首筆鑄造上鏈；幾分鐘後 Sammy 回說機制不是這樣。"
    },
    "metrics": {
     "likes": 3,
@@ -1003,8 +1003,8 @@
    "claims": [
     {
      "what": {
-      "en": "The issuer mints and sells into the gap",
-      "zh": "發行方鑄造後賣進價差"
+      "en": "Whoever can mint mints and sells into the gap",
+      "zh": "握有鑄造權的一方鑄造後賣進價差"
      },
      "value": null,
      "unit": null,
@@ -1016,8 +1016,8 @@
      },
      "verdict": "supported",
      "note": {
-      "en": "The largest one-swap drop came 3 min 48 s after the mint; the premium was about 12% by 00:55.",
-      "zh": "最大的單筆跌幅出現在鑄造後 3 分 48 秒；到 00:55 溢價約剩 12%。"
+      "en": "The largest one-swap price drop came 3 min 48 s after the mint; the premium was about 12% by 00:55.",
+      "zh": "單筆跌幅最大的一筆賣出出現在鑄造後 3 分 48 秒；到 00:55 溢價約剩 12%。"
      }
     }
    ]
@@ -1451,8 +1451,8 @@
     },
     {
      "what": {
-      "en": "Peak price",
-      "zh": "最高價"
+      "en": "On-chain price reached",
+      "zh": "鏈上價格達到"
      },
      "value": 61.15,
      "unit": "USDG",
@@ -1464,8 +1464,8 @@
      },
      "verdict": "supported",
      "note": {
-      "en": "A sampled spot price, not the top print (124.70).",
-      "zh": "這是抽樣到的現價，不是最高成交（124.70）。"
+      "en": "A trade at 23:36:13, not the peak: the highest post-swap price was 124.70 and the top minute close 71.23.",
+      "zh": "這是 23:36:13 的一筆成交，不是高點：成交後最高池價是 124.70，分鐘收盤最高 71.23。"
      }
     },
     {
@@ -1546,16 +1546,16 @@
      },
      "value": 132.64,
      "unit": "USDG",
-     "atTs": 1788132480,
+     "atTs": 1788132540,
      "onchain": {
       "series": "himsUsdg (swap prints)",
-      "value": "124.70 top print (23:28:42 UTC); 71.23 top minute close (23:31)",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt)"
+      "value": "124.70 highest post-swap price (23:28:42 UTC); 122.75 highest trade price; 71.23 top minute close (23:31); 133.35 in a small 50%-fee pool (23:30:46, 0.52 HIMS)",
+      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt); gauge/cache/squeeze/swaps-d13c1e0285.json.ndjson (all 55 USDG/HIMS pools)"
      },
      "verdict": "partly",
      "note": {
-      "en": "Same order of magnitude, but no swap in either dollar pool we replay printed 132.x. Our top print, 124.70, paid 904 USDG for 12.69 HIMS. The figure may come from another of ~60 HIMS pools or a chart tool.",
-      "zh": "數量級相同，但我們重播的兩個美元池都沒有 132 美元左右的成交。最高一筆是 124.70，用 904 USDG 買 12.69 顆 HIMS。這個數字可能來自其他約 60 個 HIMS 池之一，或圖表工具。"
+      "en": "No swap in the two main dollar pools traded at 132.x. The highest post-swap price was 124.70 (that 12.69 HIMS buy paid 71.25 on average), and the highest price any trade executed at was 122.75. Across all 55 USDG/HIMS pools, the only higher trade was a 0.52 HIMS router leg into a small 50%-fee pool at 133.35 (23:30:46), which a per-trade chart could show.",
+      "zh": "兩個主要美元池都沒有 132 美元左右的成交。成交後最高池價是 124.70（那筆買進 12.69 顆，平均每顆只付 71.25），單筆成交均價最高是 122.75。在全部 55 個 USDG/HIMS 池中，唯一更高的成交是一筆路由分單經過一個 50% 手續費小池，在 23:30:46 以每顆 133.35 買到 0.52 顆；逐筆成交圖表可能會顯示這類價格。"
      }
     },
     {
@@ -1657,13 +1657,13 @@
      "atTs": 1788132960,
      "onchain": {
       "series": "himsUsdg",
-      "value": "61.15 (swap at 23:36:13)",
+      "value": "61.15 (swap at 23:36:13); top minute close 71.23 (23:31); highest post-swap price 124.70 (23:28:42)",
       "source": "web/squeeze/data.json"
      },
-     "verdict": "supported",
+     "verdict": "partly",
      "note": {
-      "en": "DeFiPrime's sampled peak.",
-      "zh": "DeFiPrime 抽樣到的高點。"
+      "en": "Traded at 61.15 (23:36:13), but minute closes reached 71.23 at 23:31 and the post-swap price 124.70 at 23:28:42.",
+      "zh": "61.15 確有成交（23:36:13），但分鐘收盤在 23:31 達到 71.23，成交後池價在 23:28:42 達到 124.70。"
      }
     },
     {
@@ -1717,16 +1717,16 @@
      },
      "value": ">120",
      "unit": "USDG",
-     "atTs": 1788132480,
+     "atTs": 1788132540,
      "onchain": {
       "series": "himsUsdg (swap prints)",
-      "value": "124.70 after one swap at 23:28:42 (4.3x)",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json"
+      "value": "124.70 after one swap at 23:28:42 (4.3x); a 0.016 HIMS sale at 122.75 at 23:28:43",
+      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg)"
      },
      "verdict": "supported",
      "note": {
-      "en": "A single print on thin liquidity (12.69 HIMS for 904 USDG); minute closes peaked at 71.23 (2.5x).",
-      "zh": "只是流動性極薄時的一筆成交（904 USDG 買 12.69 顆）；分鐘收盤最高 71.23（2.5 倍）。"
+      "en": "A post-swap price on thin liquidity (12.69 HIMS bought for 904 USDG, 71.25 on average); a 0.016 HIMS sale a second later executed at 122.75, so '>$120' holds as a trade too. Minute closes peaked at 71.23 (2.5x).",
+      "zh": "這是流動性極薄時一筆交易後的池價（904 USDG 買 12.69 顆，平均 71.25）；一秒後一筆 0.016 顆的賣出以 122.75 成交，所以「120 美元以上」也確實成交過。分鐘收盤最高 71.23（2.5 倍）。"
      }
     }
    ]
@@ -1780,16 +1780,16 @@
      },
      "value": 132.64,
      "unit": "USDG",
-     "atTs": 1788132480,
+     "atTs": 1788132540,
      "onchain": {
       "series": "himsUsdg (swap prints)",
-      "value": "124.70 top print (23:28:42 UTC); 71.23 top minute close (23:31)",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt)"
+      "value": "124.70 highest post-swap price (23:28:42 UTC); 122.75 highest trade price; 71.23 top minute close (23:31); 133.35 in a small 50%-fee pool (23:30:46, 0.52 HIMS)",
+      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt); gauge/cache/squeeze/swaps-d13c1e0285.json.ndjson (all 55 USDG/HIMS pools)"
      },
      "verdict": "partly",
      "note": {
-      "en": "Same order of magnitude, but no swap in either dollar pool we replay printed 132.x. Our top print, 124.70, paid 904 USDG for 12.69 HIMS. The figure may come from another of ~60 HIMS pools or a chart tool.",
-      "zh": "數量級相同，但我們重播的兩個美元池都沒有 132 美元左右的成交。最高一筆是 124.70，用 904 USDG 買 12.69 顆 HIMS。這個數字可能來自其他約 60 個 HIMS 池之一，或圖表工具。"
+      "en": "No swap in the two main dollar pools traded at 132.x. The highest post-swap price was 124.70 (that 12.69 HIMS buy paid 71.25 on average), and the highest price any trade executed at was 122.75. Across all 55 USDG/HIMS pools, the only higher trade was a 0.52 HIMS router leg into a small 50%-fee pool at 133.35 (23:30:46), which a per-trade chart could show.",
+      "zh": "兩個主要美元池都沒有 132 美元左右的成交。成交後最高池價是 124.70（那筆買進 12.69 顆，平均每顆只付 71.25），單筆成交均價最高是 122.75。在全部 55 個 USDG/HIMS 池中，唯一更高的成交是一筆路由分單經過一個 50% 手續費小池，在 23:30:46 以每顆 133.35 買到 0.52 顆；逐筆成交圖表可能會顯示這類價格。"
      }
     }
    ]
@@ -1856,14 +1856,14 @@
      "unit": "HIMS",
      "atTs": null,
      "onchain": {
-      "series": "himsSupply",
-      "value": "42,493 at Mon 13:59 (last replay minute)",
-      "source": "web/squeeze/data.json"
+      "series": "himsSupply (mint/burn log)",
+      "value": "58,706 at ~17:05 UTC Mon 31 Aug; 80,309 at ~12:16 UTC Tue 1 Sep (42,493 at 13:59, last replay minute)",
+      "source": "gauge/cache/squeeze/hims-transfers (mints and burns; times estimated from block numbers after the window)"
      },
-     "verdict": "unverifiable",
+     "verdict": "supported",
      "note": {
-      "en": "After our window ends, though supply was still rising at 13:59. It explains why later posts say 53% rather than 81%.",
-      "zh": "已超出重播時段，但 13:59 時供給仍在上升；這也解釋了為何之後的貼文說 53% 而不是 81%。"
+      "en": "Beyond the replay window, but the cached mint and burn log shows supply passing both levels. 31.2K of 58.7K is the 53% that later posts cite, which is why they say 53% rather than 81%.",
+      "zh": "超出重播時段，但快取的鑄造／贖回紀錄顯示供給先後經過這兩個水位；58.7K 中的 31.2K 正是之後貼文引用的 53%，所以它們說 53% 而不是 81%。"
      }
     }
    ]
@@ -1896,21 +1896,21 @@
    "claims": [
     {
      "what": {
-      "en": "First arbitrage 3 min 48 s after the first mint",
-      "zh": "首筆鑄造後 3 分 48 秒開始套利"
+      "en": "New HIMS entered arbitrage 3 min 48 s after the mint",
+      "zh": "新鑄 HIMS 在鑄造後 3 分 48 秒進入套利"
      },
      "value": "3:48",
      "unit": "min:s",
      "atTs": 1788137220,
      "onchain": {
       "series": "swaps",
-      "value": "mint 00:43:30 → 120 HIMS sold at 00:47:18",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json"
+      "value": "mint 00:43:30 → one tx at 00:47:18 moved exactly 1,000 HIMS into Uniswap v4 (120 sold into the dollar pool, 678.97 into the BONER pool)",
+      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/hims-transfers; gauge/cache/squeeze/swaps-d13c1e0285.json.ndjson"
      },
      "verdict": "supported",
      "note": {
-      "en": "Exact to the second.",
-      "zh": "精確到秒都吻合。"
+      "en": "The timing matches, to the second, the 00:47:18 transaction that carried exactly 1,000 HIMS; we have not traced it back to the minter address. Routing arbitrages had already started at 00:43:37.",
+      "zh": "時間與 00:47:18 那筆剛好帶進 1,000 顆 HIMS 的交易精確到秒吻合，但我們沒有追到這批 HIMS 是否來自鑄造地址。路由套利在 00:43:37 就已開始。"
      }
     },
     {
@@ -1920,16 +1920,16 @@
      },
      "value": 132.41,
      "unit": "USDG",
-     "atTs": 1788132480,
+     "atTs": 1788132540,
      "onchain": {
       "series": "himsUsdg (swap prints)",
-      "value": "124.70 top print (23:28:42 UTC); 71.23 top minute close (23:31)",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt)"
+      "value": "124.70 highest post-swap price (23:28:42 UTC); 122.75 highest trade price; 71.23 top minute close (23:31); 133.35 in a small 50%-fee pool (23:30:46, 0.52 HIMS)",
+      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt); gauge/cache/squeeze/swaps-d13c1e0285.json.ndjson (all 55 USDG/HIMS pools)"
      },
      "verdict": "partly",
      "note": {
-      "en": "Same order of magnitude, but no swap in either dollar pool we replay printed 132.x. Our top print, 124.70, paid 904 USDG for 12.69 HIMS. The figure may come from another of ~60 HIMS pools or a chart tool.",
-      "zh": "數量級相同，但我們重播的兩個美元池都沒有 132 美元左右的成交。最高一筆是 124.70，用 904 USDG 買 12.69 顆 HIMS。這個數字可能來自其他約 60 個 HIMS 池之一，或圖表工具。"
+      "en": "No swap in the two main dollar pools traded at 132.x. The highest post-swap price was 124.70 (that 12.69 HIMS buy paid 71.25 on average), and the highest price any trade executed at was 122.75. Across all 55 USDG/HIMS pools, the only higher trade was a 0.52 HIMS router leg into a small 50%-fee pool at 133.35 (23:30:46), which a per-trade chart could show.",
+      "zh": "兩個主要美元池都沒有 132 美元左右的成交。成交後最高池價是 124.70（那筆買進 12.69 顆，平均每顆只付 71.25），單筆成交均價最高是 122.75。在全部 55 個 USDG/HIMS 池中，唯一更高的成交是一筆路由分單經過一個 50% 手續費小池，在 23:30:46 以每顆 133.35 買到 0.52 顆；逐筆成交圖表可能會顯示這類價格。"
      }
     },
     {
@@ -1939,16 +1939,16 @@
      },
      "value": "1:53",
      "unit": "h:min",
-     "atTs": null,
+     "atTs": 1788132540,
      "onchain": {
       "series": "himsUsdg (swap prints)",
-      "value": "top print 23:28:42, 1 h 15 min before the mint",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json"
+      "value": "peak 23:28:42 (124.70 post-swap) to mint 00:43:30 = 1 h 14 min 48 s; HIMS closed at 32.95 (+14%) at 22:50",
+      "source": "web/squeeze/data.json; gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/swaps-d13c1e0285.json.ndjson (all 55 USDG/HIMS pools)"
      },
-     "verdict": "unverifiable",
+     "verdict": "contradicted",
      "note": {
-      "en": "Implies a peak near 22:50 UTC, which the main dollar pool does not show; it may refer to another pool.",
-      "zh": "推算高點約在 22:50 UTC，主美元池沒有這個高點；可能指的是其他池子。"
+      "en": "Every measure puts the peak at 23:28–23:31 (124.70 post-swap, the 133.35 trade in the 50%-fee pool, the 71.23 top minute close), 1 h 12–15 min before the mint; no USDG/HIMS pool traded above about 40 between 22:40 and 23:00. The article may use another reference point.",
+      "zh": "各種量法的高點都在 23:28–23:31（成交後池價 124.70、50% 手續費小池成交 133.35、分鐘收盤最高 71.23），距鑄造 1 小時 12–15 分；22:40–23:00 之間沒有任何 USDG/HIMS 池成交價超過約 40。文章可能採用其他參考點。"
      }
     }
    ]
@@ -2064,16 +2064,16 @@
      },
      "value": 132,
      "unit": "USDG",
-     "atTs": 1788132480,
+     "atTs": 1788132540,
      "onchain": {
       "series": "himsUsdg (swap prints)",
-      "value": "124.70 top print (23:28:42 UTC); 71.23 top minute close (23:31)",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt)"
+      "value": "124.70 highest post-swap price (23:28:42 UTC); 122.75 highest trade price; 71.23 top minute close (23:31); 133.35 in a small 50%-fee pool (23:30:46, 0.52 HIMS)",
+      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt); gauge/cache/squeeze/swaps-d13c1e0285.json.ndjson (all 55 USDG/HIMS pools)"
      },
      "verdict": "partly",
      "note": {
-      "en": "Same order of magnitude, but no swap in either dollar pool we replay printed 132.x. Our top print, 124.70, paid 904 USDG for 12.69 HIMS. The figure may come from another of ~60 HIMS pools or a chart tool.",
-      "zh": "數量級相同，但我們重播的兩個美元池都沒有 132 美元左右的成交。最高一筆是 124.70，用 904 USDG 買 12.69 顆 HIMS。這個數字可能來自其他約 60 個 HIMS 池之一，或圖表工具。"
+      "en": "No swap in the two main dollar pools traded at 132.x. The highest post-swap price was 124.70 (that 12.69 HIMS buy paid 71.25 on average), and the highest price any trade executed at was 122.75. Across all 55 USDG/HIMS pools, the only higher trade was a 0.52 HIMS router leg into a small 50%-fee pool at 133.35 (23:30:46), which a per-trade chart could show.",
+      "zh": "兩個主要美元池都沒有 132 美元左右的成交。成交後最高池價是 124.70（那筆買進 12.69 顆，平均每顆只付 71.25），單筆成交均價最高是 122.75。在全部 55 個 USDG/HIMS 池中，唯一更高的成交是一筆路由分單經過一個 50% 手續費小池，在 23:30:46 以每顆 133.35 買到 0.52 顆；逐筆成交圖表可能會顯示這類價格。"
      }
     }
    ]
@@ -2185,16 +2185,16 @@
      },
      "value": 132,
      "unit": "USDG",
-     "atTs": 1788132480,
+     "atTs": 1788132540,
      "onchain": {
       "series": "himsUsdg (swap prints)",
-      "value": "124.70 top print (23:28:42 UTC); 71.23 top minute close (23:31)",
-      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt)"
+      "value": "124.70 highest post-swap price (23:28:42 UTC); 122.75 highest trade price; 71.23 top minute close (23:31); 133.35 in a small 50%-fee pool (23:30:46, 0.52 HIMS)",
+      "source": "gauge/cache/squeeze/out/notable-swaps.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg, himsUsdgAlt); gauge/cache/squeeze/swaps-d13c1e0285.json.ndjson (all 55 USDG/HIMS pools)"
      },
      "verdict": "partly",
      "note": {
-      "en": "Our top print is 124.70 (4.3x) for 12.69 HIMS. The '$28 at the same moment' can only be Friday's close, since the NYSE was shut.",
-      "zh": "我們的最高成交是 124.70（4.3 倍），只有 12.69 顆；所謂「同一時間股價 28 美元」只能是週五收盤價，因為當時紐約證交所休市。"
+      "en": "Our highest post-swap price is 124.70 (4.3x), left by a 12.69 HIMS buy that paid 71.25 on average; the only higher trade was a 0.52 HIMS leg through a small 50%-fee pool at 133.35. The '$28 at the same moment' can only be Friday's close, since the NYSE was shut.",
+      "zh": "成交後最高池價是 124.70（4.3 倍），那筆買進 12.69 顆、平均只付 71.25；唯一更高的成交是經一個 50% 手續費小池的 0.52 顆，每顆 133.35。所謂「同一時間股價 28 美元」只能是週五收盤價，因為當時紐約證交所休市。"
      }
     }
    ]
@@ -2243,21 +2243,37 @@
     },
     {
      "what": {
+      "en": "Premium fell from 27% to 6% in 30 min",
+      "zh": "溢價在 30 分鐘內從 27% 降到 6%"
+     },
+     "value": "27 → 6",
+     "unit": "%",
+     "atTs": 1788138960,
+     "onchain": {
+      "series": "himsPremiumPct (per swap)",
+      "value": "last above 27% at 00:50:04, first at or below 6% at 01:15:35 (25.5 min)",
+      "source": "gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg)"
+     },
+     "verdict": "supported",
+     "note": null
+    },
+    {
+     "what": {
       "en": "Premium under 5% within ~1.3 h",
       "zh": "約 1.3 小時內溢價降到 5% 以下"
      },
      "value": 5,
      "unit": "%",
-     "atTs": 1788141300,
+     "atTs": 1788139080,
      "onchain": {
       "series": "himsPremiumPct",
-      "value": "below 5% for good from 01:55, 72 min after the first mint",
-      "source": "web/squeeze/data.json"
+      "value": "first close under 5% at 01:18 (swap 01:17:45), 1.3 h after the 00:00 reopen; above 5% again 01:28–01:54 (up to 14.9%) and 03:10–03:21 (up to 9%); under 5% for good from 03:22",
+      "source": "web/squeeze/data.json; gauge/cache/squeeze/out/swaps-raw-main.json (himsUsdg)"
      },
      "verdict": "supported",
      "note": {
-      "en": "Their \"27% to 6% in 30 minutes\" step does not match our minutes (~90% at 00:46, ~12% by 00:55, ~6% by 01:15).",
-      "zh": "他們說的「30 分鐘內從 27% 降到 6%」與我們的分鐘資料不符（00:46 約 90%，00:55 約 12%，01:15 約 6%）。"
+      "en": "Gate's 1.3 h fits the first crossing, counted from the 00:00 reopen; the premium came back above 5% twice before settling.",
+      "zh": "Gate 說的 1.3 小時對應從 00:00 重新開放起算的第一次跌破；之後溢價又兩度回到 5% 以上才穩定下來。"
      }
     }
    ]
@@ -2312,12 +2328,12 @@
  ],
  "findings": [
   {
-   "en": "X watched it happen, mostly as a joke. The first post asking whether HIMS was being squeezed came 13 seconds before the dollar pool sold its last HIMS (23:24:59 UTC); by 23:39 a user saw routers going around the empty pool via BONER and AI. The first numbers arrived at 00:13 and match the chain at 00:03 exactly.",
-   "zh": "X 上的人是即時看著它發生的，只是多半當成笑話。第一則問 HIMS 是否被擠壓的貼文，比美元池賣出最後一顆 HIMS（23:24:59 UTC）早了 13 秒；23:39 已有用戶發現路由器改走 BONER 與 AI 繞過空掉的池子。第一批數字在 00:13 出現，和鏈上 00:03 的狀態完全吻合。"
+   "en": "X watched it happen, mostly as a joke. The first post asking whether HIMS was being squeezed came 13 seconds before the dollar pool sold its last HIMS (23:24:59 UTC); by 23:39 a user saw routers going around the nearly empty pool via BONER and AI. The first numbers arrived at 00:13 and match the chain at 00:03, all within about 1%.",
+   "zh": "X 上的人是即時看著它發生的，只是多半當成笑話。第一則問 HIMS 是否被擠壓的貼文，比美元池賣出最後一顆 HIMS（23:24:59 UTC）早了 13 秒；23:39 已有用戶發現路由器改走 BONER 與 AI，繞過幾乎見底的池子。第一批數字在 00:13 出現，和鏈上 00:03 的狀態相比，誤差都在約 1% 以內。"
   },
   {
-   "en": "The mechanism was spelled out before and during the event. In the two hours before the buying began, a trader warned against off-hours stock pairs and LONG's founder said minting was closed for the weekend. At 00:42 a reply predicted the issuer would mint and sell into the gap; the first mint landed under a minute later and the largest single sale 3 min 48 s after that.",
-   "zh": "機制在事前與事中都有人講清楚了。買盤開始前的兩小時內，有交易員警告別在休市時段碰股票配對，LONG 創辦人也說週末暫停鑄造。00:42 有則回覆預言發行方會鑄造後賣進價差；不到一分鐘後首筆鑄造上鏈，3 分 48 秒後出現最大一筆單筆賣出。"
+   "en": "The mechanism was spelled out before and during the event. In the two hours before the buying began, a trader warned against off-hours stock pairs and a LONG co-founder said minting was closed for the weekend. At 00:42 a reply predicted that whoever can mint would mint and sell into the gap; the first mint landed under a minute later, and the sharpest single-swap price drop (−37.5%, a 120 HIMS sale) came 3 min 48 s after that.",
+   "zh": "機制在事前與事中都有人講清楚了。買盤開始前的兩小時內，有交易員警告別在休市時段碰股票配對，LONG 共同創辦人也說週末暫停鑄造。00:42 有則回覆預言握有鑄造權的一方會鑄造後賣進價差；不到一分鐘後首筆鑄造上鏈，3 分 48 秒後出現單筆跌幅最大的一筆賣出（賣出 120 顆，池價跌 37.5%）。"
   },
   {
    "en": "Nobody official spoke. From 28 Aug to 10 Sep we found no post about HIMS or BONER from Robinhood, its executives or Hims & Hers corporate accounts, and the BONER account joked through the drain. The only company-side signal is that the Hims & Hers CEO follows the BONER account (first noticed 6 Sep, confirmed 25 Sep).",
@@ -2328,8 +2344,8 @@
    "zh": "「流通量擠壓」（float squeeze）一詞出自 00:13 那串貼文，作者後來還糾正了 The Defiant 用「軋空」下的標題，DeFiPrime 與 OKX Ventures 也沿用這個說法。但「軋空」仍然更常見：8 月 31 日與 9 月 1 日談這起事件的貼文用了 55 次「軋空」，「流通量擠壓」只有 29 次。"
   },
   {
-   "en": "Posts that quote a moment agree with the chain: 81%, 92 HIMS against $135K, $39, $61.15, $500K and 29,765 tokens all match to the minute. The $132.64 peak, first reported by The Defiant about 19 hours later, spread to nearly 80 posts in 11 languages, including a BingX referral template, but the dollar pool's top print was 124.70, for 12.69 HIMS. Shares of 81%, 86% and 53% differ because supply grew from 15,227 to 42,493 by Monday 14:00.",
-   "zh": "引用特定時刻的貼文，數字都和鏈上一致：81%、92 顆 HIMS 對 13.5 萬美元、39 美元、61.15 美元、50 萬美元、29,765 顆，全都對得上分鐘資料。132.64 美元的高點則是 The Defiant 在約 19 小時後首先報導，之後擴散到近 80 則、11 種語言的貼文，其中包括一套 BingX 推薦連結模板；但美元池最高成交是 124.70，而且只成交 12.69 顆。81%、86%、53% 等比例之所以不同，是因為供給在週一 14:00 前已從 15,227 增加到 42,493 顆。"
+   "en": "Posts that quote a moment agree with the chain: 81%, 92 HIMS against $135K, $39, $61.15, $500K and 29,765 tokens all match to the minute. The $132.64 peak, first reported by The Defiant about 19 hours later, spread to nearly 80 posts in 11 languages, including a BingX referral template. No swap in the two main dollar pools traded near 132: the highest post-swap price was 124.70, left by a 12.69 HIMS buy that paid 71.25 on average, and the only higher trade was a 0.52 HIMS router leg through a small 50%-fee pool at 133.35. 81% (Mon 00:03) and 86% (DeFiPrime; our peak is 84.6% at 00:29, and their count may include fees) describe the same fixed 15,227 supply at different moments; later figures such as 53% came after the mints, when about 58.7K HIMS existed (Monday evening UTC).",
+   "zh": "引用特定時刻的貼文，數字都和鏈上一致：81%、92 顆 HIMS 對 13.5 萬美元、39 美元、61.15 美元、50 萬美元、29,765 顆，全都對得上分鐘資料。132.64 美元的高點則是 The Defiant 在約 19 小時後首先報導，之後擴散到近 80 則、11 種語言的貼文，其中包括一套 BingX 推薦連結模板；但兩個主要美元池都沒有 132 美元左右的成交：成交後的最高池價是 124.70，來自一筆買進 12.69 顆、平均每顆只付 71.25 的交易；唯一更高的成交，是一筆路由分單經過一個 50% 手續費小池的 0.52 顆，每顆 133.35。81%（週一 00:03）與 86%（DeFiPrime；我們的最高值是 00:29 的 84.6%，他們的數字可能含手續費）是同一個固定 15,227 顆供給在不同時刻的比例；53% 等較晚的數字則出現在增發之後，當時（週一晚間 UTC）供給已約 5.87 萬顆。"
   },
   {
    "en": "Some confusion came from X itself. In 34 posts up to 31 Aug 02:54 UTC, including the main thread, the text X returns links the $BONER cashtag to a Solana token address rather than the Robinhood Chain contract. A reply at 23:47 said the chart pointed to the wrong coin, and a podcast promo on 2 Sep called BONER a Solana memecoin.",
