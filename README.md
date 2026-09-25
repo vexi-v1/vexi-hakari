@@ -39,19 +39,20 @@ a stale price. So `SafeSettle` does not ask whether the two TWAPs disagree. It a
 is deep enough that faking any relevant move would cost more than it could earn on everything settling on it.
 
 The same real TSLA/USDG liquidity gives opposite answers depending on the world. A 30-minute TWAP, 100,000 USDG
-settling ([`test/fork/ShadowPool.fork.t.sol`](test/fork/ShadowPool.fork.t.sol), block 72,409,810):
+settling ([`test/fork/ShadowPool.fork.t.sol`](test/fork/ShadowPool.fork.t.sol), block 72,419,444):
 
 | | Max safe exposure | 100,000 USDG |
 |---|---|---|
-| Weekend: nobody pushes back | 12,114 USDG | **refused** |
-| Weekday, arbitrage pulls back every 60 s | 112,495 USDG | settle on raw |
-| Weekday, arbitrage every 12 s | 487,478 USDG | settle on raw |
-| Weekend, a +5 % push held for 10 s | 2,612 USDG | **refused** |
+| Weekend: nobody pushes back | 12,089 USDG | **refused** |
+| Weekday, arbitrage pulls back every 60 s | 112,262 USDG | settle on raw |
+| Weekday, arbitrage every 12 s | 486,467 USDG | settle on raw |
+| Weekend, a +5 % push held for 10 s | 2,607 USDG | **refused** |
 
 The reversion time is the caller's input, not a measurement. At 30 minutes each rung pays 1 + ⌈hold ÷ reversion⌉
 round trips, so the bound scales about as 1 ÷ reversion: slower than roughly 70 s and this 100,000 USDG would be
 refused on a weekday too. The test asserts the derivable ratios (≥ 9× the weekend bound at 60 s, ≥ 39/9 more at
-12 s), not the decisions, which move with the live book.
+12 s), not the decisions, which move with the live book. One settlement on this book costs about 1.05M gas with
+arbitrage closed and 4.1M with it open (three push widths per move), storage cold.
 
 ### Was HIMS a one-off?
 
@@ -106,7 +107,8 @@ thin book, pushes the price +35 % and keeps it there with small swaps. A minute 
 1,000,000 tokens of exposure:
 [tx `0x50c06e53…299e`](https://explorer.testnet.chain.robinhood.com/tx/0x50c06e53dad5689111ed40cbb80f8cb4dd43f1f357db44d141b9da48f4dc299e)
 emits `Settled` with raw tick 3000, truncated 1250, trusted **false**: the thin pool could safely carry
-3.2 × 10¹² wei (0.0000032 tokens), bound set by a 1,823-tick move up. 382k gas. Decode it yourself:
+3.2 × 10¹² wei (0.0000032 tokens), bound set by a 1,823-tick move up. 382k gas on this thin pool; a real
+book costs more (below). Decode it yourself:
 
 ```bash
 cast receipt 0x50c06e53dad5689111ed40cbb80f8cb4dd43f1f357db44d141b9da48f4dc299e --rpc-url https://rpc.testnet.chain.robinhood.com/rpc --json | jq -r '.logs[0].data' | xargs cast abi-decode --input 'Settled(int24,int24,bool,uint256,uint256,int24,bool)'
@@ -117,8 +119,8 @@ On mainnet 4663 we write nothing: the lens runs there by state override
 
 ## Numbers
 
-**The lens against a real pool.** On a 4663 fork at block 72,409,810, buying 10 TSLA and selling them back
-in one unlock nets −26.124117 USDG; the lens pushed to the exact price that buy reached reports 26.124117
+**The lens against a real pool.** On a 4663 fork at block 72,419,444, buying 10 TSLA and selling them back
+in one unlock nets −26.126663 USDG; the lens pushed to the exact price that buy reached reports 26.126663
 USDG for 10.000000 TSLA ([`test/fork/PushCostLens.fork.t.sol`](test/fork/PushCostLens.fork.t.sol)). The fork
 follows the chain head, because the public RPC does not keep old state, so the test asserts agreement
 within 0.1 % rather than a fixed figure. Output saved in [`docs/demo-outputs/`](docs/demo-outputs/) by
@@ -181,7 +183,7 @@ truncated depending on whether a fake of the gap between the two TWAPs was cheap
 | Finding | First rule | Now (`98bc7d7`) | Test |
 |---|---|---|---|
 | A push held until both TWAPs agree | settled on the fake, unchecked | refused | `test_pushHeldUntilTheSeriesConverge_isStillRefused` |
-| The HIMS weekend, a five-hour drift | settled at 43–52 USDG | refused above 115 USDG | gauge `hims-replay`, max safe exposure |
+| The HIMS weekend, a five-hour drift | settled at 43–52 USDG | refused above 115 USDG | gauge `hims-replay`; the gauge's bound is pinned to `CostModel.maxSafeExposure` by `WalkFixture` + `max-safe-exposure.test.ts` |
 | A genuine surge on a thin pool | settled on the lagging truncated price | refused, explicitly | `test_layer3_genuineSurgeOnThinPool_isRefused` |
 | Gain counted per call | ten settlements each "not worth faking" | the input is the total exposure on the price | documented; the caller supplies it |
 | TSLA weekday/weekend contrast | flipped inside a 43k–106k notional band at 5 s | a bound about 9× higher on a weekday (60 s reversion) than on a weekend | `test_tslaShapedBook_maxSafeExposure_weekendVsWeekday` |
@@ -203,12 +205,19 @@ inflated the cost (fixed in `d93a700`), and that the gain used the tick's direct
   mint/redeem is closed, and otherwise a slow, measured bound, since a fast one overstates what faking costs. With
   arbitrage closed the bound is a lower bound (fees on an exact retrace); with it open, it is only as good as the
   reversion time. `settle` is permissionless: a `Settled` log is only as meaningful as its caller.
+- **Refusal can be forced.** A rule that refuses when a pool is thin hands a lever to anyone who can make it look
+  thin at settlement: an LP pulling liquidity just before expiry, or a push into a thin stretch (the bound is read
+  from the price now). What a refused settlement does next (wait and retry, extend the expiry, fall back to a slower
+  source) is the integrator's call, and that fallback is where the next attack goes. HAKARI does not choose it.
 - **The ladder samples moves up to 20 %.** On the pools we measured the bound was usually set by the 20 % rung,
-  where liquidity thins, so a larger move could be cheaper still and the true bound lower. A wider or adaptive
-  ladder costs more gas; a settlement is already ~380k.
+  where liquidity thins, so a larger move could be cheaper still and the true bound lower.
+- **Gas.** One settlement on the TSLA book costs about 1.05M gas with arbitrage closed and 4.1M with it open
+  (6–7 moves × 2 directions × up to 3 push widths, each a capped walk), storage cold. Fine on an L2, heavy on L1;
+  a wider or adaptive ladder would cost more.
 - **View mode sees stored fees only.** `depthToMove` / `roundTripCost` fold in the LP and protocol fee from
   `slot0`; hook-taken charges and per-swap fee overrides appear only in the exact `quotePush`. Measured in review
-  on BONER/HIMS (dynamic fee, hooked): view ≈ 0.066 × exact. On hooked pools the bound can be far too high.
+  on BONER/HIMS (dynamic fee, hooked): view ≈ 0.066 × exact. On hooked pools the bound can be far too high; GLD's
+  pool in the weekend chart is one (marked †).
 - **The walk is capped** (`MAX_WALK_STEPS` = 64 segments); past the cap a cost is "at least this"
   (`costComplete = false`), so the bound is too.
 - **One Δ per hook**, fixed at deployment, and the hook only covers pools created with it. Δ now affects only the
@@ -235,7 +244,7 @@ faking a price fell two orders of magnitude in four hours, next to a rebuilt wee
 git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari && cd vexi-hakari
 forge test --no-match-path 'test/fork/*'          # 37 tests, no RPC
 script/record-fork-tests.sh                       # 5 fork tests on real pools (public RPC, ~4 min), URLs masked
-cd gauge && npm ci && npm test                    # 20 tests: the TS math port is pinned to the Solidity walk
+cd gauge && npm ci && npm test                    # 21 tests: the walk and the bound are pinned to the Solidity ones
 npm run discover                                  # the deepest USDG pool of 30 stock tokens
 npm run weekend -- 2026-09-18                     # rebuild a weekend for every one of them
 npm run hims && npm run ladder && npm run calibrate && npm run charts
