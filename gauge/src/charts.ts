@@ -94,7 +94,7 @@ export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio
   });
   if (himsRef) s += `<text x="24" y="${H - 54}" font-size="12" fill="${C.ink}">For comparison, HIMS on Sunday 2026-08-30: ${fmt(himsRef.from)} → ${fmt(himsRef.to)} USDG (×${himsRef.ratio.toFixed(3)}).</text>`;
   s += `<text x="24" y="${H - 34}" font-size="11" fill="${C.muted}">SafeSettle's bound with nobody pushing back. ×N = weekend minimum ÷ Friday. Data: gauge/data/weekend-${d.friday}.json</text>`;
-  if (rows.some((r: any) => r.hooked)) s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">† Hooked pool: the hook's own charges are not in the bound, which may read high.</text>`;
+  if (rows.some((r: any) => r.hooked)) s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">† Hooked pool: the hook's own charges are not in the bound, so it may read low (conservative).</text>`;
   return s + "</svg>";
 }
 
