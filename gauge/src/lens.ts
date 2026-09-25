@@ -8,7 +8,7 @@ import { POOL_MANAGER } from "./chain.ts";
 import { poolKeyOf, type PoolInfo } from "./pools.ts";
 
 /** Any address with no code; the override puts the lens there for one call. */
-export const LENS_OVERRIDE_ADDRESS = "0x4A4a4a4a4A4a4A4a4a4A4A4A4a4a4A4a4A4a4A4a" as const;
+export const LENS_OVERRIDE_ADDRESS = "0x4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a" as const;
 
 export interface PushQuote {
   sqrtPriceStart: bigint;
