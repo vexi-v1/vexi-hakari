@@ -25,16 +25,17 @@ inside a flash action) cannot call a V4Quoter-style quote: the nested `unlock` r
 walk over the tick bitmap (`depthToMove`, `depthBetween`), and pinned it to the exact simulation in
 tests (within 0.1 %). The quoter docs could say this outright and point to a view alternative.
 
-## 3. `StateLibrary` reads the tick bitmap, but nothing walks it
+## 3. Reading the tick bitmap from outside: a word at a time, but no search from a tick
 
-"Next initialized tick from here" is the core of every depth calculation. v4-core's
-`TickBitmap.nextInitializedTickWithinOneWord` only works on a storage mapping the caller owns;
-`StateLibrary` exposes `getTickBitmap(poolId, wordPos)` but no walker over it, and neither `StateView`
-nor v4-periphery adds one. We re-implemented the word walk over `extsload`
-([`src/libraries/TickBitmapView.sol`](src/libraries/TickBitmapView.sol), ~30 lines that mirror
-`TickBitmap` bit for bit; checked against a forge fixture and a TypeScript port). A
-`StateLibrary.nextInitializedTickWithinOneWord(manager, poolId, tick, tickSpacing, lte)` would save
-every quoter, depth tool and simulator from writing it again.
+"Next initialized tick from here, in this direction" is the core of every depth or cost calculation. v4-core's
+`TickBitmap.nextInitializedTickWithinOneWord` only works on a storage mapping the caller owns. v4-periphery's
+`ReservesLens` (merged 2026-07-13) now exposes `getPopulatedTicksInWord(manager, key, wordPos)`, the v4
+`TickLens`: every populated tick in one word. What it does not offer is the directional search from a given
+tick. We re-implemented that over `extsload`
+([`src/libraries/TickBitmapView.sol`](src/libraries/TickBitmapView.sol), ~30 lines that mirror `TickBitmap` bit
+for bit; checked against a forge fixture and a TypeScript port). We missed `ReservesLens` at first because we
+built against an older periphery. A `nextInitializedTickWithinOneWord(manager, poolId, tick, tickSpacing, lte)`
+beside it would save every quoter, depth tool and simulator from writing the search again.
 
 ## 4. A view over pool state can be gamed inside an unlock
 

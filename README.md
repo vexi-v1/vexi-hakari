@@ -1,8 +1,8 @@
 # HAKARI (秤) — what it costs to fake a price
 
 **A Uniswap v4 price is only as trustworthy as it is expensive to fake.** HAKARI measures that cost for
-any v4 pool, keeps the raw and the truncated TWAP side by side in a hook, and settles on the raw price
-only when faking it would cost an attacker more than it would earn them.
+any v4 pool, turns it into the largest settlement the pool can safely carry right now, and settles on the
+pool's TWAP only below that line. Above it, it refuses.
 
 ![HIMS/USDG on Sunday 2026-08-30: pool price vs the NYSE close, and the cost to push it 10 %](docs/img/hims-weekend.svg)
 
@@ -11,9 +11,11 @@ Sunday 2026-08-30 was Robinhood Chain's busiest day ever: $270.6M of stock-token
 minted or redeemed, so nobody could arbitrage. By 23:53 UTC, with minting still closed, pushing the HIMS/USDG
 v4 pool 10 % higher cost **12 USDG** in fees (it had cost 1,351 four hours earlier). When minting reopened
 the pool stood at **54.50 USDG**; the stock had closed Friday at **28.84**. Any lending market, perp or option
-settling on that pool would have paid out on a price no arbitrage could correct. The hundredfold fall in the cost
-to push is what HAKARI measures. Its demo settlement rule would **not** have stopped that payout: replaying the
-weekend's real swaps through the hook's rule settles at 43–52 USDG (see [Limitations](#limitations)).
+settling on that pool would have paid out on a price no arbitrage could correct. HAKARI measures it: the largest
+settlement the pool could safely carry fell from **7,259 USDG** at 19:40 to **115 USDG** at 23:53, and `SafeSettle`
+refuses anything above that line. Our first rule, which chose between the raw and the truncated TWAP, would not
+have: replaying the weekend's swaps through it settles at 43–52 USDG. An internal review showed why, and the rule
+changed ([What the review found](#what-the-review-found-and-what-changed)).
 
 ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · MIT ·
 [`FEEDBACK.md`](FEEDBACK.md) · spec [`SPEC.md`](SPEC.md) · prompts [`docs/prompts/`](docs/prompts/)
@@ -24,69 +26,70 @@ ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · 
 |---|---|---|
 | **`PushCostLens`** | What it costs to push any v4 pool to a price and sell straight back. **Exact mode** runs real swaps to a price limit inside `unlock` and reverts with the answer (the V4Quoter pattern, with a price limit V4Quoter lacks). **View mode** walks the tick bitmap through `StateLibrary`, from any starting price, so a contract already inside an unlock can still ask. Needs no deployment: inject its bytecode with an `eth_call` state override. | [`src/PushCostLens.sol`](src/PushCostLens.sol) |
 | **`HakariOracleHook`** | OpenZeppelin's truncated oracle hook plus `twaps()`: the raw **and** truncated TWAP in one call. Records before the first swap of each second, so a push undone in the same transaction is never seen. | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol) |
-| **`SafeSettle`** | A demo settlement rule. Raw ≈ truncated → raw. Otherwise price the fake with the lens, from the truncated price to where the pool was held: cost > gain → a genuine move, settle raw; cost ≤ gain → settle truncated. Emits `Settled(id, raw, trunc, usedRaw, cost, gain)`. | [`src/SafeSettle.sol`](src/SafeSettle.sol), [`src/CostModel.sol`](src/CostModel.sol) |
+| **`SafeSettle`** + **`CostModel`** | A demo settlement rule. For moves of 0.5–20 % (plus the gap between the two TWAPs), both ways from the price now, the lens prices holding the move over the window, re-pushing after every pull-back while arbitrage is open. Cost ÷ what the move earns per unit of exposure, minimised, is the **max safe exposure**. The total exposure settling on the price must be below it to settle on the raw TWAP; otherwise it refuses. Emits `Settled(id, raw, trunc, trusted, exposure, maxSafeExposure, bindingTicks, bindingUp)`. | [`src/SafeSettle.sol`](src/SafeSettle.sol), [`src/CostModel.sol`](src/CostModel.sol) |
 | **Gauge** (TypeScript) | Live cost ladder, Δ calibration from `Swap` events, any past weekend rebuilt from `ModifyLiquidity` logs, the Robinhood mint-window flag. | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
 | **Web page** | Paste any pool → live cost to push it, fenced or not, suggested Δ. HIMS replay, every stock pool over a weekend, SafeSettle's decisions. | [`web/`](web/) — `python3 -m http.server 8790 --bind 127.0.0.1`, open <http://localhost:8790/web/> |
 
 ### Why not just truncate the oracle?
 
-Truncation (Panoptic's design: each observation moves at most Δ ticks) blocks a sustained push. It also
-lags in a genuine crash, and then honest holders are settled on a stale price. That is why some protocols
-turn it off. HAKARI keeps both series and decides per settlement, using what a fake would cost right now.
+Truncation (Panoptic's design: each observation moves at most Δ ticks) slows a sustained push. It does not stop
+one: Δ is per *observation*, so a push held with one dust swap a second catches the truncated series up in x/Δ
+seconds, and then both TWAPs agree on the fake. And in a genuine crash truncation lags, settling honest holders on
+a stale price. So `SafeSettle` does not ask whether the two TWAPs disagree. It asks whether this pool, right now,
+is deep enough that faking any relevant move would cost more than it could earn on everything settling on it.
 
-The same push on the same TSLA-shaped pool gives opposite answers depending on the world. We hold +5 % for
-a 10-second window on a 100,000 USDG settlement ([`test/fork/ShadowPool.fork.t.sol`](test/fork/ShadowPool.fork.t.sol),
-block 72,308,997):
+The same real TSLA/USDG liquidity gives opposite answers depending on the world. A 30-minute TWAP, 100,000 USDG
+settling ([`test/fork/ShadowPool.fork.t.sol`](test/fork/ShadowPool.fork.t.sol), block 72,409,810):
 
-| | Faking costs | Faking earns | SafeSettle uses |
-|---|---|---|---|
-| Weekend: nobody can arbitrage | 2,070 USDG | 4,801 USDG | **truncated** (don't pay on it) |
-| Weekday: arbitrage pulls back every 5 s | 5,070 USDG | 4,801 USDG | **raw** (a real move; truncation would only lag) |
+| | Max safe exposure | 100,000 USDG |
+|---|---|---|
+| Weekend: nobody pushes back | 12,114 USDG | **refused** |
+| Weekday, arbitrage pulls back every 60 s | 112,495 USDG | settle on raw |
+| Weekday, arbitrage every 12 s | 487,478 USDG | settle on raw |
+| Weekend, a +5 % push held for 10 s | 2,612 USDG | **refused** |
 
-The contrast rests on two inputs. The answers differ only for settlements between about 43,000 and 106,000
-USDG (below that both days settle raw, above it both settle truncated). The 5-second reversion is also an
-assumption, not a measurement: at 10 seconds or slower, the weekday cost is 2 × 2,070 = 4,140 USDG and both
-days settle truncated.
+The reversion time is the caller's input, not a measurement. At 30 minutes each rung pays 1 + ⌈hold ÷ reversion⌉
+round trips, so the bound scales about as 1 ÷ reversion: slower than roughly 70 s and this 100,000 USDG would be
+refused on a weekday too. The test asserts the derivable ratios (≥ 9× the weekend bound at 60 s, ≥ 39/9 more at
+12 s), not the decisions, which move with the live book.
 
 ### Was HIMS a one-off?
 
-![Every stock pool, the weekend of 2026-09-18: Friday's cost to push +10 % vs the cheapest moment while minting was closed](docs/img/weekend-2026-09-18.svg)
+![Every stock pool, the weekend of 2026-09-18: the largest settlement each could carry on Friday vs its lowest while minting was closed](docs/img/weekend-2026-09-18.svg)
 
 We rebuilt the 12 deepest Robinhood stock pools plus HIMS for the weekend of 2026-09-18 → 21, from Friday's
 US close to Monday, every six hours and around the mint reopening: 187 points, and at every one the rebuilt
 liquidity equals the chain's own `Swap` record ([`gauge/data/weekend-2026-09-18.json`](gauge/data/weekend-2026-09-18.json)).
-**Nothing collapsed.** The cheapest moment while minting was closed cost between 0.67× (GOOGL) and 2.4× (GLD)
-of Friday's figure; HIMS 0.96×. On 2026-08-30 it was 0.009×.
+**Nothing collapsed.** The lowest max safe exposure while minting was closed was 0.69× (GOOGL) to 2.4× (GLD)
+of Friday's; HIMS 1.06×. On 2026-08-30 HIMS fell to 0.016× (7,259 → 115 USDG).
 
 So a closed mint window does not make a pool cheap to push. It removes the force that would push a price
 back, and on 08-30 the price left the LPs' ranges and the HIMS inventory moved to another pool. That can
 happen on a given weekend, and most weekends it doesn't. This is why HAKARI measures at settlement instead
-of reading the calendar: a calendar rule would pay truncation's lag every weekend, including the ones where the
-book held. Measuring at settlement is not enough on its own, though: once a push has been held long enough for
-the two series to agree, there is nothing left to price (see [Limitations](#limitations)). `npm run weekend -- <friday>`
-rebuilds any weekend.
+of reading the calendar: a calendar rule would refuse every weekend, including the ones where the book held, while
+a big enough exposure is unsafe on any weekend. `npm run weekend -- <friday>` rebuilds any weekend.
 
 ## Where the Uniswap integration is
 
 Everything runs against the **official v4 PoolManager** `0x8366a39CC670B4001A1121B8F6A443A643e40951`
-(same address on Robinhood Chain 4663 and testnet 46630). Links are pinned to commit `fced71c`.
+(same address on Robinhood Chain 4663 and testnet 46630). Links are pinned to commit `98bc7d7`.
 
 | What | Code |
 |---|---|
-| `PoolManager.unlock` → `unlockCallback`, reverting with the result | [`PushCostLens.sol#L85`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L85), [`#L104`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L104) |
-| Push leg: `poolManager.swap` to a `sqrtPriceLimitX96`, `BalanceDelta` read | [`PushCostLens.sol#L114`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L114) |
-| Return leg: sell exactly what came out | [`PushCostLens.sol#L125`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L125) |
-| Push to an exact price | [`PushCostLens.sol#L76`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L76) |
-| View walk over `StateLibrary` (`getSlot0`, `getLiquidity`, `getTickBitmap`, `getTickLiquidity`), protocol fee folded in as `Pool.swap` does | [`PushCostLens.sol#L179`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L179), [`#L267`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L267), [`TickBitmapView.sol#L14`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/libraries/TickBitmapView.sol#L14) |
-| Walk from any price (the honest one), through the liquidity as it is now | [`PushCostLens.sol#L197`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L197), [`#L231`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/PushCostLens.sol#L231) |
-| `BaseOracleHook.observe` → both TWAPs | [`HakariOracleHook.sol#L24`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/HakariOracleHook.sol#L24) |
-| Refuse to answer inside an unlock (`TransientStateLibrary.isUnlocked`) | [`SafeSettle.sol#L67`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/SafeSettle.sol#L67) |
-| The decision: cost to fake vs gain if faked | [`SafeSettle.sol#L78-L83`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/SafeSettle.sol#L78-L83), [`CostModel.sol#L27`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/CostModel.sol#L27), [`#L60`](https://github.com/vexi-v1/vexi-hakari/blob/fced71c0a05eabd9f6f5fcbca50df165224759b8/src/CostModel.sol#L60) |
+| `PoolManager.unlock` → `unlockCallback`, reverting with the result | [`PushCostLens.sol#L85`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L85), [`#L104`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L104) |
+| Push leg: `poolManager.swap` to a `sqrtPriceLimitX96`, `BalanceDelta` read | [`PushCostLens.sol#L114`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L114) |
+| Return leg: sell exactly what came out | [`PushCostLens.sol#L125`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L125) |
+| Push to an exact price | [`PushCostLens.sol#L76`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L76) |
+| View walk over `StateLibrary` (`getSlot0`, `getLiquidity`, `getTickBitmap`, `getTickLiquidity`), protocol fee folded in as `Pool.swap` does | [`PushCostLens.sol#L179`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L179), [`#L267`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L267), [`TickBitmapView.sol#L14`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/libraries/TickBitmapView.sol#L14) |
+| Walk from any price (the honest one), through the liquidity as it is now | [`PushCostLens.sol#L197`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L197), [`#L231`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/PushCostLens.sol#L231) |
+| `BaseOracleHook.observe` → both TWAPs | [`HakariOracleHook.sol#L24`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/HakariOracleHook.sol#L24) |
+| Refuse to answer inside an unlock (`TransientStateLibrary.isUnlocked`) | [`SafeSettle.sol#L76`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/SafeSettle.sol#L76) |
+| The decision: max safe exposure vs the exposure settling | [`SafeSettle.sol#L79-L88`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/SafeSettle.sol#L79-L88), [`CostModel.sol#L40`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/CostModel.sol#L40) (the bound), [`#L68`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/CostModel.sol#L68) (holding a move against arbitrage), [`#L102`](https://github.com/vexi-v1/vexi-hakari/blob/98bc7d793ce37f1a9570b1197673df0cf0afd6c4/src/CostModel.sol#L102) (what it earns) |
 | Hook salt mined against the CREATE2 proxy for the `0x1080` flag bits | [`script/Deploy.s.sol`](script/Deploy.s.sol) |
 
 ### On-chain, testnet 46630 (sources verified on the explorer)
 
-Lens and hook deployed from commit `798ab19`, `SafeSettle` from `fced71c` (the `src/` the links above point
+Lens and hook deployed from commit `798ab19`, `SafeSettle` from `98bc7d7` (the `src/` the links above point
 to), all by the project wallet `0x51E4EfE117e8Baf023dab3B7Cb5380DF1d378DF1`. Explorer:
 <https://explorer.testnet.chain.robinhood.com>.
 
@@ -94,19 +97,19 @@ to), all by the project wallet `0x51E4EfE117e8Baf023dab3B7Cb5380DF1d378DF1`. Exp
 |---|---|---|
 | `PushCostLens` | [`0x4E73CcC9Aed21FFBf3F69d9Dd92f9F33F39669E5`](https://explorer.testnet.chain.robinhood.com/address/0x4E73CcC9Aed21FFBf3F69d9Dd92f9F33F39669E5) | [`0x85288ca1…d5d6`](https://explorer.testnet.chain.robinhood.com/tx/0x85288ca13826577622afa4177ab3335b8e5a0e9e0de13af39495ed534d99d5d6) |
 | `HakariOracleHook` (Δ = 250) | [`0x3b58D774cE351227B24A91103b20bA4fc068D080`](https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080) | [`0xf591433a…8d50`](https://explorer.testnet.chain.robinhood.com/tx/0xf591433a7322099962a117b9ebad9a0671f9dc36dcb7e323b035aacfaa538d50) |
-| `SafeSettle` | [`0x8191E93066CE93ca6D6bf338D31e32A655CD6f44`](https://explorer.testnet.chain.robinhood.com/address/0x8191E93066CE93ca6D6bf338D31e32A655CD6f44) | [`0x82d1043c…9296`](https://explorer.testnet.chain.robinhood.com/tx/0x82d1043c10f3573d4c0dc88875006587a8a11c9b47bb3bcc785ee08b399f9296) |
+| `SafeSettle` | [`0x68435Bf7A1c207A62E0C3acc6884383B2B273561`](https://explorer.testnet.chain.robinhood.com/address/0x68435Bf7A1c207A62E0C3acc6884383B2B273561) | [`0x87accb14…7370`](https://explorer.testnet.chain.robinhood.com/tx/0x87accb14f57925715ea52de655bd56892a266153d479bcdde292b9da7d2b7370) |
 
 **The whole loop, in public.** [`script/DemoPool.s.sol`](script/DemoPool.s.sol) creates a pool with the hook
 on the official PoolManager (id `0xe454eb2b3746dce8cff428120140f68ff83ae5aff586e358c940da5e8a71306c`), adds a
 thin book, pushes the price +35 % and keeps it there with small swaps. A minute later
-[`script/DemoSettle.s.sol`](script/DemoSettle.s.sol) calls `SafeSettle.settle` with a 60-second window and a
-1,000,000-token notional:
-[tx `0x8a18e030…7471`](https://explorer.testnet.chain.robinhood.com/tx/0x8a18e030d29caf64970c843ca73483dfd7bcd656bbebe4bbd3ac200b81c27471)
-emits `Settled` with raw tick 3000, truncated 1250, cost to fake 5.6 × 10¹¹ wei, gain 1.9 × 10²³ wei →
-settled on the truncated price. Decode it yourself:
+[`script/DemoSettle.s.sol`](script/DemoSettle.s.sol) calls `SafeSettle.settle` with a 60-second window and
+1,000,000 tokens of exposure:
+[tx `0x50c06e53…299e`](https://explorer.testnet.chain.robinhood.com/tx/0x50c06e53dad5689111ed40cbb80f8cb4dd43f1f357db44d141b9da48f4dc299e)
+emits `Settled` with raw tick 3000, truncated 1250, trusted **false**: the thin pool could safely carry
+3.2 × 10¹² wei (0.0000032 tokens), bound set by a 1,823-tick move up. 382k gas. Decode it yourself:
 
 ```bash
-cast receipt 0x8a18e030d29caf64970c843ca73483dfd7bcd656bbebe4bbd3ac200b81c27471 --rpc-url https://rpc.testnet.chain.robinhood.com/rpc --json | jq -r '.logs[0].data' | xargs cast abi-decode --input 'Settled(int24,int24,bool,uint256,uint256)'
+cast receipt 0x50c06e53dad5689111ed40cbb80f8cb4dd43f1f357db44d141b9da48f4dc299e --rpc-url https://rpc.testnet.chain.robinhood.com/rpc --json | jq -r '.logs[0].data' | xargs cast abi-decode --input 'Settled(int24,int24,bool,uint256,uint256,int24,bool)'
 ```
 
 On mainnet 4663 we write nothing: the lens runs there by state override
@@ -114,23 +117,25 @@ On mainnet 4663 we write nothing: the lens runs there by state override
 
 ## Numbers
 
-**The lens against a real pool.** On a 4663 fork at block 72,308,997, buying 10 TSLA and selling them back
-in one unlock nets −25.885799 USDG; the lens pushed to the exact price that buy reached reports 25.885799
+**The lens against a real pool.** On a 4663 fork at block 72,409,810, buying 10 TSLA and selling them back
+in one unlock nets −26.124117 USDG; the lens pushed to the exact price that buy reached reports 26.124117
 USDG for 10.000000 TSLA ([`test/fork/PushCostLens.fork.t.sol`](test/fork/PushCostLens.fork.t.sol)). The fork
 follows the chain head, because the public RPC does not keep old state, so the test asserts agreement
-within 0.1 % rather than a fixed figure. Output saved in [`docs/demo-outputs/`](docs/demo-outputs/).
+within 0.1 % rather than a fixed figure. Output saved in [`docs/demo-outputs/`](docs/demo-outputs/) by
+[`script/record-fork-tests.sh`](script/record-fork-tests.sh), which runs on the public RPC and masks every URL.
 
 **The HIMS weekend**, rebuilt from 1,998 `ModifyLiquidity` logs. At each point's last `Swap`, the rebuilt
 active liquidity equals that event's own `liquidity` field ([`gauge/data/hims-replay.json`](gauge/data/hims-replay.json)).
-"HIMS in pool" is curve principal excluding fees, not the reserves you could sell into:
+"HIMS in pool" is curve principal excluding fees, not the reserves you could sell into. "Max safe exposure" is
+`SafeSettle`'s bound with nobody pushing back, computed by the gauge's mirror of `CostModel`:
 
-| Block | Time (UTC) | Mint window | USDG/HIMS | HIMS in pool | Cost to push +10 % |
-|---|---|---|---|---|---|
-| 50,265,277 | Sun 19:40 | closed | 29.38 | 2,606 | 1,351 USDG |
-| 50,415,299 | Sun 23:53 | closed | 43.27 | 67 | **12 USDG** |
-| 50,444,948 | Mon 00:43 (last block before the first mint, #50,444,949) | open | 54.50 | 32 | 13 USDG |
-| 50,490,000 | Mon 01:59 | open | 29.31 | 2,036 | 867 USDG |
-| 50,772,447 | Mon 09:54 | open | 29.48 | 2,567 | 1,307 USDG |
+| Block | Time (UTC) | Mint window | USDG/HIMS | HIMS in pool | Cost to push +10 % | Max safe exposure |
+|---|---|---|---|---|---|---|
+| 50,265,277 | Sun 19:40 | closed | 29.38 | 2,606 | 1,351 USDG | 7,259 USDG |
+| 50,415,299 | Sun 23:53 | closed | 43.27 | 67 | **12 USDG** | **115 USDG** |
+| 50,444,948 | Mon 00:43 (last block before the first mint, #50,444,949) | open | 54.50 | 32 | 13 USDG | 124 USDG |
+| 50,490,000 | Mon 01:59 | open | 29.31 | 2,036 | 867 USDG | 5,310 USDG |
+| 50,772,447 | Mon 09:54 | open | 29.48 | 2,567 | 1,307 USDG | 7,009 USDG |
 
 **Cost ladder**, mainnet 4663, block 72,241,051 ([`gauge/data/ladder.json`](gauge/data/ladder.json)). Pushing
 the stock *up*; fees lost / capital needed, in USDG. A snapshot: the book moves (TSLA's +5 % cost ranged about
@@ -152,71 +157,64 @@ carries one Δ, so a stock-grade and a memecoin-grade hook are two deployments.
 
 ## The three layers, as tests
 
-`forge test --match-contract ThreeLayers -vv` ([`test/demo/ThreeLayers.t.sol`](test/demo/ThreeLayers.t.sol)):
+`forge test --match-contract ThreeLayers -vv` ([`test/demo/ThreeLayers.t.sol`](test/demo/ThreeLayers.t.sol)), one
+token of exposure each:
 
 1. **An atomic push fools `slot0`, not the hook.** A naive consumer settles on tick 499 after a 500-tick push
-   undone in the same transaction; both of the hook's series read the honest tick, −1.
-2. **A sustained push on a thin pool → settle truncated.** Raw TWAP 3000, truncated 650; faking it cost
-   7.3 × 10¹¹ wei against a 2.6 × 10¹⁷ wei gain.
-3. **A genuine surge on a deep pool → settle raw.** Raw 1650, truncated 550; faking it would cost
-   1.0 × 10¹⁸ wei against a 1.2 × 10¹⁷ wei gain, so truncation would only lag.
+   undone in the same transaction; both of the hook's series read the honest tick, −1. (Inherited from the
+   OpenZeppelin / Panoptic hook: the observation is written before the first swap of each second.)
+2. **A push held on a thin pool is refused, whether the TWAPs disagree or not.** Held 10 s: raw 3000, truncated
+   650. Held 42 s: both 3000. Either way the pool could safely carry about 3 × 10⁻⁶ tokens: refused.
+3. **A genuine surge is trusted on a deep pool and refused on a thin one.** Deep, arbitrage every 5 s: max safe
+   9.56 tokens, settle on raw 1650 while truncation lags at 550. Thin: 9.6 × 10⁻⁶ tokens, refused. Where faking is
+   cheap the rule cannot tell real from fake, and it says so instead of paying on a lagging price.
 
 The atomic case is not hypothetical. On our own options venue on testnet 46630 (Vexi), a push-trade-push
 earned +87 bps per contract after fees. That measurement is not reproduced in this repo; layer 1 is the
 in-repo evidence.
 
+## What the review found, and what changed
+
+An internal adversarial review (Abner's session, `e581e23`) attacked the first rule, which settled on raw or
+truncated depending on whether a fake of the gap between the two TWAPs was cheaper than its gain:
+
+| Finding | First rule | Now (`98bc7d7`) | Test |
+|---|---|---|---|
+| A push held until both TWAPs agree | settled on the fake, unchecked | refused | `test_pushHeldUntilTheSeriesConverge_isStillRefused` |
+| The HIMS weekend, a five-hour drift | settled at 43–52 USDG | refused above 115 USDG | gauge `hims-replay`, max safe exposure |
+| A genuine surge on a thin pool | settled on the lagging truncated price | refused, explicitly | `test_layer3_genuineSurgeOnThinPool_isRefused` |
+| Gain counted per call | ten settlements each "not worth faking" | the input is the total exposure on the price | documented; the caller supplies it |
+| TSLA weekday/weekend contrast | flipped inside a 43k–106k notional band at 5 s | a bound about 9× higher on a weekday (60 s reversion) than on a weekend | `test_tslaShapedBook_maxSafeExposure_weekendVsWeekday` |
+| A liquidity wall across transactions | bought trust | **still buys trust** (below) | `test_knownLimit_aWallAcrossTransactions_buysTrust` |
+
+Earlier the review had also found that the walk started from the pushed price and that a wall inside one unlock
+inflated the cost (fixed in `d93a700`), and that the gain used the tick's direction where the quote is currency0
+(fixed in `fced71c`).
+
 ## Limitations
 
-- **The cost is a lower bound only when nobody arbitrages** (`arbReversionSeconds = 0`): fees on an exact
-  retrace through the liquidity the pool has at settlement. With arbitrage open, the holding cost is only as
-  good as the reversion time the caller asserts; a faster one than the market delivers overstates the cost
-  and makes the raw price look safer. Pass a slow, measured bound. That input, and the mint-window flag, are
-  where `SafeSettle` trusts an off-chain gauge.
-- **Converged series are not checked.** When the raw and truncated TWAPs agree within `TOLERANCE_TICKS` (10),
-  `SafeSettle` uses raw and prices nothing. Truncation moves Δ per *observation*, not per second. With nobody
-  pushing back, an attacker who holds a push and makes one dust swap per second catches the truncated series up
-  in x/Δ observations; one window later, both series agree on the fake. On the `ThreeLayers` thin pool (+3,000
-  ticks, Δ = 100, 10-second window), holding for 10 s settles truncated (650), but holding for 42 s settles on raw
-  3,000 with cost 0. On a fenced pool, where holding is free, truncation buys x/Δ seconds, not safety. Before
-  that point, pricing from the truncated TWAP only understates the cost, which is the safe direction.
-- **The HIMS weekend, replayed through the rule.** We fed the 3,220 real HIMS/USDG swaps between 19:40 and 00:43
-  UTC on 2026-08-30/31 (1,687 distinct seconds, so 1,687 observations) through the hook's observation rule, as
-  if the pool had carried the hook. At the 54.50 peak:
-  - Δ = 10: the truncated TWAP reads 48–50 USDG over 10/30/60-minute windows. At 30 minutes the two series
-    agree within 6 ticks, so raw 48.21 would be used unchecked.
-  - Δ = 3: it reads 43–44.
-
-  Whichever series `SafeSettle` picks, it settles between 43 and 52 USDG, nowhere near the 28.84 close. A
-  five-hour drift is well within what truncation lets through.
-- **A liquidity wall across transactions** inflates the cost to fake. `SafeSettle` refuses to answer inside an
-  unlock, which stops add-ask-remove in one transaction. It does not stop three separate transactions, which can
-  sit in the same block. On the thin pool above:
-  - A wall added below the held price flipped the decision from truncated to raw.
-  - Its owner withdrew everything but 1 wei.
-  - It needs roughly the gain divided by twice the swap fee (~175× the gain at 0.3 %), all of it returned.
-
-  The hook keeps no liquidity history. v1: record time-weighted liquidity in the hook (new flags, new salt,
-  new pool), so a wall must stand for the whole window.
-- **The gain is per call.** `notionalAtStake` is one settlement's notional; an attacker earns on every
-  position, and every protocol, settling on the same price. Take ten 100,000-USDG settlements on the TSLA-shaped
-  weekday case: each one sees cost 5,070 > gain 4,801 and settles raw, while the attacker earns 48,015. Exposure
-  across protocols is not visible on-chain at all.
-- **On a thin pool a genuine move lags too.** When faking is cheap, the rule cannot tell a real move from a fake.
-  A genuine surge on the thin pool (raw 1,650, truncated 550) settles truncated, exactly as plain truncation
-  would. The trade-off is resolved only where faking is expensive relative to the notional: deep pools, small
-  settlements.
+- **A liquidity wall across transactions buys trust.** The bound reads the liquidity present at settlement.
+  `SafeSettle` refuses to answer inside an unlock, which stops add-ask-remove in one transaction, but three
+  separate transactions (even in one block) are not stopped, and the wall's owner gets it all back. The fix is
+  time-weighted liquidity recorded by the hook (new flags, new salt, new pool), so a wall must stand for the whole
+  window. `test_knownLimit_aWallAcrossTransactions_buysTrust` demonstrates the limit.
+- **Two inputs are trusted.** `exposure` must be the total settling on that price (every position, every
+  protocol), which no contract can see. `arbReversionSeconds` is the caller's statement about arbitrage: 0 while
+  mint/redeem is closed, and otherwise a slow, measured bound, since a fast one overstates what faking costs. With
+  arbitrage closed the bound is a lower bound (fees on an exact retrace); with it open, it is only as good as the
+  reversion time. `settle` is permissionless: a `Settled` log is only as meaningful as its caller.
+- **The ladder samples moves up to 20 %.** On the pools we measured the bound was usually set by the 20 % rung,
+  where liquidity thins, so a larger move could be cheaper still and the true bound lower. A wider or adaptive
+  ladder costs more gas; a settlement is already ~380k.
 - **View mode sees stored fees only.** `depthToMove` / `roundTripCost` fold in the LP and protocol fee from
-  `slot0`; hook-taken charges and per-swap fee overrides appear only in the exact `quotePush`. Measured in
-  review on BONER/HIMS (dynamic fee, hooked): view ≈ 0.066 × exact.
-- **Caller inputs.** `window`, `notional`, the quote side and `arbReversionSeconds` come from the integrator,
-  and `settle` is permissionless: a `Settled` log is only as meaningful as the caller who emitted it.
-- **One Δ per hook**, fixed at deployment, and the hook only covers pools created with it. The walk is capped
-  (`MAX_WALK_STEPS`); past the cap the cost is reported as "at least this" (`costComplete = false`). The cap is
-  shared with the uncounted walk from the current price back to the truncated one: if that leg alone exhausts
-  it, `depthBetween` returns zero and the rule settles truncated. That errs on the safe side against a fake,
-  but a genuine move across many initialized ticks will lag as plain truncation would.
-- **`SafeSettle` is a demo rule**, not a product. The contribution is the measurement and the two-series
-  hook; the rule is meant to be replaced.
+  `slot0`; hook-taken charges and per-swap fee overrides appear only in the exact `quotePush`. Measured in review
+  on BONER/HIMS (dynamic fee, hooked): view ≈ 0.066 × exact. On hooked pools the bound can be far too high.
+- **The walk is capped** (`MAX_WALK_STEPS` = 64 segments); past the cap a cost is "at least this"
+  (`costComplete = false`), so the bound is too.
+- **One Δ per hook**, fixed at deployment, and the hook only covers pools created with it. Δ now affects only the
+  truncated TWAP reported alongside, not the decision.
+- **`SafeSettle` is a demo rule**, not a product. The contribution is the measurement (lens, bound, gauge) and the
+  two-series hook; the rule shows one way to use them.
 
 ## Prior art
 
@@ -225,7 +223,7 @@ in-repo evidence.
 | [Chaos Labs, TWAP manipulation research](https://chaoslabs.xyz/posts/chaos-labs-uniswap-v3-twap-oracles) (Uniswap Foundation grant, Jan 2023) | An off-chain tool to simulate manipulating Uniswap v3 TWAP oracles | v4; the cost as an on-chain call and as a zero-deploy `eth_call`; tied to a settlement decision |
 | [Euler, `uni-v3-twap-manipulation`](https://github.com/euler-xyz/uni-v3-twap-manipulation) | Cost-of-attack for v3 TWAPs, behind Euler's oracle risk grades | v4 pools, per settlement, with the arbitrage state as an input |
 | [Uniswap, "Uniswap v3 TWAP Oracles in Proof of Stake"](https://blog.uniswap.org/uniswap-v3-oracles) (Oct 2022) | Multi-block manipulation cost for major pairs | The same question for thin pools whose arbitrage switches off on a schedule |
-| Panoptic's truncated oracle, OpenZeppelin `BaseOracleHook` | Clip each observation to ±Δ | We build on it: both series exposed, Δ calibrated per pool, the choice between them priced |
+| Panoptic's truncated oracle, OpenZeppelin `BaseOracleHook` | Clip each observation to ±Δ | We build on it and expose both series; the decision is not a choice between them (a held push makes them agree) but a bound from the pool's depth |
 | `V4Quoter` | Quote a swap by amount via unlock + revert | The same pattern to a price limit, plus a view path for callers already inside an unlock |
 
 What is new here is the combination on v4, and a measured case: a stock-token weekend on which the cost of
@@ -235,9 +233,9 @@ faking a price fell two orders of magnitude in four hours, next to a rebuilt wee
 
 ```bash
 git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari && cd vexi-hakari
-forge test --no-match-path 'test/fork/*'          # 33 tests, no RPC
-forge test --match-path 'test/fork/*' -vv         # real pools on a 4663 fork (public RPC, ~4 min)
-cd gauge && npm ci && npm test                    # 17 tests: the TS math port is pinned to the Solidity walk
+forge test --no-match-path 'test/fork/*'          # 37 tests, no RPC
+script/record-fork-tests.sh                       # 5 fork tests on real pools (public RPC, ~4 min), URLs masked
+cd gauge && npm ci && npm test                    # 20 tests: the TS math port is pinned to the Solidity walk
 npm run discover                                  # the deepest USDG pool of 30 stock tokens
 npm run weekend -- 2026-09-18                     # rebuild a weekend for every one of them
 npm run hims && npm run ladder && npm run calibrate && npm run charts
@@ -254,7 +252,8 @@ knowledge, not code: the HIMS weekend was first traced in our own pre-hackathon 
 The numbers above are re-derived here by a new collector, and they match. The atomic-push figure comes from
 our other project, Vexi; none of its code is here. An earlier testnet deployment (commit `bb1cf1a`, a shared
 deployer wallet) is superseded and kept for the record in `deployments/46630-bb1cf1a-superseded.json`; so is
-the first `SafeSettle` from `798ab19` (`0x64890652…B150`), replaced after the currency0 gain fix.
+the first two `SafeSettle` deployments, from `798ab19` (`0x64890652…B150`) and `fced71c` (`0x8191E930…6f44`),
+replaced by the rule above.
 
 ## AI disclosure
 
@@ -266,16 +265,9 @@ and the review's fixes are in the history. The pace of the commit history is the
 
 ## Next
 
-- **Fence-aware settlement.** While mint/redeem is closed and the measured cost to push is low, do not accept
-  converged series: settle on the last pre-fence TWAP, or refuse. The gauge already has the schedule and the
-  cost.
-- **Price the agreement too.** Measure the cost from an older anchor (a long-window truncated TWAP) even when
-  the two series agree, so a push held until they converge is still priced.
-- **Gain from open interest.** The integrator passes the total exposure settling on that pool at that time,
-  not one settlement's notional.
-- **Time-weighted liquidity in the hook**, so a liquidity wall has to stand for the window.
-- **Tests for every limit above.** Add the review's probes (convergence, wall across transactions, thin-pool
-  surge) as tests, and ship the HIMS replay through the hook's rule as a `gauge` script.
-- Measure the arbitrage reversion time per pool from the `Swap` stream, instead of taking it as an input.
-- `n_max`: the largest open interest a venue can safely write against a pool, straight from the ladder.
-- Upstream: a `StateLibrary` tick walker and a two-series oracle getter (`FEEDBACK.md` § 3, § 7).
+- **Time-weighted liquidity in the hook**, so a liquidity wall has to stand for the whole window.
+- **Measure the reversion time** per pool from the `Swap` stream instead of taking it as an input, and feed the
+  mint-window flag from the gauge.
+- **A wider, adaptive ladder**, searching for the cheapest move instead of sampling six.
+- Upstream: a price-limit quote on `V4Quoter` and a directional tick search next to `ReservesLens`
+  (`FEEDBACK.md` § 1, § 3).

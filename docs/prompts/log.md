@@ -143,3 +143,18 @@ Output:
 - Limitations adds convergence, the HIMS replay, the wall across transactions, per-call gain and thin-pool lag.
 - Next lists the fixes: fence-aware settlement, pricing agreement from an anchor, gain from open interest,
   time-weighted liquidity, tests for each limit.
+
+## 2026-09-26 02:30 — replace the settlement rule
+
+After reading the review (`e581e23`), Eric chose to change the rule rather than only document its limits:
+
+> 不會，你直接做2
+> ("No — just do option 2.")
+
+Output: `CostModel` v1 and `SafeSettle` v1 (`98bc7d7`): instead of choosing between the raw and truncated TWAP by
+their gap, price the largest exposure the pool can carry now (moves of 0.5–20 % and the gap, both ways, held over
+the window) and settle on raw only below it, refusing otherwise. The review's probes became tests; the liquidity
+wall across transactions stays as a known-limit test. Redeployed on 46630 and verified; the HIMS replay and the
+2026-09-18 weekend are priced as max safe exposure; `script/record-fork-tests.sh` records fork output on the public
+RPC with URLs masked.
+
