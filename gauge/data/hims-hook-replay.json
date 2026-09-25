@@ -1,0 +1,1057 @@
+{
+  "what": "HAKARI's own rules replayed on the HIMS/USDG weekend at every minute, as if HakariOracleHook had been attached to the pool. It was not: HIMS/USDG has no hook (hooks = 0x0), so no HAKARI contract ever read this pool; this is a counterfactual computed from the pool's real swaps and positions.",
+  "pool": {
+    "name": "HIMS/USDG",
+    "id": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
+    "fee": 9000,
+    "tickSpacing": 90,
+    "hooks": "0x0000000000000000000000000000000000000000",
+    "initBlock": 41738721,
+    "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+    "currency1": "0xccee82fe024c36fa15e1005ede3e9e4787e23d09",
+    "quote": "USDG (currency0)",
+    "quoteIsCurrency0": true
+  },
+  "produce": "cd gauge && npm run squeeze:hakari (alias npm run hims:hook); inputs are the squeeze collectors' caches (npm run squeeze). Per-minute arrays: gauge/cache/squeeze/out/hakari-1m.json (git-ignored, rebuilt by the command).",
+  "parameters": {
+    "deltas": [10, 3],
+    "windowsSec": [600, 1800, 3600],
+    "exposuresUsdg": [1000, 10000, 100000],
+    "toleranceTicks": 10,
+    "ladderTicks": [50, 100, 200, 488, 953, 1823],
+    "arbReversionSeconds": 0,
+    "primary": { "delta": 10, "windowSec": 1800 }
+  },
+  "assumptions": ["Counterfactual: HIMS/USDG never had HakariOracleHook, and a v4 hook is part of the PoolKey, so it never could have. The replay assumes the same swaps and positions in a pool that had it. The hook only records (no fee, no delta), so it would not by itself have changed any swap.", "The hook's record starts at the last swap before the window (block 48495677, 2026-08-28T17:59:51Z), initialized at the tick that swap left, with the truncated series equal to the raw one. Windows reaching before it are null (the contract reverts with TargetPredatesOldestObservation). A truncated start 500 ticks off either way is forgotten within 75 minutes (oracle.truncatedStartForgottenAt), two days before the squeeze.", "Observation cardinality grown to 65535 at initialization (increaseObservationCardinalityNext); the least that serves every read is oracle.minCardinality, per window in seconds.", "Reads at t_k: every ModifyLiquidity and Swap with block timestamp <= t_k applied, and the hook read as a view call at the end of that second (observe with the current slot0 tick) — the convention of web/squeeze/data.json.", "Nobody pushes back (arbReversionSeconds = 0) at every minute. That holds between the mint rule's close (Sat 00:00 UTC) and the first Monday mint (00:43:30 UTC); before and after, arbitrage was possible, so there the bound is a lower bound and a refusal is conservative.", "Max safe exposure: replay.ts maxSafeExposure (the gauge's mirror of CostModel.maxSafeExposure, pinned by test/max-safe-exposure.test.ts) on the pool rebuilt from positions at the last swap's price, fee = that swap's fee (9,991 pips). Its walk is capped at 1,024 segments, not the contract's MAX_WALK_STEPS = 64 bitmap steps; every walk here completed.", "SafeSettle v1 also prices the gap between the two TWAPs as one more move when it exceeds 10 ticks (CostModel's extraTicks). v1.gapBoundUsdg is that bound where it binds, else null; the effective bound is gapBoundUsdg ?? maxSafeExposureUsdg.", "SafeSettle v0 is the rule at fced71c: within 10 ticks, raw with no check; otherwise the round trip from the truncated price to the raw one through the liquidity present now (PushCostLens.roundTripCostBetween, mirrored with v4math), against the gain on the exposure. It never refuses.", "TWAP ticks are HakariOracleHook.twaps' int24 results (rounded toward negative infinity); prices are 1e12 / 1.0001^tick USDG per HIMS."],
+  "oracle": {
+    "firstObservation": { "block": 48495677, "ts": 1787939991, "iso": "2026-08-28T17:59:51Z", "tick": 242604 },
+    "observationsWritten": 7313,
+    "swaps": 11242,
+    "minCardinality": { "600": 333, "1800": 643, "3600": 919 },
+    "truncatedStartForgottenAt": { "d10-500": "2026-08-28T18:20:18Z", "d10+500": "2026-08-28T18:10:17Z", "d3-500": "2026-08-28T19:13:55Z", "d3+500": "2026-08-28T18:58:37Z" },
+    "squeeze1940to004330": { "swaps": 3220, "distinctSeconds": 1687, "observations": 1687 },
+    "layer1TickLimit": {
+      "swap": {
+        "block": 50398350,
+        "logIndex": 55,
+        "time": "2026-08-30T23:24:59Z",
+        "tickAfter": -887272,
+        "note": "bought the last HIMS in range; slot0 sat at the tick limit (USDG per HIMS ~1e50) until a sale later in the same block"
+      },
+      "observationsAround": [
+        {
+          "time": "2026-08-30T23:24:57Z",
+          "tickWritten": 235238,
+          "trunc": { "3": 240499, "10": 238596 }
+        },
+        {
+          "time": "2026-08-30T23:24:59Z",
+          "tickWritten": 234716,
+          "trunc": { "3": 240496, "10": 238586 }
+        },
+        {
+          "time": "2026-08-30T23:25:00Z",
+          "tickWritten": 233665,
+          "trunc": { "3": 240493, "10": 238576 }
+        }
+      ],
+      "recorded": "never recorded: the hook writes once per second, before that second's first swap, and the pool was back by the next second"
+    }
+  },
+  "auditProbe": {
+    "source": "hims_sim.py / hims_sim.out.txt, 2026-09-26 (float replay of the same swaps, outside the repo)",
+    "swaps1940to004330": { "probe": 3220, "ours": 3220 },
+    "distinctSeconds1940to004330": { "probe": 1687, "ours": 1687 },
+    "spot": [
+      { "time": "2026-08-30T19:40:00Z", "probe": 29.38, "ours": 29.38 },
+      { "time": "2026-08-30T23:53:00Z", "probe": 43.27, "ours": 43.27 },
+      { "time": "2026-08-31T00:43:30Z", "probe": 54.5, "ours": 54.5 }
+    ],
+    "twaps": [
+      {
+        "time": "2026-08-30T19:40:00Z",
+        "delta": 10,
+        "windowMin": 10,
+        "probe": { "raw": 29.38, "trunc": 29.38, "gapTicks": 0 },
+        "ours": { "raw": 29.38, "trunc": 29.38, "gapTicks": 0 },
+        "oursContract": { "rawTick": 242518, "truncTick": 242518, "gapTicks": 0, "raw": 29.38, "trunc": 29.38 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T19:40:00Z",
+        "delta": 10,
+        "windowMin": 30,
+        "probe": { "raw": 29.41, "trunc": 29.42, "gapTicks": 0 },
+        "ours": { "raw": 29.41, "trunc": 29.42, "gapTicks": 0 },
+        "oursContract": { "rawTick": 242507, "truncTick": 242507, "gapTicks": 0, "raw": 29.42, "trunc": 29.42 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T19:40:00Z",
+        "delta": 10,
+        "windowMin": 60,
+        "probe": { "raw": 29.46, "trunc": 29.46, "gapTicks": 0 },
+        "ours": { "raw": 29.46, "trunc": 29.46, "gapTicks": 0 },
+        "oursContract": { "rawTick": 242492, "truncTick": 242492, "gapTicks": 0, "raw": 29.46, "trunc": 29.46 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T23:53:00Z",
+        "delta": 10,
+        "windowMin": 10,
+        "probe": { "raw": 48.16, "trunc": 51.41, "gapTicks": 652 },
+        "ours": { "raw": 48.16, "trunc": 51.41, "gapTicks": 652 },
+        "oursContract": { "rawTick": 237576, "truncTick": 236924, "gapTicks": 652, "raw": 48.16, "trunc": 51.41 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T23:53:00Z",
+        "delta": 10,
+        "windowMin": 30,
+        "probe": { "raw": 52.52, "trunc": 50.6, "gapTicks": 373 },
+        "ours": { "raw": 52.52, "trunc": 50.6, "gapTicks": 373 },
+        "oursContract": { "rawTick": 236710, "truncTick": 237083, "gapTicks": -373, "raw": 52.52, "trunc": 50.6 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T23:53:00Z",
+        "delta": 10,
+        "windowMin": 60,
+        "probe": { "raw": 45.93, "trunc": 43.77, "gapTicks": 481 },
+        "ours": { "raw": 45.93, "trunc": 43.77, "gapTicks": 481 },
+        "oursContract": { "rawTick": 238051, "truncTick": 238531, "gapTicks": -480, "raw": 45.93, "trunc": 43.78 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-31T00:43:30Z",
+        "delta": 10,
+        "windowMin": 10,
+        "probe": { "raw": 51.51, "trunc": 50.39, "gapTicks": 220 },
+        "ours": { "raw": 51.51, "trunc": 50.39, "gapTicks": 220 },
+        "oursContract": { "rawTick": 236904, "truncTick": 237124, "gapTicks": -220, "raw": 51.51, "trunc": 50.39 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-31T00:43:30Z",
+        "delta": 10,
+        "windowMin": 30,
+        "probe": { "raw": 48.21, "trunc": 48.18, "gapTicks": 6 },
+        "ours": { "raw": 48.21, "trunc": 48.18, "gapTicks": 6 },
+        "oursContract": { "rawTick": 237566, "truncTick": 237572, "gapTicks": -6, "raw": 48.21, "trunc": 48.18 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-31T00:43:30Z",
+        "delta": 10,
+        "windowMin": 60,
+        "probe": { "raw": 44.92, "trunc": 48.69, "gapTicks": 805 },
+        "ours": { "raw": 44.92, "trunc": 48.69, "gapTicks": 805 },
+        "oursContract": { "rawTick": 238272, "truncTick": 237467, "gapTicks": 805, "raw": 44.93, "trunc": 48.69 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T19:40:00Z",
+        "delta": 3,
+        "windowMin": 10,
+        "probe": { "raw": 29.38, "trunc": 29.47, "gapTicks": 29 },
+        "ours": { "raw": 29.38, "trunc": 29.47, "gapTicks": 29 },
+        "oursContract": { "rawTick": 242518, "truncTick": 242489, "gapTicks": 29, "raw": 29.38, "trunc": 29.47 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T19:40:00Z",
+        "delta": 3,
+        "windowMin": 30,
+        "probe": { "raw": 29.41, "trunc": 29.5, "gapTicks": 27 },
+        "ours": { "raw": 29.41, "trunc": 29.5, "gapTicks": 27 },
+        "oursContract": { "rawTick": 242507, "truncTick": 242480, "gapTicks": 27, "raw": 29.42, "trunc": 29.5 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T19:40:00Z",
+        "delta": 3,
+        "windowMin": 60,
+        "probe": { "raw": 29.46, "trunc": 29.55, "gapTicks": 31 },
+        "ours": { "raw": 29.46, "trunc": 29.55, "gapTicks": 31 },
+        "oursContract": { "rawTick": 242492, "truncTick": 242462, "gapTicks": 30, "raw": 29.46, "trunc": 29.55 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T23:53:00Z",
+        "delta": 3,
+        "windowMin": 10,
+        "probe": { "raw": 48.16, "trunc": 42.26, "gapTicks": 1307 },
+        "ours": { "raw": 48.16, "trunc": 42.26, "gapTicks": 1307 },
+        "oursContract": { "rawTick": 237576, "truncTick": 238883, "gapTicks": -1307, "raw": 48.16, "trunc": 42.26 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T23:53:00Z",
+        "delta": 3,
+        "windowMin": 30,
+        "probe": { "raw": 52.52, "trunc": 39.91, "gapTicks": 2746 },
+        "ours": { "raw": 52.52, "trunc": 39.91, "gapTicks": 2746 },
+        "oursContract": { "rawTick": 236710, "truncTick": 239457, "gapTicks": -2747, "raw": 52.52, "trunc": 39.91 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-30T23:53:00Z",
+        "delta": 3,
+        "windowMin": 60,
+        "probe": { "raw": 45.93, "trunc": 36.81, "gapTicks": 2213 },
+        "ours": { "raw": 45.93, "trunc": 36.81, "gapTicks": 2213 },
+        "oursContract": { "rawTick": 238051, "truncTick": 240264, "gapTicks": -2213, "raw": 45.93, "trunc": 36.81 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-31T00:43:30Z",
+        "delta": 3,
+        "windowMin": 10,
+        "probe": { "raw": 51.51, "trunc": 44.24, "gapTicks": 1522 },
+        "ours": { "raw": 51.51, "trunc": 44.24, "gapTicks": 1522 },
+        "oursContract": { "rawTick": 236904, "truncTick": 238426, "gapTicks": -1522, "raw": 51.51, "trunc": 44.24 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-31T00:43:30Z",
+        "delta": 3,
+        "windowMin": 30,
+        "probe": { "raw": 48.21, "trunc": 43.07, "gapTicks": 1127 },
+        "ours": { "raw": 48.21, "trunc": 43.07, "gapTicks": 1127 },
+        "oursContract": { "rawTick": 237566, "truncTick": 238693, "gapTicks": -1127, "raw": 48.21, "trunc": 43.07 },
+        "identical": true
+      },
+      {
+        "time": "2026-08-31T00:43:30Z",
+        "delta": 3,
+        "windowMin": 60,
+        "probe": { "raw": 44.92, "trunc": 42.78, "gapTicks": 488 },
+        "ours": { "raw": 44.92, "trunc": 42.78, "gapTicks": 488 },
+        "oursContract": { "rawTick": 238272, "truncTick": 238760, "gapTicks": -488, "raw": 44.93, "trunc": 42.79 },
+        "identical": true
+      }
+    ],
+    "note": "`ours` uses the exact average tick (as the probe does) for prices to 2 decimals and the gap to 1 tick; `oursContract` is what HakariOracleHook.twaps returns (int24, floored), off by less than one tick"
+  },
+  "keyMoments": [
+    {
+      "id": "sun-1940",
+      "label": "Sun 19:40 UTC: before the squeeze (hims-replay point 1)",
+      "ts": 1788118800,
+      "time": "2026-08-30T19:40:00Z",
+      "gridIndex": 2980,
+      "pool": {
+        "tick": 242518,
+        "usdgPerHims": 29.3835,
+        "swapFeePips": 9991,
+        "livePositions": 83,
+        "himsInPositions": 2606.37,
+        "usdgInPositions": 68978.7,
+        "pushUp10CostUsdg": 1351.28
+      },
+      "maxSafeExposureUsdg": 7258.82,
+      "binding": { "ticks": 1823, "himsUp": true, "costUsdg": 1451.5, "complete": true },
+      "configs": {
+        "d10w600": {
+          "twapTicks": { "raw": 242518, "trunc": 242518, "gap": 0 },
+          "usdgPerHims": { "raw": 29.38, "trunc": 29.38 },
+          "v1": {
+            "maxSafeExposureUsdg": 7258.82,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": null,
+            "settle": { "1000": "raw (unchecked) 29.38", "10000": "raw (unchecked) 29.38", "100000": "raw (unchecked) 29.38" }
+          }
+        },
+        "d10w1800": {
+          "twapTicks": { "raw": 242507, "trunc": 242507, "gap": 0 },
+          "usdgPerHims": { "raw": 29.42, "trunc": 29.42 },
+          "v1": {
+            "maxSafeExposureUsdg": 7258.82,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": null,
+            "settle": { "1000": "raw (unchecked) 29.42", "10000": "raw (unchecked) 29.42", "100000": "raw (unchecked) 29.42" }
+          }
+        },
+        "d10w3600": {
+          "twapTicks": { "raw": 242492, "trunc": 242492, "gap": 0 },
+          "usdgPerHims": { "raw": 29.46, "trunc": 29.46 },
+          "v1": {
+            "maxSafeExposureUsdg": 7258.82,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": null,
+            "settle": { "1000": "raw (unchecked) 29.46", "10000": "raw (unchecked) 29.46", "100000": "raw (unchecked) 29.46" }
+          }
+        },
+        "d3w600": {
+          "twapTicks": { "raw": 242518, "trunc": 242489, "gap": 29 },
+          "usdgPerHims": { "raw": 29.38, "trunc": 29.47 },
+          "v1": {
+            "maxSafeExposureUsdg": 7258.82,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 58134.4,
+            "settle": { "1000": "raw (cost > gain) 29.38", "10000": "raw (cost > gain) 29.38", "100000": "truncated 29.47" }
+          }
+        },
+        "d3w1800": {
+          "twapTicks": { "raw": 242507, "trunc": 242480, "gap": 27 },
+          "usdgPerHims": { "raw": 29.42, "trunc": 29.5 },
+          "v1": {
+            "maxSafeExposureUsdg": 7258.82,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 58154.7,
+            "settle": { "1000": "raw (cost > gain) 29.42", "10000": "raw (cost > gain) 29.42", "100000": "truncated 29.5" }
+          }
+        },
+        "d3w3600": {
+          "twapTicks": { "raw": 242492, "trunc": 242462, "gap": 30 },
+          "usdgPerHims": { "raw": 29.46, "trunc": 29.55 },
+          "v1": {
+            "maxSafeExposureUsdg": 7258.82,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 58215.8,
+            "settle": { "1000": "raw (cost > gain) 29.46", "10000": "raw (cost > gain) 29.46", "100000": "truncated 29.55" }
+          }
+        }
+      }
+    },
+    {
+      "id": "sun-2325",
+      "label": "Sun 23:25: a swap at 23:24:59 bought the last HIMS in the LPs' ranges; the positions hold 3.68 HIMS",
+      "ts": 1788132300,
+      "time": "2026-08-30T23:25:00Z",
+      "gridIndex": 3205,
+      "pool": {
+        "tick": 233686,
+        "usdgPerHims": 71.0646,
+        "swapFeePips": 9991,
+        "livePositions": 76,
+        "himsInPositions": 3.67892,
+        "usdgInPositions": 134622,
+        "pushUp10CostUsdg": 3.84926
+      },
+      "maxSafeExposureUsdg": 20.3787,
+      "binding": { "ticks": 1823, "himsUp": true, "costUsdg": 4.075, "complete": true },
+      "configs": {
+        "d10w600": {
+          "twapTicks": { "raw": 238218, "trunc": 239190, "gap": -972 },
+          "usdgPerHims": { "raw": 45.17, "trunc": 40.99 },
+          "v1": {
+            "maxSafeExposureUsdg": 20.3787,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 153.147,
+            "settle": { "1000": "truncated 40.99", "10000": "truncated 40.99", "100000": "truncated 40.99" }
+          }
+        },
+        "d10w1800": {
+          "twapTicks": { "raw": 239140, "trunc": 239840, "gap": -700 },
+          "usdgPerHims": { "raw": 41.19, "trunc": 38.41 },
+          "v1": {
+            "maxSafeExposureUsdg": 20.3787,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 220.129,
+            "settle": { "1000": "truncated 38.41", "10000": "truncated 38.41", "100000": "truncated 38.41" }
+          }
+        },
+        "d10w3600": {
+          "twapTicks": { "raw": 240002, "trunc": 240309, "gap": -307 },
+          "usdgPerHims": { "raw": 37.79, "trunc": 36.65 },
+          "v1": {
+            "maxSafeExposureUsdg": 20.3787,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 320.673,
+            "settle": { "1000": "truncated 36.65", "10000": "truncated 36.65", "100000": "truncated 36.65" }
+          }
+        },
+        "d3w600": {
+          "twapTicks": { "raw": 238218, "trunc": 240703, "gap": -2485 },
+          "usdgPerHims": { "raw": 45.17, "trunc": 35.23 },
+          "v1": {
+            "maxSafeExposureUsdg": 15.0571,
+            "binding": "the TWAP gap, 2485 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 232.163,
+            "settle": { "1000": "truncated 35.23", "10000": "truncated 35.23", "100000": "truncated 35.23" }
+          }
+        },
+        "d3w1800": {
+          "twapTicks": { "raw": 239140, "trunc": 241008, "gap": -1868 },
+          "usdgPerHims": { "raw": 41.19, "trunc": 34.17 },
+          "v1": {
+            "maxSafeExposureUsdg": 19.8987,
+            "binding": "the TWAP gap, 1868 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 345.09,
+            "settle": { "1000": "truncated 34.17", "10000": "truncated 34.17", "100000": "truncated 34.17" }
+          }
+        },
+        "d3w3600": {
+          "twapTicks": { "raw": 240002, "trunc": 241308, "gap": -1306 },
+          "usdgPerHims": { "raw": 37.79, "trunc": 33.16 },
+          "v1": {
+            "maxSafeExposureUsdg": 20.3787,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 1117.57,
+            "settle": { "1000": "raw (cost > gain) 37.79", "10000": "truncated 33.16", "100000": "truncated 33.16" }
+          }
+        }
+      }
+    },
+    {
+      "id": "sun-2336",
+      "label": "Sun 23:36: DeFiPrime samples 61.15 at 23:36:14",
+      "ts": 1788132960,
+      "time": "2026-08-30T23:36:00Z",
+      "gridIndex": 3216,
+      "pool": {
+        "tick": 234524,
+        "usdgPerHims": 65.3524,
+        "swapFeePips": 9991,
+        "livePositions": 76,
+        "himsInPositions": 12.3174,
+        "usdgInPositions": 134058,
+        "pushUp10CostUsdg": 12.5784
+      },
+      "maxSafeExposureUsdg": 76.3714,
+      "binding": { "ticks": 1823, "himsUp": true, "costUsdg": 15.2715, "complete": true },
+      "configs": {
+        "d10w600": {
+          "twapTicks": { "raw": 235889, "trunc": 237187, "gap": -1298 },
+          "usdgPerHims": { "raw": 57.01, "trunc": 50.07 },
+          "v1": {
+            "maxSafeExposureUsdg": 76.3714,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 104.913,
+            "settle": { "1000": "truncated 50.07", "10000": "truncated 50.07", "100000": "truncated 50.07" }
+          }
+        },
+        "d10w1800": {
+          "twapTicks": { "raw": 237724, "trunc": 238632, "gap": -908 },
+          "usdgPerHims": { "raw": 47.46, "trunc": 43.34 },
+          "v1": {
+            "maxSafeExposureUsdg": 76.3714,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 99.846,
+            "settle": { "1000": "truncated 43.34", "10000": "truncated 43.34", "100000": "truncated 43.34" }
+          }
+        },
+        "d10w3600": {
+          "twapTicks": { "raw": 239184, "trunc": 239669, "gap": -485 },
+          "usdgPerHims": { "raw": 41.01, "trunc": 39.07 },
+          "v1": {
+            "maxSafeExposureUsdg": 76.3714,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 211.162,
+            "settle": { "1000": "truncated 39.07", "10000": "truncated 39.07", "100000": "truncated 39.07" }
+          }
+        },
+        "d3w600": {
+          "twapTicks": { "raw": 235889, "trunc": 239879, "gap": -3990 },
+          "usdgPerHims": { "raw": 57.01, "trunc": 38.26 },
+          "v1": {
+            "maxSafeExposureUsdg": 32.2565,
+            "binding": "the TWAP gap, 3990 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 103.144,
+            "settle": { "1000": "truncated 38.26", "10000": "truncated 38.26", "100000": "truncated 38.26" }
+          }
+        },
+        "d3w1800": {
+          "twapTicks": { "raw": 237724, "trunc": 240490, "gap": -2766 },
+          "usdgPerHims": { "raw": 47.46, "trunc": 35.99 },
+          "v1": {
+            "maxSafeExposureUsdg": 48.6696,
+            "binding": "the TWAP gap, 2766 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 169.232,
+            "settle": { "1000": "truncated 35.99", "10000": "truncated 35.99", "100000": "truncated 35.99" }
+          }
+        },
+        "d3w3600": {
+          "twapTicks": { "raw": 239184, "trunc": 240986, "gap": -1802 },
+          "usdgPerHims": { "raw": 41.01, "trunc": 34.25 },
+          "v1": {
+            "maxSafeExposureUsdg": 76.3714,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 345.54,
+            "settle": { "1000": "truncated 34.25", "10000": "truncated 34.25", "100000": "truncated 34.25" }
+          }
+        }
+      }
+    },
+    {
+      "id": "sun-2353",
+      "label": "Sun 23:53: 12 USDG to push +10 % (hims-replay point 2 is at 23:53:36)",
+      "ts": 1788133980,
+      "time": "2026-08-30T23:53:00Z",
+      "gridIndex": 3233,
+      "pool": {
+        "tick": 238647,
+        "usdgPerHims": 43.2724,
+        "swapFeePips": 9991,
+        "livePositions": 74,
+        "himsInPositions": 66.5622,
+        "usdgInPositions": 130186,
+        "pushUp10CostUsdg": 12.1104
+      },
+      "maxSafeExposureUsdg": 115.19,
+      "binding": { "ticks": 1823, "himsUp": true, "costUsdg": 23.0338, "complete": true },
+      "configs": {
+        "d10w600": {
+          "twapTicks": { "raw": 237576, "trunc": 236924, "gap": 652 },
+          "usdgPerHims": { "raw": 48.16, "trunc": 51.41 },
+          "v1": {
+            "maxSafeExposureUsdg": 115.19,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 140.482,
+            "settle": { "1000": "truncated 51.41", "10000": "truncated 51.41", "100000": "truncated 51.41" }
+          }
+        },
+        "d10w1800": {
+          "twapTicks": { "raw": 236710, "trunc": 237083, "gap": -373 },
+          "usdgPerHims": { "raw": 52.52, "trunc": 50.6 },
+          "v1": {
+            "maxSafeExposureUsdg": 115.19,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 131.946,
+            "settle": { "1000": "truncated 50.6", "10000": "truncated 50.6", "100000": "truncated 50.6" }
+          }
+        },
+        "d10w3600": {
+          "twapTicks": { "raw": 238051, "trunc": 238531, "gap": -480 },
+          "usdgPerHims": { "raw": 45.93, "trunc": 43.78 },
+          "v1": {
+            "maxSafeExposureUsdg": 115.19,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 124.301,
+            "settle": { "1000": "truncated 43.78", "10000": "truncated 43.78", "100000": "truncated 43.78" }
+          }
+        },
+        "d3w600": {
+          "twapTicks": { "raw": 237576, "trunc": 238883, "gap": -1307 },
+          "usdgPerHims": { "raw": 48.16, "trunc": 42.26 },
+          "v1": {
+            "maxSafeExposureUsdg": 115.19,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 119.906,
+            "settle": { "1000": "truncated 42.26", "10000": "truncated 42.26", "100000": "truncated 42.26" }
+          }
+        },
+        "d3w1800": {
+          "twapTicks": { "raw": 236710, "trunc": 239457, "gap": -2747 },
+          "usdgPerHims": { "raw": 52.52, "trunc": 39.91 },
+          "v1": {
+            "maxSafeExposureUsdg": 109.46,
+            "binding": "the TWAP gap, 2747 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 120.361,
+            "settle": { "1000": "truncated 39.91", "10000": "truncated 39.91", "100000": "truncated 39.91" }
+          }
+        },
+        "d3w3600": {
+          "twapTicks": { "raw": 238051, "trunc": 240264, "gap": -2213 },
+          "usdgPerHims": { "raw": 45.93, "trunc": 36.81 },
+          "v1": {
+            "maxSafeExposureUsdg": 112.679,
+            "binding": "the TWAP gap, 2213 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 175.638,
+            "settle": { "1000": "truncated 36.81", "10000": "truncated 36.81", "100000": "truncated 36.81" }
+          }
+        }
+      }
+    },
+    {
+      "id": "mon-004330",
+      "label": "Mon 00:43:30: the last second before the first Monday mint; pool at 54.50",
+      "ts": 1788137010,
+      "time": "2026-08-31T00:43:30Z",
+      "gridIndex": null,
+      "pool": {
+        "tick": 236340,
+        "usdgPerHims": 54.5001,
+        "swapFeePips": 9991,
+        "livePositions": 70,
+        "himsInPositions": 32.4279,
+        "usdgInPositions": 126252,
+        "pushUp10CostUsdg": 13.4295
+      },
+      "maxSafeExposureUsdg": 123.86,
+      "binding": { "ticks": 1823, "himsUp": true, "costUsdg": 24.7675, "complete": true },
+      "configs": {
+        "d10w600": {
+          "twapTicks": { "raw": 236904, "trunc": 237124, "gap": -220 },
+          "usdgPerHims": { "raw": 51.51, "trunc": 50.39 },
+          "v1": {
+            "maxSafeExposureUsdg": 123.86,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 160.569,
+            "settle": { "1000": "truncated 50.39", "10000": "truncated 50.39", "100000": "truncated 50.39" }
+          }
+        },
+        "d10w1800": {
+          "twapTicks": { "raw": 237566, "trunc": 237572, "gap": -6 },
+          "usdgPerHims": { "raw": 48.21, "trunc": 48.18 },
+          "v1": {
+            "maxSafeExposureUsdg": 123.86,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": null,
+            "settle": { "1000": "raw (unchecked) 48.21", "10000": "raw (unchecked) 48.21", "100000": "raw (unchecked) 48.21" }
+          }
+        },
+        "d10w3600": {
+          "twapTicks": { "raw": 238272, "trunc": 237467, "gap": 805 },
+          "usdgPerHims": { "raw": 44.93, "trunc": 48.69 },
+          "v1": {
+            "maxSafeExposureUsdg": 123.86,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 183.787,
+            "settle": { "1000": "truncated 48.69", "10000": "truncated 48.69", "100000": "truncated 48.69" }
+          }
+        },
+        "d3w600": {
+          "twapTicks": { "raw": 236904, "trunc": 238426, "gap": -1522 },
+          "usdgPerHims": { "raw": 51.51, "trunc": 44.24 },
+          "v1": {
+            "maxSafeExposureUsdg": 123.86,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 150.644,
+            "settle": { "1000": "truncated 44.24", "10000": "truncated 44.24", "100000": "truncated 44.24" }
+          }
+        },
+        "d3w1800": {
+          "twapTicks": { "raw": 237566, "trunc": 238693, "gap": -1127 },
+          "usdgPerHims": { "raw": 48.21, "trunc": 43.07 },
+          "v1": {
+            "maxSafeExposureUsdg": 123.86,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 157.144,
+            "settle": { "1000": "truncated 43.07", "10000": "truncated 43.07", "100000": "truncated 43.07" }
+          }
+        },
+        "d3w3600": {
+          "twapTicks": { "raw": 238272, "trunc": 238760, "gap": -488 },
+          "usdgPerHims": { "raw": 44.93, "trunc": 42.79 },
+          "v1": {
+            "maxSafeExposureUsdg": 123.86,
+            "binding": "1823 ticks, HIMS up",
+            "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 160.223,
+            "settle": { "1000": "truncated 42.79", "10000": "truncated 42.79", "100000": "truncated 42.79" }
+          }
+        }
+      }
+    },
+    {
+      "id": "mon-0159",
+      "label": "Mon 01:59: back near 29.3 after the mints (hims-replay point 4 is at 01:59:17)",
+      "ts": 1788141540,
+      "time": "2026-08-31T01:59:00Z",
+      "gridIndex": 3359,
+      "pool": {
+        "tick": 242542,
+        "usdgPerHims": 29.3131,
+        "swapFeePips": 9991,
+        "livePositions": 72,
+        "himsInPositions": 2035.63,
+        "usdgInPositions": 51769.6,
+        "pushUp10CostUsdg": 866.759
+      },
+      "maxSafeExposureUsdg": 5310.34,
+      "binding": { "ticks": 1823, "himsUp": false, "costUsdg": 884.921, "complete": true },
+      "configs": {
+        "d10w600": {
+          "twapTicks": { "raw": 242140, "trunc": 238825, "gap": 3315 },
+          "usdgPerHims": { "raw": 30.52, "trunc": 42.51 },
+          "v1": {
+            "maxSafeExposureUsdg": 2992.4,
+            "binding": "the TWAP gap, 3315 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 2441.68,
+            "settle": { "1000": "raw (cost > gain) 30.52", "10000": "truncated 42.51", "100000": "truncated 42.51" }
+          }
+        },
+        "d10w1800": {
+          "twapTicks": { "raw": 241846, "trunc": 238442, "gap": 3404 },
+          "usdgPerHims": { "raw": 31.43, "trunc": 44.17 },
+          "v1": {
+            "maxSafeExposureUsdg": 2907.56,
+            "binding": "the TWAP gap, 3404 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 1900.36,
+            "settle": { "1000": "raw (cost > gain) 31.43", "10000": "truncated 44.17", "100000": "truncated 44.17" }
+          }
+        },
+        "d10w3600": {
+          "twapTicks": { "raw": 241907, "trunc": 238018, "gap": 3889 },
+          "usdgPerHims": { "raw": 31.23, "trunc": 46.08 },
+          "v1": {
+            "maxSafeExposureUsdg": 2510.41,
+            "binding": "the TWAP gap, 3889 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 1886.77,
+            "settle": { "1000": "raw (cost > gain) 31.23", "10000": "truncated 46.08", "100000": "truncated 46.08" }
+          }
+        },
+        "d3w600": {
+          "twapTicks": { "raw": 242140, "trunc": 238867, "gap": 3273 },
+          "usdgPerHims": { "raw": 30.52, "trunc": 42.33 },
+          "v1": {
+            "maxSafeExposureUsdg": 3034.03,
+            "binding": "the TWAP gap, 3273 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 2457.26,
+            "settle": { "1000": "raw (cost > gain) 30.52", "10000": "truncated 42.33", "100000": "truncated 42.33" }
+          }
+        },
+        "d3w1800": {
+          "twapTicks": { "raw": 241846, "trunc": 238752, "gap": 3094 },
+          "usdgPerHims": { "raw": 31.43, "trunc": 42.82 },
+          "v1": {
+            "maxSafeExposureUsdg": 3221.65,
+            "binding": "the TWAP gap, 3094 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 1987.39,
+            "settle": { "1000": "raw (cost > gain) 31.43", "10000": "truncated 42.82", "100000": "truncated 42.82" }
+          }
+        },
+        "d3w3600": {
+          "twapTicks": { "raw": 241907, "trunc": 238625, "gap": 3282 },
+          "usdgPerHims": { "raw": 31.23, "trunc": 43.37 },
+          "v1": {
+            "maxSafeExposureUsdg": 3025.02,
+            "binding": "the TWAP gap, 3282 ticks, HIMS up",
+            "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+          },
+          "v0": {
+            "thresholdUsdg": 2037.4,
+            "settle": { "1000": "raw (cost > gain) 31.23", "10000": "truncated 43.37", "100000": "truncated 43.37" }
+          }
+        }
+      }
+    }
+  ],
+  "replayBlocks": [
+    {
+      "block": 50265277,
+      "timestamp": 1788118800,
+      "time": "2026-08-30T19:40:00Z",
+      "ours": { "usdg": 7258.815143346441, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 1451.495869 },
+      "himsReplayJson": { "usdg": 7258.815143346441, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 1451.495869 },
+      "identical": true,
+      "hookPrimary": {
+        "twapTicks": { "raw": 242507, "trunc": 242507, "gap": 0 },
+        "usdgPerHims": { "raw": 29.42, "trunc": 29.42 },
+        "v1": {
+          "maxSafeExposureUsdg": 7258.82,
+          "binding": "1823 ticks, HIMS up",
+          "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+        },
+        "v0": {
+          "thresholdUsdg": null,
+          "settle": { "1000": "raw (unchecked) 29.42", "10000": "raw (unchecked) 29.42", "100000": "raw (unchecked) 29.42" }
+        }
+      }
+    },
+    {
+      "block": 50415299,
+      "timestamp": 1788134016,
+      "time": "2026-08-30T23:53:36Z",
+      "ours": { "usdg": 115.18994774903908, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 23.03375 },
+      "himsReplayJson": { "usdg": 115.18994774903908, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 23.03375 },
+      "identical": true,
+      "hookPrimary": {
+        "twapTicks": { "raw": 236722, "trunc": 237046, "gap": -324 },
+        "usdgPerHims": { "raw": 52.46, "trunc": 50.79 },
+        "v1": {
+          "maxSafeExposureUsdg": 115.19,
+          "binding": "1823 ticks, HIMS up",
+          "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+        },
+        "v0": {
+          "thresholdUsdg": 132.514,
+          "settle": { "1000": "truncated 50.79", "10000": "truncated 50.79", "100000": "truncated 50.79" }
+        }
+      }
+    },
+    {
+      "block": 50444948,
+      "timestamp": 1788137010,
+      "time": "2026-08-31T00:43:30Z",
+      "ours": { "usdg": 123.86014827658722, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 24.767471 },
+      "himsReplayJson": { "usdg": 123.86014827658722, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 24.767471 },
+      "identical": true,
+      "hookPrimary": {
+        "twapTicks": { "raw": 237566, "trunc": 237572, "gap": -6 },
+        "usdgPerHims": { "raw": 48.21, "trunc": 48.18 },
+        "v1": {
+          "maxSafeExposureUsdg": 123.86,
+          "binding": "1823 ticks, HIMS up",
+          "decide": { "1000": "refuse", "10000": "refuse", "100000": "refuse" }
+        },
+        "v0": {
+          "thresholdUsdg": null,
+          "settle": { "1000": "raw (unchecked) 48.21", "10000": "raw (unchecked) 48.21", "100000": "raw (unchecked) 48.21" }
+        }
+      }
+    },
+    {
+      "block": 50490000,
+      "timestamp": 1788141557,
+      "time": "2026-08-31T01:59:17Z",
+      "ours": { "usdg": 5310.342869067709, "bindingTicks": 1823, "bindingStockUp": false, "bindingCostUsdg": 884.921414 },
+      "himsReplayJson": { "usdg": 5310.342869067709, "bindingTicks": 1823, "bindingStockUp": false, "bindingCostUsdg": 884.921414 },
+      "identical": true,
+      "hookPrimary": {
+        "twapTicks": { "raw": 241849, "trunc": 238453, "gap": 3396 },
+        "usdgPerHims": { "raw": 31.42, "trunc": 44.12 },
+        "v1": {
+          "maxSafeExposureUsdg": 2915.01,
+          "binding": "the TWAP gap, 3396 ticks, HIMS up",
+          "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+        },
+        "v0": {
+          "thresholdUsdg": 1907.43,
+          "settle": { "1000": "raw (cost > gain) 31.42", "10000": "truncated 44.12", "100000": "truncated 44.12" }
+        }
+      }
+    },
+    {
+      "block": 50772447,
+      "timestamp": 1788170042,
+      "time": "2026-08-31T09:54:02Z",
+      "ours": { "usdg": 7009.2635997993275, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 1401.594745 },
+      "himsReplayJson": { "usdg": 7009.2635997993275, "bindingTicks": 1823, "bindingStockUp": true, "bindingCostUsdg": 1401.594745 },
+      "identical": true,
+      "hookPrimary": {
+        "twapTicks": { "raw": 242442, "trunc": 242441, "gap": 1 },
+        "usdgPerHims": { "raw": 29.61, "trunc": 29.61 },
+        "v1": {
+          "maxSafeExposureUsdg": 7009.26,
+          "binding": "1823 ticks, HIMS up",
+          "decide": { "1000": "trust raw", "10000": "refuse", "100000": "refuse" }
+        },
+        "v0": {
+          "thresholdUsdg": null,
+          "settle": { "1000": "raw (unchecked) 29.61", "10000": "raw (unchecked) 29.61", "100000": "raw (unchecked) 29.61" }
+        }
+      }
+    }
+  ],
+  "weekend": {
+    "minMaxSafeExposure": { "usdg": 20.3787, "at": "2026-08-30T23:25:00Z" },
+    "maxSafeExposureAt": { "sun-1940": 7258.82, "sun-2325": 20.3787, "sun-2336": 76.3714, "sun-2353": 115.19, "mon-004330": 123.86, "mon-0159": 5310.34 },
+    "v1RefusalsPrimary": {
+      "config": "Δ = 10, 30-minute window, nobody pushing back",
+      "byExposureUsdg": {
+        "1000": {
+          "minutesRefused": 183,
+          "minutesRefusedWhileMintClosed": 153,
+          "firstRefused": "2026-08-29T06:01:00Z",
+          "lastRefused": "2026-08-31T01:48:00Z",
+          "longestRun": { "from": "2026-08-30T22:51:00Z", "to": "2026-08-31T00:50:00Z", "minutes": 120 },
+          "v0SettledMeanwhileUsdgPerHims": { "min": 29.89, "max": 51.7 }
+        },
+        "10000": {
+          "minutesRefused": 3890,
+          "minutesRefusedWhileMintClosed": 2763,
+          "firstRefused": "2026-08-28T18:30:00Z",
+          "lastRefused": "2026-08-31T14:00:00Z",
+          "longestRun": { "from": "2026-08-29T18:22:00Z", "to": "2026-08-31T14:00:00Z", "minutes": 2619 },
+          "v0SettledMeanwhileUsdgPerHims": { "min": 28.37, "max": 51.7 }
+        },
+        "100000": {
+          "minutesRefused": 4051,
+          "minutesRefusedWhileMintClosed": 2924,
+          "firstRefused": "2026-08-28T18:30:00Z",
+          "lastRefused": "2026-08-31T14:00:00Z",
+          "longestRun": { "from": "2026-08-28T18:30:00Z", "to": "2026-08-31T14:00:00Z", "minutes": 4051 },
+          "v0SettledMeanwhileUsdgPerHims": { "min": 28.37, "max": 51.7 }
+        }
+      },
+      "runsRefusing1000Usdg": [
+        { "from": "2026-08-29T06:01:00Z", "to": "2026-08-29T06:08:00Z", "minutes": 8, "lowestBoundUsdg": 331.172, "setBy": "the ladder" },
+        { "from": "2026-08-30T21:58:00Z", "to": "2026-08-30T22:00:00Z", "minutes": 3, "lowestBoundUsdg": 550.152, "setBy": "the ladder" },
+        { "from": "2026-08-30T22:07:00Z", "to": "2026-08-30T22:07:00Z", "minutes": 1, "lowestBoundUsdg": 813.748, "setBy": "the ladder" },
+        { "from": "2026-08-30T22:09:00Z", "to": "2026-08-30T22:11:00Z", "minutes": 3, "lowestBoundUsdg": 332.54, "setBy": "the ladder" },
+        { "from": "2026-08-30T22:13:00Z", "to": "2026-08-30T22:14:00Z", "minutes": 2, "lowestBoundUsdg": 778.874, "setBy": "the ladder" },
+        { "from": "2026-08-30T22:17:00Z", "to": "2026-08-30T22:39:00Z", "minutes": 23, "lowestBoundUsdg": 199.159, "setBy": "the ladder" },
+        { "from": "2026-08-30T22:51:00Z", "to": "2026-08-31T00:50:00Z", "minutes": 120, "lowestBoundUsdg": 20.3787, "setBy": "the ladder" },
+        { "from": "2026-08-31T00:52:00Z", "to": "2026-08-31T00:52:00Z", "minutes": 1, "lowestBoundUsdg": 962.578, "setBy": "the ladder" },
+        { "from": "2026-08-31T01:03:00Z", "to": "2026-08-31T01:04:00Z", "minutes": 2, "lowestBoundUsdg": 933.562, "setBy": "the TWAP gap" },
+        { "from": "2026-08-31T01:09:00Z", "to": "2026-08-31T01:11:00Z", "minutes": 3, "lowestBoundUsdg": 929.067, "setBy": "the TWAP gap" },
+        {
+          "from": "2026-08-31T01:32:00Z",
+          "to": "2026-08-31T01:48:00Z",
+          "minutes": 17,
+          "lowestBoundUsdg": 509.755,
+          "setBy": "the TWAP gap in 15 of the minutes"
+        }
+      ]
+    },
+    "v0At004330": {
+      "min": 42.79,
+      "max": 50.39,
+      "seriesSpan": { "min": 42.79, "max": 51.51 },
+      "note": "over every Δ (10, 3), window (10/30/60 min) and exposure (1k/10k/100k) v0 settles and never refuses; seriesSpan is where the raw and truncated TWAPs lie, min/max where v0's picks lie"
+    },
+    "v0StaleAfterFirstMint": {
+      "config": "Δ = 10, 30-minute window",
+      "note": "minutes after 00:43:30 in which v0 settles on the truncated TWAP more than 10 % above the pool's own price, while the move down was real (mints had reopened)",
+      "byExposureUsdg": {
+        "1000": {
+          "minutesOnTruncatedOver10PctAboveSpot": 30,
+          "worst": { "at": "2026-08-31T01:17:00Z", "settlesUsdgPerHims": 49.61, "spotUsdgPerHims": 30.34, "premiumPct": 63.51 }
+        },
+        "10000": {
+          "minutesOnTruncatedOver10PctAboveSpot": 144,
+          "worst": { "at": "2026-08-31T01:20:00Z", "settlesUsdgPerHims": 49.14, "spotUsdgPerHims": 29.85, "premiumPct": 64.62 }
+        },
+        "100000": {
+          "minutesOnTruncatedOver10PctAboveSpot": 144,
+          "worst": { "at": "2026-08-31T01:20:00Z", "settlesUsdgPerHims": 49.14, "spotUsdgPerHims": 29.85, "premiumPct": 64.62 }
+        }
+      }
+    },
+    "rawTwapPeak": {
+      "w600": { "usdgPerHims": 58.15, "at": "2026-08-30T23:37:00Z" },
+      "w1800": { "usdgPerHims": 52.65, "at": "2026-08-30T23:50:00Z" },
+      "w3600": { "usdgPerHims": 47.12, "at": "2026-08-31T00:01:00Z" }
+    },
+    "truncTwapPeak": {
+      "d10w600": { "usdgPerHims": 53.48, "at": "2026-08-30T23:42:00Z" },
+      "d10w1800": { "usdgPerHims": 51.7, "at": "2026-08-31T00:00:00Z" },
+      "d10w3600": { "usdgPerHims": 49.53, "at": "2026-08-31T01:23:00Z" },
+      "d3w600": { "usdgPerHims": 44.9, "at": "2026-08-31T00:53:00Z" },
+      "d3w1800": { "usdgPerHims": 44.55, "at": "2026-08-31T01:07:00Z" },
+      "d3w3600": { "usdgPerHims": 44.16, "at": "2026-08-31T01:31:00Z" }
+    },
+    "largestGap": {
+      "d10w600": { "ticks": 4560, "at": "2026-08-31T01:25:00Z" },
+      "d10w1800": { "ticks": 4375, "at": "2026-08-31T01:29:00Z" },
+      "d10w3600": { "ticks": 4036, "at": "2026-08-31T01:50:00Z" },
+      "d3w600": { "ticks": -4156, "at": "2026-08-30T23:32:00Z" },
+      "d3w1800": { "ticks": 3533, "at": "2026-08-31T02:25:00Z" },
+      "d3w3600": { "ticks": 3365, "at": "2026-08-31T02:12:00Z" }
+    },
+    "minutesTheGapBinds": { "d10w600": 141, "d10w1800": 127, "d10w3600": 121, "d3w600": 223, "d3w1800": 216, "d3w3600": 209 }
+  },
+  "checks": [
+    {
+      "name": "Max safe exposure at the five hims-replay.json blocks",
+      "pass": true,
+      "detail": "50265277: 7258.815143346441 vs 7258.815143346441 USDG, 1823 ticks up (identical); 50415299: 115.18994774903908 vs 115.18994774903908 USDG, 1823 ticks up (identical); 50444948: 123.86014827658722 vs 123.86014827658722 USDG, 1823 ticks up (identical); 50490000: 5310.342869067709 vs 5310.342869067709 USDG, 1823 ticks down (identical); 50772447: 7009.2635997993275 vs 7009.2635997993275 USDG, 1823 ticks up (identical)"
+    },
+    {
+      "name": "Pool state at every grid minute equals inventory-1m.json's",
+      "pass": true,
+      "detail": "push +10 % cost identical at 4081/4081 minutes (replay.ts pushCostInQuote on the same sweep)"
+    },
+    { "name": "Raw TWAP identical in the Δ = 10 and Δ = 3 hooks", "pass": true, "detail": "truncation only touches the truncated accumulator" },
+    {
+      "name": "Audit probe hims_sim.py reproduced",
+      "pass": true,
+      "detail": "19:40-00:43:30: 3220 swaps in 1687 seconds (1687 observations; probe 3220 / 1687); 18/18 TWAP rows identical to 2 decimals and 1 tick"
+    }
+  ],
+  "sources": {
+    "swaps": "gauge/cache/squeeze/out/swaps-raw-main.json (squeeze/pools-swaps.ts): 11242 HIMS/USDG Swap events, the last one before the window (the seed) and every one in blocks 48495759..50919068",
+    "modifyLiquidity": "gauge/cache/squeeze/modliq-ce3a7f54cf-41726520.json.ndjson (squeeze/inventory.ts): 2064 HIMS/USDG ModifyLiquidity logs from its Initialize to block 50919068",
+    "timestamps": "gauge/cache/squeeze/timestamps-*.json (exact block timestamps from the collectors)",
+    "himsReplay": "gauge/data/hims-replay.json",
+    "auditProbe": "hims_sim.py, the internal review's float replay of the same swaps (2026-09-26, run outside this repo; its printed numbers are compared here, none of its code is used)"
+  },
+  "generatedAt": "2026-09-25T18:36:59.191Z"
+}

@@ -16,7 +16,9 @@
     "weekend": "tsx src/weekend.ts",
     "charts": "tsx src/charts.ts",
     "squeeze": "tsx src/squeeze/run-all.ts",
-    "squeeze:build": "tsx src/squeeze/build.ts"
+    "squeeze:build": "tsx src/squeeze/build.ts",
+    "squeeze:hakari": "tsx src/squeeze/hakari-read.ts",
+    "hims:hook": "tsx src/squeeze/hakari-read.ts"
   },
   "dependencies": {
     "@types/node": "^26.6.2",
