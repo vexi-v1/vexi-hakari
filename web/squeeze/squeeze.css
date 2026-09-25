@@ -143,6 +143,9 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .summary, .lead { font-size: 17px; line-height: 1.5; margin: 0 0 12px; max-width: 66ch; }
 .card-h { font-family: var(--display); font-stretch: 85%; font-weight: 650; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin: 16px 0 8px; }
 .card-h3 { font-family: var(--display); font-stretch: 85%; font-weight: 650; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin: 14px 0 6px; }
+.why { margin: 6px 0 4px; padding: 10px 12px; border-left: 3px solid var(--hakari); background: var(--surface-2); border-radius: 0 6px 6px 0; }
+.why .why-h { margin: 0 0 4px; }
+.why-p { margin: 0; font-size: 15px; line-height: 1.5; max-width: 66ch; }
 .tldr { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
 .tldr li { padding-left: 2px; max-width: 66ch; }
 .tldr li::marker { font-family: var(--display); font-weight: 700; font-stretch: 85%; }
@@ -175,6 +178,8 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); 
 .tri-prices strong { font-size: 14px; color: var(--text-primary); font-weight: 650; }
 .tri-prices .tp-u, .tri-prices .tp-s { grid-column: 1 / -1; }
 .tri-flow { font-size: 13px; color: var(--text-secondary); margin: 4px 0 6px; }
+.tri-look { font-size: 14px; line-height: 1.45; color: var(--text-primary); margin: 2px 0 6px; max-width: 72ch; }
+.tri-note { font-size: 12px; line-height: 1.4; color: var(--text-secondary); margin: 0 0 6px; max-width: 72ch; }
 .tri-table { margin-top: 8px; }
 .tri-table caption { text-align: left; font-size: 12px; color: var(--text-secondary); padding-bottom: 4px; }
 .tri-side { display: grid; gap: 20px; }
@@ -261,6 +266,7 @@ body.playing .chev { animation: march 1.2s linear infinite; }
 .ro .key-line, .ro .key-rect { align-self: center; margin-right: 1px; }
 .ro strong { font-weight: 650; }
 .ro-l { color: var(--text-secondary); font-size: 12px; }
+.ro-note { white-space: normal; max-width: 100%; min-width: 0; }
 .lh-tools { display: flex; gap: 6px; align-self: center; }
 .lane-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 16px; margin: 2px 0 0; }
 .lane-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 12px; color: var(--text-secondary); }
@@ -480,7 +486,7 @@ ul.plain { margin: 0; padding-left: 18px; display: grid; gap: 6px; max-width: 72
 
 /* ------------------------------------------------------------------ presenter mode */
 body.presenting .sections, body.presenting .footer, body.presenting .pools, body.presenting .tri-cap, body.presenting .tri-table,
-body.presenting .back, body.presenting .h1, body.presenting .keys-btn, body.presenting .lane-sub, body.presenting .one-line, body.presenting .moment { display: none !important; }
+body.presenting .back, body.presenting .h1, body.presenting .keys-btn, body.presenting .lane-sub, body.presenting .one-line, body.presenting .moment, body.presenting .tri-look { display: none !important; }
 body.presenting .pres-off { display: none !important; }
 body.presenting .tri-prices { margin-bottom: 0; }
 body.presenting .lane-meta, body.presenting .lh-tools, body.presenting .col-btn, body.presenting .tb-tools, body.presenting .tri-flow { display: none !important; }

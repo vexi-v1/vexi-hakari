@@ -42,14 +42,14 @@
     'unit.float': { en: 'HIMS tokens', zh: 'HIMS 顆數' },
     'sub.float': { en: 'Pools: HIMS held by rebuilt LP positions. Other v4 = PoolManager balance minus those two (other pools, uncollected fees). Outside v4 = everything else.', zh: '池子：重建的 LP 部位持有的 HIMS。其他 v4＝PoolManager 餘額減去這兩個池（其他池、未領手續費）。v4 之外＝其餘全部。' },
     'lane.route': { en: 'HIMS moved by trades', zh: '交易搬動的 HIMS' },
-    'unit.route': { en: 'HIMS, summed from the left edge', zh: 'HIMS，自畫面左緣累加' },
-    'sub.route': { en: 'Trades only (no LP adds or removals), summed from {t}.', zh: '只計交易（不含 LP 加減），自 {t} 起累加。' },
+    'unit.route': { en: 'HIMS, net, trades only', zh: 'HIMS，淨額，只計交易' },
+    'sub.route': { en: 'Trades only (no LP adds or removals), summed from {t}. BONER’s pool also takes HIMS from other pools and wallets, so the two lines need not match.', zh: '只計交易（不含 LP 加減），自 {t} 起累加。BONER 池也會從其他池子與錢包收進 HIMS，所以兩條線不必相等。' },
     'lane.inventory': { en: 'Dollar pool: HIMS side vs USDG side', zh: '美元池：HIMS 端與 USDG 端' },
     'unit.inventory': { en: 'USDG, HIMS counted at 28.84', zh: 'USDG，HIMS 以 28.84 計' },
     'sub.inventory': { en: 'LP principal rebuilt from positions, not reserves. HIMS is counted at the Friday close so this line tracks tokens, not the premium.', zh: '由部位重建的 LP 本金，不是儲備。HIMS 以週五收盤價計，所以這條線反映顆數而不是溢價。' },
     'lane.cost': { en: 'Cost to push HIMS 10% and sell back', zh: '把 HIMS 推動 10% 再賣回的成本' },
     'unit.cost': { en: 'USDG, log scale', zh: 'USDG，對數刻度' },
-    'sub.cost': { en: 'Fees on both legs, same method as HAKARI’s PushCostLens. Lower = cheaper to fake.', zh: '兩段都計手續費，方法與 HAKARI 的 PushCostLens 相同。越低＝越便宜就能造假。' },
+    'sub.cost': { en: 'Fees on both legs, same method as HAKARI’s on-chain cost-to-push lens. Lower = cheaper to fake.', zh: '兩段都計手續費，方法與 HAKARI 的鏈上推價成本工具相同。越低＝越便宜就能造假。' },
     'lane.social': { en: 'Posts about it on X', zh: 'X 上的相關貼文' },
     'unit.social': { en: 'posts per hour · markers = sampled posts', zh: '每小時貼文數・標記＝抽樣貼文' },
     // series
@@ -77,22 +77,24 @@
     'ro.range': { en: 'range {a}–{b}', zh: '區間 {a}–{b}' },
     'ro.noswap': { en: 'no swap this minute, price carried', zh: '本分鐘無兌換，沿用前價' },
     'ro.swaps': { en: '{n} swaps this minute', zh: '本分鐘 {n} 筆兌換' },
-    'ro.premiumInside': { en: 'HIMS premium inside BONER’s price: {p}', zh: 'BONER 價格中的 HIMS 溢價：{p}' },
-    'ro.matched': { en: 'matched {p}', zh: '對得上 {p}' },
+    'ro.premiumInside': { en: 'via HIMS vs at 28.84: {p}, the HIMS premium', zh: '經 HIMS 對以 28.84 計：{p}，即 HIMS 溢價' },
+    'ro.intoMore': { en: 'BONER’s pool took in {x}× what left the dollar pool; the rest came from other HIMS pools and wallets', zh: 'BONER 池收進的 HIMS 是流出美元池的 {x} 倍；其餘來自其他 HIMS 池與錢包' },
+    'ro.intoLess': { en: 'BONER’s pool took in {p} of what left the dollar pool', zh: 'BONER 池收進了流出美元池的 {p}' },
+    'ro.fromBase': { en: 'summed from {t}', zh: '自 {t} 起累加' },
     'ro.share': { en: 'HIMS share of the pool at NAV {p}', zh: '以淨值計 HIMS 佔池 {p}' },
     'ro.capital': { en: 'capital {v} USDG, returned', zh: '所需資金 {v} USDG，會收回' },
     'ro.nullCost': { en: 'the push runs past the last initialized tick', zh: '推價超出最後一個已初始化的 tick' },
-    'ro.since': { en: 'since {t}', zh: '自 {t}' },
+    'ro.since': { en: 'since {t}', zh: '（自 {t}）' },
     'ro.10min': { en: '/ 10 min', zh: '／10 分鐘' },
     'ro.burnedSince': { en: 'burned since {t}', zh: '自 {t} 銷毀' }, 'ro.mintedSince': { en: 'minted since {t}', zh: '自 {t} 鑄造' },
     inThisChapter: { en: 'in this chapter', zh: '本章重點' },
     // watch labels
-    'w.himsUsdg': { en: 'HIMS in the dollar pool', zh: '美元池的 HIMS 價格' },
+    'w.himsUsdg': { en: 'HIMS price, dollar pool', zh: '美元池的 HIMS 價格' },
     'w.himsPremiumPct': { en: 'vs the 28.84 close', zh: '相對收盤價 28.84' },
     'w.himsSupply': { en: 'HIMS supply', zh: 'HIMS 總供給' },
     'w.himsInPoolManager': { en: 'HIMS in the v4 PoolManager', zh: 'v4 PoolManager 內的 HIMS' },
     'w.himsInBonerHims': { en: 'HIMS in BONER’s pool', zh: 'BONER 池內的 HIMS' },
-    'w.himsInHimsUsdg': { en: 'HIMS in the dollar pool', zh: '美元池內的 HIMS' },
+    'w.himsInHimsUsdg': { en: 'HIMS left in the dollar pool', zh: '美元池內剩下的 HIMS' },
     'w.usdgInHimsUsdg': { en: 'USDG in the dollar pool', zh: '美元池內的 USDG' },
     'w.bonerHims': { en: 'HIMS per BONER', zh: '每顆 BONER 的 HIMS' },
     'w.bonerUsdgViaHims': { en: 'BONER via HIMS', zh: '經 HIMS 換算的 BONER' },
@@ -106,14 +108,14 @@
     'gate.issuer': { en: 'Issuer', zh: '發行方' }, 'gate.mintRedeem': { en: 'mint ⇅ redeem', zh: '鑄造 ⇅ 贖回' },
     'gate.hours': { en: 'brokerage hours only', zh: '只在券商交易時段' },
     'gate.open': { en: 'Open', zh: '開放' }, 'gate.openSub': { en: 'mint & redeem', zh: '可鑄造與贖回' },
-    'gate.closed': { en: 'Closed', zh: '關閉' }, 'gate.fenced': { en: 'fenced {d}', zh: '圍欄 {d}' },
+    'gate.closed': { en: 'Closed', zh: '關閉' }, 'gate.fenced': { en: 'fenced {d}', zh: '已圍欄 {d}' },
     'gate.waiting': { en: 'Open · no mint yet', zh: '已開放・尚未鑄造' }, 'gate.waitingSub': { en: '{m} min so far', zh: '已 {m} 分鐘' },
     'gate.minting': { en: 'Minting', zh: '鑄造中' }, 'gate.mintingSub': { en: '+{n} HIMS since {t}', zh: '{t} 起 +{n} 顆' },
     'chip.nyseOpen': { en: 'NYSE open', zh: '紐約證交所開盤' }, 'chip.nyseClosed': { en: 'NYSE closed', zh: '紐約證交所休市' },
     'chip.sessionOpen': { en: '24/5 session open', zh: '24/5 時段開啟' }, 'chip.sessionClosed': { en: '24/5 session closed', zh: '24/5 時段關閉' },
     'chip.gateOpen': { en: 'Mint/redeem open', zh: '可鑄造／贖回' },
-    'chip.gateClosed': { en: 'Gate closed · fenced {d}', zh: '閘門關閉・圍欄 {d}' },
-    'chip.gateWaiting': { en: 'Gate open · no mint yet', zh: '閘門開啟・尚未鑄造' },
+    'chip.gateClosed': { en: 'Mint/redeem closed · fenced {d}', zh: '鑄造／贖回關閉・已圍欄 {d}' },
+    'chip.gateWaiting': { en: 'Mint/redeem open · no mint yet', zh: '可鑄造／贖回・尚未鑄造' },
     'chip.gateMinting': { en: 'Minting', zh: '鑄造中' },
     ny: { en: '{t} in New York', zh: '紐約 {t}' },
     nearby: { en: 'Nearby', zh: '附近事件' },
@@ -123,6 +125,18 @@
     open: { en: 'open', zh: '開啟' },
     toChapter: { en: 'chapter {n}', zh: '第 {n} 章' },
     tldr: { en: 'In four steps', zh: '四個步驟' },
+    whyMatters: { en: 'Why it matters', zh: '為什麼重要' },
+    lookHere: { en: 'look here', zh: '看這裡' },
+    // one "where to look" line per chapter (above the triangle caption); the lane it names is the only one flagged
+    'look.overview': { en: 'Look at the orange number: what it costs to push HIMS 10% and sell back. About 1,351 USDG on Sunday evening, a few USDG at the peak.', zh: '看橘色數字：把 HIMS 推高 10% 再賣回的成本。週日傍晚約 1,351 USDG，高峰時只要幾 USDG。' },
+    'look.friday': { en: 'Look at the magenta band under the triangle: BONER’s pool already holds more than half of all HIMS.', zh: '看三角形下方的洋紅色帶：BONER 的池子已經握有超過一半的 HIMS。' },
+    'look.redeem': { en: 'Look at the supply line in the float lane: it steps down twice, 500 and then 400 HIMS redeemed.', zh: '看流通量軌道上的總供給線：它往下跳兩次，先贖回 500 顆，再 400 顆。' },
+    'look.fence': { en: 'Look at the shaded fence in the price lane: the price barely moves, apart from one spike on Saturday morning.', zh: '看價格軌道上的灰色圍欄區：除了週六早上一次急漲，價格幾乎不動。' },
+    'look.climb': { en: 'Look at the triangle: the blue ribbon’s HIMS end thins while the magenta ribbon’s HIMS end fattens.', zh: '看三角形：藍色帶的 HIMS 端變細，洋紅色帶的 HIMS 端變粗。' },
+    'look.peak': { en: 'Look at the orange number: about 1,351 USDG on Sunday evening, a few USDG now.', zh: '看橘色數字：週日傍晚約 1,351 USDG，現在只要幾 USDG。' },
+    'look.reopen': { en: 'Look at the gate: trading has reopened, but no new HIMS arrives for 43 minutes and the price spikes again.', zh: '看閘門：交易已重開，但 43 分鐘內沒有新的 HIMS 進來，價格又衝一次。' },
+    'look.mint': { en: 'Look at the price lane: as new HIMS is sold into the pool, the price falls back to the dashed 28.84 line.', zh: '看價格軌道：新的 HIMS 賣進池子後，價格跌回 28.84 的虛線。' },
+    'look.aftermath': { en: 'Look at the BONER lane: with HIMS back at NAV, BONER through HIMS stays near 4x its Friday price.', zh: '看 BONER 軌道：HIMS 回到淨值後，經 HIMS 換算的 BONER 仍約是週五價格的 4 倍。' },
     more: { en: 'More', zh: '更多' }, less: { en: 'Less', zh: '收起' },
     inOneLine: { en: 'In one line', zh: '一句話' },
     evidence: { en: 'Evidence', zh: '證據' },
@@ -131,7 +145,8 @@
     chapterOf: { en: 'Chapter {n} of {m}', zh: '第 {n}／{m} 章' },
     // triangle
     'tri.title': { en: 'Three pools, one frozen token', zh: '三個池子，一個被凍結的代幣' },
-    'tri.caption': { en: 'Ribbon width = tokens held by LP positions (rebuilt principal, not reserves; uncollected fees excluded), converted at fixed prices (HIMS 28.84 USDG, BONER {b} USDG) so width tracks tokens, not the premium. Outline: baseline, {t}.', zh: '帶寬＝LP 部位持有的代幣（重建的本金，不是儲備，不含未領手續費），以固定價格換算（HIMS 28.84 USDG、BONER {b} USDG），所以寬度反映顆數而非溢價。外框：基準時點，{t}。' },
+    'tri.caption': { en: 'Each ribbon is a pool; the width at each end is how much of that token its LPs hold. Outline: {t}.', zh: '每條帶子是一個池子；兩端的寬度是池中 LP 持有該代幣的多寡。外框：{t} 的狀態。' },
+    'tri.note': { en: 'Widths are rebuilt LP principal (not reserves; uncollected fees excluded), converted at fixed prices (HIMS 28.84 USDG, BONER {b} USDG) so width tracks tokens, not the premium.', zh: '寬度是重建的 LP 本金（不是儲備，不含未領手續費），以固定價格換算（HIMS 28.84 USDG、BONER {b} USDG），所以寬度反映顆數而非溢價。' },
     'tri.flow': { en: 'Last 15 min:', zh: '最近 15 分鐘：' },
     'tri.flowOut': { en: '{a} HIMS left the dollar pool', zh: '{a} 顆 HIMS 流出美元池' },
     'tri.flowIn': { en: '{b} entered BONER’s pool', zh: '{b} 顆流入 BONER 池' },
@@ -142,7 +157,7 @@
     'tri.perBonerH': { en: 'HIMS per BONER', zh: '每顆 BONER 的 HIMS' },
     'tri.perBonerU': { en: 'USDG per BONER', zh: '每顆 BONER 的 USDG' },
     'tri.vsNav': { en: '{p} vs NAV', zh: '相對淨值 {p}' },
-    'tri.sinceBase': { en: '×{x} since {t}', zh: '自 {t} ×{x}' },
+    'tri.sinceBase': { en: '{x} since {t}', zh: '{t} 起 {x}' }, 'tri.vsBase': { en: '{x} vs {t}', zh: '對比 {t}：{x}' },
     'tri.routeGap': { en: 'route gap {p}', zh: '路由價差 {p}' },
     'tri.noTrade': { en: 'no trade yet', zh: '尚無成交' },
     'tri.supply': { en: 'supply {v}', zh: '供給 {v}' },
@@ -159,7 +174,8 @@
     'float.title': { en: 'Where the supply sits', zh: '流通量在哪裡' },
     'hero.label': { en: 'Cost to push HIMS +10% and sell back', zh: '把 HIMS 推高 10% 再賣回的成本' },
     'hero.was': { en: 'was {v} at {t}', zh: '{t} 時為 {v}' },
-    'hero.cheaper': { en: '{x}× cheaper', zh: '便宜 {x} 倍' },
+    'hero.baseline': { en: 'baseline ({t}): {v}', zh: '基準（{t}）：{v}' },
+    'hero.cheaper': { en: '{x}× cheaper', zh: '成本降到 1/{x}' },
     'hero.dearer': { en: '{x}× the baseline', zh: '基準的 {x} 倍' },
     // moments
     'mo.fence': { en: 'Mint/redeem closed · fenced', zh: '鑄造／贖回關閉・圍欄中' },
@@ -168,14 +184,14 @@
     'mo.label': { en: 'Moments', zh: '關鍵時刻' },
     'mo.clusterTick': { en: '{n} mints this minute, +{v} HIMS', zh: '本分鐘 {n} 次鑄造，+{v} 顆' },
     'mo.fenceBracket': { en: 'Supply frozen at {v} for {d}', zh: '流通量凍結在 {v}，長達 {d}' },
-    'mo.outOfRange': { en: '{v} (one swap, off the scale)', zh: '{v}（單筆成交，超出刻度）' },
+    'mo.outOfRange': { en: '{v} after one swap (off the scale)', zh: '{v}（單筆兌換後報價，超出刻度）' },
     block: { en: 'block', zh: '區塊' }, tx: { en: 'tx', zh: '交易' },
     // minimap
     'mm.label': { en: 'Replay time', zh: '重播時間' },
     'mm.valuetext': { en: '{t}. HIMS {p} USDG, {prem} vs NAV. {ch}.', zh: '{t}。HIMS {p} USDG，相對淨值 {prem}。{ch}。' },
     // sections
     'sec.mechanism': { en: 'How it happened', zh: '事情怎麼發生的' },
-    'sec.roles': { en: 'Who came out where', zh: '誰得到什麼結果' },
+    'sec.roles': { en: 'Who came out where', zh: '各方得失' },
     'sec.hakari': { en: 'Why HAKARI cares', zh: 'HAKARI 為什麼在意' },
     'sec.next': { en: 'Next', zh: '下一步' },
     'sec.glossary': { en: 'Glossary', zh: '名詞解釋' },
@@ -184,10 +200,10 @@
     'ref.numbers': { en: 'Numbers', zh: '數字' }, 'ref.sources': { en: 'Sources', zh: '來源' },
     'ref.method': { en: 'Method', zh: '方法' }, 'ref.caveats': { en: 'Caveats', zh: '注意事項' },
     'next.lane': { en: 'It will appear as one more lane under the price lane.', zh: '它會以價格線下方的一條新軌道出現。' },
-    'hakari.sub': { en: '{a} → {b}, {x}× cheaper, while the fence kept arbitrage out', zh: '{a} → {b}，便宜 {x} 倍，而圍欄把套利擋在外面' },
+    'hakari.sub': { en: '{a} → {b} {z}, {x}× cheaper, while the fence kept arbitrage out', zh: '{a} → {b} {z}，成本降到 1/{x}，而圍欄把套利擋在外面' },
     'hakari.unit': { en: 'USDG to push +10%', zh: 'USDG 即可推高 10%' },
     'hakari.link': { en: 'See the live cost ladder on the HAKARI gauge →', zh: '在 HAKARI 量測頁看即時成本階梯 →' },
-    'hakari.min': { en: 'Lowest minute close in the replay: {v} USDG at {t}, when the dollar pool had run out of HIMS.', zh: '重播中最低的分鐘收盤：{t} 的 {v} USDG，當時美元池的 HIMS 已被買光。' },
+    'hakari.min': { en: 'Lowest minute close in the replay: {v} USDG at {t}, when the dollar pool was down to under 4 HIMS.', zh: '重播中最低的分鐘收盤：{t} 的 {v} USDG，當時美元池只剩不到 4 顆 HIMS。' },
     // reference
     'xc.title': { en: 'Cross-check: our reconstruction vs published figures', zh: '交叉核對：我們的重建與公開數字' },
     'xc.moment': { en: 'Moment (UTC)', zh: '時點（UTC）' }, 'xc.block': { en: 'Block', zh: '區塊' },
@@ -215,7 +231,7 @@
     'm.supply': { en: 'Supply', zh: '供給' },
     'm.supplyText': { en: 'From HIMS Transfer logs: mints from and burns to the zero address; the PoolManager balance from transfers in and out.', zh: '取自 HIMS 的 Transfer 紀錄：從零地址鑄造、轉入零地址銷毀；PoolManager 餘額由轉入轉出計算。' },
     'm.cost': { en: 'Cost to push', zh: '推價成本' },
-    'm.costText': { en: 'The same math as HAKARI’s PushCostLens with fees on both legs; the push-down cost is converted to USDG at the minute close.', zh: '與 HAKARI 的 PushCostLens 相同的算法，兩段都計手續費；下壓成本以分鐘收盤價換成 USDG。' },
+    'm.costText': { en: 'The same math as HAKARI’s on-chain cost lens (PushCostLens) with fees on both legs; the push-down cost is converted to USDG at the minute close.', zh: '與 HAKARI 鏈上推價成本工具（PushCostLens）相同的算法，兩段都計手續費；下壓成本以分鐘收盤價換成 USDG。' },
     'm.checks': { en: 'Checks', zh: '檢查' },
     'm.caching': { en: 'Caching', zh: '快取' },
     'm.cachingText': { en: 'Every figure comes from cached collector output (gauge/cache/squeeze/). The page never queries the chain; rebuilding the data re-reads the cache and fetches only blocks it has not seen. Data generated {g}.', zh: '所有數字都來自收集程式的快取（gauge/cache/squeeze/）。本頁從不查詢鏈上；重建資料時只讀快取，只抓尚未看過的區塊。資料產生於 {g}。' },
@@ -258,6 +274,7 @@
     'k.jump': { en: 'overview / chapter n', zh: '全覽／第 n 章' },
     'k.slider': { en: 'on the timeline: ±1 min, Shift ±10 min, PgUp/PgDn ±1 h, Home/End', zh: '在時間軸上：±1 分，Shift ±10 分，PgUp/PgDn ±1 小時，Home/End' },
     'k.esc': { en: 'leave presenter mode', zh: '離開簡報模式' },
+    colon: { en: ': ', zh: '：' },
     live: { en: 'Chapter {n}: {title}', zh: '第 {n} 章：{title}' }
   };
   S.I18N = T;
@@ -306,9 +323,16 @@
     return Math.abs(v) >= 100 ? S.fmtFixed(v, 0) : S.fmtFixed(v, 1);
   };
   S.fmtSupply = function (v) { return S.fmtFixed(v, 1); };
+  var NB = '\u00a0';
+  // zh: 萬 / 億 instead of K / M (Taiwan usage); a no-break space keeps the number and its unit together.
+  function wan(v, a) {
+    if (a >= 1e8) return minus(nf(0, 2).format(v / 1e8)) + NB + '億';
+    return minus(nf(0, a >= 1e6 ? 0 : 2).format(v / 1e4)) + NB + '萬';
+  }
   S.fmtUsdg = function (v) {
     if (v == null || !isFinite(v)) return '—';
     var a = Math.abs(v);
+    if (S.lang === 'zh' && a >= 1e4) return wan(v, a);
     if (a >= 1e6) return minus(nf(2, 2).format(v / 1e6)) + 'M';
     if (a >= 1e4) return minus(nf(1, 1).format(v / 1e3)) + 'K';
     if (a >= 100) return S.fmtFixed(v, 0);
@@ -318,6 +342,7 @@
   S.fmtCompact = function (v) {
     if (v == null || !isFinite(v)) return '—';
     var a = Math.abs(v);
+    if (S.lang === 'zh') return a >= 1e4 ? wan(v, a) : minus(nf(0, a >= 100 ? 0 : 2).format(v));
     if (a >= 1e9) return minus(nf(0, 1).format(v / 1e9)) + 'B';
     if (a >= 1e6) return minus(nf(0, 1).format(v / 1e6)) + 'M';
     if (a >= 1e3) return minus(nf(0, 1).format(v / 1e3)) + 'K';
@@ -325,6 +350,14 @@
   };
   S.fmtInt = function (v) { return v == null || !isFinite(v) ? '—' : minus(nf(0, 0).format(v)); };
   S.fmtSigned = function (s, v) { return (v > 0 ? '+' : '') + s; };
+  // Change from a to b for deltas: ×N for 2x and up, 1/N below 2% of the start, a percentage in between.
+  S.fmtChange = function (b, a) {
+    if (a == null || b == null || !a || !isFinite(b / a)) return '';
+    var r = b / a;
+    if (r >= 2) return '×' + S.fmtFixed(r, r < 10 ? 1 : 0);
+    if (r < 0.02 && r > 0) return '1/' + S.fmtInt(1 / r);
+    return S.fmtPct((r - 1) * 100);
+  };
   S.fmtDur = function (sec) {
     sec = Math.max(0, Math.round(sec / 60));
     var h = Math.floor(sec / 60), m = sec % 60;

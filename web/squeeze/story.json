@@ -5,8 +5,8 @@
     "zh": "HIMS 週末流通量擠壓：鏈上重播"
   },
   "dek": {
-    "en": "Over the last weekend of August 2026, a memecoin quoted in tokenized HIMS soaked up most of the stock token's frozen weekend supply, and the dollar pool briefly priced HIMS at more than twice its Friday close. Once the issuer could mint again on Monday the premium was gone in about 75 minutes, and this page replays those hours from Robinhood Chain's own logs.",
-    "zh": "2026 年 8 月最後一個週末，一個以代幣化 HIMS 計價的迷因幣吸走了這檔股票代幣週末被凍結的大部分流通量，美元池裡的 HIMS 報價一度超過週五收盤價的兩倍。週一發行方恢復鑄造後，溢價在約 75 分鐘內消失；本頁用 Robinhood Chain 自己的鏈上紀錄重播這幾個小時。"
+    "en": "Over the last weekend of August 2026, a memecoin quoted in tokenized HIMS soaked up most of the stock token's frozen weekend supply, and the dollar pool briefly priced HIMS at more than twice its Friday close. Once the issuer minted again on Monday (00:43 UTC), the premium was gone in about 75 minutes. This page replays those hours from Robinhood Chain's own logs.",
+    "zh": "2026 年 8 月最後一個週末，一個以代幣化 HIMS 計價的迷因幣吸走了這檔股票代幣週末被凍結的大部分流通量，美元池裡的 HIMS 報價一度超過週五收盤價的兩倍。週一 00:43 UTC 發行方恢復鑄造後，溢價在約 75 分鐘內消失；本頁用 Robinhood Chain 自己的鏈上紀錄重播這幾個小時。"
   },
   "tldr": [
     {
@@ -22,8 +22,12 @@
       "zh": "LP 區間之上幾乎沒有 HIMS 可賣：把價格推高 10% 只要約 12 USDG，而不是約 1,351（最低時 3.85）；池子的分鐘收盤價最高到 71.23，而週五收盤價是 28.84。"
     },
     {
-      "en": "Minting resumed at Mon 00:43 UTC and the price was back near NAV within about 75 minutes. BONER kept a gain of about 4x, the losses fell on whoever bought HIMS far above NAV, and the NYSE opened as if nothing had happened.",
-      "zh": "週一 00:43 UTC 恢復鑄造，約 75 分鐘內價格回到淨值附近。BONER 保住約 4 倍漲幅，虧損落在遠高於淨值買進 HIMS 的人身上，紐約證交所週一照常開盤，彷彿什麼事都沒發生。"
+      "en": "Minting resumed at Mon 00:43 UTC; the issuer's market-making wallet sold the new tokens into the premium, and the price was back near NAV within about 75 minutes. BONER kept about 4x; in DeFiPrime's reading, the losses fell on those left holding HIMS bought far above NAV. The NYSE opened as usual.",
+      "zh": "週一 00:43 UTC 恢復鑄造；發行方的造市錢包把新代幣賣進溢價，約 75 分鐘內價格回到淨值附近。BONER 保住約 4 倍漲幅；照 DeFiPrime 的解讀，虧損落在手上還握著遠高於淨值買進之 HIMS 的人身上。紐約證交所照常開盤。"
+    },
+    {
+      "en": "Any contract reading this pool saw a stock that closed at 28.84 quoted at up to 71.23, and pushing it 10% cost about 12 USDG instead of 1,351. HAKARI measures that cost when a price is about to settle, and refuses to settle when faking the price costs less than the fake would earn.",
+      "zh": "任何讀這個池子價格的合約，都會看到一檔收盤 28.84 的股票被報到最高 71.23，而把它推高 10% 只要約 12 USDG，不是 1,351。HAKARI 在價格要拿來結算時量測這個成本；只要造假的成本低於造假能賺到的錢，就拒絕結算。"
     }
   ],
   "chapters": [
@@ -86,7 +90,7 @@
       "id": "redeem",
       "fromTs": 1787947200,
       "toTs": 1787961600,
-      "focusTs": 1787952060,
+      "focusTs": 1787952120,
       "kicker": {
         "en": "Fri 20:00 – Sat 00:00 UTC",
         "zh": "週五 20:00 – 週六 00:00 UTC"
@@ -140,28 +144,28 @@
         "zh": "週六 00:00 – 週日 21:30 UTC"
       },
       "title": {
-        "en": "The fence: supply closed, a quiet weekend",
-        "zh": "圍欄關上：供給凍結，週末很安靜"
+        "en": "The fence: supply closed, a mostly quiet weekend",
+        "zh": "圍欄關上：供給凍結，週末大致平靜"
       },
       "summary": {
-        "en": "With minting and redemption closed, the pools drift quietly: HIMS stays around 29–30 USDG while BONER slides.",
-        "zh": "鑄造與贖回都關閉，池子平靜漂移：HIMS 維持在 29–30 USDG 附近，BONER 則一路下滑。"
+        "en": "With minting and redemption closed, the pools mostly drift: apart from a 15-minute spike on Saturday morning, HIMS stays around 29–31 USDG, and BONER slides after a Saturday-morning high.",
+        "zh": "鑄造與贖回都關閉，池子大致平靜漂移：除了週六早上一次 15 分鐘的急漲，HIMS 維持在 29–31 USDG 附近；BONER 在週六早上走高後一路下滑。"
       },
       "body": {
         "en": [
           "From Sat 00:00 UTC the mint/redeem window is closed (HAKARI's gauge models it as Sat 02:00 to Mon 02:00 Berlin time). Nobody can mint HIMS at NAV to sell into a high price, or redeem cheap tokens for shares. HAKARI calls a pool in this state **fenced**: the arbitrage that normally anchors its price cannot reach it.",
-          "For most of the weekend nothing happens. HIMS/USDG stays around 29–30 USDG, and BONER drifts down from about $0.0036 to about $0.0024.",
-          "At Sun 19:40 UTC the dollar pool's positions hold about **2,606 HIMS** and 69K USDG. Pushing the price up 10% and selling straight back would cost about **1,351 USDG** in fees. That is the baseline."
+          "For most of the weekend little happens. The exception is Saturday morning: between 06:00 and 06:15 UTC the dollar pool's HIMS drops to about 185, the minute close reaches 34.58 at 06:07 (single swaps up to 35.88 at 06:03, +24%) and pushing the price 10% costs only 39 USDG, before the price falls back near 31 and the pool's HIMS recovers. Otherwise HIMS/USDG stays around 29–31 USDG. BONER, priced through HIMS, rises from about 0.0036 USDG on Friday to about 0.0057 on Saturday morning, then slides to about 0.0024 by Sunday evening. If anything the dollar pool got deeper over Saturday (from about 790 HIMS at 00:00 to about 4,300 by 20:00), which makes Sunday night's collapse starker.",
+          "At Sun 19:40 UTC the dollar pool's positions hold about **2,606 HIMS** and 69K USDG. Pushing the price up 10% and selling straight back would cost about **1,351 USDG** in fees. That is this page's baseline: the last quiet minute before the squeeze, near the middle of the fenced weekend, when this cost was usually between about 700 and 2,100 USDG."
         ],
         "zh": [
-          "從週六 00:00 UTC 起，鑄造／贖回窗口關閉（HAKARI 的 gauge 以柏林時間週六 02:00 至週一 02:00 建模）。沒有人能按淨值鑄造 HIMS 去賣給高價，也沒有人能把便宜的代幣贖回成股票。HAKARI 把這種狀態的池子稱為**圍欄池**：平常把價格拉回原位的套利碰不到它。",
-          "週末大部分時間什麼事都沒發生。HIMS/USDG 維持在 29–30 USDG 附近，BONER 從約 $0.0036 慢慢跌到約 $0.0024。",
-          "週日 19:40 UTC，美元池的流動性部位約有 **2,606 顆 HIMS** 與 6.9 萬 USDG。把價格推高 10% 再立刻賣回，光手續費就要約 **1,351 USDG**。這是基準線。"
+          "從週六 00:00 UTC 起，鑄造／贖回窗口關閉（HAKARI 量測工具以柏林時間週六 02:00 至週一 02:00 建模）。沒有人能按淨值鑄造 HIMS 去賣給高價，也沒有人能把便宜的代幣贖回成股票。HAKARI 把這種狀態的池子稱為**圍欄池**：平常把價格拉回原位的套利碰不到它。",
+          "週末大部分時間沒什麼事，例外是週六早上：06:00 到 06:15 UTC 之間，美元池的 HIMS 降到約 185 顆，分鐘收盤價在 06:07 到 34.58（06:03 單筆最高 35.88，+24%），把價格推高 10% 只要 39 USDG；之後價格回落到 31 附近，池中的 HIMS 也回來了。其餘時間 HIMS/USDG 維持在 29–31 USDG 附近。經 HIMS 換算的 BONER 從週五約 0.0036 USDG 漲到週六早上約 0.0057，之後一路跌到週日傍晚約 0.0024。美元池在週六反而變深（從 00:00 的約 790 顆 HIMS 增加到 20:00 的約 4,300 顆），這讓週日深夜的崩落更加突兀。",
+          "週日 19:40 UTC，美元池的流動性部位約有 **2,606 顆 HIMS** 與 6.9 萬 USDG。把價格推高 10% 再立刻賣回，光手續費就要約 **1,351 USDG**。這是本頁的基準線：擠壓前最後一個平靜的時點，大約落在圍欄週末的中間值；那段期間這個成本通常在約 700 到 2,100 USDG 之間。"
         ]
       },
       "presenterNote": {
-        "en": "Now the fence closes: no minting, no redemption until Monday. Saturday and most of Sunday are calm. Remember one number: pushing this pool 10% costs about 1,351 USDG.",
-        "zh": "圍欄關上了：週一之前不能鑄造也不能贖回。週六和週日大半天都很平靜。請記住一個數字：把這個池子推高 10% 要花約 1,351 USDG。"
+        "en": "Now the fence closes: no minting, no redemption until Monday. Apart from a brief spike on Saturday morning, the weekend is calm. Remember one number: on Sunday evening, pushing this pool 10% costs about 1,351 USDG.",
+        "zh": "圍欄關上了：週一之前不能鑄造也不能贖回。除了週六早上一次短暫急漲，週末很平靜。請記住一個數字：週日傍晚，把這個池子推高 10% 要花約 1,351 USDG。"
       },
       "watch": [
         "himsUsdg",
@@ -204,14 +208,14 @@
       },
       "body": {
         "en": [
-          "To buy BONER with dollars, the route is **USDG → HIMS → BONER**: buy HIMS in the HIMS/USDG pool, then swap it into the BONER pool. Memecoin demand becomes demand for a stock token whose supply is frozen. BONER also trades directly against USDG in a smaller pool (DeFiPrime puts it at about $160K); the route-gap lane shows how far the two BONER prices drift apart.",
-          "The HIMS that lands in the BONER/HIMS pool only comes back out when someone sells BONER. No LP withdrew from that pool all weekend, and its hook even adds liquidity inside users' trades, so while BONER buyers outnumber sellers, HIMS leaves the dollar pool far faster than it returns.",
-          "HIMS/USDG goes from about 29.73 at 21:46 to 36.22 at 22:28 and 39.94 at 23:02 UTC: about 38% over Friday's close, on a Sunday night with the stock market shut."
+          "To buy BONER with dollars, the route is **USDG → HIMS → BONER**: buy HIMS in the HIMS/USDG pool, then swap it into the BONER pool. Memecoin demand becomes demand for a stock token whose supply is frozen. BONER also trades directly against USDG in a smaller pool (about 25–50K USDG that evening; DeFiPrime's $160K is its Monday size); in the BONER lane, the via-HIMS and direct lines show how far the two BONER prices drift apart.",
+          "The HIMS that lands in the BONER/HIMS pool only comes back out when someone sells BONER. No LP withdrew from that pool all weekend, and its hook even adds liquidity inside users' trades, so while BONER buyers outnumber sellers, HIMS leaves the dollar pool far faster than it returns. BONER's pool also drew HIMS from other HIMS pools and wallets: from 19:40 to 23:53 trades moved about 2,440 HIMS out of the dollar pool and about 5,360 into BONER's pool.",
+          "DeFiPrime's single-swap samples put HIMS/USDG at about 29.73 at 21:46, 36.22 at 22:28 and 39.94 at 23:02 UTC (+38%); the minute close at 23:02 was 41.32 (+43%), on a Sunday night with the stock market shut."
         ],
         "zh": [
-          "想用美元買 BONER，路由是 **USDG → HIMS → BONER**：先在 HIMS/USDG 池買 HIMS，再換進 BONER 池。迷因幣的需求就這樣變成對一檔供給被凍結的股票代幣的需求。BONER 另有一個直接對 USDG 的較小池子（DeFiPrime 估計約 16 萬美元），「路由價差」那條線顯示兩種 BONER 價格拉開多遠。",
-          "進了 BONER/HIMS 池的 HIMS，只有在有人賣出 BONER 時才會流出。整個週末沒有任何 LP 從這個池撤出流動性，它的 hook 甚至會在使用者的交易裡順手加入流動性，所以只要 BONER 的買盤多於賣盤，HIMS 離開美元池的速度就遠比回來快。",
-          "HIMS/USDG 從 21:46 的約 29.73，漲到 22:28 的 36.22、23:02 UTC 的 39.94：在股市休市的週日深夜，比週五收盤高了約 38%。"
+          "想用美元買 BONER，路由是 **USDG → HIMS → BONER**：先在 HIMS/USDG 池買 HIMS，再換進 BONER 池。迷因幣的需求就這樣變成對一檔供給被凍結的股票代幣的需求。BONER 另有一個直接對 USDG 的較小池子（當晚約 2.5 萬到 5 萬 USDG；DeFiPrime 說的約 16 萬美元是它週一的規模），BONER 那條軌道上「經 HIMS」與「直接池」兩條線，顯示兩種 BONER 價格拉開多遠。",
+          "進了 BONER/HIMS 池的 HIMS，只有在有人賣出 BONER 時才會流出。整個週末沒有任何 LP 從這個池撤出流動性，它的 hook 甚至會在使用者的交易裡順手加入流動性，所以只要 BONER 的買盤多於賣盤，HIMS 離開美元池的速度就遠比回來快。BONER 的池子也從其他 HIMS 池與錢包吸進 HIMS：19:40 到 23:53 之間，交易從美元池搬走約 2,440 顆 HIMS，流進 BONER 池的則約 5,360 顆。",
+          "DeFiPrime 的單筆取樣：HIMS/USDG 在 21:46 約 29.73、22:28 為 36.22、23:02 UTC 為 39.94（+38%）；23:02 的分鐘收盤價是 41.32（+43%）。這是股市休市的週日深夜。"
         ]
       },
       "presenterNote": {
@@ -241,29 +245,31 @@
       "id": "peak",
       "fromTs": 1788132000,
       "toTs": 1788134400,
-      "focusTs": 1788132974,
+      "focusTs": 1788132660,
       "kicker": {
         "en": "Sun 23:20 – Mon 00:00 UTC",
         "zh": "週日 23:20 – 週一 00:00 UTC"
       },
       "title": {
-        "en": "The dollar pool runs out of HIMS",
+        "en": "The dollar pool nearly runs out of HIMS",
         "zh": "美元池裡的 HIMS 快被搬空"
       },
       "summary": {
-        "en": "At 23:24:59 UTC one swap buys the last HIMS in the dollar pool's ranges; the minute close peaks at 71.23 USDG (+147%) at 23:31, DeFiPrime samples 61.15 at 23:36, and by 23:53 the positions hold only about 67 HIMS.",
-        "zh": "23:24:59 UTC，一筆交易買走美元池區間內最後的 HIMS；分鐘收盤價在 23:31 衝到 71.23 USDG（+147%），DeFiPrime 在 23:36 取樣到 61.15，到 23:53 池中部位只剩約 67 顆 HIMS。"
+        "en": "The dollar pool runs dry: its minute close hits 71.23 at 23:31, about 2.5 times the stock's Friday close, and pushing the price 10% costs a few USDG instead of 1,351.",
+        "zh": "美元池被買乾：分鐘收盤價在 23:31 衝到 71.23，約是股票週五收盤價的 2.5 倍，把價格推高 10% 只要幾 USDG，而不是 1,351。"
       },
       "body": {
         "en": [
-          "The rebuilt tape goes further than the published samples. At 23:24:59 UTC one swap bought the last 12.91 HIMS inside the LPs' ranges for 937.09 USDG, leaving the positions with **3.68 HIMS** against about 134,600 USDG; the minute close peaked at **71.23** (+147%) at 23:31, and single trades printed as high as 124.70 with almost no liquidity in range. DeFiPrime sampled **61.15** at 23:36:14 UTC, a 112% premium. By 23:53 the price was back at about 43.27, still 50% over, and the dollar pool's positions held only about **67 HIMS** against about 130K USDG. Shortly after midnight @0xSammy counted about 92 HIMS against about $135K.",
-          "LP flight explains only a small part of the thinning. Rebuilding every position between 19:40 and the first mint attributes about **91%** of the drop in the pool's HIMS to the price moving above the LPs' concentrated ranges and about **9%** to position changes (190 removals against 327 additions). Above those ranges there is very little HIMS left to sell.",
-          "The result: pushing the price another 10% and selling back now cost about **12 USDG** instead of 1,351, and 3.85 USDG at 23:25, when the pool had run dry. More than 80% of all HIMS in existence sat in BONER's pool, and BONER, measured in HIMS, had nearly tripled since 19:40."
+          "At 23:24:59 UTC one swap buys the last 12.91 HIMS inside the LPs' ranges for 937.09 USDG. The dollar pool's positions are left with **3.68 HIMS** against about 134,600 USDG, and six minutes later the minute close peaks at **71.23** (+147%).",
+          "Above the LPs' ranges there is almost nothing left to sell, so pushing the price another 10% and selling back costs **3.85 USDG** at 23:25 and about **12 USDG** at 23:53, instead of 1,351 at 19:40. More than 80% of all HIMS sits in BONER's pool, and BONER, measured in HIMS, has nearly tripled since 19:40.",
+          "Other readings of the same half hour: with almost no liquidity in range, one swap at 23:28:42 left the pool quoting 124.70 (it paid 71.25 per HIMS on average); DeFiPrime sampled 61.15 from a single swap at 23:36:13 UTC (+112%). By 23:53 the price was back at about 43.27, still 50% over, and the positions held only about **67 HIMS** against about 130K USDG; shortly after midnight @0xSammy counted about 92 HIMS against about 135K USDG.",
+          "LP flight explains only a small part of the thinning. Rebuilding every position between 19:40 and the first mint attributes about **91%** of the drop in the pool's HIMS to the price moving above the LPs' concentrated ranges and about **9%** to position changes (190 removals against 327 additions)."
         ],
         "zh": [
-          "重建的鏈上紀錄比公開取樣看到的更極端。23:24:59 UTC，一筆交易以 937.09 USDG 買走 LP 區間內最後的 12.91 顆 HIMS，部位只剩 **3.68 顆 HIMS**，對上約 13.46 萬 USDG；分鐘收盤價在 23:31 衝到 **71.23**（+147%），單筆成交最高印到 124.70，當下區間內幾乎沒有流動性。DeFiPrime 在 23:36:14 UTC 取樣到 **61.15**，溢價 112%。到 23:53 價格回到約 43.27，仍高出 50%，而美元池的部位只剩約 **67 顆 HIMS**，對上約 13 萬 USDG。午夜過後不久，@0xSammy 數到的是約 92 顆 HIMS 對約 13.5 萬美元。",
-          "LP 撤離只能解釋一小部分的變薄。重建 19:40 到首次鑄造前的每一個部位後，美元池 HIMS 的減少約 **91%** 可歸於價格漲出 LP 的集中流動性區間，約 **9%** 歸於部位變動（190 次撤出、327 次加入）。區間之上幾乎沒有 HIMS 可賣。",
-          "結果：把價格再推高 10% 然後賣回，成本只要約 **12 USDG**，而不是 1,351；23:25 池子被買空時更只要 3.85 USDG。此時全部 HIMS 有八成以上在 BONER 的池子裡；以 HIMS 計價的 BONER 從 19:40 起已漲了將近三倍。"
+          "23:24:59 UTC，一筆交易以 937.09 USDG 買走 LP 區間內最後的 12.91 顆 HIMS。美元池的部位只剩 **3.68 顆 HIMS**，對上約 13.46 萬 USDG；六分鐘後，分鐘收盤價衝到 **71.23**（+147%）。",
+          "LP 區間之上幾乎沒有 HIMS 可賣，所以把價格再推高 10% 然後賣回，23:25 只要 **3.85 USDG**，23:53 約 **12 USDG**，而 19:40 要 1,351。此時全部 HIMS 有八成以上在 BONER 的池子裡；以 HIMS 計價的 BONER 從 19:40 起已漲了將近三倍。",
+          "同一個半小時的其他讀數：區間內幾乎沒有流動性時，23:28:42 有一筆兌換後池子報價停在 124.70（該筆平均每顆付 71.25）；DeFiPrime 在 23:36:13 UTC 取樣到一筆 61.15（+112%）。到 23:53 價格回到約 43.27，仍高出 50%，部位只剩約 **67 顆 HIMS**，對上約 13 萬 USDG；午夜過後不久，@0xSammy 數到的是約 92 顆 HIMS 對約 13.5 萬 USDG。",
+          "LP 撤離只能解釋一小部分的變薄。重建 19:40 到首次鑄造前的每一個部位後，美元池 HIMS 的減少約 **91%** 可歸於價格漲出 LP 的集中流動性區間，約 **9%** 歸於部位變動（190 次撤出、327 次加入）。"
         ]
       },
       "presenterNote": {
@@ -312,19 +318,19 @@
       },
       "body": {
         "en": [
-          "At Mon 00:00 UTC (Sunday 20:00 in New York) Robinhood's 24/5 session reopens and the issuer can buy shares again. For 43 minutes, though, no mint reaches the chain. The price eases to about 34.33 at 00:13, then climbs back above **59** at 00:37 (+105%) and is still at about 54.50 when the first mint lands at 00:43.",
+          "At Mon 00:00 UTC (Sunday 20:00 in New York) Robinhood's 24/5 session reopens and the issuer can buy shares again. For 43 minutes, though, no mint reaches the chain. The price eases to about 34.33 at 00:13, then spikes again: single swaps reach 70.97 in the 00:24 minute and the minute close is back above **59** at 00:37 (+105%). The 00:43 close is 53.45, and the last swap before the first mint leaves the pool at 54.50.",
           "The float is still frozen, so pushing the price 10% still costs only about 13 USDG. People were watching live: at 00:13 UTC @0xSammy posted that BONER's pool held about 81% of all on-chain HIMS.",
           "The replies split. One warned that anyone buying at these levels would lose once arbitrage came back. At 00:42, a minute before the first mint, another argued the gap would vanish as soon as whoever holds mint rights minted and sold; @0xSammy questioned whether Robinhood's tokenization works that way."
         ],
         "zh": [
-          "週一 00:00 UTC（紐約週日 20:00），Robinhood 的 24/5 時段重開，發行方可以再買股票。但接下來 43 分鐘，鏈上沒有任何鑄造。價格在 00:13 回落到約 34.33，00:37 又衝上 **59** 以上（+105%），00:43 首次鑄造上鏈時仍在約 54.50。",
+          "週一 00:00 UTC（紐約週日 20:00），Robinhood 的 24/5 時段重開，發行方可以再買股票。但接下來 43 分鐘，鏈上沒有任何鑄造。價格在 00:13 回落到約 34.33，接著又衝一次：00:24 那一分鐘單筆最高到 70.97，00:37 分鐘收盤價回到 **59** 以上（+105%）。00:43 的分鐘收盤是 53.45，首次鑄造前最後一筆兌換後池價為 54.50。",
           "流通量依然凍結，把價格推高 10% 仍然只要約 13 USDG。當時就有人即時關注：00:13 UTC @0xSammy 發文指出，BONER 的池子握有鏈上約 81% 的 HIMS。",
           "回覆意見分歧。有人提醒，套利一回來，在這個價位買進的人會虧很多。00:42，也就是首次鑄造前一分鐘，另一則回覆認為只要有鑄造權的一方鑄造並賣出，價差就會消失；@0xSammy 則質疑 Robinhood 的代幣化機制是否真的這樣運作。"
         ]
       },
       "presenterNote": {
-        "en": "Midnight UTC the brokerage session reopens, but minting lags by 43 minutes. The float is still frozen, so the price spikes again, to about 59.",
-        "zh": "UTC 午夜，券商的交易時段重開，但鑄造晚了 43 分鐘。流通量還是凍結的，所以價格又衝到約 59。"
+        "en": "Midnight UTC the brokerage session reopens, but minting lags by 43 minutes. The float is still frozen, so the price spikes again: minute closes near 59, single swaps up to 71.",
+        "zh": "UTC 午夜，券商的交易時段重開，但鑄造晚了 43 分鐘。流通量還是凍結的，所以價格又衝一次：分鐘收盤接近 59，單筆最高到 71。"
       },
       "watch": [
         "himsUsdg",
@@ -370,19 +376,19 @@
         "zh": "第一筆鑄造，溢價崩塌"
       },
       "summary": {
-        "en": "At 00:43:30 UTC the issuer mints 1,000 HIMS; the premium peaks near 93% at 00:47, is down to about 12% by 00:55, and by 01:59 the price is back near NAV.",
-        "zh": "00:43:30 UTC 發行方鑄造 1,000 顆 HIMS；溢價在 00:47 衝到約 93%，00:55 已掉到約 12%，01:59 價格回到淨值附近。"
+        "en": "At 00:43:30 UTC the issuer mints 1,000 HIMS (3,000 by 00:55); the premium is still near 93% at the 00:47 minute close, down to about 12% by 00:55, and by 01:59 the price is back near NAV.",
+        "zh": "00:43:30 UTC 發行方鑄造 1,000 顆 HIMS（到 00:55 共 3,000 顆）；00:47 的分鐘收盤溢價仍約 93%，00:55 已掉到約 12%，01:59 價格回到淨值附近。"
       },
       "body": {
         "en": [
           "The first new supply since Friday: **1,000 HIMS** minted at 00:43:30 UTC, more than 51 hours after the last Friday burn. It is the first of **294 mints** that add about **18,750 HIMS** by 09:54, more than the entire weekend float.",
-          "New tokens go to the issuer's distribution wallet, and a market-making wallet sells them into the pools as they arrive (DeFiPrime notes it held under 25 HIMS by the end of the morning). The price goes from about 55.61 at 00:47 to 32.37 at 00:55 and 29.31 at 01:59.",
-          "Outside arbitrage was small change. Seconds after the first mint, two cyclic trades (USDG → HIMS → BONER → AI → USDG) cleared about 2.71 and 5.61 USDG before costs. What actually closed the gap was new supply, and only the issuer can mint."
+          "New tokens go to the issuer's distribution wallet, and a market-making wallet sells them into the pools as they arrive (DeFiPrime notes it held under 25 HIMS by the end of the morning). The price goes from about 55.61 at the 00:47 minute close (single swaps up to 63.85, +121%, in that minute) to 32.37 at 00:55 and 29.31 at 01:59.",
+          "Outside arbitrage was small change. Seconds after the first mint, two cyclic trades (USDG → HIMS → BONER → AI → USDG; AI is another Robinhood Chain memecoin) cleared about 2.71 and 5.61 USDG before costs. What actually closed the gap was new supply, and only the issuer can mint."
         ],
         "zh": [
           "週五之後第一批新供給：00:43:30 UTC 鑄造 **1,000 顆 HIMS**，距離週五最後一次銷毀已超過 51 小時。這是 **294 次鑄造**中的第一次，到 09:54 共增加約 **18,750 顆 HIMS**，比整個週末的流通量還多。",
-          "新代幣先進到發行方的分發錢包，再由一個造市錢包隨到隨賣進池子（DeFiPrime 指出它到早上結束時只剩不到 25 顆）。價格從 00:47 的約 55.61，掉到 00:55 的 32.37，01:59 回到 29.31。",
-          "外部套利只是零頭：首次鑄造後幾秒，兩筆循環交易（USDG → HIMS → BONER → AI → USDG）扣除成本前分別約賺 2.71 與 5.61 USDG。真正把價差收掉的是新供給，而只有發行方能鑄造。"
+          "新代幣先進到發行方的分發錢包，再由一個造市錢包隨到隨賣進池子（DeFiPrime 指出它到早上結束時只剩不到 25 顆）。價格從 00:47 分鐘收盤的約 55.61（那一分鐘單筆最高 63.85，+121%），掉到 00:55 的 32.37，01:59 回到 29.31。",
+          "外部套利只是零頭：首次鑄造後幾秒，兩筆循環交易（USDG → HIMS → BONER → AI → USDG；AI 是 Robinhood Chain 上另一個迷因幣）扣除成本前分別約賺 2.71 與 5.61 USDG。真正把價差收掉的是新供給，而只有發行方能鑄造。"
         ]
       },
       "presenterNote": {
@@ -439,19 +445,19 @@
       },
       "body": {
         "en": [
-          "At 09:54 UTC the pool quotes about 29.48 and holds about 2,567 HIMS; pushing it 10% costs about 1,307 USDG again. Of the 33,977 HIMS now in existence, about 32,087 sit in Uniswap v4 pools, most of them in BONER's.",
-          "BONER does not give its move back: about $0.0147, roughly 4x Friday, an implied $14.7M across 1 billion tokens. HIMS is back near NAV by then, so this gain does not rest on the HIMS premium.",
-          "At 13:30 UTC the NYSE opens as usual; in DeFiPrime's telling, the stock itself never noticed. No short seller was forced to buy: what got squeezed was the token's float, not the shares. DeFiPrime leaves open whether this was the system working as designed, the gap closing the moment minting was allowed, or a small-scale trial of what more tokens at stake, stronger memecoin demand and a longer closure could do. A GameStop-paired memecoin had tried the same structure in July."
+          "At 09:54 UTC the pool quotes about 29.48 and holds about 2,567 HIMS; pushing it 10% costs about 1,307 USDG again. Of the 33,977 HIMS now in existence, about 32,100 sit in Uniswap v4 pools, most of them in BONER's.",
+          "BONER does not give its move back: about 0.0147 USDG, roughly 4x Friday, an implied 14.7M USDG across 1 billion tokens. HIMS is back near NAV by then, so this gain does not rest on the HIMS premium.",
+          "At 13:30 UTC the NYSE opens as usual; in DeFiPrime's telling, the stock itself never noticed. Nothing in the replay needs a short seller: what got squeezed was the token's float, not the shares. DeFiPrime leaves open whether this was the system working as designed, the gap closing the moment minting was allowed, or a small preview of what more tokens at stake, stronger memecoin demand and a longer closure could do. DeFiPrime also notes that a GameStop-paired memecoin had tried the same structure in July."
         ],
         "zh": [
-          "09:54 UTC，池子報價約 29.48，握有約 2,567 顆 HIMS；推高 10% 的成本回到約 1,307 USDG。現有的 33,977 顆 HIMS 中約 32,087 顆在 Uniswap v4 池裡，大部分在 BONER 的池子。",
-          "BONER 沒有吐回漲幅：約 $0.0147，約週五的 4 倍，以 10 億顆總量計約 1,470 萬美元。此時 HIMS 已回到淨值附近，所以這個漲幅並不是靠 HIMS 的溢價撐起來的。",
-          "13:30 UTC 紐約證交所照常開盤；照 DeFiPrime 的說法，股票本身完全沒察覺。也沒有空頭被迫回補：被擠壓的是代幣的流通量，不是股票。DeFiPrime 沒有下定論：這可能是系統照設計運作，一能鑄造價差就被收掉；也可能是一場小規模試演，預示流通量更大、迷因幣買盤更猛、休市更久時會發生什麼。7 月已有一個配對代幣化 GameStop 的迷因幣用過同樣的結構。"
+          "09:54 UTC，池子報價約 29.48，握有約 2,567 顆 HIMS；推高 10% 的成本回到約 1,307 USDG。現有的 33,977 顆 HIMS 中約 32,100 顆在 Uniswap v4 池裡，大部分在 BONER 的池子。",
+          "BONER 沒有吐回漲幅：約 0.0147 USDG，約週五的 4 倍，以 10 億顆總量計約 1,470 萬 USDG。此時 HIMS 已回到淨值附近，所以這個漲幅並不是靠 HIMS 的溢價撐起來的。",
+          "13:30 UTC 紐約證交所照常開盤；照 DeFiPrime 的說法，股票本身完全沒察覺。重播裡沒有任何地方需要空頭回補才能解釋：被擠壓的是代幣的流通量，不是股票。DeFiPrime 沒有下定論：這可能是系統照設計運作，一能鑄造價差就被收掉；也可能是一個小規模的縮影，預示流通量更大、迷因幣買盤更猛、休市更久時會發生什麼。DeFiPrime 也提到，7 月已有一個配對代幣化 GameStop 的迷因幣用過同樣的結構。"
         ]
       },
       "presenterNote": {
-        "en": "By Monday morning it is over: supply doubled, the pool is deep again, BONER kept about 4x, and the NYSE opens as usual. Working as designed, or a rehearsal? Still open.",
-        "zh": "到週一早上一切結束：流通量翻倍、池子恢復深度、BONER 保住約 4 倍，紐約照常開盤。是系統照設計運作，還是一場預演？目前還沒有答案。"
+        "en": "By Monday morning it is over: supply doubled, the pool is deep again, BONER kept about 4x, and the NYSE opens as usual. For hours, the price any contract could read was cheap to fake; HAKARI measures that cost at settlement and refuses to settle when a fake costs less than it earns.",
+        "zh": "到週一早上一切結束：流通量翻倍、池子恢復深度、BONER 保住約 4 倍，紐約照常開盤。有好幾個小時，任何合約讀到的價格都很便宜就能造假；HAKARI 在結算當下量測這個成本，造假比能賺的還便宜時就拒絕結算。"
       },
       "watch": [
         "bonerUsdgViaHims",
@@ -487,8 +493,8 @@
       "zh": "迷因幣需求繞道 HIMS。BONER 的主池以 HIMS 計價，用美元買 BONER 就得先在美元池買 HIMS。"
     },
     {
-      "en": "HIMS migrates. Each such trade moves HIMS from the HIMS/USDG pool into the BONER/HIMS pool, where no LP withdrew all weekend and HIMS only leaves when someone sells BONER; the dollar pool's HIMS falls from about 2,606 to under 4 in less than four hours (19:40 to 23:25 UTC).",
-      "zh": "HIMS 搬家。每筆這樣的交易都把 HIMS 從 HIMS/USDG 池搬進 BONER/HIMS 池；那個池整個週末沒有 LP 撤資，HIMS 只有在有人賣 BONER 時才會流出。美元池的 HIMS 在不到四小時內（19:40 到 23:25 UTC）從約 2,606 顆降到不到 4 顆。"
+      "en": "HIMS migrates. Each such trade moves HIMS from the HIMS/USDG pool into the BONER/HIMS pool, where no LP withdrew all weekend and HIMS only leaves when someone sells BONER; the dollar pool's HIMS falls from about 2,606 to under 4 in less than four hours (19:40 to 23:25 UTC). BONER's pool also drew HIMS from other pools and wallets, a little more than it took from the dollar pool.",
+      "zh": "HIMS 搬家。每筆這樣的交易都把 HIMS 從 HIMS/USDG 池搬進 BONER/HIMS 池；那個池整個週末沒有 LP 撤資，HIMS 只有在有人賣 BONER 時才會流出。美元池的 HIMS 在不到四小時內（19:40 到 23:25 UTC）從約 2,606 顆降到不到 4 顆。BONER 的池子也從其他池子與錢包吸進 HIMS，量比從美元池拿到的還多一些。"
     },
     {
       "en": "The price leaves the LP ranges. Above the concentrated positions there is almost no HIMS to sell; on the rebuilt positions this accounts for about 91% of the dollar pool's lost HIMS, and the cost of pushing the price up 10% drops from about 1,351 to about 12 USDG, and to 3.85 at the low.",
@@ -499,8 +505,8 @@
       "zh": "重開與鑄造。24/5 時段在週一 00:00 UTC 重開；第一筆鑄造在 00:43:30 上鏈，到 09:54 共 294 次鑄造、約 18,750 顆 HIMS。"
     },
     {
-      "en": "Collapse. The new HIMS is sold into the pools; the premium drops from about 93% at 00:47 to about 12% at 00:55 and is gone by about 02:00 UTC.",
-      "zh": "崩塌。新的 HIMS 被賣進池子；溢價從 00:47 的約 93% 掉到 00:55 的約 12%，約 02:00 UTC 前消失。"
+      "en": "Collapse. The new HIMS is sold into the pools; the premium drops from about 93% at the 00:47 minute close to about 12% at 00:55 and is gone by about 02:00 UTC.",
+      "zh": "崩塌。新的 HIMS 被賣進池子；溢價從 00:47 分鐘收盤的約 93% 掉到 00:55 的約 12%，約 02:00 UTC 前消失。"
     }
   ],
   "roles": [
@@ -566,12 +572,12 @@
     }
   ],
   "hakari": {
-    "en": "Any protocol that reads a price from this pool, whether a lending market, an options venue or a perp oracle, would have seen a stock that closed at 28.84 quoted at about 61, and at 71.23 at the highest minute close, and nothing in the number itself says it is 112% to 147% away from the share behind it. What had changed was the cost of moving it: pushing HIMS/USDG up 10% and selling straight back cost about 1,351 USDG at 19:40 and about 12 USDG at 23:53, more than a hundred times cheaper, while the fence meant no arbitrageur could pull the price back. That cost is what HAKARI measures, and the cost-to-push lane on this page follows the same method as HAKARI's PushCostLens. The calendar alone cannot tell such weekends apart: on the ordinary weekend of 2026-09-18 the cheapest moment for HIMS while minting was closed was still about 0.96x its Friday cost, against about 0.009x on 2026-08-30. So HAKARI measures at settlement time and settles on the raw price only when faking it would cost more than faking it would earn.",
-    "zh": "任何從這個池子讀價格的協議，不論是借貸市場、選擇權平台還是永續合約的預言機，都會看到一檔收盤 28.84 的股票被報到約 61，最高的分鐘收盤價更到 71.23，而這個數字本身看不出它離背後的股票已經差了 112% 到 147%。改變的是推動它的成本：把 HIMS/USDG 推高 10% 再立刻賣回，19:40 要約 1,351 USDG，23:53 只要約 12 USDG，便宜了一百倍以上；同時圍欄讓套利者沒辦法把價格拉回來。HAKARI 量的就是這個成本，本頁的推價成本那條線，用的也是和 HAKARI PushCostLens 相同的方法。光看日曆分不出這兩種週末：在 2026-09-18 那個平常的週末，鑄造關閉期間 HIMS 最便宜的時刻仍約是週五成本的 0.96 倍，而 2026-08-30 只剩約 0.009 倍。所以 HAKARI 在結算當下量測，只有在造假的成本高於造假能賺到的錢時，才用原始價格結算。"
+    "en": "Any protocol that reads a price from this pool, whether a lending market, an options venue or a perp oracle, would have seen a stock that closed at 28.84 quoted at about 61, and at 71.23 at the highest minute close, and nothing in the number itself says it is 112% to 147% away from the share behind it. What had changed was the cost of moving it: pushing HIMS/USDG up 10% and selling straight back cost about 1,351 USDG at 19:40 and about 12 USDG at 23:53, more than a hundred times cheaper, while the fence meant no arbitrageur could pull the price back. That cost is what HAKARI measures, and the cost-to-push lane on this page follows the same method as HAKARI's on-chain cost lens (PushCostLens). The calendar alone cannot tell such weekends apart: on the ordinary weekend of 2026-09-18, sampled every six hours, the cheapest moment for HIMS while minting was closed still cost about 0.96x what it did at Friday's close; on 2026-08-30, minute by minute, it fell to about 0.004x (3.85 USDG against about 979 at Friday's close). So HAKARI measures at settlement time: it settles on the pool's price only when faking it would cost more than the fake could earn on everything settling on it, and otherwise refuses to settle.",
+    "zh": "任何從這個池子讀價格的協議，不論是借貸市場、選擇權平台還是永續合約的預言機，都會看到一檔收盤 28.84 的股票被報到約 61，最高的分鐘收盤價更到 71.23，而這個數字本身看不出它離背後的股票已經差了 112% 到 147%。改變的是推動它的成本：把 HIMS/USDG 推高 10% 再立刻賣回，19:40 要約 1,351 USDG，23:53 只要約 12 USDG，便宜了一百倍以上；同時圍欄讓套利者沒辦法把價格拉回來。HAKARI 量的就是這個成本，本頁的推價成本那條線，用的也是和 HAKARI 鏈上推價成本工具（PushCostLens）相同的方法。光看日曆分不出這兩種週末：在 2026-09-18 那個平常的週末（每六小時取樣），鑄造關閉期間 HIMS 最便宜的時刻，成本仍約是週五收盤時的 0.96 倍；2026-08-30 逐分鐘看，則掉到約 0.004 倍（3.85 USDG 對週五收盤時的約 979）。所以 HAKARI 在結算當下量測：只有在造假的成本高於造假能從所有結算部位賺到的錢時，才用池子的價格結算，否則拒絕結算。"
   },
   "next": {
-    "en": "Once the Vexi integration is done, a later version of this page will overlay how a HAKARI-guarded Vexi settlement would have read these same minutes: which price it would have settled on, when it would have flagged the pool as fenced, and how far that sits from the raw spot.",
-    "zh": "等 Vexi 的整合完成後，本頁的下一版會疊上一層：由 HAKARI 把關的 Vexi 結算會怎麼讀這幾分鐘，包括它會用哪個價格結算、什麼時候把這個池子標成圍欄池，以及和原始現價差多少。"
+    "en": "A later version of this page will overlay how a settlement guarded by HAKARI would have read these same minutes: which price it would have settled on, when it would have flagged the pool as fenced, and how far that sits from the raw spot.",
+    "zh": "本頁的下一版會疊上一層：由 HAKARI 把關的結算會怎麼讀這幾分鐘，包括它會用哪個價格結算、什麼時候把這個池子標成圍欄池，以及和原始現價差多少。"
   },
   "glossary": [
     {
@@ -582,6 +588,16 @@
       "def": {
         "en": "An ERC-20 token meant to track one share of a listed company, created and redeemed by an issuer that holds the underlying shares. HIMS here is Robinhood's token for Hims & Hers.",
         "zh": "設計成追蹤一股上市公司股票的 ERC-20 代幣，由持有底層股票的發行方鑄造與贖回。這裡的 HIMS 是 Robinhood 發行、對應 Hims & Hers 的代幣。"
+      }
+    },
+    {
+      "term": {
+        "en": "Robinhood Chain",
+        "zh": "Robinhood Chain"
+      },
+      "def": {
+        "en": "Robinhood's own EVM blockchain (chain id 4663), where its stock tokens and these Uniswap v4 pools live.",
+        "zh": "Robinhood 自己的 EVM 區塊鏈（chain id 4663），它的股票代幣和這些 Uniswap v4 池都在上面。"
       }
     },
     {
@@ -606,6 +622,16 @@
     },
     {
       "term": {
+        "en": "24/5 session",
+        "zh": "24/5 交易時段"
+      },
+      "def": {
+        "en": "Robinhood's session for US stocks that runs 24 hours a day, five days a week, from Sunday 20:00 to Friday 20:00 New York time. The stock token's mint/redeem window follows it.",
+        "zh": "Robinhood 的美股交易時段，每週五天、每天 24 小時，從紐約時間週日 20:00 到週五 20:00。股票代幣的鑄造／贖回窗口跟著它走。"
+      }
+    },
+    {
+      "term": {
         "en": "Uniswap v4 pool",
         "zh": "Uniswap v4 池"
       },
@@ -616,12 +642,32 @@
     },
     {
       "term": {
+        "en": "LP (liquidity provider)",
+        "zh": "LP（流動性提供者）"
+      },
+      "def": {
+        "en": "Someone who deposits two tokens into a pool so others can trade against them, earning a fee on each trade. In Uniswap v4 each LP picks a price range for its position.",
+        "zh": "把兩種代幣存進池子讓別人交易、從每筆交易賺手續費的人。在 Uniswap v4，每個 LP 自己選部位的價格區間。"
+      }
+    },
+    {
+      "term": {
         "en": "Concentrated liquidity range",
         "zh": "集中流動性區間"
       },
       "def": {
         "en": "LPs provide liquidity only between two prices they choose. Once the price moves above a position's range, that position holds only the quote token (here USDG) and has no HIMS left to sell.",
         "zh": "LP 只在自己選定的兩個價格之間提供流動性。價格一旦漲過某個部位的區間，這個部位就只剩報價資產（這裡是 USDG），沒有 HIMS 可賣。"
+      }
+    },
+    {
+      "term": {
+        "en": "Hook",
+        "zh": "Hook（掛鉤合約）"
+      },
+      "def": {
+        "en": "A contract attached to a Uniswap v4 pool that runs its own code around swaps and liquidity changes. BONER's pool has one that adds liquidity inside users' trades.",
+        "zh": "掛在 Uniswap v4 池上的合約，會在兌換與流動性變動前後執行自己的程式。BONER 的池子有一個 hook，會在使用者的交易裡順手加入流動性。"
       }
     },
     {
@@ -656,12 +702,22 @@
     },
     {
       "term": {
+        "en": "Route gap",
+        "zh": "路由價差"
+      },
+      "def": {
+        "en": "How far BONER's price through HIMS (USDG → HIMS → BONER) sits from its price in the direct BONER/USDG pool, in percent.",
+        "zh": "經 HIMS 換算的 BONER 價格（USDG → HIMS → BONER）與 BONER/USDG 直接池價格相差多少，以百分比表示。"
+      }
+    },
+    {
+      "term": {
         "en": "Float squeeze vs short squeeze",
         "zh": "流通量擠壓 vs. 軋空"
       },
       "def": {
-        "en": "A short squeeze forces short sellers to buy back, which drives the price up. Here nobody was short: demand simply ran into a supply of tokens that could not grow until Monday. As @0xSammy put it on 1 September, “It’s a float squeeze not a short squeeze”.",
-        "zh": "軋空（short squeeze）是空頭被迫回補而推高價格。這次沒有人放空，只是需求撞上一個週一之前無法增加的代幣供給，所以是流通量擠壓（float squeeze）。@0xSammy 在 9 月 1 日也特別澄清：這是流通量擠壓，不是軋空。"
+        "en": "A short squeeze forces short sellers to buy back, which drives the price up. Here the move needs no short sellers: demand ran into a token supply that could not grow until Monday. As @0xSammy put it on 1 September, “It’s a float squeeze not a short squeeze”.",
+        "zh": "軋空（short squeeze）是空頭被迫回補而推高價格。這次的漲勢不需要任何空頭回補就能解釋：需求撞上一個週一前無法增加的代幣供給，所以是流通量擠壓（float squeeze）。@0xSammy 在 9 月 1 日也特別澄清：這是流通量擠壓，不是軋空。"
       }
     },
     {
@@ -793,7 +849,7 @@
     {
       "label": "HAKARI: every stock pool, weekend of 2026-09-18 (gauge/data/weekend-2026-09-18.json)",
       "url": "../../gauge/data/weekend-2026-09-18.json",
-      "note": "The control weekend: 13 pools rebuilt, nothing collapsed; HIMS's cheapest moment 0.96x its Friday cost to push."
+      "note": "The control weekend: 13 pools rebuilt every six hours, nothing collapsed; HIMS's cheapest moment while minting was closed was 0.96x its cost to push at Friday's close."
     }
   ],
   "numbersUsed": [
@@ -853,17 +909,37 @@
       "source": "gauge/src/mint-window.ts; gauge/src/squeeze/common.ts REF.mintRuleClose / session24x5Reopen; DeFiPrime (24/5 reopens Sun 20:00 ET = Mon 00:00 UTC)"
     },
     {
-      "value": "around 29–30",
-      "meaning": "HIMS/USDG during the fence (Sat 11:40 30.36, Sun 11:40 29.68, Sun 19:40 29.38)",
+      "value": "around 29–31",
+      "meaning": "HIMS/USDG during the fence outside the Saturday-morning spike (Sat 11:40 30.36, Sun 11:40 29.68, Sun 19:40 29.38; Sat 06:00–11:00 30.6–32)",
       "source": "DeFiPrime float table; analysis.json snapshots"
     },
     {
-      "value": "about $0.0036",
+      "value": "about 0.0036 USDG",
       "meaning": "BONER price Friday (via HIMS)",
       "source": "DeFiPrime; cross-check analysis.json 0.0001264 HIMS/BONER x 28.17 = 0.00356"
     },
     {
-      "value": "about $0.0024",
+      "value": "34.58 at 06:07, 35.88 at 06:03, about 185 HIMS, 39 USDG",
+      "meaning": "Saturday-morning spike: HIMS/USDG minute close and minute high, dollar-pool HIMS and cost to push +10% at its low",
+      "source": "data.json series himsUsdg.close/high, himsInHimsUsdg 184.53, pushUp10CostUsdg 39.36 (Sat 06:03–06:07 UTC)"
+    },
+    {
+      "value": "about 0.0057 USDG",
+      "meaning": "BONER via HIMS, Sat 06:00 UTC (0.0070 at the 06:07 spike; low 0.00195 at Sat 20:18)",
+      "source": "data.json series bonerUsdgViaHims"
+    },
+    {
+      "value": "about 790 -> about 4,300 HIMS",
+      "meaning": "Dollar-pool HIMS principal, Sat 00:00 -> Sat 20:00 UTC",
+      "source": "data.json series himsInHimsUsdg 786.35 / 4,284.24"
+    },
+    {
+      "value": "about 700 to 2,100 USDG",
+      "meaning": "Usual cost to push +10% during the fence (10th–90th percentile of fenced minutes, Sat 00:00–Sun 19:40)",
+      "source": "data.json series pushUp10CostUsdg: p10 719.9, median 1,159.7, p90 2,133.2"
+    },
+    {
+      "value": "about 0.0024 USDG",
       "meaning": "BONER price Sunday evening, before the squeeze",
       "source": "DeFiPrime; cross-check analysis.json 0.0000827 x 29.38 = 0.00243"
     },
@@ -884,8 +960,8 @@
     },
     {
       "value": "29.73 / 36.22 / 39.94",
-      "meaning": "HIMS/USDG at Sun 21:46 / 22:28 / 23:02 UTC",
-      "source": "DeFiPrime price progression"
+      "meaning": "DeFiPrime single-swap samples of HIMS/USDG at Sun 21:46 / 22:28 / 23:02 UTC",
+      "source": "DeFiPrime price progression; data.json anchors (swaps at 21:46:33, 22:28:02, 23:02:14)"
     },
     {
       "value": "about 38%",
@@ -893,9 +969,14 @@
       "source": "DeFiPrime (+38.5%)"
     },
     {
-      "value": "about $160K",
-      "meaning": "Size of the secondary BONER/USDG pool",
-      "source": "DeFiPrime (pool not yet identified by swap volume in this story)"
+      "value": "41.32 (+43%)",
+      "meaning": "HIMS/USDG minute close at Sun 23:02 UTC (the climb chapter's focus)",
+      "source": "data.json series himsUsdg.close 41.3185, himsPremiumPct 43.27"
+    },
+    {
+      "value": "about 25–50K USDG (DeFiPrime: about $160K on Monday)",
+      "meaning": "Value of the direct BONER/USDG pool during the climb, Sun 21:30–23:20 UTC; DeFiPrime's figure is its Mon 09:54 size",
+      "source": "data.json usdgInBonerUsdg + bonerInBonerUsdg x direct price (25.6K at 21:30, 42.0K at 23:02, 49.9K at 23:20); anchor valueUsdg 164,524 at Mon 09:54"
     },
     {
       "value": "0 removals (8,872 additions)",
@@ -903,9 +984,14 @@
       "source": "analysis.json liquidityChanges; research robinhood-v4/README.md §4"
     },
     {
-      "value": "61.15 at 23:36:14 UTC",
-      "meaning": "Sampled HIMS/USDG peak",
-      "source": "DeFiPrime price progression; dislocation-events.md D-04"
+      "value": "about 2,440 out, about 5,360 in",
+      "meaning": "Net HIMS moved by trades, Sun 19:40 to 23:53 UTC: out of the dollar pool vs into BONER's pool",
+      "source": "data.json series netHimsOutOfHimsUsdg 2,439.0 / netHimsIntoBonerHims 5,356.9"
+    },
+    {
+      "value": "61.15 at 23:36:13 UTC",
+      "meaning": "DeFiPrime's sampled HIMS/USDG price: a single swap (in the minute ending 23:37)",
+      "source": "DeFiPrime price progression; data.json anchor swapTs 1788132973 (23:36:13)"
     },
     {
       "value": "112%",
@@ -928,7 +1014,7 @@
       "source": "gauge/data/hims-replay.json usdgPrincipal 130,186.45"
     },
     {
-      "value": "about 92 HIMS against about $135K",
+      "value": "about 92 HIMS against about 135K USDG",
       "meaning": "@0xSammy's reading of the dollar pool during the event",
       "source": "DeFiPrime citing @0xSammy"
     },
@@ -968,9 +1054,9 @@
       "source": "DeFiPrime price progression"
     },
     {
-      "value": "about 54.50",
-      "meaning": "HIMS/USDG at Mon 00:43 UTC (second spike, just before the first mint)",
-      "source": "DeFiPrime; gauge/data/hims-replay.json 54.497 at block 50,444,948"
+      "value": "53.45 / 54.50",
+      "meaning": "HIMS/USDG minute close at Mon 00:43 UTC / after the last swap before the first mint (00:43:23)",
+      "source": "data.json series himsUsdg.close 53.4461; notableSwaps 54.497 (block 50,444,880); gauge/data/hims-replay.json 54.497 at block 50,444,948"
     },
     {
       "value": "about 13",
@@ -991,6 +1077,11 @@
       "value": "1,000 HIMS at 00:43:30 UTC",
       "meaning": "First mint after Friday, block 50,444,949, tx 0x459aee…a066b",
       "source": "DeFiPrime; analysis.json weekendIssuance firstMintBlock; research robinhood-v4/README.md §3"
+    },
+    {
+      "value": "3,000 by 00:55",
+      "meaning": "HIMS minted from 00:43:30 to 00:55 UTC",
+      "source": "data.json series himsMinted (supply 15,226.8 -> 18,226.8)"
     },
     {
       "value": "more than 51 hours",
@@ -1014,8 +1105,8 @@
     },
     {
       "value": "about 93% (00:47) to about 12% (00:55)",
-      "meaning": "Premium collapse after the first mint, eight minutes apart",
-      "source": "DeFiPrime (+92.8% at 00:47, +12.3% at 00:55)"
+      "meaning": "Premium collapse after the first mint, minute closes eight minutes apart (single swaps reached 63.85, +121%, in the 00:47 minute)",
+      "source": "DeFiPrime (+92.8% at 00:47, +12.3% at 00:55); data.json himsUsdg.high 63.85 at 00:47"
     },
     {
       "value": "about 75 minutes",
@@ -1048,17 +1139,17 @@
       "source": "DeFiPrime 33,977.3; analysis.json 33,977.293"
     },
     {
-      "value": "about 32,087",
+      "value": "about 32,100",
       "meaning": "HIMS held by the v4 PoolManager at Mon 09:54 UTC",
-      "source": "DeFiPrime float table 32,086.5 (94.4%)"
+      "source": "data.json himsInPoolManager 32,096.6 at 09:54:00; DeFiPrime float table 32,086.5 (block at 09:54:02)"
     },
     {
-      "value": "about $0.0147, roughly 4x",
+      "value": "about 0.0147 USDG, roughly 4x",
       "meaning": "BONER at Mon 09:54 UTC vs Friday",
       "source": "DeFiPrime; cross-check analysis.json 0.000497 HIMS/BONER x 29.48 = 0.01466, 3.93x Friday in HIMS terms"
     },
     {
-      "value": "$14.7M, 1 billion tokens",
+      "value": "14.7M USDG, 1 billion tokens",
       "meaning": "BONER implied value at 09:54 and its fixed supply",
       "source": "DeFiPrime"
     },
@@ -1103,9 +1194,9 @@
       "source": "X evidence hims-replies.jsonl, status 2094225213156213234, 2026-08-31T00:46:14Z"
     },
     {
-      "value": "about 0.96x vs about 0.009x",
-      "meaning": "HIMS cheapest cost to push +10% while minting was closed, relative to Friday: weekend of 2026-09-18 vs 2026-08-30",
-      "source": "HAKARI README § Was HIMS a one-off? (gauge/data/weekend-2026-09-18.json)"
+      "value": "about 0.96x vs about 0.004x",
+      "meaning": "HIMS cheapest cost to push +10% while minting was closed, relative to Friday's close (Fri 20:00 UTC): weekend of 2026-09-18 (six-hour grid) vs 2026-08-30 (minute grid)",
+      "source": "gauge/data/weekend-2026-09-18.json HIMS weekendOverFriday 0.956 (1,776.1 / 1,857.8); data.json pushUp10CostUsdg 3.849 (Sun 23:25) / 978.54 (Fri 20:00) = 0.0039"
     },
     {
       "value": "13 stock pools",
@@ -1124,8 +1215,8 @@
     },
     {
       "value": "124.70 at 23:28:42",
-      "meaning": "Highest single post-swap HIMS/USDG price, with almost no liquidity in range",
-      "source": "data.json events peak-swap (tx 0x0a4393…4551)"
+      "meaning": "Highest post-swap HIMS/USDG quote, with almost no liquidity in range (the swap paid 71.25 per HIMS on average)",
+      "source": "data.json events peak-swap (tx 0x0a4393…4551), notableSwaps avgUsdgPerHims 71.2486"
     },
     {
       "value": "3.85",
@@ -1133,9 +1224,9 @@
       "source": "data.json events min-push-up; series pushUp10CostUsdg"
     },
     {
-      "value": "above 59 at 00:37 (+105%)",
-      "meaning": "Highest HIMS/USDG minute close between the 24/5 reopen and the first mint",
-      "source": "data.json series himsUsdg.close 59.1613, himsPremiumPct 105.1"
+      "value": "above 59 at 00:37 (+105%); 70.97 at 00:24",
+      "meaning": "Highest HIMS/USDG minute close between the 24/5 reopen and the first mint; highest single swap in that stretch (the 00:24 minute)",
+      "source": "data.json series himsUsdg.close 59.1613, himsPremiumPct 105.1; himsUsdg.high 70.9683 at 00:24"
     }
   ]
 }

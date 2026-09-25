@@ -74,6 +74,9 @@
   };
 
   S.idx = function (ts) { return S.clamp(Math.round((ts - S.t0) / S.step), 0, S.N - 1); };
+  // The last grid point at or before ts: the state as it was at ts (use for "since <ts>" baselines and for
+  // posts/anchors, where the nearest minute can already include what happened after them).
+  S.idxFloor = function (ts) { return S.clamp(Math.floor((ts - S.t0) / S.step + 1e-9), 0, S.N - 1); };
   var serCache = {};
   // Dotted path into data.series (e.g. 'himsUsdg.close'); null when missing or the wrong length.
   S.ser = function (key) {

@@ -149,7 +149,7 @@
     S.xs = S.linear(S.view.d0, S.view.d1, m.l, S.laneWidth - m.r);
     S.lanes.forEach(function (L) { S.renderLane(L); });
     S.renderMinimap(); S.renderAxis();
-    if (!fast) { S.tri.renderHeroSpark(); S.lanes.forEach(function (L) { if (L.subEl && L.def.id === 'route') L.subEl.textContent = tr(L.def.sub, { t: S.fmtHM(S.view.d0) }); }); }
+    if (!fast) { S.tri.renderHeroSpark(); S.lanes.forEach(function (L) { if (L.subEl && L.def.id === 'route') L.subEl.textContent = tr(L.def.sub, { t: S.fmtWdHM(S.routeOrigin()) }); }); }
     S.updateCursor(true);
   };
   S.rebuild = function () {
@@ -166,9 +166,9 @@
     S.state.cursorTs = ts;
     if (!frameReq) frameReq = requestAnimationFrame(function () { frameReq = null; S.updateCursor(); });
   };
-  S.userScrub = function (ts, commit, fromMinimap) {
+  S.userScrub = function (ts, commit, fromMinimap, snap) {
     S.pause();
-    ts = S.t0 + Math.round((ts - S.t0) / S.step) * S.step;
+    ts = S.t0 + (snap === 'floor' ? S.idxFloor(ts) : Math.round((ts - S.t0) / S.step)) * S.step;
     S.setCursor(ts);
     if (S.state.chapterId !== 'overview') {
       var c = S.chapterAt(ts);
@@ -240,7 +240,7 @@
       if (d < bd && lab) { bd = d; best = { ts: s.ts, label: lab, tx: s.tx }; }
     });
     var el = $('moment'); S.clear(el);
-    if (!best) { el.hidden = true; return; }
+    if (!best || (S.state.chapterId === 'overview' && S.layout.mode === 'phone')) { el.hidden = true; return; }
     el.hidden = false;
     S.append(el, [S.el('span', { cls: 'mo-k', text: tr('nearby') }), ' · ', S.el('span', { cls: 'mo-t', text: S.fmtHMS(best.ts) }), ' · ', best.label + ' ']);
     if (best.tx) el.appendChild(S.link(S.txUrl(best.tx), '↗ ' + S.shortHash(best.tx), 'mono'));
@@ -263,8 +263,8 @@
     pushUp10CostUsdg: { c: 'hakari', f: function (i) { var v = S.val('pushUp10CostUsdg', i); return v == null ? '—' : S.fmtUsdg(v) + ' USDG'; }, raw: 'pushUp10CostUsdg' },
     volUsdgHimsUsdg: { c: 'pool-usd', f: function (i) { return S.fmtUsdg(S.sumRange('volUsdgHimsUsdg', i - 9, i)) + ' USDG ' + tr('ro.10min'); } },
     volHimsBonerHims: { c: 'pool-boner', f: function (i) { return S.fmtHims(S.sumRange('volHimsBonerHims', i - 9, i)) + ' HIMS ' + tr('ro.10min'); } },
-    himsMinted: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsMinted', S.idx(c.fromTs) + 1, i) || 0; return '+' + S.fmtHims(n) + ' HIMS'; } },
-    himsBurned: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsBurned', S.idx(c.fromTs) + 1, i) || 0; return (n ? '−' : '') + S.fmtHims(n) + ' HIMS'; } }
+    himsMinted: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsMinted', S.idxFloor(c.fromTs) + 1, i) || 0; return '+' + S.fmtHims(n) + ' HIMS'; } },
+    himsBurned: { c: 'text-primary', since: true, f: function (i, c) { var n = S.sumRange('himsBurned', S.idxFloor(c.fromTs) + 1, i) || 0; return (n ? '−' : '') + S.fmtHims(n) + ' HIMS'; } }
   };
   var warned = {};
   function updateWatch(i) {
@@ -283,21 +283,23 @@
       var lab = w.since ? tr(k === 'himsMinted' ? 'ro.mintedSince' : 'ro.burnedSince', { t: S.fmtHM(c.fromTs) }) : tr('w.' + k);
       row.appendChild(S.el('span', { cls: 'wl', text: lab }));
       if (w.raw) {
-        var a = S.val(w.raw, S.idx(c.fromTs)), b = S.val(w.raw, i);
-        if (a && b != null && Math.abs(b / a - 1) > 0.0005) {
-          var r = b / a;
-          var txt = r >= 3 || r <= 1 / 3 ? '×' + S.fmtFixed(r, r < 1 ? 3 : 1) : S.fmtPct((r - 1) * 100);
-          row.appendChild(S.el('span', { cls: 'wd', text: txt + ' ' + tr('ro.since', { t: S.fmtHM(c.fromTs) }) }));
-        }
+        var a = S.val(w.raw, S.idxFloor(c.fromTs)), b = S.val(w.raw, i);
+        if (a && b != null && Math.abs(b / a - 1) > 0.0005) row.appendChild(S.el('span', { cls: 'wd', text: S.fmtChange(b, a) + (S.lang === 'zh' ? '' : ' ') + tr('ro.since', { t: S.fmtHM(c.fromTs) }) }));
       }
       host.appendChild(row);
     });
-    // lanes lit by this chapter
-    var lit = {};
-    keys.forEach(function (k) { S.lanes.forEach(function (L) { if (S.laneWatch(L.def).indexOf(k) >= 0) lit[L.id] = true; }); });
-    S.lanes.forEach(function (L) { if (!L.watchDot) return; L.watchDot.hidden = !lit[L.id]; L.watchTag.hidden = !lit[L.id]; });
   }
-  function clearWatchLanes() { S.lanes.forEach(function (L) { if (L.watchDot) { L.watchDot.hidden = true; L.watchTag.hidden = true; } }); }
+  // One place to look per chapter: a sentence above the triangle caption (i18n look.<id>) and a "look here" tag
+  // on one lane. Only that lane is flagged; the watch readouts above still list every watched series.
+  var LOOK_LANE = { overview: 'cost', friday: 'float', redeem: 'float', fence: 'price', climb: 'float', peak: 'cost', reopen: 'price', mint: 'price', aftermath: 'boner' };
+  S.lookLane = function (id) { return LOOK_LANE[id] || null; };
+  function markLook() {
+    var id = S.state.chapterId, lane = LOOK_LANE[id];
+    S.lanes.forEach(function (L) { if (!L.watchDot) return; var on = L.id === lane; L.watchDot.hidden = !on; L.watchTag.hidden = !on; });
+    var el = $('tri-look'); if (!el) return;
+    var key = 'look.' + id, txt = tr(key);
+    el.hidden = txt === key; el.textContent = txt === key ? '' : txt;
+  }
 
   // ---------------------------------------------------------------- chapter / overview card
   var TLDR_CH = ['fence', 'climb', 'peak', 'mint'];
@@ -307,20 +309,29 @@
     S.clear(card);
     var id = S.state.chapterId, c = S.chapterById(id), ST = S.ST;
     if (!ST) { card.appendChild(S.el('p', { cls: 'notice', text: tr('err.story') })); return; }
+    markLook();
     if (!c) {
-      clearWatchLanes();
       card.appendChild(S.el('p', { cls: 'kicker', text: tr('ch.overview') }));
       var lead = S.el('p', { cls: 'lead clamp', id: 'dek', text: S.L(ST.dek) });
       card.appendChild(lead);
       var more = S.el('button', { type: 'button', cls: 'more-btn', id: 'dek-more', 'aria-controls': 'dek', 'aria-expanded': 'false', text: tr('more') });
       more.addEventListener('click', function () { var o = lead.classList.toggle('open'); more.setAttribute('aria-expanded', o ? 'true' : 'false'); more.textContent = tr(o ? 'less' : 'more'); });
       card.appendChild(more);
+      // the fifth tldr item is the "why it matters" line: always visible on the first screen, phone included
+      var why = (ST.tldr || [])[4];
+      if (why) {
+        var wb = S.el('div', { cls: 'why', id: 'why' }, [S.el('h3', { cls: 'card-h why-h', text: tr('whyMatters') }), S.el('p', { cls: 'why-p' }, [S.rich(S.L(why)) , ' '])]);
+        var wa = S.el('a', { href: '#hakari', cls: 'to-ch', text: '→ ' + tr('sec.hakari') });
+        wa.addEventListener('click', function (ev) { var t = $('hakari'); if (!t) return; ev.preventDefault(); t.scrollIntoView({ behavior: S.reducedMotion() ? 'auto' : 'smooth', block: 'start' }); });
+        wb.lastChild.appendChild(wa);
+        card.appendChild(wb);
+      }
       var tbox = S.el('details', { cls: 'tldr-box', id: 'tldr-box' });
       if (S.layout.mode !== 'phone') tbox.open = true;
       tbox.appendChild(S.el('summary', { cls: 'card-h', text: tr('tldr') }));
       card.appendChild(tbox);
       var ol = S.el('ol', { cls: 'tldr' });
-      (ST.tldr || []).forEach(function (t, k) {
+      (ST.tldr || []).slice(0, 4).forEach(function (t, k) {
         var li = S.el('li', null, [S.rich(S.L(t))]);
         var cid = TLDR_CH[k], ci = S.chapterIndex(cid);
         if (ci >= 0) {
@@ -475,12 +486,13 @@
   };
   S.presLayout = function () {
     if (!S.state.presenting) return;
-    var c = S.chapterById(S.state.chapterId), keys = c ? (c.watch || []) : null, lit = [];
+    var c = S.chapterById(S.state.chapterId), keys = c ? (c.watch || []) : null, lit = [], look = LOOK_LANE[S.state.chapterId];
     S.lanes.forEach(function (L) {
       if (L.def.kind === 'events' || L.def.kind === 'social') return;
       var on = keys ? S.laneWatch(L.def).some(function (k) { return keys.indexOf(k) >= 0; }) : ['price', 'float', 'cost'].indexOf(L.id) >= 0;
-      if (on) lit.push(L);
+      if (on || L.id === look) lit.push(L);
     });
+    lit.sort(function (p, q) { return (q.id === look) - (p.id === look); });
     if (!lit.length) lit = [S.lanesById.price];
     var wide = document.documentElement.clientWidth >= 1024;
     var vh = window.innerHeight, maxLanes = vh >= 900 ? 3 : 2, chosen = lit.slice(0, maxLanes);
@@ -629,7 +641,7 @@
       hit.addEventListener('focus', function () { if (!S.pinned) show(null, false); });
       hit.addEventListener('blur', function () { if (!S.pinned) S.tip.hide(); });
       hit.addEventListener('pointerdown', function (ev) { ev.stopPropagation(); });
-      function pin(ev) { ev.preventDefault(); ev.stopPropagation(); S.userScrub(p.ts, true); show(ev.clientX != null ? ev : null, true); }
+      function pin(ev) { ev.preventDefault(); ev.stopPropagation(); S.userScrub(p.ts, true, false, 'floor'); show(ev.clientX != null ? ev : null, true); }
       hit.addEventListener('click', pin);
       hit.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') pin(ev); });
     });
@@ -691,7 +703,6 @@
       (ST.roles || []).forEach(function (r) { dl.appendChild(S.el('div', { cls: 'role' }, [S.el('dt', { text: S.L(r.who) }), S.el('dd', { text: S.L(r.outcome) })])); });
       s2.appendChild(dl); host.appendChild(s2);
     }
-    if (S.SO) host.appendChild(socialSection());
     if (ST && S.D) {
       var s3 = sec('hakari', 'sec.hakari');
       s3.appendChild(S.el('p', { cls: 'prose', text: S.L(ST.hakari) }));
@@ -700,7 +711,7 @@
         var a0 = up[S.baseI], ti = S.idx(S.hakariTs), b0 = up[ti];
         var hero = S.el('div', { cls: 'hakari-hero' });
         hero.appendChild(S.el('p', { cls: 'hh-pair' }, [S.el('span', { cls: 'hh-v', text: S.fmtUsdg(a0) }), S.el('span', { cls: 'hh-arrow', text: '→' }), S.el('i', { cls: 'key-line', style: 'background:var(--hakari)', 'aria-hidden': 'true' }), S.el('span', { cls: 'hh-v', text: S.fmtUsdg(b0) }), S.el('span', { cls: 'hh-u', text: tr('hakari.unit') })]));
-        hero.appendChild(S.el('p', { cls: 'hh-sub', text: tr('hakari.sub', { a: S.fmtWdHM(S.baseTs), b: S.fmtWdHM(S.t[ti]), x: S.fmtFixed(a0 / b0, 0) }) }));
+        hero.appendChild(S.el('p', { cls: 'hh-sub', text: tr('hakari.sub', { a: S.fmtWdHM(S.baseTs), b: S.fmtWdHM(S.t[ti]), z: S.zoneLabel(), x: S.fmtFixed(a0 / b0, 0) }) }));
         var mn = Infinity, mj = 0; for (var q = S.idx(S.fenceFrom); q < S.idx(S.firstMintTs || S.W1); q++) if (up[q] != null && up[q] < mn) { mn = up[q]; mj = q; }
         if (mn < Infinity) hero.appendChild(S.el('p', { cls: 'hh-sub', text: tr('hakari.min', { v: S.fmtUsdg(mn), t: S.fmtWdHM(S.t[mj]) + ' ' + S.zoneLabel() }) }));
         s3.appendChild(hero);
@@ -708,6 +719,7 @@
       var gl = S.el('p'); gl.appendChild(S.link((window.SQZ_BACK ? window.SQZ_BACK : '../index.html#hims-price'), tr('hakari.link'))); s3.appendChild(gl);
       host.appendChild(s3);
     }
+    if (S.SO) host.appendChild(socialSection());
     if (ST && ST.next) {
       var s4 = sec('next', 'sec.next');
       s4.appendChild(S.el('p', { cls: 'prose', text: S.L(ST.next) + ' ' + tr('next.lane') }));
@@ -804,7 +816,7 @@
     var D = S.D, ST = S.ST;
     // Numbers
     var n = S.el('div', { cls: 'ref-block', id: 'ref-numbers' });
-    n.appendChild(S.el('h3', { text: tr('ref.numbers') + ': ' + tr('xc.title') }));
+    n.appendChild(S.el('h3', { text: tr('ref.numbers') + tr('colon') + tr('xc.title') }));
     var anchors = (D && D.anchors) || [];
     if (anchors.length) {
       // Grouped by anchor: a header row (moment, label, block, Show), one row per measure, then the note.
@@ -824,12 +836,12 @@
         if (!pairs.length) pairs = Object.keys(ours).slice(0, 1).map(function (k) { return [k, k]; });
         var txKey = ['priceSwapTx', 'swapTx', 'tx'].filter(function (x) { return typeof ours[x] === 'string' && /^0x[0-9a-f]{64}$/i.test(ours[x]); })[0];
         var hr = S.el('tr', { cls: 'xc-group' }), hc = S.el('th', { colspan: '4', scope: 'rowgroup' });
-        hc.appendChild(S.el('span', { cls: 'xc-when', text: a.ts ? S.fmtDay(a.ts) + ' ' + S.fmtHMS(a.ts) + ' UTC' : '' }));
+        hc.appendChild(S.el('span', { cls: 'xc-when', text: a.ts ? S.isoUTC(a.ts).slice(5, 19).replace('T', ' ') + ' UTC' : '' }));
         hc.appendChild(S.el('span', { cls: 'xc-label', text: S.L(a.label) }));
         if (a.block) hc.appendChild(S.el('span', { cls: 'xc-block' }, [tr('block') + ' ', S.link(S.blockUrl(a.block), S.fmtInt(a.block), 'mono')]));
         if (a.ts) {
           var b = S.el('button', { type: 'button', cls: 'tool', id: 'xc-show-' + ai, text: tr('xc.show') });
-          b.addEventListener('click', function () { var c = S.chapterAt(a.ts); S.pause(); if (c) S.goChapter(c.id, { keepCursor: true }); S.userScrub(a.ts, true); S.scrubEnd(); window.scrollTo({ top: 0, behavior: S.reducedMotion() ? 'auto' : 'smooth' }); });
+          b.addEventListener('click', function () { var c = S.chapterAt(a.ts); S.pause(); if (c) S.goChapter(c.id, { keepCursor: true }); S.userScrub(a.ts, true, false, 'floor'); S.scrubEnd(); window.scrollTo({ top: 0, behavior: S.reducedMotion() ? 'auto' : 'smooth' }); });
           hc.appendChild(b);
         }
         hr.appendChild(hc); body.appendChild(hr);
@@ -964,8 +976,8 @@
     $('zoom-whole').addEventListener('click', function () { S.state.zoom = 'whole'; setSegs(); S.setView(S.W0, S.W1, true); });
     $('y-fixed').addEventListener('click', function () { S.state.yMode = 'fixed'; setSegs(); S.renderAll(); });
     $('y-fit').addEventListener('click', function () { S.state.yMode = 'fit'; setSegs(); S.renderAll(); });
-    $('tz-utc').addEventListener('click', function () { S.tz = 'utc'; S.store.set('tz', 'utc'); setSegs(); applyTexts(); S.renderAll(); });
-    $('tz-jst').addEventListener('click', function () { S.tz = 'jst'; S.store.set('tz', 'jst'); setSegs(); applyTexts(); S.renderAll(); });
+    $('tz-utc').addEventListener('click', function () { S.tz = 'utc'; S.store.set('tz', 'utc'); setSegs(); applyTexts(); S.renderAll(); renderSections(); });
+    $('tz-jst').addEventListener('click', function () { S.tz = 'jst'; S.store.set('tz', 'jst'); setSegs(); applyTexts(); S.renderAll(); renderSections(); });
     $('tri-num').addEventListener('click', S.tri.toggleTable);
     document.addEventListener('keydown', onKey);
     document.addEventListener('pointerdown', function (ev) {

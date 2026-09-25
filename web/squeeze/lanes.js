@@ -61,6 +61,13 @@
     if (p == null) { var c = S.val('himsUsdg.close', i); p = c == null ? null : (c / S.NAV - 1) * 100; }
     return p;
   }
+  // Where the 'HIMS moved by trades' lane starts summing: the Sun 19:40 baseline in the whole-weekend view
+  // (so the default screen reads the squeeze, not Friday's flows), else the left edge of the view.
+  S.routeOrigin = function () {
+    var whole = !S.state || S.state.chapterId === 'overview' || S.state.zoom === 'whole';
+    return whole && S.baseTs > S.view.d0 && S.baseTs < S.view.d1 ? S.baseTs : S.view.d0;
+  };
+  function routeI0() { return S.idx(S.routeOrigin()); }
   function fixedExtent(keys, pad) {
     var e = S.extent(keys.map(S.ser), 0, S.N - 1, true);
     return e || [0.001, 1];
@@ -122,7 +129,7 @@
           { v: S.fmtSig(S.val('bonerUsdgDirect.close', i), 3), l: tr('s.direct'), color: 'pool-direct' },
           { v: S.fmtPct(gap), l: tr('s.routeGap') }
         ];
-        if (via && at) out.push({ l: tr('ro.premiumInside', { p: S.fmtPct((1 - at / via) * 100).replace('+', '') }) });
+        if (via && at) out.push({ l: tr('ro.premiumInside', { p: S.fmtPct((via / at - 1) * 100) }) });
         return out;
       },
       table: { cols: [
@@ -184,16 +191,16 @@
         { id: 'into', kind: 'cum', key: 'netHimsIntoBonerHims', color: 'pool-boner', width: 2, label: 's.into', end: 'e.into', watch: ['volHimsBonerHims'] }
       ],
       readout: function (i) {
-        var i0 = S.idx(S.view.d0) + 1;
-        var o = S.sumRange('netHimsOutOfHimsUsdg', i0, i), n = S.sumRange('netHimsIntoBonerHims', i0, i);
+        var io = routeI0(), i0 = io + 1, before = i < io;
+        var o = before ? null : S.sumRange('netHimsOutOfHimsUsdg', i0, i), n = before ? null : S.sumRange('netHimsIntoBonerHims', i0, i);
         var out = [{ v: S.fmtHims(o), l: tr('s.out'), color: 'pool-usd' }, { v: S.fmtHims(n), l: tr('s.into'), color: 'pool-boner' }];
-        if (o > 10 && n != null) out.push({ l: tr('ro.matched', { p: S.fmtFixed(n / o * 100, 0) + '%' }) });
-        out.push({ l: tr('ro.since', { t: S.fmtHM(S.view.d0) }) });
+        if (o > 10 && n > 0) { var x = n / o; out.push({ l: x >= 1.1 ? tr('ro.intoMore', { x: S.fmtFixed(x, 1) }) : tr('ro.intoLess', { p: S.fmtFixed(x * 100, 0) + '%' }) }); }
+        out.push({ l: tr('ro.fromBase', { t: S.fmtWdHM(S.t[io]) }) });
         return out;
       },
       table: { cols: [
-        { h: 's.out', get: function (i) { return S.fmtHims(S.sumRange('netHimsOutOfHimsUsdg', S.idx(S.view.d0) + 1, i)); } },
-        { h: 's.into', get: function (i) { return S.fmtHims(S.sumRange('netHimsIntoBonerHims', S.idx(S.view.d0) + 1, i)); } },
+        { h: 's.out', get: function (i) { var io = routeI0(); return i < io ? '—' : S.fmtHims(S.sumRange('netHimsOutOfHimsUsdg', io + 1, i)); } },
+        { h: 's.into', get: function (i) { var io = routeI0(); return i < io ? '—' : S.fmtHims(S.sumRange('netHimsIntoBonerHims', io + 1, i)); } },
         { h: 'USDG traded (min)', hz: '成交 USDG（每分）', get: function (i) { return S.fmtUsdg(S.val('volUsdgHimsUsdg', i)); } },
         { h: 'HIMS traded in BONER pool (min)', hz: 'BONER 池成交 HIMS（每分）', get: function (i) { return S.fmtHims(S.val('volHimsBonerHims', i)); } }
       ] },
@@ -369,9 +376,9 @@
       if (d.kind === 'events') { if (L.labelEl) L.labelEl.textContent = tr('mo.label'); return; }
       L.titleEl.textContent = tr(d.title);
       L.unitEl.textContent = tr(d.unit);
-      L.watchTag.textContent = tr('inThisChapter');
+      L.watchTag.textContent = tr('lookHere');
       if (L.numBtn) { L.numBtn.textContent = L.numbersOpen ? tr('chart') : tr('numbers'); }
-      var sub = d.sub ? tr(d.sub, { t: S.fmtHM(S.view ? S.view.d0 : S.W0) }) : '';
+      var sub = d.sub ? tr(d.sub, { t: S.fmtWdHM(S.view && S.state ? S.routeOrigin() : S.W0) }) : '';
       if (d._missing && d._missing.length) sub = tr('err.series', { k: d._missing.join(', ') });
       L.subEl.textContent = sub;
       S.clear(L.legendEl);
@@ -398,7 +405,7 @@
       var other = S.lanesById[y.fixed.slice(5)]; if (other && other.y) return S.linear(other.y.d[0], other.y.d[1], top + h, top);
     }
     if (d.id === 'route') {
-      var e0 = cumExtent(L, i0, i1); lo = Math.min(0, e0[0]); hi = Math.max(0, e0[1]);
+      var e0 = cumExtent(L, Math.max(i0, routeI0()), i1); lo = Math.min(0, e0[0]); hi = Math.max(0, e0[1]);
       var pad = (hi - lo) * 0.1 || 1; lo -= lo < 0 ? pad : 0; hi += pad;
     } else if (fit && y.fitKeys) {
       var e = S.extent(y.fitKeys.map(S.ser), i0, i1, y.scale === 'log');
@@ -535,7 +542,8 @@
     if (s.kind === 'cum') {
       var src = S.ser(s.key); if (!src) return;
       arr = new Array(S.N); var acc = 0;
-      for (var i = 0; i < S.N; i++) { if (i <= i0) { arr[i] = i === i0 ? 0 : null; continue; } acc += src[i] || 0; arr[i] = acc; }
+      var io = Math.max(i0, routeI0());
+      for (var i = 0; i < S.N; i++) { if (i <= io) { arr[i] = i === io ? 0 : null; continue; } acc += src[i] || 0; arr[i] = acc; }
     } else arr = S.seriesArr(s);
     if (!arr) return;
     var path = S.linePath(arr, i0, i1, x, y);
@@ -620,7 +628,7 @@
         S.svg('path', { cls: 'glyph', d: 'M' + bx + ',' + top + 'l4,6l-8,0z' }, g);
         var lt = S.svg('text', { cls: 'halo mark-label', x: bx + 7, y: top + 8, 'text-anchor': bx > W - m.r - 150 ? 'end' : 'start' }, g);
         if (bx > W - m.r - 150) lt.setAttribute('x', bx - 7);
-        lt.textContent = tr('mo.outOfRange', { v: S.fmtUsdg2(best) });
+        lt.textContent = tr('mo.outOfRange', { v: S.fmtUsdg2(Math.floor(best * 100 + 1e-6) / 100) }); // truncated: 124.705 reads 124.70, as in the text
         offBox = { x: bx, y: top + 8 };
       }
       var labelled = false;
@@ -718,7 +726,7 @@
   function renderParts(el, parts) {
     S.clear(el);
     parts.forEach(function (p) {
-      var sp = S.el('span', { cls: 'ro' });
+      var sp = S.el('span', { cls: p.v == null ? 'ro ro-note' : 'ro' });
       if (p.color || p.dash) sp.appendChild(S.el('i', { cls: (p.rect ? 'key-rect' : 'key-line') + (p.dash ? ' dash' : ''), style: p.dash ? null : 'background:var(--' + p.color + ')' }));
       if (p.v != null) sp.appendChild(S.el('strong', { text: p.v }));
       if (p.l) sp.appendChild(S.el('span', { cls: 'ro-l', text: p.l }));

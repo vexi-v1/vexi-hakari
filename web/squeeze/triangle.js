@@ -111,6 +111,9 @@
     S.svg('rect', { cls: 'post', x: gx + 21, y: by - 6, width: 2, height: 12 }, gg);
     T.bar = S.svg('line', { cls: 'bar', x1: gx - 22, x2: gx + 30, y1: by, y2: by }, gg);
     T.bar.style.transformOrigin = (gx - 22) + 'px ' + by + 'px';
+    // raised = rotated -80° about its left post and shortened so it never crosses the issuer box above it
+    var room = by - (gateTop + boxH) - 4, sc = S.clamp(room / (52 * Math.sin(80 * Math.PI / 180)), 0.2, 1);
+    T.barRaised = 'rotate(-80deg) scale(' + sc.toFixed(3) + ', 1)';
     T.gatePill = S.svg('g', { cls: 'gate-pill' }, gg);
     T.gatePillRect = S.svg('rect', { rx: 6, x: gx + 34, y: by - 17, height: 34 }, T.gatePill);
     T.gateIcon = S.svg('path', { cls: 'gate-icon' }, T.gatePill);
@@ -148,7 +151,8 @@
     T.issuer2.textContent = tr('gate.hours');
     T.subUsdg.textContent = tr('tri.usdg');
     var cap = S.$('tri-caption');
-    if (cap) cap.textContent = tr('tri.caption', { b: S.fmtSig(S.bonerRef, 3), t: S.fmtWdHM(S.baseTs) + ' ' + S.zoneLabel() });
+    if (cap) cap.textContent = tr('tri.caption', { t: S.fmtWdHM(S.baseTs) + ' ' + S.zoneLabel() });
+    var note = S.$('tri-note'); if (note) note.textContent = tr('tri.note', { b: S.fmtSig(S.bonerRef, 3) });
     T.pillW = {};
     Object.keys(T.edges).forEach(function (k) {
       var e = T.edges[k];
@@ -172,32 +176,56 @@
       el.setAttribute('y', (node.y + 2).toFixed(1));
       el.setAttribute('text-anchor', left ? 'end' : 'start');
       el.textContent = text;
+      var lx = node.x + (left ? -(r + 8) : r + 8), lw = estW(text, 11);
+      if (text) T.labBoxes.push({ x0: left ? lx - lw : lx, x1: left ? lx : lx + lw, y0: node.y - 9, y1: node.y + 5 });
       return;
     }
     var along = r + 14, off = w / 2 + 8, sgn = e.labInside ? -1 : 1;
     var px = node.x + e.u.x * along * dir + e.n.x * off * sgn, py = node.y + e.u.y * along * dir + e.n.y * off * sgn;
     var nx = e.n.x * sgn, ny = e.n.y * sgn;
+    var ly = py + (ny > 0.3 ? 11 : (ny < -0.3 ? -2 : 4)), anchor = e.labInside ? (which === 'a' ? 'start' : 'end') : (nx > 0.3 ? 'start' : (nx < -0.3 ? 'end' : 'middle'));
     el.setAttribute('x', px.toFixed(1));
-    el.setAttribute('y', (py + (ny > 0.3 ? 11 : (ny < -0.3 ? -2 : 4))).toFixed(1));
-    el.setAttribute('text-anchor', e.labInside ? (which === 'a' ? 'start' : 'end') : (nx > 0.3 ? 'start' : (nx < -0.3 ? 'end' : 'middle')));
+    el.setAttribute('y', ly.toFixed(1));
+    el.setAttribute('text-anchor', anchor);
     el.textContent = text;
+    if (text) { var tw = estW(text, 11), bx = anchor === 'start' ? px : (anchor === 'end' ? px - tw : px - tw / 2); T.labBoxes.push({ x0: bx, x1: bx + tw, y0: ly - 9, y1: ly + 3 }); }
   }
   // Text width estimate (CJK glyphs are full-width): avoids a forced layout per frame.
   function estW(s, px) { var w = 0; for (var k = 0; k < s.length; k++) w += s.charCodeAt(k) > 0x2e80 ? px : px * 0.58; return w; }
   S.estW = estW;
+  // Does a pill box touch any end label or node disc drawn this frame?
+  function hitsSomething(b) {
+    var P = T.geo.P, r = T.geo.r + 3;
+    var nodes = [P.hims, P.usdg, P.boner].map(function (p) { return { x0: p.x - r, x1: p.x + r, y0: p.y - r, y1: p.y + r }; });
+    return T.labBoxes.concat(nodes).some(function (q) { return !(b.x1 + 4 <= q.x0 || b.x0 >= q.x1 + 4 || b.y1 + 3 <= q.y0 || b.y0 >= q.y1 + 3); });
+  }
   function placePill(e, wmid) {
     var vw = Math.max(estW(e.pv.textContent, 13) + 14, estW(e.pu.textContent, 11), estW(e.ps.textContent, 11)) + 18;
     var hh = e.ps.textContent ? 50 : 36, hw = vw;
     var ext = Math.abs(e.n.x) * hw / 2 + Math.abs(e.n.y) * hh / 2;
-    // keep the pill clear of the end labels next to both nodes (they sit r + 14 px along the edge)
     // keep the pill clear of the along-edge end labels (the HIMS ends sit beside the disc instead)
     var extA = Math.abs(e.u.x) * hw / 2 + Math.abs(e.u.y) * hh / 2;
     var ka = ((e.a === T.geo.P.hims ? 12 : 52) + T.geo.r + extA) / e.len, kb = ((e.b === T.geo.P.hims ? 12 : 52) + T.geo.r + extA) / e.len;
     var f = ka <= 1 - kb ? S.clamp(e.f, ka, 1 - kb) : (ka + 1 - kb) / 2;
-    var mx = e.a.x + (e.b.x - e.a.x) * f, my = e.a.y + (e.b.y - e.a.y) * f;
-    var cx = mx + e.n.x * (wmid / 2 + 10 + ext), cy = my + e.n.y * (wmid / 2 + 10 + ext);
-    cx = S.clamp(cx, hw / 2 + 2, T.geo.W - hw / 2 - 2); cy = S.clamp(cy, hh / 2 + 2, T.geo.H - hh / 2 - 2);
-    var x0 = cx - hw / 2, y0 = cy - hh / 2;
+    function at(ff) {
+      var mx = e.a.x + (e.b.x - e.a.x) * ff, my = e.a.y + (e.b.y - e.a.y) * ff;
+      var cx = mx + e.n.x * (wmid / 2 + 10 + ext), cy = my + e.n.y * (wmid / 2 + 10 + ext);
+      cx = S.clamp(cx, hw / 2 + 2, T.geo.W - hw / 2 - 2); cy = S.clamp(cy, hh / 2 + 2, T.geo.H - hh / 2 - 2);
+      return { x0: cx - hw / 2, y0: cy - hh / 2, x1: cx + hw / 2, y1: cy + hh / 2 };
+    }
+    // if it touches an end label (e.g. the HIMS count beside the disc) or a node, slide it along the edge to the
+    // nearest free spot, anywhere between the two discs
+    var box = at(f);
+    if (hitsSomething(box)) {
+      var lim = (T.geo.r + 6 + extA) / e.len;
+      for (var g = 1; g <= 40; g++) {
+        var f1 = f + g * 0.02, f0 = f - g * 0.02, b1 = f1 <= 1 - lim ? at(f1) : null, b0 = f0 >= lim ? at(f0) : null;
+        if (b1 && !hitsSomething(b1)) { box = b1; break; }
+        if (b0 && !hitsSomething(b0)) { box = b0; break; }
+        if (!b1 && !b0) break;
+      }
+    }
+    var x0 = box.x0, y0 = box.y0;
     e.pillRect.setAttribute('x', x0.toFixed(1)); e.pillRect.setAttribute('y', y0.toFixed(1));
     e.pillRect.setAttribute('width', hw.toFixed(1)); e.pillRect.setAttribute('height', hh);
     e.pillKey.setAttribute('x', (x0 + 8).toFixed(1)); e.pillKey.setAttribute('y', (y0 + 10).toFixed(1));
@@ -223,6 +251,7 @@
 
   T.update = function (i) {
     if (!T.svg || !S.tri.edges) return;
+    T.labBoxes = [];
     var ts = S.state.cursorTs, u = units(i), b = S.baseI, ub = units(b), phone = T.geo.phone;
     var keys = ['usd', 'boner', 'direct'];
     keys.forEach(function (k) {
@@ -247,7 +276,7 @@
     E.usd.pv.textContent = c == null ? '—' : S.fmtUsdg2(c);
     E.usd.ps.textContent = c == null ? tr('tri.noTrade') : tr('tri.vsNav', { p: S.fmtPct(S.val('himsPremiumPct', i) != null ? S.val('himsPremiumPct', i) : (c / S.NAV - 1) * 100) });
     E.boner.pv.textContent = bh == null ? '—' : S.fmtSig(bh, 3);
-    E.boner.ps.textContent = bh == null ? tr('tri.noTrade') : (bhb ? tr('tri.sinceBase', { x: S.fmtFixed(bh / bhb, 2), t: S.fmtWdHM(S.baseTs) }) : '');
+    E.boner.ps.textContent = bh == null ? tr('tri.noTrade') : (bhb ? tr(ts < S.baseTs - 30 ? 'tri.vsBase' : 'tri.sinceBase', { x: S.fmtChange(bh, bhb), t: S.fmtWdHM(S.baseTs) }) : '');
     E.direct.pv.textContent = dr == null ? '—' : S.fmtSig(dr, 3);
     E.direct.ps.textContent = dr == null ? tr('tri.noTrade') : tr('tri.routeGap', { p: S.fmtPct(v('routeGapPct')) });
     if (T.priceCells) T.priceCells.forEach(function (c0) { var e = E[c0.k]; c0.v.textContent = e.pv.textContent; c0.u.textContent = e.pu.textContent; c0.s.textContent = e.ps.textContent; });
@@ -259,7 +288,7 @@
     // gate
     var st = S.gateState(ts), gx = T.geo.W / 2, by = T.barrierY;
     var raised = st.key !== 'closed';
-    T.bar.style.transform = raised ? 'rotate(-80deg)' : 'none';
+    T.bar.style.transform = raised ? T.barRaised : 'none';
     T.connBot.setAttribute('class', 'conn' + (st.key === 'minting' || st.key === 'open' ? '' : ' idle'));
     T.gateIcon.setAttribute('d', ICON[st.icon]);
     T.gateIcon.setAttribute('transform', 'translate(' + (gx + 46) + ',' + (by + (st.icon === 'glass' || st.icon === 'plus' ? 0 : -1)) + ')');
@@ -370,8 +399,10 @@
     S.$('hero-value').textContent = up == null ? '—' : S.fmtUsdg(up);
     var d = S.$('hero-delta');
     if (up != null && base) {
-      var ratio = base / up;
-      d.textContent = tr('hero.was', { v: S.fmtUsdg(base), t: S.fmtWdHM(S.baseTs) }) + ' · ' + (ratio >= 1.05 ? tr('hero.cheaper', { x: S.fmtFixed(ratio, ratio < 10 ? 1 : 0) }) : tr('hero.dearer', { x: S.fmtFixed(1 / ratio, 2) }));
+      var r = up / base, when = S.fmtWdHM(S.baseTs);
+      if (S.state.cursorTs < S.baseTs + 30) d.textContent = tr('hero.baseline', { t: when, v: S.fmtUsdg(base) });
+      else d.textContent = tr('hero.was', { v: S.fmtUsdg(base), t: when }) + ' · ' +
+        (r <= 0.5 ? tr('hero.cheaper', { x: S.fmtFixed(1 / r, 1 / r < 10 ? 1 : 0) }) : (r >= 2 ? tr('hero.dearer', { x: S.fmtFixed(r, 1) }) : S.fmtPct((r - 1) * 100)));
     } else d.textContent = up == null ? tr('ro.nullCost') : '';
     if (T.heroDot && T.heroX && up != null && T.heroY) {
       var ts = S.state.cursorTs, inV = ts >= S.view.d0 && ts <= S.view.d1;
