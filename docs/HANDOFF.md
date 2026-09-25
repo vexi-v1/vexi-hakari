@@ -1,4 +1,4 @@
-# Handoff — state of HAKARI at 2026-09-26 03:00 JST (H6)
+# Handoff — state of HAKARI at 2026-09-25 22:26 JST (H1.4)
 
 For whoever takes this to submission (Abner). Everything technical is done and pushed; what is
 left needs a person: recording the video, the two forms, and flipping the repo public.
@@ -8,11 +8,11 @@ Deadline **2026-09-27 09:00 JST**; aim for 06:00.
 
 | Piece | Status | Verified how |
 |---|---|---|
-| `PushCostLens`, `HakariOracleHook`, `SafeSettle`, `CostModel` | done | `forge test`: 24 unit tests green (no RPC) |
+| `PushCostLens`, `HakariOracleHook`, `SafeSettle`, `CostModel` | done | `forge test --no-match-path 'test/fork/*'`: 26 tests green (no RPC) |
 | G1: lens vs a manual 10-TSLA round trip on a 4663 fork | done | `forge test --match-contract PushCostLensForkTest -vv` (manual −26.952486 vs lens 26.952486 USDG for 10 TSLA at block 72,263,113) |
-| Shadow pool: real TSLA/USDG profile + hook on the official PoolManager, sustained push, SafeSettle | done | `forge test --match-contract ShadowPool -vv` (~3 min) |
+| Shadow pool: real TSLA/USDG profile + hook on the official PoolManager, sustained push, SafeSettle | done | `forge test --match-contract ShadowPoolForkTest -vv` (~4 min) |
 | Three-layer demo tests (write `web/decisions/*.json`) | done | `forge test --match-contract ThreeLayers -vv` |
-| Gauge: ladder, Δ calibration, HIMS replay, mint window (`gauge/data/*.json`) | done | `cd gauge && npm test` (11 green); HIMS reconstruction equals every Swap event's liquidity |
+| Gauge: ladder, Δ calibration, HIMS replay, mint window (`gauge/data/*.json`) | done | `cd gauge && npm test` (11 green); at each replay point's last Swap, the rebuilt liquidity equals that event's |
 | Web page (`web/`), live "Measure" against mainnet | done | opened in a browser, live TSLA measure returned |
 | 46630 deployment (lens, hook Δ 250, settle) | done | `deployments/46630.json`, receipts in `broadcast/Deploy.s.sol/46630/` |
 | 46630 public demo (pool with hook, push, `Settled` event) | done | `deployments/46630-demo-pool.json`, `broadcast/DemoPool.s.sol/46630/`, `broadcast/DemoSettle.s.sol/46630/` |
@@ -84,11 +84,16 @@ settle `0xBc1f6adB55eFD483abBc1e46e1F7dA6f34ea02e4`; public `Settled` tx
   `depthToMove` / `roundTripCost` there.
 - **Web page shows 404s in the console on first load** if `web/decisions/*.json` for the shadow
   scenarios are missing: run the ShadowPool fork test once.
+- **Do not re-run `Deploy` or `DemoPool` for the video.** They overwrite `deployments/46630.json`
+  and `deployments/46630-demo-pool.json`, which the README and `DemoSettle` point at. Use the
+  existing txs or a read-only `cast call`.
+- **Running the fork tests or `npm run *` dirties the tree.** They refresh committed snapshots
+  (`web/decisions/`, `test/fixtures/`, `gauge/data/`); `git checkout -- .` restores them.
 - **viem refuses hand-cased addresses.** Everything in `gauge/` is lower-case on purpose.
 
 ## If there is time
 
 - `docs/DEMO.md` § booth: rehearse the five answers.
-- Re-run `npm run ladder` right before the demo so section 1 of the page is fresh (the page's
-  **Refresh live** button does the same in the browser).
+- For fresh numbers on camera use the page's **Refresh live** button; `npm run ladder` rewrites
+  the committed `gauge/data/ladder.json` that the README table quotes.
 - Cost model v1 and `n_max` are listed under README § "Next"; do not start them now.

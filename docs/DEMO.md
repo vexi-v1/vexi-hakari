@@ -8,15 +8,18 @@ repo; the commands reproduce them. Record at ≥ 720p, no TTS, no speed-ups.
 ```bash
 cd vexi-hakari
 forge build
-python3 -m http.server 8790          # then open http://localhost:8790/web/  (dark mode looks best)
+python3 -m http.server 8790 --bind 127.0.0.1   # then open http://localhost:8790/web/  (dark mode looks best)
 ```
 
-Pre-run the two slow fork tests once so you are not waiting on the RPC on camera; their output is
-also saved in `docs/demo-outputs/`:
+Show the saved fork output in `docs/demo-outputs/` rather than re-running the fork tests on camera:
+a fresh run forks a new block, so its numbers will not match the README, and it rewrites the
+committed `web/decisions/*.json`. `ThreeLayers` is local and deterministic, so it is fine to run
+live:
 
 ```bash
-forge test --match-contract ThreeLayers -vv                          # ~1 s
-forge test --match-contract 'ShadowPool|PushCostLensForkTest' -vv     # ~4 min, 4663 fork
+forge test --match-contract ThreeLayers -vv                          # ~1 s, no RPC
+# only if you need a fresh fork run (then `git checkout -- web/decisions test/fixtures` afterwards):
+# forge test --match-contract 'ShadowPoolForkTest|PushCostLensForkTest' -vv   # ~4 min, 4663 fork
 ```
 
 Explorer for the public transactions: <https://explorer.testnet.chain.robinhood.com>.
@@ -24,15 +27,17 @@ Explorer for the public transactions: <https://explorer.testnet.chain.robinhood.
 ## Segment 1 · 0:00–0:30 · the problem
 
 **Show:** the web page, section 1. Click **Measure** on the TSLA/USDG preset (≈ 10 s; it injects
-the lens into mainnet with an `eth_call` state override — say so). Point at "+5 %: ~1,260 USDG of
-fees, tying up ~180,000 USDG".
+the lens into mainnet with an `eth_call` state override — say so). Point at the +5 % row and read
+the fees and the capital it ties up off the screen; the live book moves, so do not quote a number
+from this file.
 
 Scroll to section 2, the two HIMS charts.
 
 **Say:** "Every protocol that settles on a Uniswap pool assumes the price is real. This is the
-HIMS pool on Robinhood Chain on a Sunday: minting was closed, nobody could arbitrage, the price
-went from 29 to 54 dollars while the stock was 28.84 — and the cost to push it 10 % fell from
-1,351 dollars to 12. How much trust a price deserves depends on what it costs to fake."
+HIMS pool on Robinhood Chain on a Sunday: minting was closed, nobody could arbitrage. At 19:40 UTC
+pushing it 10 % cost 1,351 dollars; four hours later it cost 12, and the price was already 43
+against a 28.84 close. It peaked at 54 the moment minting reopened. How much trust a price
+deserves depends on what it costs to fake."
 
 ## Segment 2 · 0:30–1:15 · layer 1, the atomic push
 
@@ -58,17 +63,18 @@ forge test --match-contract ThreeLayers --match-test 'layer2and3|layer3' -vv
 `gain if faked 2.6e17`, `used raw? false`. Deep pool — `raw 1650`, `truncated 550`,
 `cost 3.2e18 > gain 1.2e17`, `used raw? true`.
 
-Then the TSLA-shaped pool (`docs/demo-outputs/fork-tests.txt`, or the test if it has run): holding
-+5 % for the window on the real TSLA/USDG liquidity profile ties up ~133,000 USDG but *costs* ~150
-USDG on a weekend, ~890 on a weekday, against a 4,801 USDG gain on a 100k settlement (the exact
-figures move with the live book; read them off `docs/demo-outputs/fork-tests.txt`).
+Then the TSLA-shaped pool (`docs/demo-outputs/fork-tests.txt`): holding +5 % for the window on the
+real TSLA/USDG liquidity profile ties up ~133,000 USDG. With the pool held there, SafeSettle's
+estimate of what it costs to fake the remaining gap is ~150 USDG on a weekend and ~890 on a
+weekday, against a 4,801 USDG gain on a 100k settlement (read the exact figures off the saved
+output).
 
 **Say:** "Truncation caps how far the recorded price can move per observation — but it lags in a
 real crash. So SafeSettle asks the lens: what would it cost to hold this pool where the raw
 series says it is, for the whole window? If that costs more than the settlement pays, the move
-is real and we use the raw price. If it is cheaper — like here, 186 dollars to move a 100,000
-dollar payout by 4,800 — we settle on the truncated price and the attacker paid fees for nothing."
-(Say "about 150 dollars" if the fresh run differs from the saved output.)
+is real and we use the raw price. If it is cheaper — like here, about 150 dollars against a 4,800
+dollar move on a 100,000 dollar payout — we settle on the truncated price and the attacker paid
+fees for nothing."
 
 ## Segment 4 · 2:15–2:45 · it is on-chain
 
@@ -78,8 +84,10 @@ dollar payout by 4,800 — we settle on the truncated price and the attacker pai
   bits, mined salt), lens `0x4fe982eBF315925D14bF11917fdad43400703d28`, settle
   `0xBc1f6adB55eFD483abBc1e46e1F7dA6f34ea02e4`, all on the official PoolManager `0x8366…0951`.
 - the public run: pool `0xc2c8…108f`, `Settled` in tx
-  `0x5dfc71837a834ac839a9a9d775013f6129f8a4d67066e32df373c09f9ad15441` — raw 3000, truncated 1158,
-  cost 6.4e11 vs gain 2.0e23 → truncated.
+  `0x5dfc71837a834ac839a9a9d775013f6129f8a4d67066e32df373c09f9ad15441` — raw 3000, truncated 1250,
+  cost 6.1e11 vs gain 1.9e23 → truncated (decoded from the event log; the explorer shows the raw
+  log data). Do not re-run `Deploy` or `DemoPool` for the video: they overwrite the deployment
+  records the README points at.
 
 **Say:** "Hook, lens and settler are live on the official v4 PoolManager on Robinhood testnet, and
 this transaction is the whole loop happening for real. Any protocol can call PushCostLens today,
@@ -90,8 +98,10 @@ the exact lines: unlock, swap, BalanceDelta."
 
 - **Why not just truncate?** Because it lags in a genuine crash and short-changes honest holders.
   Some protocols turn it off for that reason. HAKARI keeps both series and decides per settlement.
-- **Is the cost model right?** It is a lower bound (fees only, exact retrace, capped walk) and it
-  says so. The decision rule is replaceable; the measurement is the contribution.
+- **Is the cost model right?** It is v0 and the README lists its limits. Each walk counts fees only
+  and is capped, but it starts from the current price and reads current liquidity, so a held push
+  or just-in-time liquidity can move the estimate either way (README § "Known limitations"). The
+  decision rule is replaceable; the measurement is the contribution.
 - **Why two modes in the lens?** v4 forbids nested `unlock`, so a contract already inside one
   cannot use the exact simulation; the view walk over `StateLibrary` is for them.
 - **The 0.3 % pools charge 0.35 %?** Yes — protocol fees are on for these pools on Robinhood
