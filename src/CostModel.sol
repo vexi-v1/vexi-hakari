@@ -53,12 +53,14 @@ library CostModel {
         }
     }
 
-    /// @notice How much a payout on `notional` (quote units) moves when the settlement tick is off by x.
-    /// @dev up: notional × (1.0001^x − 1); down: notional × (1 − 1.0001^−x). Delta ≈ 1, as for a deep ITM option.
-    function gainIfFaked(uint256 notional, int24 x, bool up) internal pure returns (uint256) {
+    /// @notice How much a payout on `notional` (quote units) moves when the asset's price is off by x ticks.
+    /// @dev assetUp: notional × (1.0001^x − 1); down: notional × (1 − 1.0001^−x). Delta ≈ 1, as for a deep ITM option.
+    ///      The caller turns the tick direction into the asset's direction (they are opposite when the quote is
+    ///      currency0).
+    function gainIfFaked(uint256 notional, int24 x, bool assetUp) internal pure returns (uint256) {
         if (x > TickMath.MAX_TICK) x = TickMath.MAX_TICK;
         uint160 r = TickMath.getSqrtPriceAtTick(x); // sqrt(1.0001^x) in Q96
-        if (up) {
+        if (assetUp) {
             uint256 moved = FullMath.mulDiv(FullMath.mulDiv(notional, r, FixedPoint96.Q96), r, FixedPoint96.Q96);
             return moved > notional ? moved - notional : 0;
         }

@@ -152,6 +152,22 @@ contract SafeSettleTest is HakariDeployers {
         assertApproxEqRel(q0.costToFake, expected0, 0.01e18);
     }
 
+    function test_gain_followsTheAssetNotTheTick_whenTheQuoteIsCurrency0() public {
+        addLiquidity(key, -6000, 6000, 1e15);
+        _sustainedPush(3000);
+        // The v4 price is currency1 per currency0, so tick up = currency0 dearer. With the quote as currency1 (TSLA/USDG)
+        // the asset is currency0 and ROSE: a delta-1 payout moves by notional × (1.0001^x − 1). With the quote as
+        // currency0 (USDG/HIMS) the asset is currency1 and FELL: notional × (1 − 1.0001^−x).
+        SafeSettle.Decision memory quote0 = settle.settlePrice(key, WINDOW, 1e18, true, 0);
+        SafeSettle.Decision memory quote1 = settle.settlePrice(key, WINDOW, 1e18, false, 0);
+        uint256 x = uint256(int256(quote1.rawTick - quote1.truncTick));
+        uint160 r = TickMath.getSqrtPriceAtTick(int24(int256(x)));
+        uint256 up = FullMath.mulDiv(FullMath.mulDiv(1e18, r, 2 ** 96), r, 2 ** 96) - 1e18;
+        uint256 down = 1e18 - FullMath.mulDiv(FullMath.mulDiv(1e18, 2 ** 96, r), 2 ** 96, r);
+        assertEq(quote1.gainIfFaked, up, "quote is currency1: the asset (currency0) rose");
+        assertEq(quote0.gainIfFaked, down, "quote is currency0: the asset (currency1) fell");
+    }
+
     function test_settle_emitsTheReason() public {
         addLiquidity(key, -6000, 6000, 1e15);
         _sustainedPush(3000);

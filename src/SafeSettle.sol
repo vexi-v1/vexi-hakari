@@ -78,7 +78,8 @@ contract SafeSettle {
         (d.costToFake, d.costComplete) = CostModel.costToFake(
             lens, key, d.truncTick, x, up, window, arbReversionSeconds, quoteIsCurrency0, MAX_WALK_STEPS
         );
-        d.gainIfFaked = CostModel.gainIfFaked(notionalAtStake, x, up);
+        // the v4 price is currency1 per currency0: when the quote is currency0 the asset moves against the tick
+        d.gainIfFaked = CostModel.gainIfFaked(notionalAtStake, x, quoteIsCurrency0 ? !up : up);
         d.usedRaw = d.costToFake > d.gainIfFaked;
         d.tickUsed = d.usedRaw ? d.rawTick : d.truncTick;
     }
