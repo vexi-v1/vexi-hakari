@@ -249,7 +249,7 @@ if (weekend) {
     rows.map((r) => `<tr><td>${r.symbol}${r.hooked ? " †" : ""}</td><td>${fmt(r.fridayMaxSafeExposure, 0)}</td><td>${fmt(r.weekendMinMaxSafeExposure, 0)}</td><td>×${fmt(r.ratio, 2)}</td><td>${fmt(r.fridayCostUp10)}</td><td>${r.allLiquidityMatches ? "yes" : "no"}</td></tr>`).join("") + `</table></div>` +
     (rows.some((r) => r.hooked) ? `<p class="meta">† Hooked pool: the hook's own charges are not in the bound, so it may read low (conservative).</p>` : "");
 } else {
-  $("weekend-lead").textContent += " (run npm run discover and npm run weekend -- " + WEEKEND + " in gauge/)";
+  $("weekend-lead").append(" (run npm run discover and npm run weekend -- " + WEEKEND + " in gauge/)");
 }
 
 // ───────── 3. paste a pool ─────────
@@ -316,18 +316,22 @@ $("measure").onclick = async () => {
     const past = (m.pastLadder ?? []).filter((r) => r.reached).reduce((a, r) => (!a || r.exposure < a.exposure ? r : a), null);
     const pastLower = past && past.exposure < m.bound.exposure;
     const limits = `<a href="https://github.com/vexi-v1/vexi-hakari#limitations">README § Limitations</a>`;
+    // When a push past the ladder breaks even lower, the headline is that lower figure and SafeSettle v1's line is shown
+    // next to it, labelled: the page never leads with a number its own next paragraph calls too high.
     const pastNote = pastLower
-      ? `<p><b>Past the ladder.</b> ${top ? `SafeSettle's largest move (${moveOf(bnd)}) sets this line, and its ladder stops there.` : "SafeSettle's ladder stops at +20 %."} Past it this pool's liquidity thins, so a bigger fake costs less per ${unit} it earns: pushing ${asset} +${fmt(past.gain * 100, 0)} % costs <b>${amount(toHuman(past.cost))} ${unit}</b> here (exact swaps, outside SafeSettle's rule), so a fake that size pays for itself once about ${amount(toHuman(past.exposure))} ${unit} settles on this price. The true bound is lower than this line (${limits}).</p>`
+      ? `<p>SafeSettle v1 decides on <b>${amountDown(safe)} ${unit}</b>${atLeast} <span class="nowrap">(binding move: ${moveOf(bnd)})</span>, ${top ? "the top of its ladder, which stops there" : "from a ladder that stops at +20 %"}. Past it this pool's liquidity thins, so a bigger fake costs less per ${unit} it earns: pushing ${asset} +${fmt(past.gain * 100, 0)} % costs <b>${amount(toHuman(past.cost))} ${unit}</b> here (exact swaps, outside SafeSettle's rule), so it pays for itself once about ${amountDown(toHuman(past.exposure))} ${unit} settles on this price. SafeSettle v1 would still settle an exposure between the two figures (${limits}).</p>`
       : top
         ? `<p class="meta">SafeSettle's largest move (${moveOf(bnd)}) sets this line, and its ladder stops there. ${m.pastLadder ? `On this pool a bigger fake (+30, +50, +100 %) is not cheaper per ${unit} it earns.` : `A bigger fake could be cheaper per ${unit} it earns if this pool's liquidity thins past it, and the true bound lower`} (${limits}).</p>`
         : "";
     out.innerHTML = `
       <p><b>${preset?.name ?? "pool"}</b> <code>${m.id}</code> · block ${Number(block.number).toLocaleString()} · <span class="meta">measured in ${fmt((performance.now() - t0) / 1000, 1)} s</span></p>
       <div class="safe">
-        <p class="safe-line">Largest settlement this pool can safely carry right now, if nobody pushes back: <b>${amountDown(safe)} ${unit}</b>${atLeast} <span class="nowrap">(binding move: ${moveOf(bnd)})</span></p>
+        ${pastLower
+          ? `<p class="safe-line">Largest settlement this pool can safely carry right now, if nobody pushes back: at most <b>${amountDown(toHuman(past.exposure))} ${unit}</b> <span class="nowrap">(pushing ${asset} +${fmt(past.gain * 100, 0)} %, past SafeSettle's ladder)</span></p>`
+          : `<p class="safe-line">Largest settlement this pool can safely carry right now, if nobody pushes back: <b>${amountDown(safe)} ${unit}</b>${atLeast} <span class="nowrap">(binding move: ${moveOf(bnd)})</span></p>`}
         ${pastNote}
         <p>Why: of SafeSettle's twelve moves (50 to 1,823 ticks: +0.5 to +20 % up, −0.5 to −16.7 % down), the cheapest to fake per ${unit} it earns is ${asset} ${moveOf(bnd)}: <b>${amount(toHuman(bnd.cost))} ${unit}</b> in fees there and straight back, shifting every payout on this price by ${fmt(bnd.gain * 100, 1)} % of its size, so from about ${amountDown(safe)} ${unit} settling on it the fake pays for itself.</p>
-        <p class="meta">On a pool carrying HAKARI's hook, SafeSettle refuses any settlement whose total exposure on this price is at or above this line (lower still if the hook's two TWAPs disagree by more than 10 ticks). “Nobody pushes back” is <code>arbReversionSeconds = 0</code>, the case while the mint window is closed; with arbitrage open the attacker must re-push after every pull-back and the bound is higher. Computed as <code>CostModel.maxSafeExposure</code> computes it, from the same view walk (<code>PushCostLens.roundTripCosts</code>, ${MAX_WALK_STEPS} steps each way), rounded down; the exact swaps in the push costs below read slightly higher${hooked ? ". On a hooked pool the view walk does not see the hook’s own charges, so the bound may read low (conservative)" : ""}.</p>
+        <p class="meta">On a pool carrying HAKARI's hook, SafeSettle refuses any settlement whose total exposure on this price is at or above ${amountDown(safe)} ${unit} (lower still if the hook's two TWAPs disagree by more than 10 ticks). “Nobody pushes back” is <code>arbReversionSeconds = 0</code>, the case while the mint window is closed; with arbitrage open the attacker must re-push after every pull-back and the bound is higher. Computed as <code>CostModel.maxSafeExposure</code> computes it, from the same view walk (<code>PushCostLens.roundTripCosts</code>, ${MAX_WALK_STEPS} steps each way), rounded down; the exact swaps in the push costs below read slightly higher${hooked ? ". On a hooked pool the view walk does not see the hook’s own charges, so the bound may read low (conservative)" : ""}.</p>
       </div>
       <p>price <b>${fmt(m.priceQuote, 4)}</b> ${unit} · LP fee ${m.lpFee} pips, protocol fee ${m.protocolFee ? `on (${m.protocolFee & 0xfff}/${m.protocolFee >> 12} pips)` : "off"} · in-range liquidity <code>${m.liquidity}</code></p>
       <p>Push +5 % right now: <b>${fmt(five.costQuoteHuman)}</b> ${unit} of fees, tying up <b>${fmt(five.amountInHuman, 0)}</b> ${five.inputToken === "quote" ? unit : baseLabel}.

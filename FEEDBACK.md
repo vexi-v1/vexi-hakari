@@ -50,10 +50,10 @@ from pool state inside someone else's unlock may be transient."
 ## 5. Protocol fees are on for pools on Robinhood Chain, and nothing surfaces it
 
 `slot0.protocolFee` is `2048500` on TSLA/USDG and NVDA/USDG (500 pips each way) and `4097000` on
-HIMS/USDG (1000 pips each way). The effective swap fee is therefore 3,498 pips on a "0.3 %" pool and
+HIMS/USDG (1000 pips each way). The effective swap fee is therefore 3,499 pips on a "0.3 %" pool and
 9,991 on a "0.9 %" pool. The `Swap` event's `fee` field shows it; the deployments page, the fee tier in
-the key and the explorers do not. Anyone estimating slippage or attack cost from `key.fee` on this
-chain is ~17 % low. `PushCostLens` folds the protocol fee in the way `Pool.swap` does
+the key and the explorers do not. The real fee is ~17 % above `key.fee`, so anyone estimating slippage or
+attack cost from `key.fee` on this chain is ~14 % low on a "0.3 %" pool (~10 % on "0.9 %"). `PushCostLens` folds the protocol fee in the way `Pool.swap` does
 (`ProtocolFeeLibrary.calculateSwapFee`); it took reading `Pool.sol` to know that was needed. A
 per-chain "protocol fee: on, X pips" note would help.
 

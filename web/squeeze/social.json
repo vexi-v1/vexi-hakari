@@ -2376,6 +2376,10 @@
   {
    "en": "Identity: handles are shown only for organisations and accounts with at least 1,000 followers. The handle RoaringKitty is shown as posted; nothing confirms it belongs to the GameStop-era trader.",
    "zh": "身分：只有機構與追蹤者至少 1,000 人的帳號才顯示帳號名稱。RoaringKitty 這個帳號名稱照原樣呈現，沒有證據顯示它屬於 GameStop 時期那位交易員。"
+  },
+  {
+   "en": "Single-trade figures (122.75, 133.35, 0.52 HIMS, the mint and burn times) come from per-swap and per-transfer caches that npm run squeeze rebuilds from Robinhood Chain logs under gauge/cache/, which is not committed; the committed web/squeeze/data.json holds the minute series and 13 notable swaps.",
+   "zh": "單筆成交的數字（122.75、133.35、0.52 顆、鑄造與銷毀時間）來自逐筆兌換與轉帳的快取，由 npm run squeeze 從 Robinhood Chain 的紀錄重建在 gauge/cache/ 底下，這個資料夾沒有進版控；已 commit 的 web/squeeze/data.json 只有逐分鐘序列與 13 筆代表性兌換。"
   }
  ]
 }

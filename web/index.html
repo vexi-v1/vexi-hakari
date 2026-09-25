@@ -107,9 +107,9 @@
     <a href="https://explorer.testnet.chain.robinhood.com/tx/0xb2ca68bf6b448ffabe9eb8732524f21d6bd463477eb416331249ee591ac0ee88?tab=logs" target="_blank" rel="noopener"><b>See the on-chain refusal ↗</b><span>A thin pool pushed +35 %: 1,000,000 tokens asked to settle, 0.0000032 safe → <code>Settled(trusted = false)</code>, testnet 46630</span></a>
   </nav>
   <p class="meta verify">Verified on testnet 46630:
-    <a href="https://explorer.testnet.chain.robinhood.com/address/0x68435Bf7A1c207A62E0C3acc6884383B2B273561?tab=contract" target="_blank" rel="noopener">SafeSettle</a> ·
+    <a href="https://explorer.testnet.chain.robinhood.com/address/0xf360b8ebe3A68e8029308A8CAa76E867B0F02c84?tab=contract" target="_blank" rel="noopener">SafeSettle</a> ·
     <a href="https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080?tab=contract" target="_blank" rel="noopener">HakariOracleHook</a> ·
-    <a href="https://explorer.testnet.chain.robinhood.com/address/0x4E73CcC9Aed21FFBf3F69d9Dd92f9F33F39669E5?tab=contract" target="_blank" rel="noopener">PushCostLens</a> ·
+    <a href="https://explorer.testnet.chain.robinhood.com/address/0xE1AA7dD1Bd65bC9a88fbE62CE03aa4cBb7BfDCa2?tab=contract" target="_blank" rel="noopener">PushCostLens</a> ·
     <a href="https://github.com/vexi-v1/vexi-hakari">source</a></p>
 
   <h2>1 · The HIMS weekend, replayed from events</h2>
@@ -117,9 +117,10 @@
   <figure id="hims-price"></figure>
   <figure id="hims-cost"></figure>
   <div class="tablewrap"><table id="hims-table"></table></div>
+  <p class="meta">Max safe exposure here is SafeSettle's ladder alone, with nobody pushing back, rounded to the nearest USDG (SafeSettle settles only below the exact figure). At Mon 01:59 the replayed hook's 30-minute TWAPs were 3,396 ticks apart, and pricing that gap SafeSettle v1 would have decided on 2,915 USDG (<a href="../gauge/data/hims-hook-replay.json">hims-hook-replay.json</a>, <code>replayBlocks[3].hookPrimary</code>).</p>
 
   <h2>2 · Was HIMS a one-off? Every stock pool, one weekend</h2>
-  <p class="lead" id="weekend-lead">The deepest USDG pool of each Robinhood stock token, rebuilt from logs from Friday's US close to Monday, priced as the largest settlement it could safely carry with nobody pushing back. On the weekend of 2026-09-18 nothing collapsed: the weekend low was 0.69× to 2.4× of Friday (HIMS 1.06×); on 2026-08-30 HIMS fell to 0.016× (7,259 → 115 USDG). A closed mint window makes a collapse possible, not certain, which is why the bound is measured at settlement.</p>
+  <p class="lead" id="weekend-lead">The deepest USDG pool of each Robinhood stock token, rebuilt from logs from Friday's US close to Monday, priced as the largest settlement it could safely carry with nobody pushing back. On the weekend of 2026-09-18 nothing collapsed: for the 12 pools with a Friday point (MSTR has none), the weekend low was 0.69× to 2.4× of Friday (HIMS 1.06×). On 2026-08-30, by the same measure on a minute grid, HIMS fell to 0.006×: from 3,533 USDG at Friday's close to 20 at Sunday 23:25 (<a href="squeeze/">replay</a>). A closed mint window makes a collapse possible, not certain, which is why the bound is measured at settlement.</p>
   <figure id="weekend-fig"></figure>
 
   <h2 id="measure-live">3 · Measure any pool, right now</h2>
@@ -144,7 +145,7 @@
   <div class="tablewrap"><table id="ladder"></table></div>
 
   <h2>5 · SafeSettle's decisions</h2>
-  <p class="lead">Each row is one settlement from the test suite. SafeSettle prices faking a move of 0.5–20 % (and the gap between the two TWAPs, if any) from the pool's price now, both ways, over the window, re-pushing after every pull-back when arbitrage is open; the smallest cost ÷ gain is the <b>max safe exposure</b>. <span class="pill raw">settle on raw</span> when the total exposure is below it, <span class="pill trunc">refuse</span> otherwise. Agreeing TWAPs are not evidence: a push held long enough makes them agree.</p>
+  <p class="lead">Each row is one settlement from the test suite. SafeSettle prices faking a move of 0.5–20 % (and the gap between the two TWAPs, if any) from the pool's price now, both ways, over the window, re-pushing after every pull-back when arbitrage is open; the smallest cost ÷ gain is the <b>max safe exposure</b>. <span class="pill raw">settle on raw</span> when the total exposure is below it, <span class="pill trunc">refuse</span> otherwise. Agreeing TWAPs are not evidence: a push held long enough makes them agree. Figures are rounded to the nearest unit (to 0.01 below 100, two significant digits below 0.01), not down; the exact values are in <code>web/decisions/*.json</code>.</p>
   <div class="tablewrap"><table id="decisions"></table></div>
 
   <h2>6 · Suggested Δ per pool</h2>
