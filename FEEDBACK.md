@@ -78,8 +78,9 @@ two series are meant to be compared, not chosen between.
 ## 8. The v4 deployments page does not list Robinhood Chain testnet (46630)
 
 The page lists 4663. Testnet 46630 has the same PoolManager, StateView, Quoter, PositionManager and
-Permit2 at the same addresses (checked with `eth_getCode`; the PoolManager bytecode hash is equal),
-but nothing on the page says so. A one-line "testnet: same addresses" note would have saved the
+Permit2 at the same addresses (checked with `eth_getCode`: PoolManager, StateView and V4Quoter runtime code
+is byte-identical; PositionManager and Permit2 differ only in their chain-id / EIP-712 domain-separator
+immutables), but nothing on the page says so. A one-line "testnet: same addresses" note would have saved the
 probing.
 
 ## 9. Worth documenting: a lens needs no deployment

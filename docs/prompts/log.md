@@ -26,14 +26,27 @@ libraries, then the contracts in the order of SPEC.md § 7.
 Output: `.env.example` (public RPC defaults, `HAKARI_DEPLOYER_KEY` empty), `.env` git-ignored and
 never read by the AI.
 
-## 2026-09-25 — deploy the public demo
+## 2026-09-25 22:21 — deploy the public demo
 
 > 這個gas已經有了吧，你直接接手即可啊
 > ("The gas is already there; just take it over yourself.")
 
 Output: `script/DemoPool.s.sol` and `script/DemoSettle.s.sol`, run on testnet 46630 from the project wallet.
 
-## 2026-09-25 — hand-off material
+## 2026-09-25 22:24 — Abner joins: plan the remaining work
+
+Prompt (Abner, separate Claude Code session):
+
+> 準備開始執行 vexi-hakari，先計劃該做哪些事
+> ("Getting ready to work on vexi-hakari; first plan what needs doing.")
+
+Output: a read-only audit of the repo at `641a750` (contracts, tests, gauge data, web page,
+submission rules, the 46630 deployment, spec coverage, judging) in which a second agent tried to
+refute each finding, then a timed plan to submission. The audit's probe tests reproduced two v0
+limits of `SafeSettle`: the cost walk starts at the (possibly pushed) current price, and
+just-in-time liquidity can flip the decision. Nothing in the repo was changed by this step.
+
+## 2026-09-25 22:26 — hand-off material
 
 > 把相關東西先記錄下來然後開ticket or docs 然後我讓Abner接手
 > ("Write it down, open a ticket or docs, and I'll have Abner take over.")
@@ -41,7 +54,7 @@ Output: `script/DemoPool.s.sol` and `script/DemoSettle.s.sol`, run on testnet 46
 Output: a demo runbook and a hand-off note. Both were later moved out of this repo into the team's private
 tracker; they were about who does what next, not about the build.
 
-## 2026-09-25 — fix what an internal review found
+## 2026-09-25 23:00 — fix what an internal review found
 
 > 那你幫我修好這些，然後推上去後發ticket at Abner讓他做最後review
 > ("Fix these, push, then open a ticket for Abner's final review.")
@@ -63,3 +76,30 @@ answers chain 4663, and never prints a URL (`gauge/src/chain.ts`, tested against
 > ("Thirty tokens is enough, but HIMS — the story — must be in.")
 
 Output: `gauge/src/discover.ts` (30 symbols, HIMS always) and `gauge/src/weekend.ts`.
+
+## 2026-09-25 23:45 — docs accuracy pass
+
+> git pull and update docs
+
+Output: README, `docs/DEMO.md`, `docs/HANDOFF.md`, `FEEDBACK.md` corrected against the chain and the
+committed data:
+- the public `Settled` figures now come from the mined log (truncated 1250, not the simulated 1158);
+- the HIMS weekend is told as two moments (12 USDG at 23:53 UTC while closed, 54.50 at reopening);
+- the first-mint block label is fixed;
+- the Δ sample window is stated;
+- the "every figure is a lower bound" claim is withdrawn, and a "Known limitations" section is added;
+- "Run it" is fixed (26 offline tests, exact fork-test names, `npm ci`, a snapshot-refresh note);
+- the local server is bound to 127.0.0.1;
+- FEEDBACK hour tags are replaced with commit times.
+
+`.env.example` was written fresh (not from `.env`) and un-ignored.
+
+## 2026-09-26 00:00 — two sessions, one branch
+
+Abner's docs pass (`ce70a28`) and Eric's fixes landed on `main` from two machines at the same time, both
+starting from `641a750`. The merge keeps Abner's corrections against the chain (the two HIMS moments,
+the last-block-before-first-mint label, the narrowed bytecode claim in FEEDBACK § 8, the limitations he
+listed, `127.0.0.1`, `npm ci`) inside the rewritten README and FEEDBACK. His review also found that
+`gainIfFaked` used the tick's direction where the quote is currency0; that is fixed in `fced71c` and
+`SafeSettle` was redeployed. The limitations his audit reproduced (walk start, same-transaction
+liquidity) are fixed in code in `d93a700`; the cross-block one remains and is listed.
