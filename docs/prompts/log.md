@@ -158,3 +158,24 @@ wall across transactions stays as a known-limit test. Redeployed on 46630 and ve
 2026-09-18 weekend are priced as max safe exposure; `script/record-fork-tests.sh` records fork output on the public
 RPC with URLs masked.
 
+
+## 2026-09-25 23:30 — Abner: the float squeeze, as a page to show people
+
+> 針對 https://defiprime.com/tokenized-stock-float-squeeze 能不能做個網頁版的視覺化互動。能夠調整時間軸，列出
+> HIMS, BONER, USDG 彼此的流動性/價格變化與對照，並且有解釋發生什麼事情，方便向別人展示與快速說明。把相關檔案與內容
+> 都放在 vexi-hakari（作為展示內容）。等到 Vexi 相關實作完成後，可以再做更進一步比較，視覺化展示解決的問題
+> ("Make an interactive web visualisation of the DeFiPrime float-squeeze article: a timeline you can scrub, HIMS,
+> BONER and USDG liquidity and prices against each other, with explanations, so it is easy to show and explain.
+> Put it in vexi-hakari. Once the Vexi side is done we can compare further and show the problem it solves.")
+
+Follow-ups during the work: use the private RPC in `.env` (never read by the AI) instead of waiting on the public
+endpoint's 429s; cache everything already fetched and never fetch it twice; search X through twitterapi.io for
+posts that corroborate or add to the story; commit and push as each stage lands.
+
+Output: `gauge/src/squeeze/` (new collectors: every HIMS/BONER pool's swaps with exact block timestamps, LP
+positions rebuilt from `ModifyLiquidity` and checked against every `Swap` event's liquidity and against archive
+`StateView` reads, HIMS supply and PoolManager balance folded from `Transfer` logs and checked to the wei against
+archive `totalSupply`/`balanceOf`, HAKARI's cost to push +10 % on a one-minute grid), `web/squeeze/` (the page:
+bilingual EN/繁中 chapters, a scrubbable timeline, the HIMS–BONER–USDG flow triangle, an "on X" lane from
+paraphrased posts with their claims checked against the chain). Built with Claude Code workflows; the data went
+through three adversarial verification passes and the page through four critique lenses.
