@@ -1,0 +1,9 @@
+{
+  "createdAt": 1790342387,
+  "currency0": "0x04aB1f19a614299aF1B15c234dd3f81BCd535527",
+  "currency1": "0x3Dbb7A4533F666699619fD06bDD33E61BC349A2c",
+  "hooks": "0xa953EA9E06937f4169cBc04032B947Dad0b15080",
+  "lpRouter": "0x5b3546Fac3f6019B1c4988B2d0d611c072341aaB",
+  "poolId": "0xc2c886c92ebabe4a0ed74dd65c0dff3fb01c4c1352053179cc9d6bfabcce108f",
+  "swapRouter": "0x0E6fc91BDdb26429e4D57a7fAFe44434362A2ADd"
+}

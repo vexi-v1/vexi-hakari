@@ -67,6 +67,16 @@ Everything runs against the **official v4 PoolManager** `0x8366a39CC670B4001A112
 
 Record: [`deployments/46630.json`](deployments/46630.json); receipts:
 [`broadcast/Deploy.s.sol/46630/run-latest.json`](broadcast/Deploy.s.sol/46630/run-latest.json).
+
+**The whole loop, on-chain, in public** ([`script/DemoPool.s.sol`](script/DemoPool.s.sol) then
+[`script/DemoSettle.s.sol`](script/DemoSettle.s.sol)): a pool with the hook attached on the official
+PoolManager, pool id `0xc2c886c92ebabe4a0ed74dd65c0dff3fb01c4c1352053179cc9d6bfabcce108f`
+(18 txs from `0x719fb003…8333da` to `0x940b02c2…ad69fd`, block 124,125,374), a +35 % push held
+with pokes, then `SafeSettle.settle` in tx
+`0x5dfc71837a834ac839a9a9d775013f6129f8a4d67066e32df373c09f9ad15441` (block 124,125,707) emitting
+`Settled`: raw TWAP tick 3000, truncated 1158 (Δ = 250), cost to fake 6.4e11 vs gain 2.0e23
+quote wei → settled on the truncated price. Receipts under `broadcast/DemoPool.s.sol/46630/` and
+`broadcast/DemoSettle.s.sol/46630/`.
 Mainnet 4663 is read-only for us; there the lens runs via `eth_call` state override
 ([`gauge/src/lens.ts`](gauge/src/lens.ts), [`web/app.js`](web/app.js)).
 
@@ -141,7 +151,7 @@ mint/redeem window (closed Sat 02:00 → Mon 02:00 Berlin time) and the asset AP
 
 ```bash
 git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari && cd vexi-hakari
-forge test                                   # 23 unit tests, no RPC
+forge test                                   # 24 unit tests, no RPC
 forge test --match-contract Fork -vv         # G1 on a 4663 fork (public RPC)
 forge test --match-contract ShadowPool -vv   # the TSLA-shaped attack (4663 fork, ~3 min)
 cd gauge && npm install && npm test          # TS math port pinned to the Solidity walk
