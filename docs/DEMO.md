@@ -59,14 +59,16 @@ forge test --match-contract ThreeLayers --match-test 'layer2and3|layer3' -vv
 `cost 3.2e18 > gain 1.2e17`, `used raw? true`.
 
 Then the TSLA-shaped pool (`docs/demo-outputs/fork-tests.txt`, or the test if it has run): holding
-+5 % for the window on the real TSLA/USDG liquidity profile ties up 183,885 USDG but *costs* 186
-USDG on a weekend, 1,039 on a weekday, against a 4,801 USDG gain on a 100k settlement.
++5 % for the window on the real TSLA/USDG liquidity profile ties up ~133,000 USDG but *costs* ~150
+USDG on a weekend, ~890 on a weekday, against a 4,801 USDG gain on a 100k settlement (the exact
+figures move with the live book; read them off `docs/demo-outputs/fork-tests.txt`).
 
 **Say:** "Truncation caps how far the recorded price can move per observation — but it lags in a
 real crash. So SafeSettle asks the lens: what would it cost to hold this pool where the raw
 series says it is, for the whole window? If that costs more than the settlement pays, the move
 is real and we use the raw price. If it is cheaper — like here, 186 dollars to move a 100,000
 dollar payout by 4,800 — we settle on the truncated price and the attacker paid fees for nothing."
+(Say "about 150 dollars" if the fresh run differs from the saved output.)
 
 ## Segment 4 · 2:15–2:45 · it is on-chain
 

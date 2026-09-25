@@ -112,16 +112,17 @@ active liquidity equals the last `Swap` event's `liquidity` field):
 [`gauge/data/delta.json`](gauge/data/delta.json)): TSLA 3, NVDA 10, HIMS 10, AI memecoin 193. One
 hook carries one Δ; a stock-grade and a memecoin-grade hook are two deployments.
 
-**Real-pool cross-check (G1).** On a 4663 fork at block 72,232,582, buying 10 TSLA and selling
-them back in one unlock nets −26.73 USDG; the lens pushed to the same price reports 26.64 USDG
-for 9.966 TSLA (tick granularity). Pre-hackathon figure at block 71,937,777: −26.56 USDG.
+**Real-pool cross-check (G1).** On a 4663 fork at block 72,263,113, buying 10 TSLA and selling
+them back in one unlock nets −26.952486 USDG; the lens pushed to the exact price that buy reached
+(`quotePushToPrice`) reports 26.952486 USDG for 10.000000 TSLA — the same number to the unit.
+Pre-hackathon figure at block 71,937,777: −26.56 USDG.
 [`test/fork/PushCostLens.fork.t.sol`](test/fork/PushCostLens.fork.t.sol).
 
 **The attack on a TSLA-shaped book.** A shadow pool on the official PoolManager (4663 fork) with
 the real TSLA/USDG liquidity profile copied tick by tick and `HakariOracleHook` (Δ = 3) attached:
-holding the price +5 % for a 10-second window ties up 183,885 USDG but *costs* 186 USDG on a
-weekend (arbitrage closed) or 1,039 USDG on a weekday — against a 4,801 USDG gain on a 100,000
-USDG settlement. `SafeSettle` settles truncated in both cases.
+holding the price +5 % for a 10-second window ties up 133,174 USDG (block 72,263,113) but *costs*
+150 USDG on a weekend (arbitrage closed) or 891 USDG on a weekday — against a 4,801 USDG gain on
+a 100,000 USDG settlement. `SafeSettle` settles truncated in both cases.
 [`test/fork/ShadowPool.fork.t.sol`](test/fork/ShadowPool.fork.t.sol).
 
 ## The three layers, as tests

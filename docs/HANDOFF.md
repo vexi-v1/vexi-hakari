@@ -9,7 +9,7 @@ Deadline **2026-09-27 09:00 JST**; aim for 06:00.
 | Piece | Status | Verified how |
 |---|---|---|
 | `PushCostLens`, `HakariOracleHook`, `SafeSettle`, `CostModel` | done | `forge test`: 24 unit tests green (no RPC) |
-| G1: lens vs a manual 10-TSLA round trip on a 4663 fork | done | `forge test --match-contract PushCostLensForkTest -vv` (−26.73 vs 26.64 USDG at block 72,232,582) |
+| G1: lens vs a manual 10-TSLA round trip on a 4663 fork | done | `forge test --match-contract PushCostLensForkTest -vv` (manual −26.952486 vs lens 26.952486 USDG for 10 TSLA at block 72,263,113) |
 | Shadow pool: real TSLA/USDG profile + hook on the official PoolManager, sustained push, SafeSettle | done | `forge test --match-contract ShadowPool -vv` (~3 min) |
 | Three-layer demo tests (write `web/decisions/*.json`) | done | `forge test --match-contract ThreeLayers -vv` |
 | Gauge: ladder, Δ calibration, HIMS replay, mint window (`gauge/data/*.json`) | done | `cd gauge && npm test` (11 green); HIMS reconstruction equals every Swap event's liquidity |

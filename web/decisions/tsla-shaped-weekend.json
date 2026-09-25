@@ -1,12 +1,12 @@
 {
   "arbOpen": false,
   "costComplete": true,
-  "costToFake": "176444230",
+  "costToFake": "149867259",
   "gainIfFaked": "4801474468",
   "notional": "100000000000",
-  "pool": "TSLA/USDG profile at block 72250831, delta 3, notional 100,000 USDG",
-  "rawTick": -216380,
+  "pool": "TSLA/USDG profile at block 72263113, delta 3, notional 100,000 USDG",
+  "rawTick": -216316,
   "scenario": "tsla-shaped-weekend",
-  "truncTick": -216849,
+  "truncTick": -216785,
   "usedRaw": false
 }
