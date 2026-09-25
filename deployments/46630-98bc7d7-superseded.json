@@ -1,0 +1,7 @@
+{
+  "chainId": 46630,
+  "note": "PushCostLens from 798ab19 and SafeSettle v1 from 98bc7d7 (push widths up to 4x the move). Superseded by the lens with roundTripCosts and the SafeSettle that searches every width; the hook is unchanged and still in 46630.json.",
+  "pushCostLens": "0x4E73CcC9Aed21FFBf3F69d9Dd92f9F33F39669E5",
+  "safeSettle": "0x68435Bf7A1c207A62E0C3acc6884383B2B273561",
+  "demoSettleTx": "0x50c06e53dad5689111ed40cbb80f8cb4dd43f1f357db44d141b9da48f4dc299e"
+}
