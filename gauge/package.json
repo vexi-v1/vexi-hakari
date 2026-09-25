@@ -1,0 +1,21 @@
+{
+  "name": "hakari-gauge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "HAKARI gauge: cost ladders, delta calibration and the HIMS weekend replay from Robinhood Chain 4663 (read-only)",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test --import tsx test/",
+    "ladder": "tsx src/ladder.ts",
+    "calibrate": "tsx src/calibrate.ts",
+    "hims": "tsx src/hims-replay.ts",
+    "mint-window": "tsx src/mint-window.ts"
+  },
+  "dependencies": {
+    "@types/node": "^26.6.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "viem": "^2.56.9"
+  }
+}

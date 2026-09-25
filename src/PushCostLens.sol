@@ -203,7 +203,7 @@ contract PushCostLens is IUnlockCallback {
     function roundTripCost(PoolKey calldata key, int24 ticks, bool up, uint256 maxSteps)
         external
         view
-        returns (uint256 cost, bool complete)
+        returns (uint256 cost, uint256 costInCurrency0, uint256 costInCurrency1, bool complete)
     {
         uint256 amountOut;
         uint256 feePaid;
@@ -217,6 +217,7 @@ contract PushCostLens is IUnlockCallback {
             ? _mulSqrtPriceSquared(backFeeInOutputToken, sqrtStart, false) // input is currency0: currency1 → currency0
             : _mulSqrtPriceSquared(backFeeInOutputToken, sqrtStart, true); // input is currency1: currency0 → currency1
         cost = feePaid + backFeeInInputToken;
+        (costInCurrency0, costInCurrency1) = _valueAt(cost, zeroForOne, sqrtStart);
     }
 
     // ───────────────────────── helpers ─────────────────────────

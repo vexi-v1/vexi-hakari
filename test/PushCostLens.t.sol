@@ -105,8 +105,10 @@ contract PushCostLensTest is HakariDeployers {
 
     function test_roundTripCost_isWithinAPercentOfTheExactSimulation() public {
         PushCostLens.PushQuote memory q = lens.quotePush(key, 700, true);
-        (uint256 cost, bool complete) = lens.roundTripCost(key, 700, true, 64);
+        (uint256 cost, uint256 in0, uint256 in1, bool complete) = lens.roundTripCost(key, 700, true, 64);
         assertTrue(complete);
         assertApproxEqRel(cost, q.cost, 0.01e18);
+        assertEq(in1, cost, "pushing up is paid in currency1");
+        assertApproxEqRel(in0, q.costInCurrency0, 0.01e18);
     }
 }
