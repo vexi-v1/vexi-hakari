@@ -1,17 +1,17 @@
 {
   "arbReversionSeconds": 5,
-  "bindingCost": "1911754632937062795",
+  "bindingCost": "1911754632933",
   "bindingTicks": 1823,
   "bindingUp": true,
   "costComplete": true,
   "exposure": "1000000000000000000",
-  "maxSafeExposure": "9560532534953153439",
-  "pool": "local, L = 1e21, fee 0.3 %",
+  "maxSafeExposure": "9560532534932",
+  "pool": "local, L = 1e15, fee 0.3 %",
   "quoteDecimals": 18,
   "rawTick": 1650,
-  "scenario": "deep-pool-genuine-surge",
+  "scenario": "thin-pool-genuine-surge",
   "truncTick": 550,
-  "trusted": true,
+  "trusted": false,
   "unit": "tokens",
   "window": 10
 }

@@ -66,31 +66,34 @@ export function himsChart(d: any): string {
 }
 
 export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio: number }): string {
-  const rows = d.series.filter((r: any) => r.fridayCostUp10 && r.weekendMinCostUp10).sort((a: any, b: any) => a.weekendOverFriday - b.weekendOverFriday);
+  const rows = d.series
+    .filter((r: any) => r.fridayMaxSafeExposure && r.weekendMinMaxSafeExposure)
+    .map((r: any) => ({ ...r, fri: r.fridayMaxSafeExposure, wk: r.weekendMinMaxSafeExposure, ratio: r.weekendMinMaxSafeExposure / r.fridayMaxSafeExposure }))
+    .sort((a: any, b: any) => a.ratio - b.ratio);
   const W = 900, rowH = 30, top = 112, L = 90, R = 150;
   const H = top + rows.length * rowH + (himsRef ? 78 : 60);
-  const all = rows.flatMap((r: any) => [r.fridayCostUp10, r.weekendMinCostUp10]);
+  const all = rows.flatMap((r: any) => [r.fri, r.wk]);
   const lo = Math.pow(10, Math.floor(Math.log10(Math.max(0.01, Math.min(...all)))));
   const hi = Math.pow(10, Math.ceil(Math.log10(Math.max(...all))));
   const x = (v: number) => L + ((Math.log10(Math.max(v, lo)) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo))) * (W - L - R);
   const fri = new Date(`${d.friday}T00:00:00Z`);
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" ${FONT}>`;
   s += `<rect width="${W}" height="${H}" rx="12" fill="${C.card}"/>`;
-  s += `<text x="24" y="32" font-size="18" font-weight="700" fill="${C.ink}">Every stock pool, the weekend of ${fri.toISOString().slice(0, 10)}: cost to push +10 %</text>`;
+  s += `<text x="24" y="32" font-size="18" font-weight="700" fill="${C.ink}">Every stock pool, the weekend of ${fri.toISOString().slice(0, 10)}: the largest settlement it could carry</text>`;
   s += `<text x="24" y="54" font-size="13" fill="${C.ink2}">Deepest USDG pool per Robinhood stock token, rebuilt from its logs. USDG, log scale.</text>`;
-  s += `<text x="24" y="72" font-size="13" fill="${C.ink2}"><tspan fill="${C.friday}" font-weight="700">●</tspan> Friday's US close   <tspan fill="${C.weekend}" font-weight="700">●</tspan> the cheapest moment while minting was closed</text>`;
+  s += `<text x="24" y="72" font-size="13" fill="${C.ink2}"><tspan fill="${C.friday}" font-weight="700">●</tspan> Friday's US close   <tspan fill="${C.weekend}" font-weight="700">●</tspan> the lowest while minting was closed</text>`;
   for (let v = lo; v <= hi; v *= 10) s += `<line x1="${x(v)}" x2="${x(v)}" y1="${top - 14}" y2="${H - 48}" stroke="${C.grid}"/><text x="${x(v)}" y="${top - 20}" font-size="11" text-anchor="middle" fill="${C.ink2}">${fmt(v, v < 1 ? 2 : 0)}</text>`;
   rows.forEach((r: any, i: number) => {
     const cy = top + i * rowH + rowH / 2;
     const hl = r.symbol === "HIMS";
     s += `<text x="${L - 12}" y="${cy + 4}" font-size="13" text-anchor="end" font-weight="${hl ? 700 : 500}" fill="${C.ink}">${esc(r.symbol)}</text>`;
-    s += `<line x1="${x(r.fridayCostUp10)}" x2="${x(r.weekendMinCostUp10)}" y1="${cy}" y2="${cy}" stroke="${C.muted}" stroke-width="2"/>`;
-    s += `<circle cx="${x(r.fridayCostUp10)}" cy="${cy}" r="6" fill="${C.friday}" stroke="${C.card}" stroke-width="2"/>`;
-    s += `<circle cx="${x(r.weekendMinCostUp10)}" cy="${cy}" r="6" fill="${C.weekend}" stroke="${C.card}" stroke-width="2"/>`;
-    s += `<text x="${W - R + 8}" y="${cy + 4}" font-size="12" fill="${C.ink2}">×${fmt(r.weekendOverFriday, r.weekendOverFriday < 1 ? 2 : 1)}</text>`;
+    s += `<line x1="${x(r.fri)}" x2="${x(r.wk)}" y1="${cy}" y2="${cy}" stroke="${C.muted}" stroke-width="2"/>`;
+    s += `<circle cx="${x(r.fri)}" cy="${cy}" r="6" fill="${C.friday}" stroke="${C.card}" stroke-width="2"/>`;
+    s += `<circle cx="${x(r.wk)}" cy="${cy}" r="6" fill="${C.weekend}" stroke="${C.card}" stroke-width="2"/>`;
+    s += `<text x="${W - R + 8}" y="${cy + 4}" font-size="12" fill="${C.ink2}">×${fmt(r.ratio, r.ratio < 1 ? 2 : 1)}</text>`;
   });
   if (himsRef) s += `<text x="24" y="${H - 36}" font-size="12" fill="${C.ink}">For comparison, HIMS on Sunday 2026-08-30: ${fmt(himsRef.from)} → ${fmt(himsRef.to)} USDG (×${himsRef.ratio.toFixed(3)}).</text>`;
-  s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">×N = weekend minimum ÷ Friday. Cost = swap fees on an exact push and retrace (lower bound). Data: gauge/data/weekend-${d.friday}.json</text>`;
+  s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">SafeSettle's bound with nobody pushing back. ×N = weekend minimum ÷ Friday. Data: gauge/data/weekend-${d.friday}.json</text>`;
   return s + "</svg>";
 }
 
@@ -100,8 +103,8 @@ export function main() {
   const friday = process.argv[2];
   if (friday && existsSync(`${dataDir}weekend-${friday}.json`)) {
     const hims = JSON.parse(readFileSync(dataDir + "hims-replay.json", "utf8"));
-    const costs = hims.points.map((p: any) => Number(p.pushUp10.roundTripCostUsdg));
-    const ref = { from: costs[0], to: Math.min(...costs), ratio: Math.min(...costs) / costs[0] };
+    const safe = hims.points.map((p: any) => Number(p.maxSafeExposureUsdg.usdg));
+    const ref = { from: safe[0], to: Math.min(...safe), ratio: Math.min(...safe) / safe[0] };
     out(`weekend-${friday}.svg`, weekendChart(JSON.parse(readFileSync(`${dataDir}weekend-${friday}.json`, "utf8")), ref));
   }
 }

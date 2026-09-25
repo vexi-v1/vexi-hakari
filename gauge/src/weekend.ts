@@ -83,7 +83,7 @@ export async function main() {
       });
     }
     const ok = rows.filter((r) => !r.missing);
-    const fri = ok[0];
+    const fri = rows[0]?.missing ? undefined : rows[0]; // Friday's close only: a pool born mid-weekend has none
     const minClosed = ok.filter((r) => r.mintWindowClosed).reduce((m: any, r: any) => (!m || r.up10.costUsdg < m.up10.costUsdg ? r : m), undefined);
     const ratio = fri && minClosed ? minClosed.up10.costUsdg / fri.up10.costUsdg : null;
     const minSafeClosed = ok.filter((r) => r.mintWindowClosed).reduce((m: number, r: any) => Math.min(m, r.maxSafeExposureUsdg), Infinity);

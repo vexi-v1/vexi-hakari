@@ -1,0 +1,17 @@
+{
+  "arbReversionSeconds": 0,
+  "bindingCost": "637251544311",
+  "bindingTicks": 1823,
+  "bindingUp": true,
+  "costComplete": true,
+  "exposure": "1000000000000000000",
+  "maxSafeExposure": "3186844178310",
+  "pool": "local, L = 1e15, fee 0.3 %",
+  "quoteDecimals": 18,
+  "rawTick": 3000,
+  "scenario": "thin-pool-held-until-converged",
+  "truncTick": 3000,
+  "trusted": false,
+  "unit": "tokens",
+  "window": 10
+}

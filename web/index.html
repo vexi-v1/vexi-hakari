@@ -77,13 +77,13 @@
   <p class="meta" id="meta">loading…</p>
 
   <h2>1 · The HIMS weekend, replayed from events</h2>
-  <p class="lead">Sunday 2026-08-30, Robinhood's busiest day on-chain ($270.6M of stock-token volume, per SQD) and a day with no minting. With nobody able to arbitrage, the cost to push HIMS/USDG 10 % fell from 1,351 USDG at 19:40 UTC to 12 USDG at 23:53 UTC, by when the pool already read 43.27 against a 28.84 NYSE close. It peaked at 54.50 as minting reopened, and fell back to 29.31 after the first mint. Positions rebuilt from every <code>ModifyLiquidity</code> log; at each point the rebuilt liquidity equals the last <code>Swap</code> event's own liquidity field.</p>
+  <p class="lead">Sunday 2026-08-30, Robinhood's busiest day on-chain ($270.6M of stock-token volume, per SQD) and a day with no minting. With nobody able to arbitrage, the cost to push HIMS/USDG 10 % fell from 1,351 USDG at 19:40 UTC to 12 USDG at 23:53 UTC, by when the pool already read 43.27 against a 28.84 NYSE close. It peaked at 54.50 as minting reopened, and fell back to 29.31 after the first mint. The largest settlement the pool could safely carry fell from 7,259 USDG to 115: SafeSettle would have refused anything above that. Positions rebuilt from every <code>ModifyLiquidity</code> log; at each point the rebuilt liquidity equals the last <code>Swap</code> event's own liquidity field.</p>
   <figure id="hims-price"></figure>
   <figure id="hims-cost"></figure>
   <div class="tablewrap"><table id="hims-table"></table></div>
 
   <h2>2 · Was HIMS a one-off? Every stock pool, one weekend</h2>
-  <p class="lead" id="weekend-lead">The deepest USDG pool of each Robinhood stock token, rebuilt from logs from Friday's US close to Monday. Blue: Friday. Red: the cheapest moment while mint/redeem was closed. On the weekend of 2026-09-18 nothing collapsed (0.67× to 2.4× of Friday; HIMS 0.96×; on 08-30 it was 0.009×). A closed mint window makes a collapse possible, not certain, which is why the cost is measured at settlement.</p>
+  <p class="lead" id="weekend-lead">The deepest USDG pool of each Robinhood stock token, rebuilt from logs from Friday's US close to Monday, priced as the largest settlement it could safely carry with nobody pushing back. On the weekend of 2026-09-18 nothing collapsed: the weekend low was 0.69× to 2.4× of Friday (HIMS 1.06×); on 2026-08-30 HIMS fell to 0.016× (7,259 → 115 USDG). A closed mint window makes a collapse possible, not certain, which is why the bound is measured at settlement.</p>
   <figure id="weekend-fig"></figure>
 
   <h2>3 · Measure any pool, right now</h2>
@@ -108,7 +108,7 @@
   <div class="tablewrap"><table id="ladder"></table></div>
 
   <h2>5 · SafeSettle's decisions</h2>
-  <p class="lead">Each row is one settlement from the test suite: the raw and truncated TWAP disagreed, the cost model priced the fake from the truncated price, and the contract chose. <span class="pill raw">raw</span> = faking it would cost more than it pays: a genuine move, truncation would only lag. <span class="pill trunc">truncated</span> = cheap to fake: do not pay on it.</p>
+  <p class="lead">Each row is one settlement from the test suite. SafeSettle prices faking a move of 0.5–20 % (and the gap between the two TWAPs, if any) from the pool's price now, both ways, over the window, re-pushing after every pull-back when arbitrage is open; the smallest cost ÷ gain is the <b>max safe exposure</b>. <span class="pill raw">settle on raw</span> when the total exposure is below it, <span class="pill trunc">refuse</span> otherwise. Agreeing TWAPs are not evidence: a push held long enough makes them agree.</p>
   <div class="tablewrap"><table id="decisions"></table></div>
 
   <h2>6 · Suggested Δ per pool</h2>

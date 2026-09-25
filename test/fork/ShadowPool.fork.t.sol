@@ -192,9 +192,12 @@ contract ShadowPoolForkTest is DecisionLog {
         _record("tsla-shaped-weekend", pool, 0, LONG_WINDOW, exposure, 6, "USDG", weekend);
         _record("tsla-shaped-weekday-12s", pool, 12, LONG_WINDOW, exposure, 6, "USDG", weekday12);
         _record("tsla-shaped-weekday-60s", pool, 60, LONG_WINDOW, exposure, 6, "USDG", weekday60);
-        // the ordering is structural; which side of 100,000 each lands on depends on the live book, so it is logged
-        assertGt(weekday12.maxSafeExposure, weekday60.maxSafeExposure * 2, "faster arbitrage, more re-pushes to pay");
-        assertGt(weekday60.maxSafeExposure, weekend.maxSafeExposure * 10, "a 30-minute hold against arbitrage costs dozens of re-pushes");
+        // Which side of 100,000 each lands on depends on the live book, so the decisions are logged. The ratios are
+        // derivable: a push held 1,800 s at d = x, 2x, 4x (hold 1,800 / 900 / 450 s) pays 1 + ⌈hold / R⌉ round trips,
+        // and a longer push never costs less than a shorter one. R = 60 s: at least 9 round trips (the 4x rung),
+        // so ≥ 9 × the weekend bound. R = 12 s against 60 s: 39/9, 76/16, 151/31 per rung, so ≥ 4.3×.
+        assertGe(weekday60.maxSafeExposure, weekend.maxSafeExposure * 9, "a 30-minute hold against arbitrage pays at least 9 round trips");
+        assertGe(weekday12.maxSafeExposure * 9, weekday60.maxSafeExposure * 39, "faster arbitrage: at least 39/9 as many");
     }
 
     /// The weekend attack on the same book: hold +5 % with a dust swap a second. With nobody pushing back the pool is

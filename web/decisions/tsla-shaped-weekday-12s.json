@@ -1,17 +1,17 @@
 {
-  "arbReversionSeconds": 0,
-  "bindingCost": "2422362250",
+  "arbReversionSeconds": 12,
+  "bindingCost": "97477560102",
   "bindingTicks": 1823,
   "bindingUp": true,
   "costComplete": true,
   "exposure": "100000000000",
-  "maxSafeExposure": "12114040527",
+  "maxSafeExposure": "487477508215",
   "pool": "TSLA/USDG book at block 72409810, 30-min TWAP",
   "quoteDecimals": 6,
   "rawTick": -217116,
-  "scenario": "tsla-shaped-weekend",
+  "scenario": "tsla-shaped-weekday-12s",
   "truncTick": -217116,
-  "trusted": false,
+  "trusted": true,
   "unit": "USDG",
   "window": 1800
 }

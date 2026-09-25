@@ -29,7 +29,10 @@ const [ladder, hims, delta, mint, lensArtifact, weekend] = await Promise.all([
   load("lens-artifact.json"),
   load(`../gauge/data/weekend-${WEEKEND}.json`),
 ]);
-const decisionFiles = ["thin-pool-sustained-push", "deep-pool-genuine-surge", "tsla-shaped-weekend", "tsla-shaped-weekday"];
+const decisionFiles = [
+  "tsla-shaped-weekend", "tsla-shaped-weekday-60s", "tsla-shaped-weekday-12s", "tsla-shaped-weekend-held-push",
+  "thin-pool-held-push", "thin-pool-held-until-converged", "deep-pool-genuine-surge", "thin-pool-genuine-surge",
+];
 const decisions = (await Promise.all(decisionFiles.map((f) => load(`decisions/${f}.json`)))).filter(Boolean);
 
 $("meta").textContent = ladder ? `snapshot at block ${Number(ladder.block).toLocaleString()} · ${new Date(ladder.timestamp * 1000).toUTCString()}` : "no snapshot found (run npm run ladder in gauge/)";
@@ -162,15 +165,16 @@ if (hims) {
     });
     return s;
   }, "Round-trip cost of pushing HIMS +10 %, in USDG, from the rebuilt pool at each point. It collapses ~100× while the mint window is shut and nobody can arbitrage.");
-  $("hims-table").innerHTML = `<tr><th>block</th><th>time (UTC)</th><th>mint window</th><th>USDG/HIMS</th><th>HIMS in pool</th><th>USDG in pool</th><th>live positions</th><th>+10 % capital (USDG)</th><th>+10 % cost (USDG)</th><th>+85 % capital (USDG)</th><th>rebuilt L = Swap L</th></tr>` + pts.map((p) => `<tr><td>${Number(p.block).toLocaleString()}</td><td>${p.time.slice(0, 19).replace("T", " ")}</td><td><span class="pill ${p.mintWindowClosed ? "closed" : "open"}">${p.mintWindowClosed ? "closed" : "open"}</span></td><td>${fmt(p.usdgPerHims, 4)}</td><td>${fmt(p.himsPrincipal)}</td><td>${fmt(p.usdgPrincipal, 0)}</td><td>${p.livePositions}</td><td>${fmt(p.pushUp10.usdgIn, 0)}</td><td>${fmt(p.pushUp10.roundTripCostUsdg)}</td><td>${fmt(p.pushUp85.usdgIn, 0)}</td><td>${p.liquidityMatches ? "yes" : "NO"}</td></tr>`).join("");
+  $("hims-table").innerHTML = `<tr><th>block</th><th>time (UTC)</th><th>mint window</th><th>USDG/HIMS</th><th>HIMS in pool</th><th>USDG in pool</th><th>live positions</th><th>+10 % capital (USDG)</th><th>+10 % cost (USDG)</th><th>+85 % capital (USDG)</th><th>max safe exposure (USDG)</th><th>rebuilt L = Swap L</th></tr>` + pts.map((p) => `<tr><td>${Number(p.block).toLocaleString()}</td><td>${p.time.slice(0, 19).replace("T", " ")}</td><td><span class="pill ${p.mintWindowClosed ? "closed" : "open"}">${p.mintWindowClosed ? "closed" : "open"}</span></td><td>${fmt(p.usdgPerHims, 4)}</td><td>${fmt(p.himsPrincipal)}</td><td>${fmt(p.usdgPrincipal, 0)}</td><td>${p.livePositions}</td><td>${fmt(p.pushUp10.usdgIn, 0)}</td><td>${fmt(p.pushUp10.roundTripCostUsdg)}</td><td>${fmt(p.pushUp85.usdgIn, 0)}</td><td><b>${fmt(p.maxSafeExposureUsdg.usdg, 0)}</b></td><td>${p.liquidityMatches ? "yes" : "NO"}</td></tr>`).join("");
 }
 
 // ───────── weekend, every stock pool ─────────
 if (weekend) {
-  const rows = weekend.series.filter((r) => r.fridayCostUp10 && r.weekendMinCostUp10).sort((a, b) => a.weekendOverFriday - b.weekendOverFriday);
-  $("weekend-fig").innerHTML = `<img src="../docs/img/weekend-${WEEKEND}.svg" alt="Friday vs weekend cost to push each stock pool 10 %" style="width:100%;height:auto;border-radius:10px">` +
-    `<div class="tablewrap"><table><tr><th>stock</th><th>Friday +10 % cost</th><th>weekend minimum</th><th>weekend ÷ Friday</th><th>rebuild = chain</th></tr>` +
-    rows.map((r) => `<tr><td>${r.symbol}</td><td>${fmt(r.fridayCostUp10)}</td><td>${fmt(r.weekendMinCostUp10)}</td><td>×${fmt(r.weekendOverFriday, 2)}</td><td>${r.allLiquidityMatches ? "yes" : "no"}</td></tr>`).join("") + `</table></div>`;
+  const rows = weekend.series.filter((r) => r.fridayMaxSafeExposure && r.weekendMinMaxSafeExposure)
+    .map((r) => ({ ...r, ratio: r.weekendMinMaxSafeExposure / r.fridayMaxSafeExposure })).sort((a, b) => a.ratio - b.ratio);
+  $("weekend-fig").innerHTML = `<img src="../docs/img/weekend-${WEEKEND}.svg" alt="Friday vs weekend: the largest settlement each stock pool could carry" style="width:100%;height:auto;border-radius:10px">` +
+    `<div class="tablewrap"><table><tr><th>stock</th><th>Friday max safe exposure</th><th>weekend minimum</th><th>weekend ÷ Friday</th><th>Friday +10 % cost</th><th>rebuild = chain</th></tr>` +
+    rows.map((r) => `<tr><td>${r.symbol}</td><td>${fmt(r.fridayMaxSafeExposure, 0)}</td><td>${fmt(r.weekendMinMaxSafeExposure, 0)}</td><td>×${fmt(r.ratio, 2)}</td><td>${fmt(r.fridayCostUp10)}</td><td>${r.allLiquidityMatches ? "yes" : "no"}</td></tr>`).join("") + `</table></div>`;
 } else {
   $("weekend-lead").textContent += " (run npm run discover and npm run weekend -- " + WEEKEND + " in gauge/)";
 }
@@ -228,10 +232,9 @@ $("measure").onclick = async () => {
 };
 
 // ───────── 4. decisions ─────────
-const decUnit = (d) => (d.scenario.startsWith("tsla") ? { dec: 6, unit: "USDG" } : { dec: 18, unit: "tokens" });
-const human = (v, d) => { const { dec, unit } = decUnit(d); const x = Number(BigInt(v)) / 10 ** dec; return `${x < 0.01 ? x.toExponential(2) : fmt(x, 2)} ${unit}`; };
-$("decisions").innerHTML = `<tr><th>scenario</th><th>pool</th><th>arbitrage pulls back</th><th>raw tick</th><th>truncated tick</th><th>gap</th><th>cost to fake</th><th>gain if faked</th><th>settled on</th></tr>` +
-  (decisions.length ? decisions.map((d) => `<tr><td>${d.scenario}</td><td>${d.pool}</td><td>${Number(d.arbReversionSeconds) > 0 ? `every ${d.arbReversionSeconds} s` : "never (closed)"}</td><td>${d.rawTick}</td><td>${d.truncTick}</td><td>${Math.abs(Number(d.rawTick) - Number(d.truncTick))}</td><td>${human(d.costToFake, d)}${d.costComplete ? "" : " (at least)"}</td><td>${human(d.gainIfFaked, d)}</td><td><span class="pill ${d.usedRaw ? "raw" : "trunc"}">${d.usedRaw ? "raw" : "truncated"}</span></td></tr>`).join("") : `<tr><td colspan="9">run forge test --match-contract ThreeLayers (and ShadowPool on a fork) to fill this</td></tr>`);
+const human = (v, d) => { const x = Number(BigInt(v)) / 10 ** Number(d.quoteDecimals); return `${x !== 0 && x < 0.01 ? x.toExponential(1) : fmt(x, x < 100 ? 2 : 0)} ${d.unit}`; };
+$("decisions").innerHTML = `<tr><th>scenario</th><th>pool</th><th>window</th><th>arbitrage pulls back</th><th>raw / truncated tick</th><th>exposure</th><th>max safe exposure</th><th>binding move</th><th>decision</th></tr>` +
+  (decisions.length ? decisions.map((d) => `<tr><td>${d.scenario}</td><td>${d.pool}</td><td>${d.window} s</td><td>${Number(d.arbReversionSeconds) > 0 ? `every ${d.arbReversionSeconds} s` : "never (closed)"}</td><td>${d.rawTick} / ${d.truncTick}</td><td>${human(d.exposure, d)}</td><td>${human(d.maxSafeExposure, d)}${d.costComplete ? "" : " (at least)"}</td><td>${d.bindingUp ? "+" : "−"}${d.bindingTicks} ticks</td><td><span class="pill ${d.trusted ? "raw" : "trunc"}">${d.trusted ? "settle on raw" : "refuse"}</span></td></tr>`).join("") : `<tr><td colspan="9">run forge test --match-contract ThreeLayers (and script/record-fork-tests.sh) to fill this</td></tr>`);
 
 // ───────── 5. delta ─────────
 if (delta) $("delta").innerHTML = `<tr><th>pool</th><th>swaps in window</th><th>swap blocks</th><th>p50 move</th><th>p90</th><th>p99</th><th>max</th><th>suggested Δ</th></tr>` + delta.pools.map((p) => `<tr><td>${p.name}</td><td>${p.swaps}</td><td>${p.swapBlocks}</td><td>${p.perSwapBlock.p50}</td><td>${p.perSwapBlock.p90}</td><td>${p.perSwapBlock.p99}</td><td>${p.perSwapBlock.max}</td><td><b>${p.suggestedDelta}</b></td></tr>`).join("");

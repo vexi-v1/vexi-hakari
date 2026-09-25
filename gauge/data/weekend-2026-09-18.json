@@ -1,6 +1,6 @@
 {
   "friday": "2026-09-18",
-  "generatedAt": "2026-09-25T15:12:59.297Z",
+  "generatedAt": "2026-09-25T17:39:16.184Z",
   "method": "each pool rebuilt from its ModifyLiquidity logs at each point; price and reported liquidity from the last Swap at or before it; cost = fees on pushing the stock ±10 % and selling straight back",
   "points": [
     {
@@ -104,7 +104,8 @@
             "costUsdg": 28073.346248,
             "capitalUsdg": 4033547.015169,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 166885.0531294126
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -123,7 +124,8 @@
             "costUsdg": 25861.498305,
             "capitalUsdg": 3716518.43726,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 156910.93942034701
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -142,7 +144,8 @@
             "costUsdg": 25478.676105,
             "capitalUsdg": 3661687.627657,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 154614.40698007372
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -161,7 +164,8 @@
             "costUsdg": 25366.627559,
             "capitalUsdg": 3645582.586247,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 153941.99209368092
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -180,7 +184,8 @@
             "costUsdg": 25272.796683,
             "capitalUsdg": 3631949.080764,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 153378.92584480744
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -199,7 +204,8 @@
             "costUsdg": 26393.707015,
             "capitalUsdg": 3792631.951924,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 160105.4542656606
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -218,7 +224,8 @@
             "costUsdg": 25049.052297,
             "capitalUsdg": 3599671.909616,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 152036.33343113927
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -237,7 +244,8 @@
             "costUsdg": 24260.654617,
             "capitalUsdg": 3486758.712084,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 147306.29773098297
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -256,7 +264,8 @@
             "costUsdg": 24742.454307,
             "capitalUsdg": 3555825.719206,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 150196.63779657445
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -275,7 +284,8 @@
             "costUsdg": 25141.413397,
             "capitalUsdg": 3613144.744138,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 150041.37732383065
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -294,7 +304,8 @@
             "costUsdg": 26816.389613,
             "capitalUsdg": 3853835.66324,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 141725.26533217606
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -313,7 +324,8 @@
             "costUsdg": 28343.768105,
             "capitalUsdg": 4073330.543266,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 134035.31596965846
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -332,7 +344,8 @@
             "costUsdg": 30168.406209,
             "capitalUsdg": 4337202.446325,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 115427.19700866706
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -351,7 +364,8 @@
             "costUsdg": 32643.717811,
             "capitalUsdg": 4695703.984777,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 97580.99601409303
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -370,12 +384,15 @@
             "costUsdg": 44415.919194,
             "capitalUsdg": 6402587.631097,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 49300.16982404382
         }
       ],
       "fridayCostUp10": 33272.595433,
       "weekendMinCostUp10": 29914.385981,
-      "weekendOverFriday": 0.8990698078013684
+      "weekendOverFriday": 0.8990698078013684,
+      "fridayMaxSafeExposure": 166885.0531294126,
+      "weekendMinMaxSafeExposure": 147306.29773098297
     },
     {
       "symbol": "META",
@@ -401,7 +418,8 @@
             "costUsdg": 9160.192842,
             "capitalUsdg": 1334244.562156,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 63813.44053371063
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -420,7 +438,8 @@
             "costUsdg": 12843.473443,
             "capitalUsdg": 1863161.235574,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 66385.48220662671
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -439,7 +458,8 @@
             "costUsdg": 13435.124161,
             "capitalUsdg": 1948189.987134,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 63223.09255509746
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -458,7 +478,8 @@
             "costUsdg": 14260.364315,
             "capitalUsdg": 2066872.831636,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 59304.023511175736
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -477,7 +498,8 @@
             "costUsdg": 13778.86228,
             "capitalUsdg": 1997971.746495,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 56373.153289846625
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -496,7 +518,8 @@
             "costUsdg": 13810.233466,
             "capitalUsdg": 2002499.851464,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 56059.56358672228
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -515,7 +538,8 @@
             "costUsdg": 12678.818939,
             "capitalUsdg": 1840074.942969,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 56346.95104799752
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -534,7 +558,8 @@
             "costUsdg": 13164.149035,
             "capitalUsdg": 1909628.603705,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 56124.72788353613
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -553,7 +578,8 @@
             "costUsdg": 10232.410491,
             "capitalUsdg": 1489316.133786,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 56728.3233097595
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -572,7 +598,8 @@
             "costUsdg": 10205.336856,
             "capitalUsdg": 1485668.431313,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 54628.921208765874
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -591,7 +618,8 @@
             "costUsdg": 11804.450836,
             "capitalUsdg": 1716148.063999,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 48954.69915404699
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -610,7 +638,8 @@
             "costUsdg": 12078.689127,
             "capitalUsdg": 1755671.637164,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 47438.908196683195
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -629,7 +658,8 @@
             "costUsdg": 11433.484491,
             "capitalUsdg": 1666185.882225,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 36478.26874772506
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -648,7 +678,8 @@
             "costUsdg": 12693.576597,
             "capitalUsdg": 1860368.172352,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11754.04108913641
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -667,12 +698,15 @@
             "costUsdg": 13236.473018,
             "capitalUsdg": 1940280.170053,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 36270.721463982285
         }
       ],
       "fridayCostUp10": 13053.376202,
       "weekendMinCostUp10": 10597.246783,
-      "weekendOverFriday": 0.811839528640592
+      "weekendOverFriday": 0.811839528640592,
+      "fridayMaxSafeExposure": 63813.44053371063,
+      "weekendMinMaxSafeExposure": 54628.921208765874
     },
     {
       "symbol": "MSTR",
@@ -738,7 +772,8 @@
             "costUsdg": 0.007384,
             "capitalUsdg": 1.844141,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 0.04431079542753156
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -757,7 +792,8 @@
             "costUsdg": 0.029004,
             "capitalUsdg": 7.243706,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 0.17405069211540158
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -776,7 +812,8 @@
             "costUsdg": 0.078136,
             "capitalUsdg": 19.610038,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 0.01660805628586569
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -795,7 +832,8 @@
             "costUsdg": 0,
             "capitalUsdg": 0,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 0
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -814,7 +852,8 @@
             "costUsdg": 0,
             "capitalUsdg": 0,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 0
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -833,7 +872,8 @@
             "costUsdg": 0,
             "capitalUsdg": 0,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 0
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -852,12 +892,15 @@
             "costUsdg": 0,
             "capitalUsdg": 0,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 0
         }
       ],
-      "fridayCostUp10": 41.936798,
+      "fridayCostUp10": null,
       "weekendMinCostUp10": 41.936798,
-      "weekendOverFriday": 1
+      "weekendOverFriday": null,
+      "fridayMaxSafeExposure": null,
+      "weekendMinMaxSafeExposure": 0.04431079542753156
     },
     {
       "symbol": "GLD",
@@ -883,7 +926,8 @@
             "costUsdg": 4736.465634,
             "capitalUsdg": 960336.520943,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 28475.881559056463
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -902,7 +946,8 @@
             "costUsdg": 11548.679631,
             "capitalUsdg": 977334.012479,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 68066.8896264434
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -921,7 +966,8 @@
             "costUsdg": 11948.706496,
             "capitalUsdg": 1011203.823836,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 68886.2972273503
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -940,7 +986,8 @@
             "costUsdg": 11965.521595,
             "capitalUsdg": 1012581.23767,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 68678.6396233059
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -959,7 +1006,8 @@
             "costUsdg": 12101.343129,
             "capitalUsdg": 1023730.634458,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 67958.21312732717
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -978,7 +1026,8 @@
             "costUsdg": 11935.953666,
             "capitalUsdg": 1009685.615748,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 68435.72938692066
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -997,7 +1046,8 @@
             "costUsdg": 11660.249435,
             "capitalUsdg": 986542.663907,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 67591.29831608734
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -1016,7 +1066,8 @@
             "costUsdg": 11553.715799,
             "capitalUsdg": 977507.18837,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 68215.6272077721
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -1035,7 +1086,8 @@
             "costUsdg": 11579.646136,
             "capitalUsdg": 979700.374153,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 67920.46178016209
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -1054,7 +1106,8 @@
             "costUsdg": 11784.63745,
             "capitalUsdg": 996906.915197,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 67588.89541389496
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -1073,7 +1126,8 @@
             "costUsdg": 11810.246222,
             "capitalUsdg": 999046.669735,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 67851.02649738306
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -1092,7 +1146,8 @@
             "costUsdg": 11759.603607,
             "capitalUsdg": 994761.408896,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 67927.54808921512
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -1111,7 +1166,8 @@
             "costUsdg": 3858.112568,
             "capitalUsdg": 781731.195287,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 23639.928358837453
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -1130,7 +1186,8 @@
             "costUsdg": 3954.869952,
             "capitalUsdg": 801317.626255,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 24240.328277138397
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -1149,12 +1206,15 @@
             "costUsdg": 3645.451608,
             "capitalUsdg": 738492.439206,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 22324.737221382013
         }
       ],
       "fridayCostUp10": 5414.610184,
       "weekendMinCostUp10": 12921.145716,
-      "weekendOverFriday": 2.3863482830549043
+      "weekendOverFriday": 2.3863482830549043,
+      "fridayMaxSafeExposure": 28475.881559056463,
+      "weekendMinMaxSafeExposure": 67588.89541389496
     },
     {
       "symbol": "CRCL",
@@ -1180,7 +1240,8 @@
             "costUsdg": 34.486951,
             "capitalUsdg": 10028.031435,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 151.6120553017398
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -1199,7 +1260,8 @@
             "costUsdg": 50.955118,
             "capitalUsdg": 14710.097549,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 144.89206866092917
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -1218,7 +1280,8 @@
             "costUsdg": 45.951269,
             "capitalUsdg": 13280.718357,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 177.09369954338186
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -1237,7 +1300,8 @@
             "costUsdg": 49.076953,
             "capitalUsdg": 14169.758858,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 159.42388286780798
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -1256,7 +1320,8 @@
             "costUsdg": 50.915697,
             "capitalUsdg": 14695.432393,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 147.03629825126995
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -1275,7 +1340,8 @@
             "costUsdg": 46.386845,
             "capitalUsdg": 13404.36078,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 174.5368040124819
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -1294,7 +1360,8 @@
             "costUsdg": 33.73002,
             "capitalUsdg": 9811.213088,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 277.0513491794845
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -1313,7 +1380,8 @@
             "costUsdg": 39.442038,
             "capitalUsdg": 11438.031741,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 240.86634525961293
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -1332,7 +1400,8 @@
             "costUsdg": 63.252617,
             "capitalUsdg": 18313.328491,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 164.4279937457893
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -1351,7 +1420,8 @@
             "costUsdg": 46.691119,
             "capitalUsdg": 13584.313543,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 158.0865617682341
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -1370,7 +1440,8 @@
             "costUsdg": 44.549741,
             "capitalUsdg": 12970.494997,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 133.66771310680042
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -1389,7 +1460,8 @@
             "costUsdg": 47.113283,
             "capitalUsdg": 13702.432739,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 167.97724189368103
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -1408,7 +1480,8 @@
             "costUsdg": 45.738111,
             "capitalUsdg": 13305.539236,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 152.3184552965015
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -1427,7 +1500,8 @@
             "costUsdg": 32.089947,
             "capitalUsdg": 9332.710226,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 89.2466335489079
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -1446,12 +1520,15 @@
             "costUsdg": 32.353049,
             "capitalUsdg": 9407.512357,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 108.05799529651001
         }
       ],
       "fridayCostUp10": 28.082012,
       "weekendMinCostUp10": 26.938568,
-      "weekendOverFriday": 0.9592819773739859
+      "weekendOverFriday": 0.9592819773739859,
+      "fridayMaxSafeExposure": 151.6120553017398,
+      "weekendMinMaxSafeExposure": 144.89206866092917
     },
     {
       "symbol": "TSLA",
@@ -1477,7 +1554,8 @@
             "costUsdg": 3408.986253,
             "capitalUsdg": 496787.768568,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 17152.277540798987
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -1496,7 +1574,8 @@
             "costUsdg": 3426.800999,
             "capitalUsdg": 499326.648311,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 17039.184443921455
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -1515,7 +1594,8 @@
             "costUsdg": 2754.396557,
             "capitalUsdg": 402212.022022,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 15969.63911659557
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -1534,7 +1614,8 @@
             "costUsdg": 2774.979559,
             "capitalUsdg": 405187.534398,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16218.092633079024
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -1553,7 +1634,8 @@
             "costUsdg": 2786.919027,
             "capitalUsdg": 406919.705761,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16250.53608846306
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -1572,7 +1654,8 @@
             "costUsdg": 2813.168233,
             "capitalUsdg": 410713.912657,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16127.644178365823
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -1591,7 +1674,8 @@
             "costUsdg": 2719.995355,
             "capitalUsdg": 397291.057419,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16746.483489834445
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -1610,7 +1694,8 @@
             "costUsdg": 2672.564497,
             "capitalUsdg": 390394.505886,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16784.114994945678
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -1629,7 +1714,8 @@
             "costUsdg": 2669.260243,
             "capitalUsdg": 389914.993994,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16818.56121888779
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -1648,7 +1734,8 @@
             "costUsdg": 2588.491137,
             "capitalUsdg": 378348.932466,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 15774.554436274617
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -1667,7 +1754,8 @@
             "costUsdg": 2915.165284,
             "capitalUsdg": 425384.45086,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 15017.578419296013
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -1686,7 +1774,8 @@
             "costUsdg": 2974.020151,
             "capitalUsdg": 433882.337828,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 14642.36876660383
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -1705,7 +1794,8 @@
             "costUsdg": 3058.387155,
             "capitalUsdg": 446030.764218,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 13476.385887425358
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -1724,7 +1814,8 @@
             "costUsdg": 3539.101302,
             "capitalUsdg": 516677.6484,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 8140.303283580867
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -1743,12 +1834,15 @@
             "costUsdg": 3055.281413,
             "capitalUsdg": 446213.389492,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 8419.101739270398
         }
       ],
       "fridayCostUp10": 3280.491433,
       "weekendMinCostUp10": 2989.37369,
-      "weekendOverFriday": 0.9112578865253205
+      "weekendOverFriday": 0.9112578865253205,
+      "fridayMaxSafeExposure": 17152.277540798987,
+      "weekendMinMaxSafeExposure": 15774.554436274617
     },
     {
       "symbol": "AAPL",
@@ -1774,7 +1868,8 @@
             "costUsdg": 3353.528098,
             "capitalUsdg": 489669.157511,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 9200.119090438599
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -1793,7 +1888,8 @@
             "costUsdg": 3876.110152,
             "capitalUsdg": 564538.323439,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 9420.01751209083
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -1812,7 +1908,8 @@
             "costUsdg": 3930.907621,
             "capitalUsdg": 571948.845063,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11204.753921952175
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -1831,7 +1928,8 @@
             "costUsdg": 3869.41567,
             "capitalUsdg": 563100.336096,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11421.126659792926
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -1850,7 +1948,8 @@
             "costUsdg": 4151.568787,
             "capitalUsdg": 604124.080784,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11438.710120576918
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -1869,7 +1968,8 @@
             "costUsdg": 4076.134052,
             "capitalUsdg": 593253.183364,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11840.708117975377
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -1888,7 +1988,8 @@
             "costUsdg": 3451.609744,
             "capitalUsdg": 503683.84867,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 10265.914747734096
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -1907,7 +2008,8 @@
             "costUsdg": 3076.361368,
             "capitalUsdg": 449231.824936,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 8939.775100819195
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -1926,7 +2028,8 @@
             "costUsdg": 3022.016493,
             "capitalUsdg": 441251.619476,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 9283.610939967428
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -1945,7 +2048,8 @@
             "costUsdg": 3061.898454,
             "capitalUsdg": 447111.038635,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 9011.389164546854
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -1964,7 +2068,8 @@
             "costUsdg": 3088.785833,
             "capitalUsdg": 451058.027119,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 8811.888726619214
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -1983,7 +2088,8 @@
             "costUsdg": 3119.294429,
             "capitalUsdg": 455541.417762,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 8599.229047071403
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -2002,7 +2108,8 @@
             "costUsdg": 3019.698632,
             "capitalUsdg": 440905.836397,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 9107.30124469988
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -2021,7 +2128,8 @@
             "costUsdg": 3034.695417,
             "capitalUsdg": 443238.274622,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 8707.399878132435
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -2040,12 +2148,15 @@
             "costUsdg": 2951.584522,
             "capitalUsdg": 431356.547448,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 5723.492981766545
         }
       ],
       "fridayCostUp10": 1711.26931,
       "weekendMinCostUp10": 1653.550458,
-      "weekendOverFriday": 0.9662713217243404
+      "weekendOverFriday": 0.9662713217243404,
+      "fridayMaxSafeExposure": 9200.119090438599,
+      "weekendMinMaxSafeExposure": 8939.775100819195
     },
     {
       "symbol": "GOOGL",
@@ -2071,7 +2182,8 @@
             "costUsdg": 5083.18669,
             "capitalUsdg": 740337.832875,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16170.748815666357
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -2090,7 +2202,8 @@
             "costUsdg": 4900.498471,
             "capitalUsdg": 714004.778922,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16951.560263943422
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -2109,7 +2222,8 @@
             "costUsdg": 4898.688134,
             "capitalUsdg": 713743.469462,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16960.487026684652
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -2128,7 +2242,8 @@
             "costUsdg": 4886.775548,
             "capitalUsdg": 712006.070571,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16451.779862206848
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -2147,7 +2262,8 @@
             "costUsdg": 5069.264236,
             "capitalUsdg": 738360.267802,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 15753.986041190192
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -2166,7 +2282,8 @@
             "costUsdg": 6016.338004,
             "capitalUsdg": 874754.18159,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11549.8631054267
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -2185,7 +2302,8 @@
             "costUsdg": 4850.060229,
             "capitalUsdg": 706822.508572,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 12730.65705020109
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -2204,7 +2322,8 @@
             "costUsdg": 4658.177943,
             "capitalUsdg": 678705.584338,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 12571.803762336627
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -2223,7 +2342,8 @@
             "costUsdg": 4655.453645,
             "capitalUsdg": 678359.378713,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11135.785570099779
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -2242,7 +2362,8 @@
             "costUsdg": 4672.794571,
             "capitalUsdg": 680871.850205,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11170.60955355882
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -2261,7 +2382,8 @@
             "costUsdg": 4702.259152,
             "capitalUsdg": 685228.797533,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 10841.129296186415
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -2280,7 +2402,8 @@
             "costUsdg": 4749.651761,
             "capitalUsdg": 692189.121009,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 10557.694777348628
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -2299,7 +2422,8 @@
             "costUsdg": 5133.382464,
             "capitalUsdg": 747975.85745,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 10288.320010846866
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -2318,7 +2442,8 @@
             "costUsdg": 6031.005198,
             "capitalUsdg": 878457.086747,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 9741.440046646465
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -2337,12 +2462,15 @@
             "costUsdg": 5105.899199,
             "capitalUsdg": 745427.951727,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 8235.195856119723
         }
       ],
       "fridayCostUp10": 3056.567222,
       "weekendMinCostUp10": 2047.225994,
-      "weekendOverFriday": 0.6697794765529288
+      "weekendOverFriday": 0.6697794765529288,
+      "fridayMaxSafeExposure": 16170.748815666357,
+      "weekendMinMaxSafeExposure": 11135.785570099779
     },
     {
       "symbol": "PLTR",
@@ -2368,7 +2496,8 @@
             "costUsdg": 9042.988677,
             "capitalUsdg": 420700.968467,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30665.139170647166
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -2387,7 +2516,8 @@
             "costUsdg": 9126.768762,
             "capitalUsdg": 424517.453975,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30966.46467686131
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -2406,7 +2536,8 @@
             "costUsdg": 9095.040206,
             "capitalUsdg": 423118.558618,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30555.995390539872
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -2425,7 +2556,8 @@
             "costUsdg": 9004.057687,
             "capitalUsdg": 418868.277686,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30986.35365691686
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -2444,7 +2576,8 @@
             "costUsdg": 6543.476322,
             "capitalUsdg": 304097.039013,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30789.746446413363
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -2463,7 +2596,8 @@
             "costUsdg": 6426.431366,
             "capitalUsdg": 298706.281638,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30397.88117868335
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -2482,7 +2616,8 @@
             "costUsdg": 6629.160828,
             "capitalUsdg": 308057.757208,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30781.081201797824
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -2501,7 +2636,8 @@
             "costUsdg": 6495.029514,
             "capitalUsdg": 301808.868279,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 31920.911213213218
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -2520,7 +2656,8 @@
             "costUsdg": 6279.045246,
             "capitalUsdg": 291770.810374,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30760.336194212407
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -2539,7 +2676,8 @@
             "costUsdg": 6633.975164,
             "capitalUsdg": 308196.737844,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30343.098362314133
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -2558,7 +2696,8 @@
             "costUsdg": 6698.068811,
             "capitalUsdg": 311178.880093,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 29988.82447231094
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -2577,7 +2716,8 @@
             "costUsdg": 6742.54489,
             "capitalUsdg": 313247.076326,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 29739.854935867275
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -2596,7 +2736,8 @@
             "costUsdg": 6718.255573,
             "capitalUsdg": 312123.737365,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 29759.902205051872
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -2615,7 +2756,8 @@
             "costUsdg": 5451.676793,
             "capitalUsdg": 254394.982,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 19467.007402332154
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -2634,12 +2776,15 @@
             "costUsdg": 6155.180493,
             "capitalUsdg": 286402.043468,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 26563.939825324946
         }
       ],
       "fridayCostUp10": 4898.522436,
       "weekendMinCostUp10": 4921.97695,
-      "weekendOverFriday": 1.0047880793252326
+      "weekendOverFriday": 1.0047880793252326,
+      "fridayMaxSafeExposure": 30665.139170647166,
+      "weekendMinMaxSafeExposure": 30343.098362314133
     },
     {
       "symbol": "SPCX",
@@ -2665,7 +2810,8 @@
             "costUsdg": 13168.335466,
             "capitalUsdg": 616084.902558,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 42784.7962170027
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -2684,7 +2830,8 @@
             "costUsdg": 13158.679713,
             "capitalUsdg": 615627.262512,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 42736.33681929616
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -2703,7 +2850,8 @@
             "costUsdg": 13248.288593,
             "capitalUsdg": 619854.885488,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 41074.65627470379
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -2722,7 +2870,8 @@
             "costUsdg": 13427.048372,
             "capitalUsdg": 628257.969153,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 41239.364955102734
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -2741,7 +2890,8 @@
             "costUsdg": 13394.317468,
             "capitalUsdg": 626712.247295,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 41307.02599637823
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -2760,7 +2910,8 @@
             "costUsdg": 13381.829573,
             "capitalUsdg": 626131.027774,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 41327.73453225196
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -2779,7 +2930,8 @@
             "costUsdg": 11450.748259,
             "capitalUsdg": 535636.170345,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 37427.84938863398
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -2798,7 +2950,8 @@
             "costUsdg": 11318.496649,
             "capitalUsdg": 529447.548908,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 37335.93122345835
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -2817,7 +2970,8 @@
             "costUsdg": 11314.002308,
             "capitalUsdg": 529231.668713,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 37355.570002470835
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -2836,7 +2990,8 @@
             "costUsdg": 11310.883024,
             "capitalUsdg": 529082.216766,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 37421.236901775745
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -2855,7 +3010,8 @@
             "costUsdg": 11309.820018,
             "capitalUsdg": 529031.451745,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 37426.16980955062
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -2874,7 +3030,8 @@
             "costUsdg": 11311.777603,
             "capitalUsdg": 529126.158865,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 37462.56341185766
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -2893,7 +3050,8 @@
             "costUsdg": 11306.62906,
             "capitalUsdg": 528879.380921,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 37433.02576621323
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -2912,7 +3070,8 @@
             "costUsdg": 9838.362626,
             "capitalUsdg": 460283.681548,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 30137.40696009865
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -2931,12 +3090,15 @@
             "costUsdg": 8592.954934,
             "capitalUsdg": 401834.264792,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 32198.60500561786
         }
       ],
       "fridayCostUp10": 7067.784711,
       "weekendMinCostUp10": 6011.000894,
-      "weekendOverFriday": 0.8504787765598933
+      "weekendOverFriday": 0.8504787765598933,
+      "fridayMaxSafeExposure": 42784.7962170027,
+      "weekendMinMaxSafeExposure": 37335.93122345835
     },
     {
       "symbol": "NVDA",
@@ -2962,7 +3124,8 @@
             "costUsdg": 2208.396329,
             "capitalUsdg": 322870.830491,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16504.062588498742
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -2981,7 +3144,8 @@
             "costUsdg": 2234.065018,
             "capitalUsdg": 326612.95685,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16411.846198442487
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -3000,7 +3164,8 @@
             "costUsdg": 2234.891348,
             "capitalUsdg": 326728.606563,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16453.362213397908
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -3019,7 +3184,8 @@
             "costUsdg": 2240.747085,
             "capitalUsdg": 327590.97877,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16538.427337447476
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -3038,7 +3204,8 @@
             "costUsdg": 2503.681916,
             "capitalUsdg": 366072.266452,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16217.855634465523
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -3057,7 +3224,8 @@
             "costUsdg": 2501.935794,
             "capitalUsdg": 365818.325202,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16241.55735115725
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -3076,7 +3244,8 @@
             "costUsdg": 2410.431278,
             "capitalUsdg": 352344.65124,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16987.704795415382
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -3095,7 +3264,8 @@
             "costUsdg": 2403.058202,
             "capitalUsdg": 351259.2069,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 17048.286328889426
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -3114,7 +3284,8 @@
             "costUsdg": 2364.94897,
             "capitalUsdg": 345660.542967,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 17164.618676867864
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -3133,7 +3304,8 @@
             "costUsdg": 2425.307288,
             "capitalUsdg": 354540.53345,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16693.773594933144
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -3152,7 +3324,8 @@
             "costUsdg": 2484.189564,
             "capitalUsdg": 363214.505459,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 16214.27474549495
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -3171,7 +3344,8 @@
             "costUsdg": 2537.689829,
             "capitalUsdg": 371089.05522,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 15767.509499835145
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -3190,7 +3364,8 @@
             "costUsdg": 2529.641047,
             "capitalUsdg": 369919.197259,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 15752.903932055819
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -3209,7 +3384,8 @@
             "costUsdg": 2566.479292,
             "capitalUsdg": 375336.651289,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 15487.814004068448
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -3228,12 +3404,15 @@
             "costUsdg": 2816.071326,
             "capitalUsdg": 412209.643213,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 13291.057947581701
         }
       ],
       "fridayCostUp10": 2508.034096,
       "weekendMinCostUp10": 2459.965854,
-      "weekendOverFriday": 0.9808342948460459
+      "weekendOverFriday": 0.9808342948460459,
+      "fridayMaxSafeExposure": 16504.062588498742,
+      "weekendMinMaxSafeExposure": 16217.855634465523
     },
     {
       "symbol": "MSFT",
@@ -3259,7 +3438,8 @@
             "costUsdg": 1240.958292,
             "capitalUsdg": 180571.405532,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6164.017453972408
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -3278,7 +3458,8 @@
             "costUsdg": 1261.88954,
             "capitalUsdg": 183643.945589,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6055.87574827115
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -3297,7 +3478,8 @@
             "costUsdg": 1373.257351,
             "capitalUsdg": 199602.760916,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 7037.7819728728555
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -3316,7 +3498,8 @@
             "costUsdg": 1365.142399,
             "capitalUsdg": 198426.110123,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 7077.624859932096
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -3335,7 +3518,8 @@
             "costUsdg": 1257.615985,
             "capitalUsdg": 183009.029785,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6114.223970761715
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -3354,7 +3538,8 @@
             "costUsdg": 1246.387171,
             "capitalUsdg": 181368.1948,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6167.948502380823
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -3373,7 +3558,8 @@
             "costUsdg": 1236.806987,
             "capitalUsdg": 179962.840956,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6214.149284447217
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -3392,7 +3578,8 @@
             "costUsdg": 1229.8028,
             "capitalUsdg": 178935.570353,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6247.940712891046
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -3411,7 +3598,8 @@
             "costUsdg": 1230.852444,
             "capitalUsdg": 179089.30802,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6242.7770226465855
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -3430,7 +3618,8 @@
             "costUsdg": 1288.694773,
             "capitalUsdg": 187577.605815,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 5963.853974028929
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -3449,7 +3638,8 @@
             "costUsdg": 1282.277902,
             "capitalUsdg": 186635.218283,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 5994.677326274626
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -3468,7 +3658,8 @@
             "costUsdg": 1282.261564,
             "capitalUsdg": 186632.817229,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 5994.754885547417
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -3487,7 +3678,8 @@
             "costUsdg": 1297.594785,
             "capitalUsdg": 188879.960577,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 5914.0449579598135
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -3506,7 +3698,8 @@
             "costUsdg": 1238.878307,
             "capitalUsdg": 180266.541528,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6204.56552580278
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -3525,12 +3718,15 @@
             "costUsdg": 1479.672213,
             "capitalUsdg": 215557.770479,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 4927.535531257082
         }
       ],
       "fridayCostUp10": 1153.817536,
       "weekendMinCostUp10": 1113.751463,
-      "weekendOverFriday": 0.9652752088177659
+      "weekendOverFriday": 0.9652752088177659,
+      "fridayMaxSafeExposure": 6164.017453972408,
+      "weekendMinMaxSafeExposure": 5963.853974028929
     },
     {
       "symbol": "HIMS",
@@ -3556,7 +3752,8 @@
             "costUsdg": 1431.14458,
             "capitalUsdg": 73237.582701,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 10162.593233855232
         },
         {
           "time": "2026-09-19T02:00:00.000Z",
@@ -3575,7 +3772,8 @@
             "costUsdg": 1825.689531,
             "capitalUsdg": 93345.858893,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 10745.981256635421
         },
         {
           "time": "2026-09-19T08:00:00.000Z",
@@ -3594,7 +3792,8 @@
             "costUsdg": 1814.289691,
             "capitalUsdg": 92747.951307,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 10960.797503043934
         },
         {
           "time": "2026-09-19T14:00:00.000Z",
@@ -3613,7 +3812,8 @@
             "costUsdg": 1852.885984,
             "capitalUsdg": 94717.145821,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11663.932531972614
         },
         {
           "time": "2026-09-19T20:00:00.000Z",
@@ -3632,7 +3832,8 @@
             "costUsdg": 1786.088721,
             "capitalUsdg": 91287.211148,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 12001.963632907986
         },
         {
           "time": "2026-09-20T02:00:00.000Z",
@@ -3651,7 +3852,8 @@
             "costUsdg": 1814.189568,
             "capitalUsdg": 92729.764961,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11862.618830078747
         },
         {
           "time": "2026-09-20T08:00:00.000Z",
@@ -3670,7 +3872,8 @@
             "costUsdg": 1708.592415,
             "capitalUsdg": 87311.274864,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11802.249210681528
         },
         {
           "time": "2026-09-20T14:00:00.000Z",
@@ -3689,7 +3892,8 @@
             "costUsdg": 1628.753003,
             "capitalUsdg": 83214.435682,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11231.193282524548
         },
         {
           "time": "2026-09-20T20:00:00.000Z",
@@ -3708,7 +3912,8 @@
             "costUsdg": 1719.356888,
             "capitalUsdg": 87844.110983,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11808.062578209592
         },
         {
           "time": "2026-09-20T23:45:00.000Z",
@@ -3727,7 +3932,8 @@
             "costUsdg": 1726.650602,
             "capitalUsdg": 88212.39972,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11851.863319416085
         },
         {
           "time": "2026-09-21T01:00:00.000Z",
@@ -3746,7 +3952,8 @@
             "costUsdg": 1726.650602,
             "capitalUsdg": 88212.39972,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11851.863319416085
         },
         {
           "time": "2026-09-21T02:00:00.000Z",
@@ -3765,7 +3972,8 @@
             "costUsdg": 1726.650602,
             "capitalUsdg": 88212.39972,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11851.863319416085
         },
         {
           "time": "2026-09-21T08:00:00.000Z",
@@ -3784,7 +3992,8 @@
             "costUsdg": 1630.194857,
             "capitalUsdg": 83283.759417,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 11234.721985680406
         },
         {
           "time": "2026-09-21T14:00:00.000Z",
@@ -3803,7 +4012,8 @@
             "costUsdg": 1923.669967,
             "capitalUsdg": 98500.211032,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 9158.782318468237
         },
         {
           "time": "2026-09-21T20:00:00.000Z",
@@ -3822,12 +4032,15 @@
             "costUsdg": 1972.731685,
             "capitalUsdg": 101430.706494,
             "complete": true
-          }
+          },
+          "maxSafeExposureUsdg": 6600.284937788979
         }
       ],
       "fridayCostUp10": 1857.830129,
       "weekendMinCostUp10": 1776.112403,
-      "weekendOverFriday": 0.9560144252564224
+      "weekendOverFriday": 0.9560144252564224,
+      "fridayMaxSafeExposure": 10162.593233855232,
+      "weekendMinMaxSafeExposure": 10745.981256635421
     }
   ]
 }
