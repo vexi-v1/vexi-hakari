@@ -1,0 +1,108 @@
+# ETHGlobal Tokyo 2026: submission texts
+
+Ready to paste into the ETHGlobal form. Track: **Continuity**. Partner prizes: 1inch **Build an Aqua App** and
+Uniswap Foundation **Best Uniswap Stack Contribution**. Repository: <https://github.com/vexi-v1/vexi-hakari>.
+
+## Tagline
+
+Options written from a wallet through 1inch Aqua, with a Uniswap v4 price band that tells the writer when to stop.
+
+## Short description (≤ 280 characters)
+
+Covered calls and cash-secured puts whose collateral stays in the writer's wallet until a buyer fills, pulled by 1inch
+Aqua. HAKARI's hook keeps a v4 pool's TWAP; a ±5 % band around it thins the book near the edge, stops it past, and
+guards settlement.
+
+## Long description
+
+Writing a fully collateralised option today means locking the collateral in a protocol before anyone buys. The
+writers with the most depth will not hand over custody, so option books stay thin.
+
+Here the writer's tokens stay in its own wallet. An `AquaWriter` is a 1inch Aqua app: the writer ships a strategy to
+it and posts covered calls and cash-secured puts as promises. When a buyer buys, Aqua `pull`s exactly the collateral
+of the contracts sold from the writer's wallet, inside the buyer's transaction; at expiry, unexercised collateral,
+exercise proceeds and premiums come home through Aqua `push`, credited to the same strategy. The same wallet can
+quote spot through a SwapVM strategy, and `ExposureGuard`, a custom SwapVM instruction, shrinks that spot pool to what
+the options have not promised, at the same price, so a buyer who sees option depth can always fill it. It runs as an
+opcode on our router and, through SwapVM's `Extruction`, on 1inch's router already deployed on Robinhood Chain.
+
+A writer that sells at a fixed price is right only while the price stands still, and a pool anyone can trade is a
+price anyone can push. HAKARI (秤, "the scale") started at this event as a study of what it costs to fake a Uniswap
+v4 price: on Robinhood Chain's stock-token weekend of 2026-08-30, while minting was closed, pushing the HIMS/USDG pool
+10 % cost 12 USDG, and the pool stood at 54.50 against a Friday close of 28.84. It now guards the writer.
+`HakariOracleHook`, OpenZeppelin's truncated-oracle hook with both TWAPs in one call, records each second's price
+before the first swap, so a push undone inside one transaction never reaches its TWAP. `StabilityBandPricer` draws a
+band of ±5 % around a hooked pool's one-hour TWAP: the nearer the price is to the edge, the fewer contracts per trade
+and the wider the spread; past the edge the book stops until the price comes back. 5 % is the Limit Up-Limit Down band
+of the stocks themselves (Tier 1, above $3), so the book stops about where the stock's own market would, and keeps
+that brake on weekends, when the pool is the only price. `HookTwapExpiryPrice` settles an expiry on the hook's
+five-minute TWAP only if it is inside the same band drawn before expiry; a push through the settle window defers
+settlement to the next window instead of paying out on it.
+
+Every claim has a test on a fork of Robinhood Chain mainnet 4663: canonical Aqua, the deployed SwapVM router, real
+TSLA and USDG, and the hook's deployed testnet bytecode running on the real v4 PoolManager.
+
+## How it's made
+
+- **Contracts:** Solidity, Foundry. The hook: solc 0.8.26 against v4-core and OpenZeppelin `uniswap-hooks`, its
+  address mined for its flag bits and deployed with CREATE2 on testnet 46630. The Aqua seam, the band and the
+  settlement: solc 0.8.30, cancun, via-IR, against 1inch `aqua` `ef24220`, `swap-vm` `v1.0.2` (the interface of the
+  router deployed on 4663), `solidity-utils`, OpenZeppelin `v5.4.0` and v4-core `v4.0.0` (libraries and types:
+  `StateLibrary`, `TickMath`, `FullMath`, `PoolKey`, `PoolId`, `Currency`).
+- **Tests:** on a fork of Robinhood Chain 4663 pinned at block 72,248,228; nobody is impersonated, every account is a
+  plain address funded on the fork. The hook's deployed runtime bytecode is etched at its own address on the fork and
+  runs unchanged against the real PoolManager (the same address on both chains). Fork-free suites fuzz the guard and
+  the band's taper.
+- **SwapVM programs:** built byte by byte in the test helpers: `ExposureGuard` (opcode 34 on our router, or
+  `Extruction` 32 on the canonical one), `x·y=k`, a salt.
+- **Testnet 46630:** the hook, and an AAPL/USDG v4 pool created with it through PositionManager and Permit2
+  (`MINT_POSITION` + `SETTLE_PAIR`, full range), its observation ring grown to 128.
+- **Built at the event, in public and in private:** the hook and the first study were built in this repository
+  commit by commit; the Aqua seam, the band and the settlement were written during the event in the team's private
+  product repository and brought here on 2026-09-27, trimmed to the integration (`docs/history.md`,
+  `docs/extraction.md`).
+- **AI:** built with Claude Code; the prompts are in `docs/prompts/`.
+
+## How is 1inch Aqua / SwapVM used
+
+Aqua is the writer's custody model: one balance, shipped as virtual balances to an options strategy and a SwapVM spot
+strategy, moved only at a fill. SwapVM is the spot pool and the place where the two strategies are kept honest.
+
+- `aqua/src/aqua/AquaWriter.sol`: `provide` → `AQUA.pull(MAKER, strategyHash, collateral, amount, BOOK)`, called
+  from `OptionBook.buy`; `onReturned` → `AQUA.push`, called from `OptionBook.close`; `claimPremium` takes the premium
+  from the book once settled and pushes it the same way; `available` = min(virtual balance, wallet, allowance to
+  Aqua); `promised(token)`.
+- `aqua/src/swapvm/ExposureGuard.sol`: custom instruction, same price, depth capped at the unpromised balance;
+  `ExposureGuardExtruction.sol`: the same policy on the canonical router through `Extruction`;
+  `WriterSwapVMRouter.sol`: the deployed router's opcode table plus the guard.
+- Proofs: `aqua/test/Lifecycle.t.sol` (the Aqua invariants on the fork), `aqua/test/ExposureGuard.t.sol` (without the
+  guard, a spot fill takes promised collateral and the option buyer is refused), `aqua/test/ExposureGuardCanonical.t.sol`
+  (the guard on `0x111111338c…`), `aqua/test/GuardProperties.t.sol`.
+
+## How is Uniswap used
+
+Uniswap v4 is the price the writer's book is checked against, through HAKARI's hook.
+
+- `src/HakariOracleHook.sol`: OpenZeppelin `BaseOracleHook` plus `twaps()`, deployed on 46630 at
+  `0x3b58D774cE351227B24A91103b20bA4fc068D080`.
+- `aqua/src/band/StabilityBandPricer.sol`: `slot0` and in-range liquidity through v4-core's `StateLibrary`, raw and
+  truncated cumulative ticks from the hook's `observe`, the oracle read from the pool key's `hooks`; the band, the
+  taper and the pause; raw and truncated TWAPs disagreeing pauses the book.
+- `aqua/src/band/HookTwapExpiryPrice.sol`: settlement on the hook's TWAP, deferred when a push moves the window out
+  of the band. `aqua/src/band/BandMath.sol`: tick → price without a 320-bit overflow, either token order.
+- `aqua/script/HookedPool.s.sol`: the hooked testnet pool through `PositionManager.initializePool`,
+  `modifyLiquidities` with Permit2, `increaseObservationCardinalityNext`, `PoolSwapTest`.
+- Proofs: `aqua/test/StabilityBandFork.t.sol` (the deployed hook on the real PoolManager), `aqua/test/StabilityBand.t.sol`,
+  `aqua/test/StabilityTwapSettle.t.sol`, `test/HakariOracleHook.t.sol`.
+- Developer feedback: `FEEDBACK.md`.
+
+## Continuity Track: what existed before the event, and what was built at it
+
+**Before the event.** Vexi, the team's options venue on Robinhood Chain (a separate, private codebase). This entry
+continues Vexi's design questions, not its code. No code, contract or asset from Vexi or any other pre-existing project
+is in the repository; public libraries are pinned submodules, unmodified.
+
+**At the event.** Everything in the repository. HAKARI's first commit is `c65549c` (2026-09-25 21:29 JST) and its
+history is public. The Aqua seam, the band and the settlement were written during the event in the team's private
+repository, from 2026-09-25 21:46 JST, and brought into this repository on 2026-09-27; `docs/history.md` lists when
+each part was written.
