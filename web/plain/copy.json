@@ -442,8 +442,8 @@
         },
         {
           "href": "../live/",
-          "title": { "en": "Every stock pool, every minute →", "zh": "每個股票池，每分鐘更新 →" },
-          "text": { "en": "The live board: for each stock pool on Robinhood Chain, how much money could safely depend on its price right now, next to last Friday. Read-only, no wallet.", "zh": "即時看板：Robinhood Chain 上每個股票池，現在最多能讓多少錢安全地押在它的價格上，並和上週五對照。只讀取、不用錢包（英文介面）。" }
+          "title": { "en": "The main stock pools, every minute →", "zh": "主要股票池，每分鐘更新 →" },
+          "text": { "en": "The live board: for the main stock pools on Robinhood Chain, how much money could safely depend on each price right now, next to last Friday. Read-only, no wallet.", "zh": "即時看板：Robinhood Chain 上主要的股票池，每一個現在最多能讓多少錢安全地押在它的價格上，並和上週五對照。只讀取、不用錢包（英文介面）。" }
         },
         {
           "href": "../#measure-live",
