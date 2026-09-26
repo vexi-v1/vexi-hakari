@@ -1845,75 +1845,84 @@ html[lang="zh-Hant"] .hero-copy {
   .header .brand-logo { width: 26px; height: 26px; }
 }
 
-/* Uniswap reference → oracle → quote enforcement. */
+
+/* Uniswap implementation guide: contract seams, arithmetic and assertions. */
 .uniswap-section { border-top: 1px solid var(--line); }
-.uniswap-intro { max-width: 780px; margin: -10px 0 30px; color: var(--muted); line-height: 1.8; font-size: 15px; }
-.uniswap-flow { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 26px; margin: 0; padding: 0; list-style: none; }
-.uniswap-node { position: relative; display: flex; flex-direction: column; padding: 25px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
-.uniswap-node:not(:last-child)::after { content: "→"; position: absolute; right: -21px; top: 48%; color: var(--muted); }
-.uniswap-node .tiny { color: #ff70b5; }
-.uniswap-node h3, .uniswap-gate h3, .uniswap-limits h3 { margin: 16px 0 12px; font-size: 21px; font-weight: 550; letter-spacing: -.4px; }
-.uniswap-node p, .uniswap-gate p, .uniswap-detail-body p, .uniswap-limits p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 0 0 18px; }
+.uniswap-intro { max-width: 890px; margin: -10px 0 28px; color: var(--muted); line-height: 1.8; font-size: 15px; }
+.review-facts { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 18px; padding: 20px 0; margin-bottom: 26px; border-block: 1px solid var(--line); }
+.review-facts > div { display: grid; gap: 9px; }
+.review-facts span { color: var(--muted); font-size: 11px; }
+.review-facts code { font-size: 12px; color: #ff90c4; overflow-wrap: anywhere; }
+.uniswap-flow { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.uniswap-node { display: flex; flex-direction: column; padding: 24px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.uniswap-node .tiny { color: #ff90c4; }
+.uniswap-node h3 { margin: 18px 0 14px; font-size: 17px; font-weight: 550; }
+.uniswap-node h3 code { font-size: inherit; overflow-wrap: anywhere; letter-spacing: -.6px; }
+.uniswap-node p, .uniswap-detail-body p, .review-code-panel p, .review-fixture { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 0 0 18px; }
 .pool-node { border-top-color: #ff007a80; }
 .oracle-node { border-top-color: #ff70b580; }
 .band-node { border-top-color: #37d67a80; }
 .band-node .tiny { color: var(--green); }
-.uniswap-output { display: grid; gap: 9px; border-top: 1px solid var(--line); padding-top: 17px; margin-top: auto; }
-.uniswap-output code { font-size: 11px; overflow-wrap: anywhere; color: var(--ink); }
-.uniswap-output span { color: var(--muted); font-size: 11px; }
-.uniswap-gate { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; padding: 28px; margin-top: 20px; border: 1px solid #37d67a35; border-radius: 10px; background: linear-gradient(100deg,#37d67a08,transparent); }
-.uniswap-gate .tiny { color: var(--green); }
-.uniswap-gate p { margin-bottom: 0; }
-.uniswap-callpath { display: grid; gap: 7px; justify-items: center; text-align: center; font-size: 12px; min-width: 0; }
-.uniswap-callpath code { padding: 9px 14px; border-radius: 5px; background: var(--panel-2); border: 1px solid var(--line); max-width: 100%; overflow-wrap: anywhere; }
-.uniswap-callpath > span { color: var(--green); }
-.uniswap-boundary { padding: 17px 0 22px; color: var(--muted); font-size: 13px; line-height: 1.8; margin: 0; }
-.uniswap-boundary strong { color: var(--ink); }
+.uniswap-output { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 17px; margin-top: auto; font-size: 11px; color: var(--muted); }
+.uniswap-output code { overflow-wrap: anywhere; }
+.review-block-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin: 40px 0 18px; }
+.review-block-heading h3 { font-size: 21px; font-weight: 550; letter-spacing: -.4px; margin: 0; }
+.review-block-heading > a { color: var(--green); font-size: 12px; flex-shrink: 0; }
+.review-block-heading .tiny { color: var(--muted); }
+.review-code-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.review-code-panel { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); padding: 22px; min-width: 0; }
+.review-code-panel h4 { font-size: 14px; font-weight: 550; line-height: 1.7; margin: 0 0 18px; }
+.review-code-panel pre, .uniswap-detail-body pre { white-space: pre; overflow-x: auto; font-size: 11px; line-height: 1.85; margin: 0 0 20px; padding: 18px; border: 1px solid var(--line); border-radius: 6px; color: #a8d8bc; background: #08080a; tab-size: 2; }
+.review-code-panel pre code, .uniswap-detail-body pre code { font-size: inherit; }
+.review-code-panel p { margin-bottom: 0; font-size: 12px; }
+.review-math .review-code-panel pre { color: #efb0d0; }
+.review-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.review-guards { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+.review-guards caption { text-align: left; color: var(--muted); padding: 17px; font-size: 12px; line-height: 1.8; }
+.review-guards th, .review-guards td { padding: 14px 17px; border-top: 1px solid var(--line); text-align: left; vertical-align: top; line-height: 1.7; overflow-wrap: anywhere; white-space: normal; }
+.review-guards th { background: var(--panel); color: var(--muted); font-weight: 500; }
+.review-guards th:first-child { width: 19%; }
+.review-guards th:nth-child(2) { width: 46%; }
+.review-guards td:last-child { color: #ff90c4; }
+.review-guards code { font-size: 11px; }
+.review-guards small { display: block; color: var(--muted); font-size: 11px; padding-top: 5px; }
+.review-details { margin-top: 28px; }
 .uniswap-details { border-top: 1px solid var(--line); }
 .uniswap-details details { border-bottom: 1px solid var(--line); }
-.uniswap-details summary { cursor: pointer; padding: 22px 2px; font-size: 16px; font-weight: 500; }
+.uniswap-details summary { cursor: pointer; padding: 22px 2px; font-size: 15px; font-weight: 500; line-height: 1.7; }
 .uniswap-details summary::marker { color: #ff70b5; }
-.uniswap-details details[open] summary { color: var(--ink); }
 .uniswap-detail-body { max-width: 900px; padding: 0 2px 12px; }
-.uniswap-detail-body ol { list-style: none; display: grid; gap: 12px; padding: 18px; margin: 0 0 20px; border-radius: 7px; background: var(--panel); }
-.uniswap-detail-body li { display: grid; grid-template-columns: 145px 1fr; gap: 14px; align-items: baseline; font-size: 13px; line-height: 1.7; color: var(--muted); }
-.uniswap-detail-body li code { color: #ff90c4; font-size: 12px; }
-.uniswap-examples { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin: 0 0 14px; }
-.uniswap-examples > div { display: grid; gap: 10px; padding: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 7px; }
-.uniswap-examples strong { font-size: 17px; font-weight: 500; }
-.uniswap-examples span { font-size: 12px; color: var(--muted); }
-.uniswap-examples b { font-family: "SFMono-Regular",Consolas,monospace; color: var(--green); font-size: 15px; font-weight: 500; }
-.uniswap-examples > div:last-child b { color: #ff879b; }
-.uniswap-detail-body .text-link { display: inline-block; margin-bottom: 14px; font-size: 13px; color: var(--green); }
-.uniswap-limits { padding-top: 23px; }
-.uniswap-limits h3 { margin-bottom: 23px; }
-.uniswap-limits-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 28px; }
-.uniswap-limits .tiny { color: var(--ink); }
-.uniswap-limits p { margin-top: 12px; }
+.uniswap-detail-body .text-link { display: inline-block; margin-bottom: 14px; font-size: 12px; color: var(--green); }
+.review-tests { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin-bottom: 20px; }
+.review-tests > a { display: grid; gap: 12px; padding: 22px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); min-width: 0; }
+.review-tests > a:hover { border-color: #37d67a66; text-decoration: none; }
+.review-tests strong { font-size: 16px; line-height: 1.6; font-weight: 550; }
+.review-tests .tiny { color: var(--green); font-size: 10px; }
+.review-tests span:not(.tiny) { color: var(--muted); font-size: 12px; line-height: 1.8; }
+.review-tests code { color: #b5c3bb; font-size: 10px; line-height: 1.7; overflow-wrap: anywhere; }
+.review-fixture { font-size: 12px; }
 .uniswap-sources { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
 .uniswap-sources .tiny { flex-basis: 100%; color: #ff90c4; }
 @media (min-width: 801px) and (max-width: 1100px) {
   .header-actions { gap: 12px; }
   .header nav { gap: 12px; font-size: 11px; }
 }
-@media (max-width: 900px) {
-  .uniswap-flow { gap: 20px; }
+@media (max-width: 1000px) {
   .uniswap-node { padding: 18px; }
-  .uniswap-node:not(:last-child)::after { right: -17px; }
+  .uniswap-node h3 { font-size: 14px; }
+  .review-code-panel { padding: 18px; }
 }
 @media (max-width: 740px) {
   .uniswap-intro { font-size: 14px; }
-  .uniswap-flow, .uniswap-gate, .uniswap-limits-grid { grid-template-columns: 1fr; }
-  .uniswap-flow { gap: 26px; }
+  .review-facts { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px 14px; }
+  .uniswap-flow, .review-code-grid, .review-tests { grid-template-columns: 1fr; }
   .uniswap-node { padding: 22px; }
-  .uniswap-node:not(:last-child)::after { content: "↓"; top: auto; right: 50%; bottom: -23px; }
-  .uniswap-gate { padding: 22px; gap: 24px; }
-  .uniswap-callpath { padding-top: 20px; border-top: 1px solid var(--line); }
-  .uniswap-details summary { font-size: 15px; line-height: 1.7; }
-  .uniswap-detail-body li { grid-template-columns: 1fr; gap: 4px; }
-  .uniswap-examples { grid-template-columns: 1fr; }
-  .uniswap-examples > div { grid-template-columns: 1fr auto; }
-  .uniswap-examples span { grid-column: 1; }
-  .uniswap-examples b { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
-  .uniswap-limits-grid { gap: 6px; }
+  .uniswap-node h3 { font-size: 17px; }
+  .review-block-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .review-block-heading h3 { font-size: 20px; line-height: 1.6; }
+  .review-code-panel pre { padding: 14px; }
+  .review-guards th, .review-guards td { padding: 12px 10px; font-size: 11px; }
+  .review-guards code { font-size: 10px; }
+  .review-guards th:first-child { width: 21%; }
+  .review-guards th:nth-child(2) { width: 39%; }
 }

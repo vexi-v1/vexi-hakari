@@ -21,14 +21,16 @@ does not prevent language switching. The translation catalog is `website/i18n.mj
 readable alongside the code. The dark presentation uses Vexi's near-black, gray-panel, green and red/pink visual
 palette, with original public-site CSS and system font fallbacks. No private product code or font assets are copied.
 
-## Uniswap mechanism explainer
+## Uniswap implementation guide
 
-The bilingual Uniswap section precedes the contract replay. It follows PoolManager state, the oracle hook,
-StabilityBandPricer and the check inside OptionBook.buy. Expandable explanations cover pre-swap observations,
-live slot0 versus geometric TWAP, raw versus truncated series, observation capacity, the optional liquidity
-floor and exact illustrative 400 / 410 / 420 USDG quotes. The section distinguishes option-fill refusal from
-reference-pool swaps, and links to the public implementation and official Uniswap documentation. The existing
-Band lab remains the interactive calculator; recorded evidence and contracts are unchanged.
+The bilingual Uniswap section is a technical review entry point before the contract replay. It identifies the
+reused OpenZeppelin observation engine separately from Hakari's paired-TWAP helper and IPremium band wrapper.
+Visible call-path pseudocode separates pool callbacks from buy-time enforcement. The guide includes exact
+default fixed-point arithmetic and rounding, the ordered refusal conditions, and expandable notes on storage,
+read-time extrapolation, hook address flags, configuration and limits. Code blocks preserve identifiers in both
+languages. Source and assertion links are pinned to the evidence revision; the OpenZeppelin callbacks link to
+the pinned dependency revision. Additional linked source tests are distinguished from the five exported website
+scenarios. The existing Band lab remains the interactive calculator; contracts and recorded evidence are unchanged.
 
 ## What the visitor can verify
 

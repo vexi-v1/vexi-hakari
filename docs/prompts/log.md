@@ -625,3 +625,15 @@ to the public website explaining the v4 pool, Oracle Hook, raw and truncated TWA
 enforcement. Check claims against the public contracts and official Uniswap documentation; distinguish
 reference-pool swaps from option-fill refusal. Preserve the dark Vexi presentation, update section numbering,
 and keep private product pricing and risk information outside the public site. Commit locally without pushing.
+
+
+## 2026-09-27 — Abner: technical Uniswap implementation for reviewers
+
+> Make the Uniswap explanation more technical so technical judges can quickly understand the implementation.
+
+English translation of the instruction. Work (Codex): refactor the bilingual Uniswap section around concrete
+contracts and interfaces, inherited callbacks and hook flags, separate swap and option-buy call paths, exact
+fixed-point rounding, ordered refusal conditions and pinned source assertions. Clarify inherited versus added
+code, per-observation truncation including read-time extrapolation, and the synthetic fork fixture. Keep the
+fixed-width public boundary, preserve evidence and contract code, verify both locales and responsive layouts,
+and commit locally without pushing.

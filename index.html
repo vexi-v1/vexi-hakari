@@ -40,45 +40,106 @@
     <div class="scope wrap"><span class="tag">RECORDED LOCAL FORK</span><p>Real protocol calls in a local test EVM, with synthetic accounts and market history. This page replays the exported results. It does not connect a wallet or send transactions.</p></div>
 
 
-    <section id="uniswap" class="section uniswap-section wrap" aria-labelledby="uniswap-title">
-      <div class="section-heading"><div><p class="eyebrow">01 / THE UNISWAP MECHANISM</p><h2 id="uniswap-title">From pool price<br>to permission to fill.</h2></div><p>Uniswap v4 supplies the reference.<br>Vexi Hakari turns it into quote rules.</p></div>
-      <p class="uniswap-intro">A tokenized-stock pool can keep trading while its underlying market is closed. Vexi Hakari reads that pool’s price and price history before offering a new option fill. Here is how the public integration works.</p>
-      <ol class="uniswap-flow" aria-label="From the Uniswap pool to an option quote">
-        <li class="uniswap-node pool-node"><span class="tiny">01 / PRICE</span><h3>Uniswap v4 pool</h3><p>The TSLA / USDG reference pool lives in PoolManager. Swaps change its live price; active liquidity describes the depth currently in range.</p><div class="uniswap-output"><code>getSlot0 · getLiquidity</code><span>Live price + active liquidity</span></div></li>
-        <li class="uniswap-node oracle-node"><span class="tiny">02 / HISTORY</span><h3>Oracle Hook</h3><p>HakariOracleHook builds on OpenZeppelin’s oracle. It records raw and truncated tick histories, then exposes observations for a time window.</p><div class="uniswap-output"><code>observe([3600, 0])</code><span>One-hour TWAP center</span></div></li>
-        <li class="uniswap-node band-node"><span class="tiny">03 / QUOTE RULES</span><h3>Stability Band</h3><p>The pricer compares the live price with that center. Approaching either edge raises the option premium and reduces the maximum size of each fill.</p><div class="uniswap-output"><code>StabilityBandPricer.ask</code><span>Premium + per-call size cap</span></div></li>
-      </ol>
-      <div class="uniswap-gate"><div><span class="tiny">ENFORCED ON EVERY BUY</span><h3>The book checks again at execution.</h3><p>OptionBook.buy reads the band-adjusted quote before taking the premium or requesting collateral through Aqua. A failed check reverts the buy.</p></div><div class="uniswap-callpath" aria-label="Option buy checks the band before collateral is pulled"><code>OptionBook.buy</code><span aria-hidden="true">↓</span><code>StabilityBandPricer.ask</code><span aria-hidden="true">↓</span><span>Quote passes → Aqua pulls collateral</span></div></div>
-      <p class="uniswap-boundary"><strong>What pauses?</strong> <span>The band pauses new option fills. The reference pool can still trade: this Oracle Hook records observations and does not apply the option band to Uniswap swaps.</span></p>
 
-      <div class="uniswap-details">
-        <details><summary>Why read both a live price and a TWAP?</summary><div class="uniswap-detail-body">
-          <p>The hook is selected in the PoolKey when a new pool is created. PoolManager calls its enabled callbacks; HakariOracleHook uses afterInitialize and beforeSwap. An existing pool cannot be retrofitted with this hook.</p>
-          <p>The default center is a one-hour time-weighted average tick, converted to a geometric average price. The default live reference comes directly from the pool’s slot0.</p>
-          <ol><li><code>afterInitialize</code><span>Start the pool’s observation history.</span></li><li><code>beforeSwap</code><span>Record the pre-swap tick, at most once per block timestamp.</span></li><li><code>swap</code><span>Update the live pool price. A subsequent option buy reads it immediately.</span></li></ol>
-          <p>A push and reversal within one transaction adds no elapsed time at the pushed price to the TWAP. An option buy between those swaps still sees the pushed slot0 price and can refuse. Setting nowWindow above zero uses a short TWAP for the live reference instead, with a slower response.</p>
+    <section id="uniswap" class="section uniswap-section wrap" aria-labelledby="uniswap-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / UNISWAP · IMPLEMENTATION</p><h2 id="uniswap-title">A v4 oracle.<br>An enforced quote gate.</h2></div><p>Read the contracts, then the assertions.<br>Public implementation · fixed-width band</p></div>
+      <p class="uniswap-intro">The integration wraps any IPremium with a pool-derived quote policy. OpenZeppelin supplies the observation engine; Hakari adds a paired-TWAP helper, the band pricer and enforcement inside the option book. The hook records prices; the book decides whether a new option buy can execute.</p>
+      <div class="review-facts" aria-label="Implementation at a glance"><div><span>Hook permissions</span><code>0x1080</code></div><div><span>Quote interface</span><code>IPremium.ask(id, n)</code></div><div><span>Center / live reference</span><code>3600s TWAP / slot0</code></div><div><span>Default half-width</span><code>500 bps = 5%</code></div></div>
+      <ol class="uniswap-flow" aria-label="Contract responsibilities">
+        <li class="uniswap-node pool-node"><span class="tiny">01 / OBSERVATION ENGINE</span><h3><code>HakariOracleHook</code></h3><p>Inherits BaseOracleHook. afterInitialize starts the per-PoolId ring; beforeSwap writes raw and truncated cumulative ticks. Hakari’s twaps() returns both average ticks side by side.</p><div class="uniswap-output"><a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/src/HakariOracleHook.sol#L24">Hakari helper ↗</a><a href="https://github.com/OpenZeppelin/uniswap-hooks/blob/acbd604c409a827f7f98c9517236da860c4fca1a/src/oracles/panoptic/BaseOracleHook.sol#L65">Inherited callbacks ↗</a></div></li>
+        <li class="uniswap-node oracle-node"><span class="tiny">02 / PRICER WRAPPER</span><h3><code>StabilityBandPricer</code></h3><p>Implements IPremium and IQuoteReference. Reads PoolManager state via StateLibrary and calls hook.observe() directly. status() derives the band; ask() enforces it before calling INNER.ask().</p><div class="uniswap-output"><a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/src/band/StabilityBandPricer.sol#L199"><code>status()</code> ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/src/band/StabilityBandPricer.sol#L281"><code>ask(seriesId, n)</code> ↗</a></div></li>
+        <li class="uniswap-node band-node"><span class="tiny">03 / EXECUTION</span><h3><code>OptionBook.buy</code></h3><p>Requotes through the order’s pricer in the buy transaction. Checks the buyer’s maxPremium, collects premium, verifies and pulls collateral through Aqua, then mints ERC-1155 longs. A revert rolls back the buy.</p><div class="uniswap-output"><a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/src/book/OptionBook.sol#L221">Buy-time enforcement ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/src/book/FixedPremium.sol#L87">Inner quote validity ↗</a></div></li>
+      </ol>
+
+      <div class="review-block-heading"><h3>Two execution paths. One reference pool.</h3><span class="tiny">CALL-PATH PSEUDOCODE</span></div>
+      <div class="review-code-grid">
+        <article class="review-code-panel"><h4>A / A Uniswap swap updates observations</h4><pre tabindex="0"><code>PoolManager.initialize(key)
+  → hook.afterInitialize
+    → observationsById[poolId].initialize(...)
+
+PoolManager.swap(key, ...)
+  → hook.beforeSwap
+    → getSlot0(poolId).tick
+    → Oracle.write(timestamp, tick, Δ)
+  → execute swap → update slot0</code></pre>
+          <p>Only afterInitialize and beforeSwap are enabled. beforeSwap returns ZERO_DELTA and no LP-fee override. The band does not reject the reference pool’s swaps.</p></article>
+        <article class="review-code-panel"><h4>B / An option buy consumes the reference</h4><pre tabindex="0"><code>OptionBook.buy(orderId, n, maxPremium)
+  → check expiry + remaining order quantity
+  → quotePremium → band.ask(seriesId, n)
+    → status(): slot0 + liquidity + observe()
+    → require quoting; require n ≤ sizeCap
+    → INNER.ask(seriesId, n) → apply extraBps
+  → check maxPremium → collect premium
+  → check collateral → writer.provide → Aqua.pull
+  → mint ERC-1155 longs</code></pre>
+          <p>ask() is a view: it computes a per-call limit and keeps no cumulative fill budget. The public INNER is FixedPremium, which checks its deadline and optional original-price anchor.</p></article>
+      </div>
+
+      <div class="review-block-heading"><h3>The arithmetic, including rounding.</h3><a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/src/band/BandMath.sol#L22">BandMath source ↗</a></div>
+      <div class="review-code-grid review-math">
+        <article class="review-code-panel"><h4>Read a geometric TWAP in whole-token units</h4><pre tabindex="0"><code>(raw, trunc) = hook.observe([3600, 0], poolId)
+tickAvg = floor((raw[1] − raw[0]) / 3600)
+C = priceOf(TickMath.getSqrtPriceAtTick(tickAvg))
+Ct = priceOf(TickMath.getSqrtPriceAtTick(
+       floor((trunc[1] − trunc[0]) / 3600)))
+L = priceOf(slot0.sqrtPriceX96)</code></pre>
+          <p>C is the raw center, Ct its truncated counterpart, and L the live reference. avgTick floors negative deltas too. priceOf handles either token order and decimals, returning 1e18-scaled quote per whole base token; FullMath avoids intermediate overflow.</p></article>
+        <article class="review-code-panel"><h4>Apply the default fixed band</h4><pre tabindex="0"><code>W = 10^18
+H = floor(C × 500 / 10_000)
+U = ceil(|L − C| × W / H)
+cap = floor(50 × (W − U) / W)
+extraBps = ceil(2000 × U² / W²)
+premium = ceil(INNER.ask(id, n)
+               × (10_000 + extraBps) / 10_000)</code></pre>
+          <p>These formulas apply after valid reference reads, with H &gt; 0 and 0 ≤ U &lt; W. The implementation saturates U for degenerate widths or extreme deviations and refuses if cap is zero. At C = 400 and L = 410: U = 0.5e18, cap = 25, extraBps = 500; an 8 USDG base ask becomes 8.4.</p></article>
+      </div>
+
+      <div class="review-block-heading"><h3>Refusal order inside the pricer.</h3><a href="#lab">Try the Band lab →</a></div>
+      <div class="review-table-wrap"><table class="review-guards"><caption>status() reports the first failing band check; ask() turns that result into Paused(reason), then checks size and the inner quote.</caption><thead><tr><th scope="col">Stage</th><th scope="col">Condition</th><th scope="col">Result</th></tr></thead><tbody>
+        <tr><td><code>status · 1</code></td><td><code>liquidity &lt; minLiquidity</code><small>Default 0: this filter is inactive.</small></td><td><code>ReferenceTooThin</code></td></tr>
+        <tr><td><code>status · 2</code></td><td>observe() reverts: missing or insufficient history.</td><td><code>ReferenceUnavailable</code></td></tr>
+        <tr><td><code>status · 3</code></td><td><code>|Ct − C| &gt; H</code></td><td><code>SeriesDisagree</code></td></tr>
+        <tr><td><code>status · 4</code></td><td><code>U &gt; W || cap == 0</code></td><td><code>OutsideBand</code></td></tr>
+        <tr><td><code>ask · 5</code></td><td><code>n &gt; cap</code></td><td><code>SizeCapped(n, cap)</code></td></tr>
+        <tr><td><code>INNER · 6a</code></td><td>No premium is set, or the quote was disabled.</td><td><code>NoPremium</code></td></tr>
+        <tr><td><code>INNER · 6b</code></td><td>The quote’s exclusive deadline has been reached.</td><td><code>QuoteExpired</code></td></tr>
+        <tr><td><code>INNER · 6c</code></td><td>An enabled anchor’s source returns zero; a source revert also propagates.</td><td><code>InvalidReferencePrice</code></td></tr>
+        <tr><td><code>INNER · 6d</code></td><td>Live price exceeds the original anchor’s configured tolerance.</td><td><code>QuoteOffAnchor</code></td></tr>
+      </tbody></table></div>
+
+      <div class="uniswap-details review-details">
+        <details><summary>Oracle storage, truncation and same-transaction behavior</summary><div class="uniswap-detail-body">
+          <p>Observations are keyed by PoolId in observationsById; stateById tracks index, cardinality and cardinalityNext. A write at the same timestamp is skipped. Raw accumulation uses the pre-swap tick for the elapsed interval. The truncated tick moves toward it by at most MAX_ABS_TICK_DELTA per observation transform.</p>
+          <pre tabindex="0"><code>rawCumulative += tick × elapsedSeconds
+truncatedTick = previousTruncatedTick
+  + clamp(tick − previousTruncatedTick, −Δ, +Δ)
+truncatedCumulative += truncatedTick × elapsedSeconds</code></pre>
+          <p>observe() can extrapolate the latest observation to now and applies truncation to that transform too. The limit is per transform, not per second. A push and reversal at the same timestamp contributes no elapsed time at the pushed price, but an intervening buy sees the changed slot0.</p>
+          <p>The fork fixture uses Δ = 250 ticks and requests cardinalityNext = 300 before generating 240 swap observations over two hours. A larger ring retains more observations; it cannot backfill missing history. A sustained price move can still become the rolling center.</p>
+          <a class="text-link" href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/test/HakariOracleHook.t.sol#L58">Verify truncation is per observation ↗</a>
         </div></details>
-        <details><summary>What do raw and truncated mean?</summary><div class="uniswap-detail-body">
-          <p>A tick expresses price on a logarithmic scale. The raw series follows the observed tick; the truncated series limits each observation’s tick change using the hook’s configured MAX_ABS_TICK_DELTA.</p>
-          <p>The band uses the raw TWAP as its center and checks it against the truncated TWAP. If their price difference exceeds the configured half-width, it refuses with SeriesDisagree. Truncation changes the oracle series, not the pool’s traded price.</p>
-          <p>The history is a finite observation ring. If the requested window is too old or history is too short, the band refuses with ReferenceUnavailable. Increasing observation capacity helps retain a longer history; it does not create past observations.</p>
-          <p>ReferenceTooThin refuses when active liquidity is below minLiquidity. The default threshold is zero; a deployment must choose a nonzero floor to use that filter.</p>
+        <details><summary>Wiring the pool, hook and quote source</summary><div class="uniswap-detail-body">
+          <p>PoolKey includes currencies, fee, tickSpacing and the hook address. The hook is selected at pool creation; its low address bits must match AFTER_INITIALIZE | BEFORE_SWAP = 0x1080. An existing pool cannot have this hook added later.</p>
+          <p>The band constructor checks the base/quote pair in either order, an initialized pool, a nonzero hook and token decimals ≤ 18. It binds the pool and INNER immutably. The owner can change band parameters with setParams; this does not validate an arbitrary hook as a trusted oracle.</p>
+          <p>Defaults: bandWindow 3600s, nowWindow 0, halfWidthBps 500, maxExtraBps 2000, maxContracts 50, minLiquidity 0. With nowWindow &gt; 0, observe([bandWindow, 0, nowWindow]) supplies a short TWAP for L. referencePriceWad() still reads live slot0 for the independent quote anchor.</p>
         </div></details>
-        <details><summary>How does a 5% band change the quote?</summary><div class="uniswap-detail-body">
-          <p>For a 400 USDG center, a fixed 5% half-width gives edges at 380 and 420. With an 8 USDG base premium, a 20% maximum extra and 50 contracts per call:</p>
-          <div class="uniswap-examples"><div><strong>400 USDG</strong><span>At the center</span><b>8 USDG · 50</b></div><div><strong>410 USDG</strong><span>Halfway to the upper edge</span><b>8.4 USDG · 25</b></div><div><strong>420 USDG</strong><span>At the edge: refused</span><b>— · 0</b></div></div>
-          <p class="note">Each result shows premium per contract and maximum contracts per call. These are exact illustrative inputs, independent of the recorded fork. Below the center, the same distance produces the same taper.</p>
-          <p>The size cap rounds down, so quoting can stop just inside the edge when fewer than one whole contract remains. OutsideBand also refuses beyond the edge; SizeCapped refuses a requested quantity above an otherwise open band’s cap.</p>
-          <a class="text-link" href="#lab">Move the price in the Band lab →</a>
+        <details><summary>Integration scope and remaining limits</summary><div class="uniswap-detail-body">
+          <p>The hook’s raw/truncated oracle engine is reused from the pinned OpenZeppelin BaseOracleHook; Hakari’s addition there is the twaps() convenience view. The band reads inherited observe() directly. The integration-specific policy lives in StabilityBandPricer and the option book’s IPremium call.</p>
+          <p>A sustained move can satisfy the rolling band again; deadline and original-anchor checks remain independent. Repeated buys can exceed one call’s cap. minLiquidity is an in-range liquidity threshold, not a measured manipulation cost. The pool reference and fixed 5% width do not establish fair stock value or a loss guarantee.</p>
+          <p>HookTwapExpiryPrice is a separate experimental settlement consumer. It can accept a later window or reach a no-window refund path; quote protection before a fill does not establish a fair expiry price.</p>
+          <a class="text-link" href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/settlement.md">Read the settlement policy ↗</a>
         </div></details>
       </div>
 
-      <div class="uniswap-limits"><h3>Three checks beyond the rolling center.</h3><div class="uniswap-limits-grid">
-        <div><span class="tiny">QUOTE VALIDITY</span><p>A sustained move can become the new TWAP center. The quote’s separate deadline and optional original-price anchor still apply; only the maker can renew the terms.</p></div>
-        <div><span class="tiny">FILL CAPACITY</span><p>The cap applies per call. Repeated buys can exceed one call’s cap, while remaining order quantity and deliverable collateral still limit execution. An open band alone does not guarantee a fill.</p></div>
-        <div><span class="tiny">REFERENCE QUALITY</span><p>This is a configurable pool-price rule. A fixed 5% band does not establish a fair stock value or a loss guarantee. Experimental expiry settlement uses a separate window-selection policy.</p></div>
-      </div></div>
-      <div class="uniswap-sources"><span class="tiny">FOLLOW THE IMPLEMENTATION</span><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/src/HakariOracleHook.sol">Oracle Hook source ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/aqua/src/band/StabilityBandPricer.sol">Band pricer source ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/band.md">Band mechanics &amp; limits ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/settlement.md">Settlement policy ↗</a><a href="https://developers.uniswap.org/docs/protocols/v4/concepts/hooks">Uniswap v4 Hooks docs ↗</a><a href="https://developers.uniswap.org/docs/protocols/v4/concepts/poolmanager">PoolManager docs ↗</a></div>
+      <div class="review-block-heading"><h3>Jump from a claim to its assertion.</h3><span class="tiny">PINNED SOURCE · 4df6d7bf44d7</span></div>
+      <div class="review-tests">
+        <a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/test/HakariOracleHook.t.sol#L29"><span class="tiny">HOOK UNIT TEST</span><strong>Push → reverse, same timestamp</strong><span>Raw and truncated TWAPs retain the prior tick.</span><code>test_twaps_pushUndoneWithinTheSameSecond_isNeverRecorded</code> ↗</a>
+        <a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/test/StabilityBandFork.t.sol#L394"><span class="tiny">LOCAL-FORK TEST</span><strong>+2.5% → taper and execute</strong><span>About 25 contracts and +500 bps; cap + 1 reverts. A permitted buy pays the computed premium.</span><code>test_InsideTheBandTheBookTapers</code> ↗</a>
+        <a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/test/StabilityBandFork.t.sol#L359"><span class="tiny">LOCAL-FORK TEST</span><strong>+5.1% → refuse in the same transaction</strong><span>Paused(OutsideBand); center unchanged. Reverse the push, then buy successfully.</span><code>test_APushOfTheReferencePastTheBandPausesTheBook</code> ↗</a>
+        <a href="https://github.com/vexi-v1/vexi-hakari/blob/4df6d7bf44d70195e3d9012758eeddd3b66e91d5/aqua/test/WebsiteEvidence.t.sol#L315"><span class="tiny">EXPORTED EVIDENCE</span><strong>+6% held → band reopens, anchor refuses</strong><span>After 3601s, status().quoting is true but buy reverts QuoteOffAnchor. Buyer funds and longs stay unchanged.</span><code>test_WebsiteAnchor</code> ↗</a>
+      </div>
+      <p class="review-fixture">Fork evidence uses Robinhood Chain 4663 at block 72,248,228, the canonical PoolManager, a newly initialized TSLA / USDG reference pool and the verified testnet hook runtime installed with vm.etch. Accounts and two hours of swap history are synthetic. The five downloadable scenarios come from WebsiteEvidence.t.sol; the other links point to additional source tests, not additional exported runs.</p>
+      <div class="uniswap-sources"><span class="tiny">REPRODUCE / CROSS-CHECK</span><a href="#evidence">Source snapshot, trace &amp; reproduction →</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/band.md">Band mechanics &amp; limits ↗</a><a href="https://developers.uniswap.org/docs/protocols/v4/concepts/hooks">Uniswap v4 Hooks docs ↗</a></div>
     </section>
 
     <section id="replay" class="section wrap" aria-labelledby="replay-title">
