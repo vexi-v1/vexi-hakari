@@ -35,8 +35,25 @@ export interface LivePool {
   decimals1: number;
 }
 
-/** Pools the discovery list does not carry, found and checked by hand (Initialize log, swap volume). */
-export const EXTRA_POOLS: LivePool[] = [];
+/**
+ * Pools the discovery list (data/stock-pools.json, 30 symbols) does not carry. AMC: the other stock token paired with
+ * memecoins over the HIMS weekend (npm run amc); its deepest of 359 USDG pools by discover.ts's own ranking, 2026-09-26.
+ */
+export const EXTRA_POOLS: LivePool[] = [
+  {
+    symbol: "AMC",
+    id: "0x7499938c352d5b5b8f0c648722aca5ee964ef9b85c3a3041f1ec379726291d9d",
+    currency0: "0x05a3d1cd21d0c88145e82600e62e7e496e0f222b",
+    currency1: "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+    fee: 1000,
+    tickSpacing: 10,
+    hooks: "0x0000000000000000000000000000000000000000",
+    initBlock: "53983886",
+    quoteIsCurrency0: false,
+    decimals0: 18,
+    decimals1: 6,
+  },
+];
 
 /** Friday 20:00 UTC, then every hour up to `untilTs`. */
 export function hourlyPoints(friday: string, untilTs: number): Date[] {

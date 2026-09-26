@@ -5,10 +5,10 @@
     "block": "72496352",
     "blockTimestamp": 1790366400
   },
-  "generatedAt": "2026-09-26T02:35:53.659Z",
+  "generatedAt": "2026-09-26T03:15:44.380Z",
   "head": {
-    "block": "72729329",
-    "timestamp": 1790389904
+    "block": "72752489",
+    "timestamp": 1790392249
   },
   "method": "Friday 20:00 UTC (the US close) and every hour since: each pool rebuilt from its ModifyLiquidity logs, price and fee from the last Swap at or before the point (replay.ts), max safe exposure as CostModel.maxSafeExposure with nobody pushing back (replay.ts, pinned to the Solidity). check: at one recent block, the same bound from PushCostLens.roundTripCosts by eth_call state override (what web/live/ runs every minute) next to the rebuild.",
   "ladderTicks": [
@@ -55,6 +55,11 @@
       "time": "2026-09-26T02:00:00.000Z",
       "block": "72710510",
       "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-26T03:00:00.000Z",
+      "block": "72746056",
+      "mintWindowClosed": true
     }
   ],
   "pools": [
@@ -72,8 +77,8 @@
       "decimals0": 18,
       "decimals1": 6,
       "hooked": false,
-      "modifyLiquidityLogs": 20568,
-      "swapsSinceLookback": 1593,
+      "modifyLiquidityLogs": 20569,
+      "swapsSinceLookback": 1603,
       "friday": {
         "price": 770.5465688898036,
         "maxSafeUsdg": 58735.690589109865,
@@ -165,13 +170,25 @@
           "livePositions": 412,
           "liquidityMatches": true,
           "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 770.8693295415267,
+          "maxSafeUsdg": 57050.25616822713,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 412,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 770.8629174507115,
-          "maxSafeUsdg": 57084.04546627891,
+          "price": 770.869333915554,
+          "maxSafeUsdg": 57050.23311898551,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 412,
@@ -179,7 +196,7 @@
           "swapFeePips": 3499
         },
         "lens": {
-          "usdg": 57084.04546627891,
+          "usdg": 57050.23311898551,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -202,8 +219,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 7896,
-      "swapsSinceLookback": 9647,
+      "modifyLiquidityLogs": 7904,
+      "swapsSinceLookback": 9866,
       "friday": {
         "price": 752.0185185681964,
         "maxSafeUsdg": 72008.44431827066,
@@ -295,13 +312,25 @@
           "livePositions": 304,
           "liquidityMatches": true,
           "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 747.0830381473048,
+          "maxSafeUsdg": 84170.55272670822,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 303,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 747.52651533068,
-          "maxSafeUsdg": 82602.3395873893,
+          "price": 747.0393924658268,
+          "maxSafeUsdg": 84309.31774284263,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 304,
@@ -309,7 +338,7 @@
           "swapFeePips": 3499
         },
         "lens": {
-          "usdg": 82602.3395873893,
+          "usdg": 84309.31774284263,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -425,10 +454,22 @@
           "livePositions": 1,
           "liquidityMatches": true,
           "swapFeePips": 2335
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 159.07941503003676,
+          "maxSafeUsdg": 31.422467497459337,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 159.07941503003676,
           "maxSafeUsdg": 31.422467497459337,
@@ -462,8 +503,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": true,
-      "modifyLiquidityLogs": 12520,
-      "swapsSinceLookback": 277,
+      "modifyLiquidityLogs": 12525,
+      "swapsSinceLookback": 283,
       "friday": {
         "price": 393.27788867038487,
         "maxSafeUsdg": 14057.615073719164,
@@ -555,16 +596,28 @@
           "livePositions": 317,
           "liquidityMatches": true,
           "swapFeePips": 6000
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 393.3130095053684,
+          "maxSafeUsdg": 35704.44502440571,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 320,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 393.3130095053684,
-          "maxSafeUsdg": 35634.13009902944,
+          "price": 393.31763351325304,
+          "maxSafeUsdg": 35765.79014618829,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
-          "livePositions": 318,
+          "livePositions": 319,
           "liquidityMatches": true,
           "swapFeePips": 6000
         },
@@ -592,8 +645,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 193,
-      "swapsSinceLookback": 666,
+      "modifyLiquidityLogs": 194,
+      "swapsSinceLookback": 667,
       "friday": {
         "price": 88.779870511765,
         "maxSafeUsdg": 912.1719471241557,
@@ -685,21 +738,33 @@
           "livePositions": 16,
           "liquidityMatches": true,
           "swapFeePips": 1762
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 87.54552327648317,
+          "maxSafeUsdg": 427.0607553044249,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 87.54544983609935,
-          "maxSafeUsdg": 421.41055279906664,
+          "price": 87.54552327648317,
+          "maxSafeUsdg": 427.0607553044249,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
-          "livePositions": 16,
+          "livePositions": 17,
           "liquidityMatches": true,
           "swapFeePips": 1762
         },
         "lens": {
-          "usdg": 421.41055279906664,
+          "usdg": 427.0607553044249,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
           "complete": true
@@ -722,8 +787,8 @@
       "decimals0": 18,
       "decimals1": 6,
       "hooked": false,
-      "modifyLiquidityLogs": 4540,
-      "swapsSinceLookback": 1040,
+      "modifyLiquidityLogs": 4541,
+      "swapsSinceLookback": 1049,
       "friday": {
         "price": 372.49686210904883,
         "maxSafeUsdg": 14236.162149717133,
@@ -815,13 +880,25 @@
           "livePositions": 177,
           "liquidityMatches": true,
           "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 372.2034223452348,
+          "maxSafeUsdg": 14479.351377443556,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 177,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 372.20749863803434,
-          "maxSafeUsdg": 14475.954497335086,
+          "price": 372.2034223452348,
+          "maxSafeUsdg": 14479.351377443556,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 177,
@@ -829,7 +906,7 @@
           "swapFeePips": 3499
         },
         "lens": {
-          "usdg": 14475.954497335086,
+          "usdg": 14479.351377443556,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -852,8 +929,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 5365,
-      "swapsSinceLookback": 519,
+      "modifyLiquidityLogs": 5367,
+      "swapsSinceLookback": 530,
       "friday": {
         "price": 340.69594357616825,
         "maxSafeUsdg": 6500.813227577537,
@@ -945,13 +1022,25 @@
           "livePositions": 171,
           "liquidityMatches": true,
           "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 341.09960271769427,
+          "maxSafeUsdg": 6484.2553355231075,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 171,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 341.09501158959796,
-          "maxSafeUsdg": 6486.507129907984,
+          "price": 341.1050259413814,
+          "maxSafeUsdg": 6481.624181326809,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 171,
@@ -959,7 +1048,7 @@
           "swapFeePips": 3499
         },
         "lens": {
-          "usdg": 6486.507129907984,
+          "usdg": 6481.624181326809,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -983,7 +1072,7 @@
       "decimals1": 6,
       "hooked": false,
       "modifyLiquidityLogs": 4676,
-      "swapsSinceLookback": 459,
+      "swapsSinceLookback": 465,
       "friday": {
         "price": 343.91654102334894,
         "maxSafeUsdg": 16054.810370161835,
@@ -1075,13 +1164,25 @@
           "livePositions": 159,
           "liquidityMatches": true,
           "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 344.06015980438053,
+          "maxSafeUsdg": 16038.346983365092,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 343.96551104194583,
-          "maxSafeUsdg": 15979.070210780992,
+          "price": 344.06015980438053,
+          "maxSafeUsdg": 16038.346983365092,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
           "livePositions": 159,
@@ -1089,7 +1190,7 @@
           "swapFeePips": 3499
         },
         "lens": {
-          "usdg": 15979.070210780992,
+          "usdg": 16038.346983365092,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
           "complete": true
@@ -1112,8 +1213,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 4802,
-      "swapsSinceLookback": 183,
+      "modifyLiquidityLogs": 4805,
+      "swapsSinceLookback": 192,
       "friday": {
         "price": 191.4866176025078,
         "maxSafeUsdg": 28361.831471069312,
@@ -1205,21 +1306,33 @@
           "livePositions": 159,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 190.5167910505646,
+          "maxSafeUsdg": 31946.77232728653,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 160,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 190.50241615936025,
-          "maxSafeUsdg": 31991.72217915137,
+          "price": 190.51670405900668,
+          "maxSafeUsdg": 31948.153581470855,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
-          "livePositions": 159,
+          "livePositions": 161,
           "liquidityMatches": true,
           "swapFeePips": 10990
         },
         "lens": {
-          "usdg": 31991.72217915137,
+          "usdg": 31948.153581470855,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -1242,7 +1355,7 @@
       "decimals0": 18,
       "decimals1": 6,
       "hooked": false,
-      "modifyLiquidityLogs": 13879,
+      "modifyLiquidityLogs": 13880,
       "swapsSinceLookback": 60,
       "friday": {
         "price": 147.99430495748834,
@@ -1335,10 +1448,22 @@
           "livePositions": 236,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 148.01548380513464,
+          "maxSafeUsdg": 37490.38424656719,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 236,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 148.01548380513464,
           "maxSafeUsdg": 37490.38424656719,
@@ -1372,8 +1497,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 10167,
-      "swapsSinceLookback": 287,
+      "modifyLiquidityLogs": 10169,
+      "swapsSinceLookback": 290,
       "friday": {
         "price": 224.86468681186585,
         "maxSafeUsdg": 14064.666885421855,
@@ -1465,13 +1590,25 @@
           "livePositions": 212,
           "liquidityMatches": true,
           "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 225.0245515898059,
+          "maxSafeUsdg": 13996.373487777433,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 212,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 225.02304206011195,
-          "maxSafeUsdg": 13997.26826743863,
+          "price": 225.02017534659032,
+          "maxSafeUsdg": 13998.967520142414,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 212,
@@ -1479,7 +1616,7 @@
           "swapFeePips": 3499
         },
         "lens": {
-          "usdg": 13997.26826743863,
+          "usdg": 13998.967520142414,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -1503,7 +1640,7 @@
       "decimals1": 18,
       "hooked": false,
       "modifyLiquidityLogs": 3021,
-      "swapsSinceLookback": 579,
+      "swapsSinceLookback": 585,
       "friday": {
         "price": 516.5559705934506,
         "maxSafeUsdg": 1348.7264534360702,
@@ -1595,13 +1732,25 @@
           "livePositions": 67,
           "liquidityMatches": true,
           "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 516.752217292702,
+          "maxSafeUsdg": 1316.6298868880076,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 67,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 516.7462560829441,
-          "maxSafeUsdg": 1317.641373026032,
+          "price": 516.752217292702,
+          "maxSafeUsdg": 1316.6298868880076,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 67,
@@ -1609,7 +1758,7 @@
           "swapFeePips": 3499
         },
         "lens": {
-          "usdg": 1317.641373026032,
+          "usdg": 1316.6298868880076,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -1725,10 +1874,22 @@
           "livePositions": 189,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 194.7850074586184,
+          "maxSafeUsdg": 26804.397135312134,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 194.7850074586184,
           "maxSafeUsdg": 26804.397135312134,
@@ -1762,8 +1923,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 3111,
-      "swapsSinceLookback": 412,
+      "modifyLiquidityLogs": 3114,
+      "swapsSinceLookback": 418,
       "friday": {
         "price": 633.6508758729746,
         "maxSafeUsdg": 16268.373075902116,
@@ -1855,13 +2016,25 @@
           "livePositions": 60,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 632.8829573932534,
+          "maxSafeUsdg": 16551.834329659778,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 60,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 632.8782099261239,
-          "maxSafeUsdg": 16553.293788235616,
+          "price": 632.901578639721,
+          "maxSafeUsdg": 16545.13020593813,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 60,
@@ -1869,7 +2042,7 @@
           "swapFeePips": 10990
         },
         "lens": {
-          "usdg": 16553.293788235616,
+          "usdg": 16545.13020593813,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -1892,7 +2065,7 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 3993,
+      "modifyLiquidityLogs": 3995,
       "swapsSinceLookback": 86,
       "friday": {
         "price": 1085.0702928018989,
@@ -1985,10 +2158,22 @@
           "livePositions": 65,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 1084.5197842145208,
+          "maxSafeUsdg": 17593.321858669082,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 1084.5197842145208,
           "maxSafeUsdg": 17593.321858669082,
@@ -2022,8 +2207,8 @@
       "decimals0": 6,
       "decimals1": 18,
       "hooked": false,
-      "modifyLiquidityLogs": 3369,
-      "swapsSinceLookback": 1148,
+      "modifyLiquidityLogs": 3370,
+      "swapsSinceLookback": 1150,
       "friday": {
         "price": 124.34353548085221,
         "maxSafeUsdg": 12762.615011242375,
@@ -2115,13 +2300,25 @@
           "livePositions": 76,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 121.96374897864935,
+          "maxSafeUsdg": 20498.51723520295,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 76,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 121.96281957583882,
-          "maxSafeUsdg": 20499.947878476072,
+          "price": 121.97273194464357,
+          "maxSafeUsdg": 20489.590392446993,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 76,
@@ -2129,7 +2326,7 @@
           "swapFeePips": 10990
         },
         "lens": {
-          "usdg": 20499.947878476072,
+          "usdg": 20489.590392446993,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -2153,7 +2350,7 @@
       "decimals1": 18,
       "hooked": false,
       "modifyLiquidityLogs": 445,
-      "swapsSinceLookback": 231,
+      "swapsSinceLookback": 233,
       "friday": {
         "price": 1183.8231680680085,
         "maxSafeUsdg": 348.87421633204787,
@@ -2245,11 +2442,11 @@
           "livePositions": 10,
           "liquidityMatches": true,
           "swapFeePips": 977
-        }
-      ],
-      "check": {
-        "block": "72728729",
-        "rebuilt": {
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
           "price": 1183.0322102322282,
           "maxSafeUsdg": 355.0914654569411,
           "bindingTicks": 1823,
@@ -2257,9 +2454,21 @@
           "livePositions": 10,
           "liquidityMatches": true,
           "swapFeePips": 977
+        }
+      ],
+      "check": {
+        "block": "72751889",
+        "rebuilt": {
+          "price": 1182.3492372447945,
+          "maxSafeUsdg": 360.46214879316096,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
         },
         "lens": {
-          "usdg": 355.0914654569411,
+          "usdg": 360.46214879316096,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -2283,7 +2492,7 @@
       "decimals1": 18,
       "hooked": false,
       "modifyLiquidityLogs": 4480,
-      "swapsSinceLookback": 150,
+      "swapsSinceLookback": 151,
       "friday": {
         "price": 29.453471969479935,
         "maxSafeUsdg": 6144.070363223076,
@@ -2375,13 +2584,25 @@
           "livePositions": 61,
           "liquidityMatches": true,
           "swapFeePips": 9991
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 29.440389522816826,
+          "maxSafeUsdg": 6183.149874802682,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 29.441064302410346,
-          "maxSafeUsdg": 6181.191624437037,
+          "price": 29.440389522816826,
+          "maxSafeUsdg": 6183.149874802682,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 61,
@@ -2389,7 +2610,7 @@
           "swapFeePips": 9991
         },
         "lens": {
-          "usdg": 6181.191624437037,
+          "usdg": 6183.149874802682,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -2505,10 +2726,22 @@
           "livePositions": 15,
           "liquidityMatches": true,
           "swapFeePips": 3450
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 249.81022841107122,
+          "maxSafeUsdg": 1118.675070088651,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 3450
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 249.81022841107122,
           "maxSafeUsdg": 1118.675070088651,
@@ -2543,7 +2776,7 @@
       "decimals1": 6,
       "hooked": false,
       "modifyLiquidityLogs": 852,
-      "swapsSinceLookback": 239,
+      "swapsSinceLookback": 240,
       "friday": {
         "price": 150.832870890842,
         "maxSafeUsdg": 1593.7149713925548,
@@ -2635,13 +2868,25 @@
           "livePositions": 17,
           "liquidityMatches": true,
           "swapFeePips": 3379
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 150.3435450121759,
+          "maxSafeUsdg": 1493.0133419635101,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 150.35700519625615,
-          "maxSafeUsdg": 1495.936444245459,
+          "price": 150.3435450121759,
+          "maxSafeUsdg": 1493.0133419635101,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
           "livePositions": 17,
@@ -2649,7 +2894,7 @@
           "swapFeePips": 3379
         },
         "lens": {
-          "usdg": 1495.936444245459,
+          "usdg": 1493.0133419635101,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
           "complete": true
@@ -2765,10 +3010,22 @@
           "livePositions": 5,
           "liquidityMatches": true,
           "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 109.63479944023086,
+          "maxSafeUsdg": 283.1043663997097,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 109.63479944023086,
           "maxSafeUsdg": 283.1043663997097,
@@ -2895,10 +3152,22 @@
           "livePositions": 9,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 236.46762496758916,
+          "maxSafeUsdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 236.46762496758916,
           "maxSafeUsdg": 2003.151359854331,
@@ -3025,10 +3294,22 @@
           "livePositions": 35,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 138.0276273102736,
+          "maxSafeUsdg": 3324.288139784576,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 35,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 138.0276273102736,
           "maxSafeUsdg": 3324.288139784576,
@@ -3063,7 +3344,7 @@
       "decimals1": 18,
       "hooked": false,
       "modifyLiquidityLogs": 2298,
-      "swapsSinceLookback": 28,
+      "swapsSinceLookback": 29,
       "friday": {
         "price": 71.48353050171619,
         "maxSafeUsdg": 1703.1832912661987,
@@ -3155,13 +3436,25 @@
           "livePositions": 50,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 71.55830065917796,
+          "maxSafeUsdg": 1726.004185039298,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 71.54796082606525,
-          "maxSafeUsdg": 1723.0070614055617,
+          "price": 71.55830065917796,
+          "maxSafeUsdg": 1726.004185039298,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
           "livePositions": 50,
@@ -3169,7 +3462,7 @@
           "swapFeePips": 10990
         },
         "lens": {
-          "usdg": 1723.0070614055617,
+          "usdg": 1726.004185039298,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
           "complete": true
@@ -3285,10 +3578,22 @@
           "livePositions": 1,
           "liquidityMatches": true,
           "swapFeePips": 10791
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 20.183236907856465,
           "maxSafeUsdg": 0.000005000920290835799,
@@ -3415,10 +3720,22 @@
           "livePositions": 8,
           "liquidityMatches": true,
           "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 352.6238816791571,
           "maxSafeUsdg": 822.2945856862714,
@@ -3453,7 +3770,7 @@
       "decimals1": 18,
       "hooked": false,
       "modifyLiquidityLogs": 2,
-      "swapsSinceLookback": 55,
+      "swapsSinceLookback": 59,
       "friday": {
         "price": 745.3798076322915,
         "maxSafeUsdg": 0.529847504814053,
@@ -3545,13 +3862,25 @@
           "livePositions": 1,
           "liquidityMatches": true,
           "swapFeePips": 468
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 745.1398330780346,
+          "maxSafeUsdg": 0.5556972617973832,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
-          "price": 744.1757767889048,
-          "maxSafeUsdg": 0.6595413716365884,
+          "price": 744.6739176809756,
+          "maxSafeUsdg": 0.6058864978362112,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "livePositions": 1,
@@ -3559,7 +3888,7 @@
           "swapFeePips": 468
         },
         "lens": {
-          "usdg": 0.6595413716365884,
+          "usdg": 0.6058864978362112,
           "bindingTicks": 1823,
           "bindingAssetUp": true,
           "complete": true
@@ -3675,10 +4004,22 @@
           "livePositions": 6,
           "liquidityMatches": true,
           "swapFeePips": 48952
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
         }
       ],
       "check": {
-        "block": "72728729",
+        "block": "72751889",
         "rebuilt": {
           "price": 41.43179659164545,
           "maxSafeUsdg": 231.70312959425848,
@@ -3692,6 +4033,148 @@
           "usdg": 231.70312959425848,
           "bindingTicks": 1823,
           "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "AMC",
+      "id": "0x7499938c352d5b5b8f0c648722aca5ee964ef9b85c3a3041f1ec379726291d9d",
+      "key": {
+        "currency0": "0x05a3d1cd21d0c88145e82600e62e7e496e0f222b",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 1000,
+        "tickSpacing": 10,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 4279,
+      "swapsSinceLookback": 1166,
+      "friday": {
+        "price": 2.921096370437674,
+        "maxSafeUsdg": 626.5028167397833,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 2.921096370437674,
+          "maxSafeUsdg": 626.5028167397833,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 51,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 2.9136456863589073,
+          "maxSafeUsdg": 661.3247498215035,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 52,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 2.9211793319267185,
+          "maxSafeUsdg": 699.4700644861798,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 52,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 2.9311787164744123,
+          "maxSafeUsdg": 608.2905652430233,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 53,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 2.9321184274170338,
+          "maxSafeUsdg": 599.1606951251024,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 53,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 2.925086239339747,
+          "maxSafeUsdg": 767.5742673141588,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 54,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 2.9253303353211,
+          "maxSafeUsdg": 739.8458646143732,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 56,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T03:00:00.000Z",
+          "block": "72746056",
+          "mintWindowClosed": true,
+          "price": 2.9196073813231185,
+          "maxSafeUsdg": 820.1352098045969,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 56,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        }
+      ],
+      "check": {
+        "block": "72751889",
+        "rebuilt": {
+          "price": 2.919133715566514,
+          "maxSafeUsdg": 825.3711233398992,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 56,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        "lens": {
+          "usdg": 825.3711233398992,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
           "complete": true
         },
         "slot0PriceMatchesLastSwap": true,

@@ -94,6 +94,7 @@ const STATUS = {
   unknown: { icon: "○", label: "no Friday point" },
   thin: { icon: "○", label: "under 1 USDG on Friday" },
   dynamic: { icon: "○", label: "dynamic fee: not compared" },
+  pending: { icon: "…", label: "measuring" },
 };
 // Friday figures under 1 USDG (GME, QQQ on 2026-09-25) are too thin for a ratio to mean anything.
 const MIN_FRIDAY_USDG = 1;
@@ -108,7 +109,7 @@ function row(p, nowMs) {
   const fri = p.friday;
   const ratio = ratioOf(p);
   const move = now && fri ? now.price / fri.price - 1 : null;
-  const st = p.dynamicFee ? "dynamic" : fri && fri.maxSafeUsdg < MIN_FRIDAY_USDG ? "thin" : standing(ratio);
+  const st = p.dynamicFee ? "dynamic" : fri && fri.maxSafeUsdg < MIN_FRIDAY_USDG ? "thin" : fri && !now ? "pending" : standing(ratio);
   const s = STATUS[st];
   return `<tr data-id="${p.id}"><td><b>${esc(p.symbol)}</b>${p.hooked ? " †" : ""}<br><span class="meta">fee ${fmt(p.key.fee)}${p.key.fee === 8388608 ? " (dynamic)" : ""}</span></td>` +
     `<td><span class="status ${st}"><i aria-hidden="true">${s.icon}</i>${s.label}</span></td>` +
