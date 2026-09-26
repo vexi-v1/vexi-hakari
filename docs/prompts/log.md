@@ -310,3 +310,20 @@ position is the calibration case, HIMS at 0.006× and TSLA's +100 % push the cou
 `SafeSettle` needs a hooked pool, `ExposureGuard` reads the same bound on any existing pool, 26 of the 28 deepest
 stock-token pools have none, FEEDBACK § 10). The video segment was handed over in the session, not committed. Checked
 locally on `python3 -m http.server` before the commit.
+
+## 2026-09-26 23:45 — Abner: what a refusal does, in plain words, with enough background
+
+> 安全線本身放上去，它就拒絕。拒絕會發生什麼事？能不能講仔細一點，要有充足的背景，讓大家好懂。如果很難插入進去解釋，就用 FAQ
+> 把可能的問題列出來並回答。
+>
+> ("'Put the bound itself on it and it refuses.' What happens on a refusal? Explain it in more detail, with enough background,
+> so that everyone can follow. If it is hard to work into the text, use a FAQ: list the likely questions and answer them.")
+
+Output: `web/vexi/index.html`, a section "Refused: what it means, and what happens next" after the what-if card: a background
+paragraph (fix, exposure, bound, and what refused means), then eight questions as `<details>`, the first open: what a refusal
+does (`trusted = false`, `tickUsed` 0, the `Settled` reason), why refuse, what happens next and who decides (wait and retry,
+a slower or other source, a cap before expiry; the fallback is the next target), what happens on this venue today (nothing:
+the fix does not read the bound), why the line itself refuses and what "watch" is (the board's label, not a rule), who is
+worse off, whether a refusal can be forced, and the on-chain refusal tx. Every figure is the README's. The what-if's second
+line and the disclosure bullet link to it. The video segment keeps its four-second line; a longer variant went into the
+draft's "+5 s" list.

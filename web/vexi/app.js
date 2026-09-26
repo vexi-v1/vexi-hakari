@@ -158,7 +158,7 @@ function renderWhatIf() {
   if (w.bound > 0) {
     const at = whatIf(w.bound, w.bound), atB = BAND[at.band];
     const half = whatIf(w.bound * WATCH_AT, w.bound), halfB = BAND[half.band];
-    $("wi-out2").innerHTML = `The same fix with <b>${fmtUsdg(w.bound)} USDG</b> on it, the bound itself → <span class="status ${at.band}"><i aria-hidden="true">${atB.icon}</i>${atB.label}</span>; from ${fmtUsdg(w.bound * WATCH_AT)} USDG the board says <span class="status ${half.band}"><i aria-hidden="true">${halfB.icon}</i>${halfB.label}</span>.`;
+    $("wi-out2").innerHTML = `The same fix with <b>${fmtUsdg(w.bound)} USDG</b> on it, the bound itself → <span class="status ${at.band}"><i aria-hidden="true">${atB.icon}</i>${atB.label}</span>; from ${fmtUsdg(w.bound * WATCH_AT)} USDG the board says <span class="status ${half.band}"><i aria-hidden="true">${halfB.icon}</i>${halfB.label}</span>. <a href="#refused">What a refusal does</a>.`;
   } else {
     $("wi-out2").innerHTML = "";
   }
