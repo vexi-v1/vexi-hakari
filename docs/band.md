@@ -1,7 +1,7 @@
 # The band: stop selling at a fixed price when the price moves
 
-An option writer that quotes a fixed premium is right only while the underlying stands still. When the price moves,
-the premium goes stale, and a buyer who sees the move first buys it at the old price. When the price is *pushed*
+A fixed option premium can become stale as the market or time changes. A buyer can take the old quote before
+the writer replaces it. When the price is *pushed*
 (a pool anyone can trade is a price anyone can move) the buyer and the pusher can be the same person. HAKARI's band
 is the rule for when to keep quoting, when to quote less, and when to stop.
 
@@ -29,31 +29,60 @@ second, so a price pushed and undone inside one transaction never reaches the ce
 once and shrinks the book in the same block. Setting `nowWindow` makes `current` a short TWAP instead, which ignores
 a same-transaction push but lags a genuine move by that window.
 
+## Quote validity is separate from the rolling band
+
+Every nonzero `FixedPremium` quote now has an explicit, exclusive `validUntil`. `ask` refuses at or after that
+instant, even if the rolling band has recovered. Only the owner can renew it. Setting the premium to zero disables
+it. This is a breaking API change: `setPremium(seriesId, premium, validUntil)` replaces the two-argument setter.
+
+For a price anchor as well, the owner calls
+`setAnchoredPremium(seriesId, premium, validUntil, priceSource, maxDeviationBps)`. The source implements
+`IQuoteReference.referencePriceWad()`: the contract captures its price at quote creation and refuses subsequent
+asks outside that fixed anchor's tolerance. Pass the band's address to use its pool's live `slot0` price, even when
+`nowWindow` makes the band itself use a short TWAP. Renewing with `setPremium` explicitly removes any old anchor;
+renew with `setAnchoredPremium` to retain price protection. The tolerance is configurable from 1 to 5,000 bps.
+
+The owner must choose a trusted source for the series' pair. Neither interface nor contract proves a price is
+fair, checks the pair of an arbitrary source, or detects a manipulated price at quote creation. Zero or reverting
+source reads refuse anchored quotes. Existing positions still settle and exercise when a quote expires.
+
+`band.status().quoting` describes the band alone, not a particular series' premium or available collateral. A UI
+must also call the book's quote for that order; an expired or off-anchor inner quote can refuse while the band is
+healthy. Tests: `FixedPremium.t.sol` and `StabilityBandTest.test_AnchorRefusesAfterRollingBandRecovers`.
+
 ## Why 5 %
 
-The demo is tokenized US stocks on Robinhood Chain (TSLA, AAPL). Those stocks already have a band, set by the market
-they trade in: under the US **Limit Up-Limit Down** plan, a Tier 1 stock (S&P 500 and Russell 1000 names) priced
-above $3 may not trade more than **5 %** away from its average price over the preceding five minutes, and trading
-pauses if it stays at that limit. TSLA and AAPL are Tier 1.
+The public demonstration uses a **configurable fixed 5% half-width**. Market price bands inspired the example;
+it is not a calibrated safety threshold, a loss guarantee, or an implementation of US Limit Up-Limit Down (LULD).
+A narrower band pauses sooner; a wider one admits larger deviations from the rolling reference.
 
-So 5 % is the width at which the stock's own market stops and asks for a breath. The book stops at the same
-distance, measured the same way (from a recent average, not from the last trade):
+LULD uses a reference based on eligible transactions over the preceding five minutes during regular US trading
+hours. This example uses a one-hour on-chain tick TWAP (a geometric price average) and runs outside those hours
+as well. Matching a percentage does not make the reference, operating hours or protections equivalent. See
+[NYSE's description](https://www.nyse.com/trade/trading-information) and the
+[Nasdaq LULD FAQ](https://nasdaqtrader.com/content/MarketRegulation/LULD_FAQ.pdf).
 
-- **Narrower** and the book would pause on moves the stock's own exchange lets trade, and a writer would stop
-  exactly when buyers want protection.
-- **Wider** and a fixed premium stays for sale further from where it was set. Inside the band, what a buyer of calls
-  whose value moves at most one-for-one with the price can take per call is at most
-  `maxContracts × u × (1 − u) × halfWidth × center ≤ maxContracts × halfWidth × center / 4`, because the size shrinks
-  as the distance grows. At TSLA ≈ 378 USDG and the defaults, that is at most **236 USDG per call**; at 10 % it would
-  be twice that.
-- **When the stock's market is closed** (nights, weekends, holidays) the pool is the only price and nobody can mint
-  or redeem the token to pull it back. HAKARI's first study measured such a weekend: on 2026-08-30 a 10 % push of
-  the HIMS/USDG pool cost 12 USDG in fees, and the pool stood at 54.50 against a Friday close of 28.84
-  ([archive](../archive/hakari-v1/README.md)). With a 5 % band the book has stopped long before a move like that, and
-  after one that large it reopens only once the pushed price has stood for most of an hour.
+The owner may set a nonzero half-width up to 50% with `setParams`. This repository does not prescribe a production
+parameter for stocks, weekends, or other tokens.
 
-5 % is the shipped default, not a constant of nature: the owner of a band can set any half-width up to 50 % with one
-`setParams` call, and a market with no such exchange rule (a token with no listed underlying) should choose its own.
+## What the taper bounds
+
+Let `C` be the current rolling center, `h` the fractional half-width and `M` the maximum contracts per call.
+Ignoring integer rounding, `n <= M(1-u)` and `|current-C| = u h C` imply:
+
+```
+n × |current − C| <= M × u(1 − u) × h × C <= M × h × C / 4
+```
+
+This bounds **single-call size times reference-price deviation**, not observed arbitrage profit or total strategy
+loss. At `C = 378 USDG`, `M = 50`, `h = 0.05`, that expression is 236.25 USDG. The fuzz test
+`testFuzz_PerCallSizeTimesReferenceDeviationIsBounded` checks the arithmetic with contract rounding.
+
+Interpreting this as an incremental option-value bound additionally assumes a fair premium at that same center,
+value changing at most one-for-one with spot, and other pricing inputs unchanged. The public code does not enforce
+those economic assumptions. A quote's original anchor can differ from the rolling center. Repeat calls can consume
+more than the per-call cap; no per-block or per-quote cumulative budget is implemented here. The remaining order
+quantity and deliverable collateral still constrain fills. Added spread does not establish a profit guarantee.
 
 ## On a fork of Robinhood Chain mainnet
 
@@ -69,16 +98,15 @@ swaps. A book sells calls at a fixed 8 USDG through the band.
 | The pool is pushed +5.1 % (a 408,413 USDG swap) and a buy follows in the same transaction | `Paused(OutsideBand)`; pushed back in the same transaction, the buy fills at 80.008 again. The one-hour center never moved |
 | A +6 % push is held through the five minutes before expiry | The settle window reads 400.98 against a center of 378.23 (601 bps): refused, `settle` reverts `NotYet`; one window later it settles at 378.27, the hook's own five-minute TWAP |
 
-A quote through the band costs 94,117 gas (storage cold); `priceAt` for settlement 130,190 gas on the first window.
+The extraction measured 94,117 gas for a cold band quote and 130,190 gas for first-window settlement. These are
+historical measurements from before quote-validity checks; use the current tests for current costs.
 
-## Settlement uses the same idea
+## Experimental settlement adapter
 
-`HookTwapExpiryPrice` settles an expiry on the hook's five-minute TWAP ending at expiry, but only if that TWAP is
-within 5 % of the TWAP of the half hour before it. If a push moves the settle window out of the band, settlement waits
-for the next five-minute window instead of paying out on the pushed price; after six windows without an accepted one
-the series cannot settle here, and the book unwinds it (makers get their collateral back, holders their premiums).
-Every attempt is held to the band drawn *before* expiry (`bandFromExpiry`), so a push cannot drag its own reference
-along by being held.
+The primary demonstration is **quote protection before a new fill**. `HookTwapExpiryPrice` is a separate,
+experimental adapter: it selects the first acceptable settlement window, potentially after expiry. Its trade-off
+is between refusing an out-of-band price and completing settlement. It is not a guarantee of a fair expiry price.
+See [the settlement state flow and economic outcomes](settlement.md).
 
 ## What it does not protect
 
@@ -87,8 +115,10 @@ along by being held.
   very edge (one contract per call, +19 % spread), and after an hour the center is the pushed price to the tick
   (`test_APushOfTheReferenceThatStandsBecomesTheCenter`). The band makes a push pay for being held (against anyone
   who can trade it back); it does not make it impossible. What limits a push that stands is the size a writer offers
-  at all.
-- **Inside the band a stale premium still pays, less.** Bounded as above, not zero.
+  at all. The quote deadline and optional original-price anchor are independent checks and can still refuse
+  a fill after the rolling band resumes.
+- **Inside the band an incorrect premium can still be traded.** Validity and optional anchors limit when it is
+  offered; the taper arithmetic above is not an unconditional bound on profit or loss.
 - **The size cap is per call.** `ask` is a view and cannot count what traded this block, so a buyer can call again.
   Each call pays the widened spread; the cap limits one call, not the block.
 - **The ring of observations is finite.** More swap-seconds within the window than the hook's cardinality and the

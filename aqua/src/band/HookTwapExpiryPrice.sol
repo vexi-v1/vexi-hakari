@@ -15,7 +15,7 @@ import { IExpiryPrice } from "../price/IExpiryPrice.sol";
 import { BandMath, ITruncatedOracle } from "./BandMath.sol";
 
 /// @title HookTwapExpiryPrice
-/// @notice Settles a series on a Uniswap v4 pool's TWAP, read from the pool's HAKARI oracle hook, but only when that
+/// @notice Experimental settlement adapter. Selects the first accepted window on a Uniswap v4 pool's TWAP, read from the pool's HAKARI oracle hook, but only when that
 ///         TWAP lies inside a fixed band around the TWAP the pool drew just before it. For a token with no price feed,
 ///         or a stock token over a weekend, when its market is closed and the pool is the only price.
 ///
@@ -30,7 +30,9 @@ import { BandMath, ITruncatedOracle } from "./BandMath.sol";
 ///         next window rather than setting the price. If no attempt is accepted, `NoWindowInBand`: the series cannot
 ///         be settled here and, after the book's grace, holders get their premiums back (`OptionBook.refund`).
 ///
-/// @dev The answer is a pure function of the hook's observations, so anyone computes the same one. The hook keeps a
+/// @dev A genuine gap can refuse every window; deferred acceptance can select a post-expiry price. Unsettled
+///      refunds change the economic outcome. This is not a guarantee of fair expiry settlement. See docs/settlement.md.
+///      The answer is a pure function of the hook's observations, so anyone computes the same one. The hook keeps a
 ///      ring of observations (one per second with a swap); once the ring wraps past the band window the reads revert.
 ///      `record` stores the answer on chain the first time it can be computed, so a settlement no longer depends on
 ///      the ring afterwards: call it soon after the accepted window ends (a keeper or the settler).

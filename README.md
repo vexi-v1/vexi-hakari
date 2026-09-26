@@ -8,10 +8,12 @@ the buyer's transaction, then pushes it home at expiry. The same wallet can also
 strategy, and a custom SwapVM instruction, `ExposureGuard`, keeps the spot strategy from selling a token an option
 buyer was promised.
 
-A writer that sells at a fixed price is right only while the price stands still. **HAKARI's band** reads a **Uniswap
+A fixed premium can become stale as the market or time changes. **HAKARI's band** reads a **Uniswap
 v4** pool through HAKARI's truncated-oracle hook: around the pool's one-hour TWAP it draws a band of ±5 %, sells less
-and at a wider spread as the price nears the edge, and stops selling past it. The same hook settles an expiry on its
-five-minute TWAP, and refuses a window that a push moved out of the band.
+and at a wider spread as the price nears the edge, and stops selling past it. The fixed width is a demonstration
+parameter. Fixed quotes also expire and can be bound to their original reference price; a recovering TWAP cannot
+renew them. A separate [experimental settlement adapter](docs/settlement.md) tries TWAP windows and may end in
+refunds if none is accepted. Quote protection is the main demonstration.
 
 Built at ETHGlobal Tokyo 2026 on Robinhood Chain, one Continuity Track entry for two partner prizes: 1inch **Build an
 Aqua App** and Uniswap Foundation **Best Uniswap Stack Contribution**. This repository started as a separate
@@ -21,7 +23,8 @@ Uniswap study and changed shape during the event; [docs/history.md](docs/history
 |---|---|
 | [How it fits together](#how-it-fits-together) | One picture and the path of a trade |
 | [For 1inch reviewers](#for-1inch-reviewers-aqua-and-swapvm) · [For Uniswap reviewers](#for-uniswap-reviewers-v4-hook-and-band) | The integration, file by file |
-| [docs/band.md](docs/band.md) | The band, and why its width is 5 % |
+| [docs/band.md](docs/band.md) | Quote validity, optional anchors, the fixed demonstration band and its limits |
+| [docs/settlement.md](docs/settlement.md) | Experimental settlement: window selection, deferral and refund outcomes |
 | [docs/history.md](docs/history.md) · [docs/extraction.md](docs/extraction.md) | How the repository got here; what was brought in from the team's private code and what was left out |
 | [archive/](archive/README.md) | The first study, "what it costs to fake a price", kept as it was |
 | [FEEDBACK.md](FEEDBACK.md) | Uniswap developer feedback |
@@ -37,7 +40,7 @@ written to stand on its own:
 - when a writer that relies on an on-chain price should stop quoting, and when it may settle (**Uniswap v4**).
 
 Vexi's own pricing and vault accounting are not here. In their place this repository uses the simplest honest
-stand-ins: a `FixedPremium` pricer (one premium per series) and a band of fixed width.
+stand-ins: a `FixedPremium` pricer (one expiring premium per series, with an optional price anchor) and a band of fixed width.
 
 ## How it fits together
 
@@ -60,16 +63,19 @@ The path of one trade:
 1. **Ship.** The maker approves Aqua once per token and ships two strategies on the same balance: one whose app is
    its `AquaWriter`, one a SwapVM spot pool guarded by `ExposureGuard`. Nothing moves.
 2. **Post.** The writer posts covered calls or cash-secured puts on the `OptionBook`, priced by the band over a
-   `FixedPremium`. Still nothing moves; `AquaWriter.promised(token)` records the promise, and `ExposureGuard` shrinks
+   `FixedPremium` with an explicit quote deadline (and optionally a captured price anchor). Still nothing moves; `AquaWriter.promised(token)` records the promise, and `ExposureGuard` shrinks
    the spot pool to what is not promised, at the same price.
 3. **Buy.** The book asks the band, which reads the v4 pool: inside the band it returns the fixed premium, widened by
    how far the price is from the center, for at most as many contracts as that distance allows. The buyer pays; inside
    the same `buy`, `AquaWriter.provide` calls `Aqua.pull` and exactly the collateral leaves the maker's wallet for the
    book. Past the band's edge the buy reverts `Paused(OutsideBand)`.
-4. **Settle.** After expiry anyone calls `settle`: `HookTwapExpiryPrice` returns the hook's five-minute TWAP at
-   expiry if it is within 5 % of the half hour before; otherwise settlement waits for the next window.
+4. **Experimental settlement.** After expiry anyone calls `settle`: `HookTwapExpiryPrice` returns the hook's five-minute TWAP at
+   expiry if it is within 5 % of the preceding band window; otherwise it tries subsequent windows. If none is
+   accepted before the book's grace ends, collateral is returned and pooled premiums are refundable pro rata by
+   contract. This can also happen after a genuine market gap; see [settlement outcomes](docs/settlement.md).
 5. **Close.** Holders exercise by delivery. Unexercised collateral, exercise proceeds and premiums go back to the
-   maker through `Aqua.push`, credited to the same strategy, promised again.
+   maker through `Aqua.push`, credited to the same strategy. Returning virtual balances does not automatically
+   create new option orders or new `promised` amounts.
 
 ## For 1inch reviewers: Aqua and SwapVM
 
@@ -97,7 +103,7 @@ the router deployed on Robinhood Chain 4663). Canonical Aqua and the deployed Sw
 | The oracle is read from the pool key: `key.hooks` is the hook | `StabilityBandPricer` constructor, `HookTwapExpiryPrice.setSource` |
 | Tick → price through `TickMath.getSqrtPriceAtTick`, √P² without a 320-bit overflow, either token order, any decimals | [`BandMath.priceOf`](aqua/src/band/BandMath.sol) |
 | The hook's truncation used as a check: raw and truncated TWAPs more than a half-width apart pause the book | `StabilityBandPricer.status` (`SeriesDisagree`) |
-| Settlement from the hook's TWAP, deferred when a push moves the window out of the band | [`HookTwapExpiryPrice.sol`](aqua/src/band/HookTwapExpiryPrice.sol) |
+| Experimental settlement-window selection, including deferral and refund outcomes | [`HookTwapExpiryPrice.sol`](aqua/src/band/HookTwapExpiryPrice.sol) |
 | A hooked pool on testnet: `PositionManager.initializePool`, full-range `MINT_POSITION` + `SETTLE_PAIR` through Permit2, `increaseObservationCardinalityNext`, `PoolSwapTest` swaps | [`aqua/script/HookedPool.s.sol`](aqua/script/HookedPool.s.sol), record [`aqua/deployments/46630-hooked-pool.json`](aqua/deployments/46630-hooked-pool.json) |
 | Proofs | [`test/StabilityBand.t.sol`](aqua/test/StabilityBand.t.sol) (the band on a mock PoolManager that `StateLibrary` reads like the real one), [`test/StabilityTwapSettle.t.sol`](aqua/test/StabilityTwapSettle.t.sol), and [`test/StabilityBandFork.t.sol`](aqua/test/StabilityBandFork.t.sol): the hook's **deployed 46630 bytecode**, etched at its own address on a 4663 fork, as the hook of a new TSLA/USDG pool on the **real PoolManager** |
 
@@ -112,7 +118,7 @@ forge test                                  # the hook: 5 tests
 
 cd aqua
 cp .env.example .env                        # fill in RH_MAINNET_RPC (read-only, fork source only)
-forge test                                  # the Aqua seam, the band, the settlement: 83 tests, fork pinned at block 72,248,228
+forge test                                  # Aqua, quote validity, band, experimental settlement; fork block 72,248,228
 ```
 
 Robinhood Chain mainnet 4663 is read-only here: every transaction in the tests goes to a local fork, and every
@@ -138,7 +144,7 @@ when each part was written and [docs/extraction.md](docs/extraction.md) what was
 or any other pre-existing project is included. Public libraries are pinned submodules, unmodified: v4-core,
 OpenZeppelin `uniswap-hooks` and `openzeppelin-contracts`, forge-std, 1inch `aqua`, `swap-vm` and `solidity-utils`.
 
-Built with Claude Code (Anthropic). The prompts that shaped the work are in [docs/prompts/](docs/prompts/); the rules
+Built with Claude Code (Anthropic), with subsequent quote-validity and documentation work using Codex (OpenAI). The prompts that shaped the work are in [docs/prompts/](docs/prompts/); the rules
 every AI session follows are in [AGENTS.md](AGENTS.md).
 
 ## License

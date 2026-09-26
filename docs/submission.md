@@ -9,9 +9,7 @@ Options written from a wallet through 1inch Aqua, with a Uniswap v4 price band t
 
 ## Short description (≤ 280 characters)
 
-Covered calls and cash-secured puts whose collateral stays in the writer's wallet until a buyer fills, pulled by 1inch
-Aqua. HAKARI's hook keeps a v4 pool's TWAP; a ±5 % band around it thins the book near the edge, stops it past, and
-guards settlement.
+Options collateral stays in the maker's wallet until a fill through 1inch Aqua. A configurable Uniswap v4 TWAP band reduces quote size and pauses new fills on large deviations. Fixed quotes expire and can carry an original-price anchor.
 
 ## Long description
 
@@ -23,24 +21,29 @@ it and posts covered calls and cash-secured puts as promises. When a buyer buys,
 of the contracts sold from the writer's wallet, inside the buyer's transaction; at expiry, unexercised collateral,
 exercise proceeds and premiums come home through Aqua `push`, credited to the same strategy. The same wallet can
 quote spot through a SwapVM strategy, and `ExposureGuard`, a custom SwapVM instruction, shrinks that spot pool to what
-the options have not promised, at the same price, so a buyer who sees option depth can always fill it. It runs as an
+the options have not promised, at the same price. Fills still check live balances, allowances and strategy state. It runs as an
 opcode on our router and, through SwapVM's `Extruction`, on 1inch's router already deployed on Robinhood Chain.
 
-A writer that sells at a fixed price is right only while the price stands still, and a pool anyone can trade is a
-price anyone can push. HAKARI (秤, "the scale") started at this event as a study of what it costs to fake a Uniswap
+A fixed premium can become stale as the market or time changes, and a pool anyone can trade is a price anyone
+can push. HAKARI (秤, "the scale") started at this event as a study of what it costs to fake a Uniswap
 v4 price: on Robinhood Chain's stock-token weekend of 2026-08-30, while minting was closed, pushing the HIMS/USDG pool
 10 % cost 12 USDG, and the pool stood at 54.50 against a Friday close of 28.84. It now guards the writer.
 `HakariOracleHook`, OpenZeppelin's truncated-oracle hook with both TWAPs in one call, records each second's price
 before the first swap, so a push undone inside one transaction never reaches its TWAP. `StabilityBandPricer` draws a
 band of ±5 % around a hooked pool's one-hour TWAP: the nearer the price is to the edge, the fewer contracts per trade
-and the wider the spread; past the edge the book stops until the price comes back. 5 % is the Limit Up-Limit Down band
-of the stocks themselves (Tier 1, above $3), so the book stops about where the stock's own market would, and keeps
-that brake on weekends, when the pool is the only price. `HookTwapExpiryPrice` settles an expiry on the hook's
-five-minute TWAP only if it is inside the same band drawn before expiry; a push through the settle window defers
-settlement to the next window instead of paying out on it.
+and the wider the spread; past the edge new fills stop. The fixed 5% default is an illustrative, configurable
+parameter inspired by market price bands, not a reproduction of LULD or a calibrated safety threshold.
+Fixed quotes have explicit deadlines and optional anchors captured when set: a rolling TWAP catching up with a
+persistent move cannot renew an expired quote or move its original anchor.
 
-Every claim has a test on a fork of Robinhood Chain mainnet 4663: canonical Aqua, the deployed SwapVM router, real
-TSLA and USDG, and the hook's deployed testnet bytecode running on the real v4 PoolManager.
+A separate experimental `HookTwapExpiryPrice` adapter selects the first TWAP window accepted against a band drawn
+before expiry. Deferral can select a post-expiry price; a genuine gap or a sustained manipulation can leave no
+accepted window. After the book's grace, the result is collateral return and pooled-premium refunds pro rata by
+contract, not a guaranteed fair settlement. The primary demonstration is quote protection before new fills.
+
+Integration tests use a fork of Robinhood Chain mainnet 4663: canonical Aqua, the deployed SwapVM router, real
+TSLA and USDG, and the hook's deployed testnet bytecode on the real v4 PoolManager. Fork-free tests cover quote
+validity and original anchors, the taper's size-times-deviation arithmetic and experimental settlement outcomes.
 
 ## How it's made
 
@@ -61,7 +64,7 @@ TSLA and USDG, and the hook's deployed testnet bytecode running on the real v4 P
   commit by commit; the Aqua seam, the band and the settlement were written during the event in the team's private
   product repository and brought here on 2026-09-27, trimmed to the integration (`docs/history.md`,
   `docs/extraction.md`).
-- **AI:** built with Claude Code; the prompts are in `docs/prompts/`.
+- **AI:** built with Claude Code, with subsequent quote-validity and documentation work using Codex; the prompts are in `docs/prompts/`.
 
 ## How is 1inch Aqua / SwapVM used
 
@@ -88,8 +91,8 @@ Uniswap v4 is the price the writer's book is checked against, through HAKARI's h
 - `aqua/src/band/StabilityBandPricer.sol`: `slot0` and in-range liquidity through v4-core's `StateLibrary`, raw and
   truncated cumulative ticks from the hook's `observe`, the oracle read from the pool key's `hooks`; the band, the
   taper and the pause; raw and truncated TWAPs disagreeing pauses the book.
-- `aqua/src/band/HookTwapExpiryPrice.sol`: settlement on the hook's TWAP, deferred when a push moves the window out
-  of the band. `aqua/src/band/BandMath.sol`: tick → price without a 320-bit overflow, either token order.
+- `aqua/src/band/HookTwapExpiryPrice.sol`: experimental settlement-window selection; rejection can defer the
+  price or leave the series refundable. `aqua/src/band/BandMath.sol`: tick → price without a 320-bit overflow, either token order.
 - `aqua/script/HookedPool.s.sol`: the hooked testnet pool through `PositionManager.initializePool`,
   `modifyLiquidities` with Permit2, `increaseObservationCardinalityNext`, `PoolSwapTest`.
 - Proofs: `aqua/test/StabilityBandFork.t.sol` (the deployed hook on the real PoolManager), `aqua/test/StabilityBand.t.sol`,

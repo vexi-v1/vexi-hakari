@@ -100,7 +100,7 @@ abstract contract ForkFixture is Test, RobinhoodChain {
     function _series(bool isCall) internal returns (uint256 seriesId) {
         seriesId = book.createSeries(TSLA, USDG, STRIKE, expiry, isCall);
         vm.prank(maker);
-        premium.setPremium(seriesId, PREMIUM);
+        premium.setPremium(seriesId, PREMIUM, uint64(vm.getBlockTimestamp() + 7 days));
     }
 
     function _post(uint256 seriesId, uint256 maxContracts) internal returns (uint256 orderId) {

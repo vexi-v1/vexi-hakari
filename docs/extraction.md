@@ -15,7 +15,7 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 |---|---|---|
 | The Aqua app | [`aqua/src/aqua/AquaWriter.sol`](../aqua/src/aqua/AquaWriter.sol) | Trimmed to the Aqua seam: bind a shipped strategy, post an order as a promise, `provide` (Aqua `pull` at a fill), `onReturned` and `claimPremium` (Aqua `push`), `available`, `release`, `promised` |
 | The book | [`aqua/src/book/OptionBook.sol`](../aqua/src/book/OptionBook.sol) | A small book of covered calls and cash-secured puts: create a series, post, buy, settle, exercise by delivery, close, refund. No buybacks and no position tokens for the writer. Every order is priced by an `IPremium` |
-| The seams | [`ICollateralSource`](../aqua/src/book/ICollateralSource.sol), [`IPremium`](../aqua/src/book/IPremium.sol), [`IExpiryPrice`](../aqua/src/price/IExpiryPrice.sol) | Reduced to the calls the book above makes |
+| The seams | [`IQuoteReference`](../aqua/src/book/IQuoteReference.sol), [`ICollateralSource`](../aqua/src/book/ICollateralSource.sol), [`IPremium`](../aqua/src/book/IPremium.sol), [`IExpiryPrice`](../aqua/src/price/IExpiryPrice.sol) | Reduced to the calls the book above makes |
 | SwapVM guard | [`aqua/src/swapvm/`](../aqua/src/swapvm/): `ExposureGuard`, `ExposureGuardExtruction`, `WriterSwapVMRouter` | Unchanged, except that the router appends only `ExposureGuard` to the deployed router's opcode table |
 | The band | [`aqua/src/band/StabilityBandPricer.sol`](../aqua/src/band/StabilityBandPricer.sol), [`BandMath.sol`](../aqua/src/band/BandMath.sol) | A fixed half-width, 5 % by default ([band.md](band.md)); it wraps any `IPremium` |
 | Settlement on the hook | [`aqua/src/band/HookTwapExpiryPrice.sol`](../aqua/src/band/HookTwapExpiryPrice.sol) | The same fixed band decides whether a settle window is accepted |
@@ -28,7 +28,7 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 
 | Part | Why |
 |---|---|
-| [`FixedPremium`](../aqua/src/book/FixedPremium.sol) | The stand-in for Vexi's pricer: one premium per series, set by its owner. It is exactly the kind of price that goes stale when the market moves, which is what the band is for |
+| [`FixedPremium`](../aqua/src/book/FixedPremium.sol) | The stand-in for Vexi's pricer: one owner-set premium per series, with an explicit deadline and an optional original-price anchor. These generic validity checks remain separate from the rolling band |
 | [`aqua/script/DeployBand.s.sol`](../aqua/script/DeployBand.s.sol) | Deploys the band and the settlement source over the hooked pool on 46630 |
 | [`docs/`](.), this README, [`FEEDBACK.md`](../FEEDBACK.md) items 13 to 21 | Written for readers of this repository |
 

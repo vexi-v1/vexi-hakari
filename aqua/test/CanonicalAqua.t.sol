@@ -144,7 +144,7 @@ contract CanonicalAquaTest is Test, RobinhoodChain {
         assertEq(writer.bind(strategy), strategyHash);
         uint64 expiry = uint64(block.timestamp + 1 days);
         uint256 seriesId = book.createSeries(TSLA, USDG, 400e18, expiry, true);
-        premium.setPremium(seriesId, 5e6); // 5 USDG per contract
+        premium.setPremium(seriesId, 5e6, uint64(vm.getBlockTimestamp() + 7 days)); // 5 USDG per contract
         uint256 orderId = writer.post(seriesId, premium, 10);
         vm.stopPrank();
 

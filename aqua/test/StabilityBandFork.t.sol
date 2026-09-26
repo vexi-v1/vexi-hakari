@@ -261,7 +261,7 @@ contract StabilityBandForkTest is Test, RobinhoodChain, UniswapV4Robinhood {
         strike = (BandMath.priceOf(sqrtNow, true, SCALE) + 5e18) / 10e18 * 10e18;
         seriesId = book.createSeries(TSLA, USDG, strike, uint64(vm.getBlockTimestamp() + 7 days), true);
         vm.prank(maker);
-        fixedPremium.setPremium(seriesId, PREMIUM);
+        fixedPremium.setPremium(seriesId, PREMIUM, uint64(vm.getBlockTimestamp() + 7 days));
         band = new StabilityBandPricer(fixedPremium, manager, key, TSLA, USDG, _defaults(), maker);
         vm.label(address(band), "StabilityBandPricer");
         assertTrue(band.BASE_IS_CURRENCY0());

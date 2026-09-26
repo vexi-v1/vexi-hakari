@@ -3,7 +3,7 @@ vexi-hakari is licensed file by file. A Solidity file's SPDX header is authorita
 MIT (LICENSES/MIT.txt), unless listed below:
   src/, test/, script/ (HakariOracleHook, its tests and its deploy script)
   aqua/src/band/ (the stability band, the hook-TWAP settlement, BandMath)
-  aqua/src/book/IPremium.sol, aqua/src/book/FixedPremium.sol
+  aqua/src/book/IPremium.sol, aqua/src/book/IQuoteReference.sol, aqua/src/book/FixedPremium.sol
   aqua/src/price/
   aqua/test/ and aqua/script/, except the SwapVM-derived helpers below
   docs/, archive/, and everything else

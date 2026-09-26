@@ -403,3 +403,27 @@ Outcome: the study moved to `archive/hakari-v1/` with `archive/README.md`; `aqua
 Foundry project of its own; the band's half-width is 5 %, the Limit Up-Limit Down band of a Tier 1 US stock
 (`docs/band.md`); `docs/history.md`, `docs/extraction.md` and `docs/submission.md` are new; `FEEDBACK.md` gained
 items 13 to 21. Each step is its own commit.
+
+## 2026-09-27 — Abner: implement public-version review items 1–4
+
+> execute 1 ~ 4
+
+Context (public scope): add fixed-quote validity and an optional original-reference-price anchor; describe the taper
+formula as a conditional, single-call size-times-deviation bound; present the fixed 5% band as an illustrative
+parameter rather than equivalent LULD protection; make settlement a separate experimental feature with its state
+flow and economic outcomes explicit. Keep the public extraction boundary intact.
+
+Implemented with Codex (OpenAI): mandatory quote deadlines, optional captured anchors through a small public price
+interface, tests for refusal and renewal, and revised README, band, settlement and submission documentation. No new
+settlement fallback, cumulative fill budget or chain deployment is part of this change.
+
+Validation for these changes (Foundry, 2026-09-27 JST):
+
+- Root `forge test`: `5 tests passed, 0 failed, 0 skipped (5 total tests)`.
+- In `aqua/`, `forge test --match-path 'test/{FixedPremium,GuardProperties,BookRefund,StabilityBand,StabilityTwapSettle}.t.sol'`:
+  `50 tests passed, 0 failed, 0 skipped (50 total tests)`.
+- In `aqua/`, `RH_MAINNET_RPC=https://rpc.ordofi.network RH_MAINNET_FORK_BLOCK=72248228 forge test --match-contract 'CanonicalAquaTest|LifecycleTest|StabilityBandForkTest|ExposureGuardCanonicalTest|ExposureGuardTest'`:
+  `42 tests passed, 0 failed, 0 skipped (42 total tests)`. The first full-suite attempt lacked the RPC environment
+  variable; the explicit public archive endpoint above resolved the five fork-suite setup failures.
+- The macOS sandbox's Foundry system-proxy initialization crashed after compilation; the same tests completed
+  outside the sandbox. No transactions were broadcast. Existing uncommitted edits were preserved.

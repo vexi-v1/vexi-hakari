@@ -59,8 +59,8 @@ contract BookRefundTest is Test {
     function test_RefundDoesNotDependOnAnyMakerClosing() public {
         uint64 expiry = uint64(block.timestamp + 1 days);
         uint256 seriesId = book.createSeries(address(base), address(quote), STRIKE, expiry, true);
-        premiumA.setPremium(seriesId, 2e6);
-        premiumB.setPremium(seriesId, 1e6);
+        premiumA.setPremium(seriesId, 2e6, uint64(vm.getBlockTimestamp() + 7 days));
+        premiumB.setPremium(seriesId, 1e6, uint64(vm.getBlockTimestamp() + 7 days));
         uint256 orderA = makerA.post(seriesId, premiumA, 10);
         uint256 orderB = makerB.post(seriesId, premiumB, 10);
         _buy(alice, orderA, 3, 6e6); // alice paid 6
@@ -97,7 +97,7 @@ contract BookRefundTest is Test {
     function test_RefundOnlyAfterTheGraceAndOnlyWhenUnsettled() public {
         uint64 expiry = uint64(block.timestamp + 1 days);
         uint256 seriesId = book.createSeries(address(base), address(quote), STRIKE, expiry, true);
-        premiumA.setPremium(seriesId, 1e6);
+        premiumA.setPremium(seriesId, 1e6, uint64(vm.getBlockTimestamp() + 7 days));
         uint256 orderId = makerA.post(seriesId, premiumA, 10);
         _buy(alice, orderId, 2, 2e6);
 
@@ -125,7 +125,7 @@ contract BookRefundTest is Test {
     function test_RefundOpensOneSecondAfterTheGrace() public {
         uint64 expiry = uint64(block.timestamp + 1 days);
         uint256 seriesId = book.createSeries(address(base), address(quote), STRIKE, expiry, false);
-        premiumA.setPremium(seriesId, 1e6);
+        premiumA.setPremium(seriesId, 1e6, uint64(vm.getBlockTimestamp() + 7 days));
         quote.mint(address(makerA), 1000e6); // puts are secured by quote
         uint256 orderId = makerA.post(seriesId, premiumA, 10);
         _buy(alice, orderId, 4, 4e6);

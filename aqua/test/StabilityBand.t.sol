@@ -57,8 +57,8 @@ contract StabilityBandTest is Test {
         oracle.init(key.toId(), tick0);
         inner = new FixedPremium(owner);
         vm.startPrank(owner);
-        inner.setPremium(SERIES, PREMIUM);
-        inner.setPremium(ODD_SERIES, ODD_PREMIUM);
+        inner.setPremium(SERIES, PREMIUM, uint64(vm.getBlockTimestamp() + 7 days));
+        inner.setPremium(ODD_SERIES, ODD_PREMIUM, uint64(vm.getBlockTimestamp() + 7 days));
         vm.stopPrank();
         band = new StabilityBandPricer(inner, IPoolManager(address(manager)), key, BASE, QUOTE, _defaults(), owner);
         center0 = band.priceOf(TickMath.getSqrtPriceAtTick(tick0));
@@ -387,7 +387,7 @@ contract StabilityBandTest is Test {
     ///         is moved +8 % and traded at for four seconds (so the truncated series, 250 ticks per observation,
     ///         catches up) and then left there. The band is paused while the center is more than ~4.9 % behind, quotes
     ///         again, tapered, 23 minutes in, and after an hour quotes the inner ask at full size at the pushed
-    ///         price. The band bounds how fast a fixed premium can go stale, not how far: a writer must reprice.
+    ///         price. The rolling band alone does not refresh a premium; quote expiry and optional anchors are separate checks.
     function test_APushThatStandsForTheWholeWindowBecomesTheCenter() public {
         uint256 start = vm.getBlockTimestamp();
         for (uint256 i = 0; i < 4; i++) {
@@ -420,15 +420,50 @@ contract StabilityBandTest is Test {
         assertEq(band.ask(SERIES, 50), inner.ask(SERIES, 50), "the stale premium, at full size");
     }
 
+    /// @notice A rolling center may recover while the quote's original anchor still refuses the changed price.
+    function test_AnchorRefusesAfterRollingBandRecovers() public {
+        uint64 until = uint64(vm.getBlockTimestamp() + 2 hours);
+        vm.prank(owner);
+        inner.setAnchoredPremium(SERIES, PREMIUM, until, band, 500);
+        uint256 start = vm.getBlockTimestamp();
+        for (uint256 i = 0; i < 4; i++) {
+            vm.warp(start + i);
+            _move(770);
+        }
+        vm.warp(start + 3603);
+        StabilityBandPricer.Status memory s = band.status();
+        assertTrue(s.quoting, "band alone has recovered");
+        assertEq(s.uWad, 0);
+        vm.expectRevert(abi.encodeWithSelector(FixedPremium.QuoteOffAnchor.selector, SERIES, s.currentWad, center0));
+        band.ask(SERIES, 1);
+        vm.prank(owner);
+        inner.setAnchoredPremium(SERIES, PREMIUM, until, band, 500);
+        assertEq(band.ask(SERIES, 1), PREMIUM, "explicit renewal captures a new anchor");
+        vm.warp(until);
+        vm.expectRevert(abi.encodeWithSelector(FixedPremium.QuoteExpired.selector, SERIES, until));
+        band.ask(SERIES, 1);
+    }
+
+    function test_AnchorReadsLivePriceEvenWhenBandUsesShortTwap() public {
+        StabilityBandPricer.Params memory p = _defaults();
+        p.nowWindow = 300;
+        _set(p);
+        uint64 until = uint64(vm.getBlockTimestamp() + 2 hours);
+        vm.prank(owner);
+        inner.setAnchoredPremium(SERIES, PREMIUM, until, band, 100);
+        _move(200);
+        assertEq(band.status().uWad, 0, "short TWAP does not see same-transaction move");
+        uint256 current = band.referencePriceWad();
+        vm.expectRevert(abi.encodeWithSelector(FixedPremium.QuoteOffAnchor.selector, SERIES, current, center0));
+        band.ask(SERIES, 1);
+    }
+
     // ------------------------------------------------------------------ the stale-premium bound
 
-    /// @notice What the band bounds. A fixed premium is set at the center; a buyer of calls whose value moves at most
-    ///         one-for-one with the price gains, per contract, at most the move |current − center| = u × halfWidth ×
-    ///         center over it. The call takes at most n = maxContracts × (1 − u), so per call
-    ///           n × u × halfWidth × center ≤ maxContracts × u(1 − u) × halfWidth × center ≤ maxContracts × halfWidth ×
-    ///         center / 4,
-    ///         whatever the push, the half-width or the size. (The taper's extra spread comes off on top.)
-    function testFuzz_TheStalePremiumGainPerCallIsBounded(uint256 ticks, bool up, uint16 halfWidth, uint32 maxC)
+    /// @notice Bounds size times deviation from the current center, not actual trading profit or total loss.
+    /// @dev An economic interpretation additionally assumes a fair quote at that center, value changing at most
+    ///      one-for-one with spot, and other pricing inputs unchanged. None is established by this arithmetic test.
+    function testFuzz_PerCallSizeTimesReferenceDeviationIsBounded(uint256 ticks, bool up, uint16 halfWidth, uint32 maxC)
         public
     {
         halfWidth = uint16(bound(halfWidth, 1, 5000));
@@ -456,7 +491,7 @@ contract StabilityBandTest is Test {
 
     /// @notice The same bound walked across the default band in 5-tick steps, with the numbers: a 400-dollar center,
     ///         a 20-dollar half-width, 50 contracts.
-    function test_TheStalePremiumGainAcrossTheBand() public {
+    function test_SizeTimesReferenceDeviationAcrossTheBand() public {
         uint256 halfWidthWad = center0 * 500 / 10_000;
         uint256 limit = 50 * halfWidthWad / 4;
         uint256 worst;
@@ -470,10 +505,10 @@ contract StabilityBandTest is Test {
         assertLe(worst, limit, "the mechanism bound");
         assertApproxEqRel(worst, limit, 0.01e18, "and it is tight: the worst push is halfway, at 25 contracts");
         assertEq(worstTicks, 245);
-        console2.log("worst gain per call over the premium, cents", worst / 1e16);
+        console2.log("worst size times reference deviation, cents", worst / 1e16);
         console2.log("  at ticks above the center", uint256(worstTicks));
         console2.log("bound 50 x halfWidth x center / 4, cents", limit / 1e16);
-        console2.log("no band, 50 contracts at a +20 % push, cents", 50 * (center0 * 2000 / 10_000) / 1e16);
+        console2.log("50 contracts times a +20 % reference deviation, cents", 50 * (center0 * 2000 / 10_000) / 1e16);
     }
 
     // ------------------------------------------------------------------ guards

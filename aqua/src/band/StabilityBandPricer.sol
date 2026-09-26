@@ -14,6 +14,7 @@ import { PoolId } from "@uniswap/v4-core/src/types/PoolId.sol";
 import { PoolKey } from "@uniswap/v4-core/src/types/PoolKey.sol";
 
 import { IPremium } from "../book/IPremium.sol";
+import { IQuoteReference } from "../book/IQuoteReference.sol";
 import { BandMath, ITruncatedOracle } from "./BandMath.sol";
 
 /// @title StabilityBandPricer
@@ -32,12 +33,8 @@ import { BandMath, ITruncatedOracle } from "./BandMath.sol";
 ///         truncated TWAPs over the window are more than a half-width apart (a jump larger than the truncation
 ///         absorbs).
 ///
-/// @dev Why a fixed 5 %: it is the band the US equity market itself uses for these names. Under the Limit Up-Limit
-///      Down plan, a Tier 1 stock (S&P 500, Russell 1000) priced above $3 may not trade more than 5 % away from its
-///      average price over the preceding five minutes, and trading pauses if it stays at that limit. The tokenized
-///      stocks this was built for (TSLA, AAPL on Robinhood Chain) are Tier 1, so the book stops selling at a fixed
-///      premium about where the stock's own market would stop trading it; on a weekend, when that market is closed
-///      and the pool is the only price, the band is the only brake left. The owner may set any half-width up to 50 %.
+/// @dev The fixed 5% width is a configurable demonstration parameter, inspired by market price bands. It is not
+///      a calibrated safety threshold or an implementation of US equity Limit Up-Limit Down rules.
 ///
 ///      Nothing is stored per trade: `ask` is a view, so the taper is a function of prices at this block, not of
 ///      what traded before. `status` never reverts, so a board keeps rendering while the book refuses.
@@ -45,7 +42,7 @@ import { BandMath, ITruncatedOracle } from "./BandMath.sol";
 ///      `current` is the slot0 price by default, so option liquidity reacts to a push of the reference at once. A
 ///      TWAP (`nowWindow` > 0) hides a push made in this transaction, because the hook writes its observation before
 ///      the swap, once per block timestamp, but it lags a genuine move by its window.
-contract StabilityBandPricer is IPremium, Ownable {
+contract StabilityBandPricer is IPremium, IQuoteReference, Ownable {
     using StateLibrary for IPoolManager;
 
     enum Reason {
@@ -54,6 +51,7 @@ contract StabilityBandPricer is IPremium, Ownable {
         ReferenceUnavailable, // the hook cannot answer over bandWindow (pool younger than it, or its ring wrapped)
         SeriesDisagree, // raw and truncated TWAPs over bandWindow are more than a half-width apart
         OutsideBand // u > 1, or so near 1 that not one contract is left
+
     }
 
     struct Params {
@@ -95,7 +93,7 @@ contract StabilityBandPricer is IPremium, Ownable {
     uint256 internal constant WAD = 1e18;
     /// @notice The widest half-width an owner may set: 50 %.
     uint16 public constant MAX_HALF_WIDTH_BPS = 5000;
-    /// @notice The half-width the band ships with: 5 %, the Limit Up-Limit Down band of a Tier 1 US stock.
+    /// @notice The demonstration half-width: 5%, configurable by the owner.
     uint16 public constant DEFAULT_HALF_WIDTH_BPS = 500;
 
     IPremium public immutable INNER;
@@ -176,8 +174,8 @@ contract StabilityBandPricer is IPremium, Ownable {
 
     function _setParams(Params memory p) internal {
         require(
-            p.bandWindow > 0 && p.nowWindow < p.bandWindow && p.halfWidthBps > 0
-                && p.halfWidthBps <= MAX_HALF_WIDTH_BPS && p.maxExtraBps < 10_000 && p.maxContracts > 0,
+            p.bandWindow > 0 && p.nowWindow < p.bandWindow && p.halfWidthBps > 0 && p.halfWidthBps <= MAX_HALF_WIDTH_BPS
+                && p.maxExtraBps < 10_000 && p.maxContracts > 0,
             BadParams()
         );
         _params = p;
@@ -189,7 +187,11 @@ contract StabilityBandPricer is IPremium, Ownable {
     /// @notice The reference pool's key.
     function poolKey() external view returns (PoolKey memory) {
         return PoolKey({
-            currency0: CURRENCY0, currency1: CURRENCY1, fee: FEE, tickSpacing: TICK_SPACING, hooks: IHooks(address(ORACLE))
+            currency0: CURRENCY0,
+            currency1: CURRENCY1,
+            fee: FEE,
+            tickSpacing: TICK_SPACING,
+            hooks: IHooks(address(ORACLE))
         });
     }
 
@@ -251,6 +253,13 @@ contract StabilityBandPricer is IPremium, Ownable {
     function sizeCapAt(uint256 uWad, uint32 maxContracts) public pure returns (uint256) {
         if (uWad >= WAD) return 0;
         return uint256(maxContracts) * (WAD - uWad) / WAD;
+    }
+
+    /// @inheritdoc IQuoteReference
+    /// @dev Always reads slot0, independent of nowWindow and the rolling center. No call back into INNER.
+    function referencePriceWad() external view returns (uint256) {
+        (uint160 sqrtPriceX96,,,) = POOL_MANAGER.getSlot0(POOL_ID);
+        return priceOf(sqrtPriceX96);
     }
 
     /// @notice A pool `sqrtPriceX96` as WAD quote per base (whole tokens), whichever currency the base is.
