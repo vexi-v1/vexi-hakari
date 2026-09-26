@@ -85,6 +85,7 @@
   .safe p { margin: 6px 0; max-width: 80ch; }
   .safe .safe-line { font-size: 17px; }
   .nowrap { white-space: nowrap; }
+  .newcomer { font-size: 16px; margin: 12px 0 4px; }
   #measure-out code { overflow-wrap: anywhere; }
   tr.binding td { font-weight: 600; }
   a { color: var(--series-1); }
@@ -101,6 +102,7 @@
 <main>
   <h1>HAKARI (秤) — what it costs to fake a price</h1>
   <p class="lead">HAKARI measures what it would cost to fake a Uniswap v4 pool's price right now, turns that into the largest settlement (a loan, a perp, an option payout) the price can safely carry, and refuses to settle above it.</p>
+  <p class="card newcomer"><b>New here?</b> <a href="plain/">The whole story in plain English, no jargon (about 6 minutes) →</a> <span class="meta">·</span> <a href="plain/#zh" lang="zh-Hant-TW">白話中文版 →</a></p>
   <nav class="cta" aria-label="Start here">
     <a class="primary" href="squeeze/"><b>Replay the HIMS weekend</b><span>HIMS, a tokenized stock, closed Friday at 28.84; with minting shut, its v4 pool's minute close hit 71.23. Minute by minute from Robinhood Chain's logs (English / 繁中)</span></a>
     <a class="primary" href="live/"><b>Right now: every stock pool vs Friday's close</b><span>Each stock token's deepest USDG pool, measured every minute from your browser: the largest settlement its price can carry now, against the same figure at Friday's US close. Built for the weekend, when minting is shut</span></a>

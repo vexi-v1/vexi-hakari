@@ -10,6 +10,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>/* link to web/plain/: one label per language, following <html lang> */
+.plain-link { margin-right: 0 !important; } .plain-link [lang="zh-Hant-TW"], :root[lang="zh-Hant-TW"] .plain-link [lang="en"] { display: none; } :root[lang="zh-Hant-TW"] .plain-link [lang="zh-Hant-TW"] { display: inline; }</style>
 <!-- bundle:head-end -->
 <link rel="stylesheet" href="squeeze.css">
 </head>
@@ -19,6 +21,7 @@
 <header class="topbar" id="topbar">
   <div class="tb-in">
     <a class="back" id="back-link" href="../index.html">← HAKARI gauge</a>
+    <a class="back plain-link" href="../plain/"><span lang="en">Plain-language version</span><span lang="zh-Hant-TW">白話版</span></a>
     <h1 class="h1"><span id="h1" class="h1-mid">The HIMS weekend float squeeze</span><span id="h1-short" class="h1-short">HIMS float squeeze</span><span id="h1-long" class="h1-long">The HIMS weekend float squeeze, replayed on-chain</span></h1>
     <nav class="stepper" id="stepper" aria-label="Chapters"></nav>
     <div class="playback" role="group" aria-label="Playback">
