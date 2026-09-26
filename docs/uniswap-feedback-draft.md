@@ -1,9 +1,10 @@
 # Uniswap Developer Feedback Form — ready-to-paste draft
 
 Form: [developers.uniswap.org/hackathon-feedback](https://developers.uniswap.org/hackathon-feedback).
-**Status: draft; not submitted.** Paste the text beneath each matching question into the form.
-Publish the reviewed integration and confirm the public links before submitting. This document contains no
-participant contact details, ratings or consent.
+**Form status: submitted, confirmed by the user on 2026-09-27.** The success message is recorded in the
+[submission review](submission-review.md#uniswap-feedback-submission--confirmed-2026-09-27).
+The answers below are retained as the preparation draft, not an exact transcript of the final submission.
+This document contains no participant contact details, ratings or consent.
 
 ## Selections and participant details
 

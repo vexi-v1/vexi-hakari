@@ -10,7 +10,7 @@ previous study when checked anonymously; the current integration must be publish
 |---|---|---|
 | P0 | Public repository does not yet contain this entry | GitHub's unauthenticated tree API returned `main = aefa9236a1302ace3e766266eb44a27aaa8a8fbc`, with no `aqua/`, at about 04:22 JST. Local work is on `tk-137-aqua-band-slice` with uncommitted changes. Publish the reviewed integration and verify the submitted ref anonymously; preferably make it the default branch. A local passing suite is not evidence that judges can access that code. |
 | Done | Open-source eligibility | `AquaWriter.sol`, `OptionBook.sol` and `ICollateralSource.sol` are MIT (were BUSL-1.1). ETHGlobal requires the new parts of a Continuity entry to remain open source, and neither 1inch prize nor 1inch's licenses ask for BUSL; the SwapVM extensions keep LicenseRef-Degensoft-SwapVM-1.1, which that license requires. See `LICENSE` and `THIRD_PARTY_NOTICES.md`. |
-| P0 | No Uniswap form receipt is recorded | Having `FEEDBACK.md` does not complete the separate Developer Feedback Form. Use [the prepared answers](uniswap-feedback-draft.md), include the public `FEEDBACK.md` URL, submit with the actual participant's details, and retain confirmation. |
+| Done | Uniswap Developer Feedback Form submitted | On 2026-09-27, the user confirmed completion and supplied the form's success message: "Thanks for sharing your feedback". See the submission confirmation below. The prepared answers remain in [the form draft](uniswap-feedback-draft.md). |
 | P0 | Dashboard completion and partner selection are unverified | The supplied `/events/tokyo2026/project` link redirects to sign-in in the review browser. Verify the actual title, descriptions, repository revision, selected Continuity track, both partner prizes and final submitted status. The link alone is not a submission receipt. |
 | P1 | Transfer demonstration needs to be presented | [demo.md](demo.md) and `bash scripts/judge-demo.sh` now provide reproducible call traces. Record or present the successful ERC-20 transfers, `Pulled`/`Pushed`, the SwapVM fill and the band's refusal. A test count or archived website by itself is insufficient evidence for this requirement. |
 | P1 | Current submission has no verified demo-video URL | A video is optional under the general event rules, but strongly useful for partner review. Record the current integration, not only the archived study. Add its URL to the dashboard and README when available. |
@@ -30,8 +30,8 @@ Checked against the live pages on 2026-09-27:
   this as a Classic entry.
 - [Uniswap: Best Uniswap Stack Contribution — Continuity](https://ethglobal.com/events/tokyo2026/prizes/uniswap-foundation):
   public open-source code, `FEEDBACK.md`, the completed Developer Feedback Form linking that file, and README
-  pointers to integration code and lines. The hook/band code and feedback exist; license eligibility, publication
-  and form completion remain the checks above.
+  pointers to integration code and lines. The hook/band code and feedback exist; licensing was updated and the user
+  confirmed form submission. Publication and public-link checks remain in the checklist below.
 - [ETHGlobal submission instructions](https://ethglobal.com/events/tokyo2026/info/details): deadline **2026-09-27
   09:00 JST**; select the partner prizes in the dashboard, disclose reused work and AI assistance, and preserve
   development artifacts. [Continuity rules](https://ethglobal.com/rules) require substantive new work and an
@@ -98,13 +98,23 @@ that sandbox succeeded. This was an execution-environment issue, not a Solidity 
 or keys were inspected; no deployment or mainnet transaction was sent. Existing uncommitted quote-validity changes
 were present and are included in these results; this review did not author those contract changes.
 
+## Uniswap feedback submission — confirmed 2026-09-27
+
+The user reported that the form was completed and supplied this success message:
+
+> Thanks for sharing your feedback
+> Your feedback helps us improve the developer experience for everyone building on Uniswap.
+
+This records the participant's confirmation of a successful submission. The final field values and a submission
+identifier were not provided; the preparation draft is not an exact transcript of the submitted answers.
+
 ## Final handoff checklist
 
 - [x] Owners resolve the three BUSL file licenses: MIT (see "Licensing decision").
 - [ ] Publish the complete reviewed revision, preserving real history; verify a fresh recursive clone.
 - [ ] Ensure README code links and the feedback link open without a signed-in GitHub session.
 - [ ] Rehearse the demo; preserve visible transfer and refusal evidence. Add the optional recording URL.
-- [ ] Complete the Uniswap form with genuine ratings/contact details and save its confirmation.
+- [x] Submit the Uniswap Developer Feedback Form; user-confirmed success message recorded above.
 - [ ] Confirm the dashboard's Continuity track, both sponsors and the full submitted state before 09:00 JST.
 
 Unmarked items mean **not verified**, not necessarily that the team has never done them elsewhere.

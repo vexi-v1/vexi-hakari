@@ -509,3 +509,14 @@ parts of a Continuity entry to remain open source, which BUSL-1.1 is not. So `Aq
 and `THIRD_PARTY_NOTICES.md` were added, the SwapVM files got Degensoft's notice where adapted and dated change notes,
 `aqua/README.md` got deploy instructions for them, and the docs that discuss Aqua or SwapVM carry the attribution
 line. Each step is its own commit.
+
+## 2026-09-27 — Abner: confirm Uniswap feedback submission
+
+> Thanks for sharing your feedback
+> Your feedback helps us improve the developer experience for everyone building on Uniswap.
+> Completed.
+
+The user supplied the form's success message and confirmed completion. Outcome (Codex): marked the feedback
+submission complete in the readiness checklist, recorded the user-provided confirmation, and changed the form
+draft's status to submitted while retaining it as a preparation copy. Final field values were not supplied;
+other submission checks were not marked complete.
