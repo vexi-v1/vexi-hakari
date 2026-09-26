@@ -406,6 +406,7 @@ widening the push at 4× the move:
 | TSLA weekday/weekend contrast | flipped inside a 43k–106k notional band at 5 s (`e581e23`, block 72,308,997) | 100,000 USDG refused either way; with arbitrage open the bound is 2–5× the weekend one | `test_tslaShapedBook_maxSafeExposure_weekendVsWeekday` |
 | The push width stopped at 4× the move (second review) | TSLA weekday 112,262 (60 s) and 486,467 (12 s): settle 100,000 | every move priced up to its one-interval width, one walk each way: 25,269 and 58,044, refused | `test_aPushPastTheLastRange_heldUnderOneReversion_setsTheBound`, `test_widthSearch_stopsOnlyWhenNoWiderPushCanBeCheaper`, `test_onABookThatEnds_arbitrageSpeedStopsMattering` |
 | A liquidity wall across transactions | bought trust | **still buys trust** (below) | `test_knownLimit_aWallAcrossTransactions_buysTrust` |
+| A clamp of the fix window to a trailing 30-minute TWAP ± 3 % (proposed the last night as a rule the pool itself would carry; a second session argued against it) | proposed | **rejected before it was built.** With the reversion this chain showed (0 on every pool measured) holding is free, so the reference costs exactly what the window it guards costs to fake: the bound with the clamp ÷ the bound without it is 1.00×. A push released just before the window makes the clamp read an honest window as the fake. On the demo pool `0xe454…` it would report nothing to clamp while `SafeSettle` refuses. A clamp applied where the hook writes is also skipped by not swapping (`FEEDBACK.md` § 12) | `test_observe_aPushBeforeAQuietWindow_isWhatTheWindowReads` |
 
 Earlier the review had also found that a wall inside one unlock inflated the cost (fixed in `d93a700`: refuse while
 the PoolManager is unlocked) and that the gain used the tick's direction where the quote is currency0 (fixed in
@@ -467,7 +468,16 @@ move back across the gap it was pushed through, so a held push shows up as a low
   enumerate them (ERC-6909 has no per-id enumeration) and cannot gate `Venue.fix`; on those pools every fix so far
   passes because the open interest is tiny (39 cells, 1,806 USDG in all): the replay shows the pipeline, not a refusal.
   The fix mechanics and the arbitrage setting are in
-  [A second consumer](#a-second-consumer-of-the-pools-price-our-own-venue-on-testnet).
+  [A second consumer](#a-second-consumer-of-the-pools-price-our-own-venue-on-testnet). A venue's own behavioural
+  limit lives in its sizing, not in its price source: for ours, a write cap from this bound is a draft in its spec,
+  not built. The bound constrains only a caller that refuses; on-chain today that is `SafeSettle`.
+- **A time rule adds no cost where nobody pulls back.** A longer TWAP, truncation, or a clamp around a trailing
+  reference all pass a push that stands through the reference period, and on a pool nobody else trades standing
+  costs nothing beyond the one round trip ([What the review found](#what-the-review-found-and-what-changed), last
+  row). The measured reversion is 0 on all 28 stock pools and on our venue's six, so here the only thing that limits
+  a fake is depth, or the consumer's own sizing. And short-dated exposure sits at the money: of our venue's 41
+  series with exposure, 40 had strikes within 3 % of the fix (median 0.24 %), so the fakes that matter to them are
+  a few dozen ticks, inside any band a cap on "how far a fix can be pushed" would leave open.
 - **`SafeSettle` is a demo rule**, not a product, and `ExposureGuard`'s verdict is another. The contribution is the
   measurement (lens, bound, gauge) and the two-series hook; the rules show two ways to use them.
 
@@ -494,7 +504,7 @@ did not.
 
 ```bash
 git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari && cd vexi-hakari
-forge test --no-match-path 'test/fork/*'          # 53 tests, no RPC
+forge test --no-match-path 'test/fork/*'          # 54 tests, no RPC
 script/record-fork-tests.sh                       # 5 fork tests on real pools (4663, public RPC, ~6 min), URLs masked
 RH_TESTNET_RPC= forge test --match-path 'test/fork/ExposureGuard*' -vv   # the guard against the live venue (46630, head only, ~2.5 min; run alone)
 cd gauge && npm ci && npm test                    # 118 tests (4 skip without `npm run squeeze`'s caches); the walk and the bound are pinned to the Solidity ones
