@@ -4,18 +4,28 @@ pragma solidity 0.8.30;
 /// @custom:license-url https://github.com/1inch/swap-vm/blob/v1.0.2/LICENSES/SwapVM-1.1.txt (copy: LICENSES/SwapVM-1.1.txt)
 /// @notice A custom SwapVM instruction written for the Vexi × HAKARI entry at ETHGlobal Tokyo 2026.
 ///         Powered by SwapVM — © Degensoft Ltd 2025.
-/// @dev A new instruction for SwapVM's opcode table, written 2026-09-25 JST; last changed 2026-09-25 JST.
+/// @dev A new instruction for SwapVM's opcode table, written 2026-09-25 JST; last changed 2026-09-27 JST.
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
-import { Calldata } from "@1inch/solidity-utils/contracts/libraries/Calldata.sol";
-import { Context } from "@1inch/swap-vm/src/libs/VM.sol";
+import {Calldata} from "@1inch/solidity-utils/contracts/libraries/Calldata.sol";
+import {Context} from "@1inch/swap-vm/src/libs/VM.sol";
 
 /// @notice What the guard reads from the maker's AquaWriter.
 interface IPromised {
     /// @return The collateral that open, unfilled option orders still promise for `token`.
     function promised(address token) external view returns (uint256);
+    function AQUA() external view returns (address);
+    function strategyHash() external view returns (bytes32);
+}
+
+/// @notice Published Aqua ABI used to read the writer strategy's remaining virtual balance.
+interface IAquaRawBalances {
+    function rawBalances(address maker, address app, bytes32 strategyHash, address token)
+        external
+        view
+        returns (uint248 balance, uint8 tokensCount);
 }
 
 library ExposureGuardArgsBuilder {
@@ -27,8 +37,8 @@ library ExposureGuardArgsBuilder {
 
 /// @title ExposureGuard
 /// @notice Options first: the spot strategy may only sell the part of the maker's wallet that open option orders
-///         have not promised. Place it before the curve instruction.
-/// @dev When the curve's `balanceOut` exceeds `free = wallet(tokenOut) - promised(tokenOut)`, both reserves are
+///         can no longer pull through their shipped Aqua strategy. Place it before the curve instruction.
+/// @dev When the curve's `balanceOut` exceeds `free = wallet(tokenOut) - min(promised(tokenOut), shipped(tokenOut))`, both reserves are
 ///      scaled down in the same ratio: `balanceOut = free`, `balanceIn = ceil(balanceIn * free / balanceOut)`.
 ///      The marginal price of the curve is unchanged; only its depth shrinks, so no fill can ever take more than
 ///      `free`. At `free == 0` both reserves are zero and the curve that follows refuses to quote
@@ -46,11 +56,16 @@ contract ExposureGuard {
         (ctx.swap.balanceIn, ctx.swap.balanceOut) = capToFree(ctx.swap.balanceIn, ctx.swap.balanceOut, free);
     }
 
-    /// @notice The maker's wallet balance of `token` that no open option order has promised.
+    /// @notice Wallet balance beyond the lesser of open promises and the writer's remaining Aqua balance.
+    /// @dev Multiple series can quote the same backing; their aggregate promises are not separate deposits.
     function unpromised(address maker, address token, address writer) public view returns (uint256) {
         uint256 wallet = IERC20(token).balanceOf(maker);
-        uint256 promised = IPromised(writer).promised(token);
-        return wallet > promised ? wallet - promised : 0;
+        uint256 reserved = IPromised(writer).promised(token);
+        (uint248 shipped,) = IAquaRawBalances(IPromised(writer).AQUA()).rawBalances(
+            maker, writer, IPromised(writer).strategyHash(), token
+        );
+        if (shipped < reserved) reserved = shipped;
+        return wallet > reserved ? wallet - reserved : 0;
     }
 
     /// @notice Shrinks a constant-product pool to `free` on the out side without moving its price.

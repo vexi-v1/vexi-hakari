@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import { stdError } from "forge-std/StdError.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
+import {stdError} from "forge-std/StdError.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
-import { IAqua } from "@1inch/aqua/src/interfaces/IAqua.sol";
-import { ISwapVM } from "@1inch/swap-vm/src/interfaces/ISwapVM.sol";
-import { XYCSwap } from "@1inch/swap-vm/src/instructions/XYCSwap.sol";
+import {IAqua} from "@1inch/aqua/src/interfaces/IAqua.sol";
+import {ISwapVM} from "@1inch/swap-vm/src/interfaces/ISwapVM.sol";
+import {XYCSwap} from "@1inch/swap-vm/src/instructions/XYCSwap.sol";
 
-import { OptionBook } from "../src/book/OptionBook.sol";
-import { WriterSwapVMRouter } from "../src/swapvm/WriterSwapVMRouter.sol";
-import { ExposureGuardExtruction } from "../src/swapvm/ExposureGuardExtruction.sol";
+import {OptionBook} from "../src/book/OptionBook.sol";
+import {WriterSwapVMRouter} from "../src/swapvm/WriterSwapVMRouter.sol";
+import {ExposureGuardExtruction} from "../src/swapvm/ExposureGuardExtruction.sol";
 
-import { ForkFixture } from "./helpers/ForkFixture.sol";
-import { WriterPrograms } from "./helpers/WriterPrograms.sol";
-import { AquaPrograms } from "./helpers/AquaPrograms.sol";
+import {ForkFixture} from "./helpers/ForkFixture.sol";
+import {WriterPrograms} from "./helpers/WriterPrograms.sol";
+import {AquaPrograms} from "./helpers/AquaPrograms.sol";
 
 /// @notice A subclassed router with the `ExposureGuard` instruction shrinks the spot strategy to the unpromised
 ///         balance without moving its price, so a spot fill can never take what an open option order has promised.
@@ -235,6 +235,15 @@ contract ExposureGuardTest is ForkFixture {
     }
 
     // ------------------------------------------------------------------ instruction == extruction
+
+    function test_SharedBalanceInstructionAndExtructionAgree() public {
+        strategy.salt = bytes32(uint256(8));
+        vm.prank(maker);
+        strategyHash = aqua.ship(address(writer), abi.encode(strategy), _addrs(TSLA, USDG), _amts(10e18, SHIP_USDG));
+        _bind();
+        _post(_series(true), 100);
+        test_InstructionAndExtructionAgreeOnTheSameState();
+    }
 
     function test_InstructionAndExtructionAgreeOnTheSameState() public {
         ExposureGuardExtruction guard = new ExposureGuardExtruction();

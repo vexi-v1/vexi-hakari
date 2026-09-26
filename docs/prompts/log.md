@@ -675,3 +675,14 @@ speaker notes, standalone scripts and the existing Google Slides versions to use
 scenario. Preserve the dark Vexi design, charts, timing and original logo. Clearly distinguish the illustration
 from the unchanged TSLA/USDG fork evidence and website replay, retaining original HIMS historical attribution.
 Keep evidence data and contract code intact, verify both languages and commit locally without pushing.
+
+
+## 2026-09-27 — Abner: latest integration reconciliation
+
+> Recheck the private source projects and ensure the event-time Aqua, SwapVM, Uniswap v4 and TWAP integrations
+> and demonstrations are represented in Hakari, including Eric's updates. Sync latest.
+
+English translation. Work (Codex): fetch source repositories, fast-forward clean outdated checkouts, preserve
+local Hakari commits and submission edits, compare the permitted extraction seams, and port the updated
+shared-balance ExposureGuard with reproducible local-fork demonstrations. Keep private product code and
+pre-event code out of this public repository. Record remaining deployment and presentation boundaries.
