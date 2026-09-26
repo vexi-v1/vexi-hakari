@@ -106,9 +106,10 @@ hooked pool whose hook's own charges the bound cannot see (†, [Limitations](#l
 **AMC, the same weekend and the next long one** (`npm run amc`: [`gauge/src/amc.ts`](gauge/src/amc.ts),
 [`gauge/data/amc-weekends.json`](gauge/data/amc-weekends.json); a 10-minute grid, the rebuilt liquidity equal to the
 `Swap` record at every point, AMC's supply equal to `totalSupply()` at 24 of 24 checks). X posts said AMC's token
-"printed $166 against a $2.59 stock" on the HIMS weekend. It did. AMC had no USDG pool until Sunday afternoon, and its
-deepest pool was ETH/AMC (5 % fee). With 17,167 AMC tokens in existence and no mint from Friday until Monday
-09:02 UTC, that pool went from 2.66 USD at Friday's close to **166.77** at Sunday 20:00 UTC (one swap at 188.58; ETH
+"printed $166 against a $2.59 stock" on the HIMS weekend. It did. Until Sunday afternoon AMC's USDG pools charged
+4.5 % to 97 % a swap and traded a few thousand USDG all weekend; its market was ETH/AMC (5 % fee, 1,904 ETH of volume
+that weekend). With 17,167 AMC tokens in existence and no mint from Friday 18:00 until Monday 09:02 UTC, that pool
+went from 2.66 USD at Friday's close to **166.77** at Sunday 20:00 UTC (one swap at 188.58; ETH
 at 2,487 USDG, from an ETH/USDG pool's own swaps). By the same measure as HIMS, its max safe exposure fell from
 2,148 USD to 295 (0.14×), and the cheapest fake was a push up at 98 % of the points. HIMS was not alone.
 
@@ -117,15 +118,15 @@ tokens as buffer supply". On Friday 2026-09-04, before that post, one address mi
 2,867,758 in a day; another redeemed 0.29M), and nothing was minted or burned again until Tuesday 00:57 UTC. The
 price held: AMC/USDG (0.1 %, now AMC's deepest USDG pool) traded 2.53–2.70 on the grid against 2.67 on Friday. The
 bound did not: it fell from 2,905 USD to **214** (0.07×), and at the low the cheapest fake was a push *down*. The
-buffer was AMC itself, 100–200k tokens in the pool, which makes a squeeze up expensive and leaves the book below
-the price thin: the side a lender holding AMC as collateral cares about. A calendar rule would treat the two weekends
+buffer was AMC itself (200k tokens in the pool at the low), which makes a squeeze up expensive and leaves the book
+below the price thin: the side a lender holding AMC as collateral cares about. A calendar rule would treat the two weekends
 alike, and a price watcher would call the second one safe. The bound tells them apart and says which way the second
 one was exposed.
 
 So a closed mint window does not by itself make a pool cheap to push. It removes the link between the token and the
 stock (pool-to-pool arbitrage runs all weekend: [measured](#why-not-just-truncate-the-oracle)), and then a price can
-leave the LPs' ranges while the inventory moves to a memecoin's pool, as HIMS's and AMC's did on 08-30, or a book can
-thin on one side while the price holds, as AMC/USDG's did on Labor Day. On the weekend of 09-18 none of the 12 pools
+leave the LPs' ranges while the pool's inventory drains, as HIMS/USDG's (into the BONER pool) and ETH/AMC's (6,544 AMC
+to 139) did on 08-30, or a book can thin on one side while the price holds, as AMC/USDG's did on Labor Day. On the weekend of 09-18 none of the 12 pools
 with a Friday point did either. This is why HAKARI measures at settlement instead of reading the calendar: a calendar rule
 would refuse every weekend, including the ones where the book held, while a big enough exposure is unsafe on any
 weekend. `npm run weekend -- <friday>` rebuilds any weekend, and the [live board](https://vexi-v1.github.io/vexi-hakari/web/live/)
