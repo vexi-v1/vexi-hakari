@@ -105,8 +105,14 @@ function renderLab() {
   };
   $('lab-explanation').textContent = r.reason ? explanations[r.reason] : `The band adds ${(Number(r.extraBps) / 100).toFixed(2)}% to the 8 USDG base premium and permits at most ${r.cap} whole contracts per call. Other inventory and collateral checks still apply.`;
 }
-$('previous').addEventListener('click', () => renderStep(Math.max(0, position - 1)));
-$('next').addEventListener('click', () => renderStep(Math.min(lifecycle.steps.length - 1, position + 1)));
+function selectStep(index) {
+  renderStep(index);
+  const selected = document.querySelector('#steps button[aria-current="step"]');
+  selected.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  $('replay-content').scrollIntoView({block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+}
+$('previous').addEventListener('click', () => selectStep(Math.max(0, position - 1)));
+$('next').addEventListener('click', () => selectStep(Math.min(lifecycle.steps.length - 1, position + 1)));
 $('deviation').addEventListener('input', renderLab);
 $('expired-toggle').addEventListener('change', renderLab);
 $('anchor-toggle').addEventListener('change', renderLab);
@@ -127,7 +133,7 @@ try {
     const li = document.createElement('li');
     const button = document.createElement('button');
     button.innerHTML = `<span>${String(i + 1).padStart(2, '0')}</span>${instructions[s.id][0]}`;
-    button.addEventListener('click', () => renderStep(i));
+    button.addEventListener('click', () => selectStep(i));
     li.append(button); $('steps').append(li);
   });
   cases.forEach(([id, title], i) => {
@@ -140,7 +146,7 @@ try {
   $('step-source').href = `${sourceRoot}/aqua/test/WebsiteEvidence.t.sol`;
   // The docs may evolve independently of the generated Solidity inputs.
   const provenance = [
-    ['Execution', 'Foundry local EVM · 5 assertions-based scenarios'],
+    ['Execution', 'Foundry local EVM · 5 verified scenarios'],
     ['Fork', `${evidence.chainId} / block ${evidence.forkBlock.toLocaleString('en-US')}`],
     ['Base revision', `<a href="${repo}/commit/${escape(evidence.sourceRevision)}">${escape(evidence.sourceRevision.slice(0, 12))} ↗</a>`],
     ['Source inputs', evidence.sourceInputsModified ? 'Modified from base revision; exact files in source.zip' : 'Match base revision; exact files in source.zip'],
