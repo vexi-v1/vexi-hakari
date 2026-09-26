@@ -243,3 +243,17 @@ arbitrage). (3) `npm run amc`: AMC's ETH/AMC pool printed 166.77 USD against 2.6
 its bound falling to 0.14×; over Labor Day one address minted 2.99M AMC on the Friday, the AMC/USDG price held, and
 its bound fell to 0.07× with the cheapest fake a push down. Minting stayed shut through Labor Day Monday, which the
 calendar rule does not know (README § Limitations).
+
+## 2026-09-26 11:10 — Abner: a plain-language, all-English demo (keep Chinese)
+
+> 要有全英文版，且易讀好懂說人話版本的 Demo website（保留中文版）
+> ("There should be a fully English, easy-to-read, plain-language version of the demo website — keep the Chinese one.")
+
+Follow-ups: commit and push when done; share the Artifacts with Eric (done by Abner from the Share menu — the AI
+cannot change sharing).
+
+Output: `web/plain/` (`20d8229`, `b4f5e01`, `87d1b16`): eight short sections, one idea and one visual each, English by
+default and 繁中 via `#zh`, written separately (not translated); every number computed from `web/squeeze/data.js` at
+load and checked at build time (`build-plain.mjs`). Read by a lay English reader, a lay Taiwanese reader, an accuracy
+check and a design pass before the fixes; English at Flesch–Kincaid grade ≤ 8. The detailed replay's English mode was
+swept for Chinese text (none but the 繁中 switch) and both pages take `#en` / `#zh` links (`a310e51`).
