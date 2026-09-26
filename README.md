@@ -17,7 +17,7 @@ prices a push, and `CostModel` turns that cost into the largest exposure the poo
 
 Sunday 2026-08-30 was Robinhood Chain's busiest day ever: $270.6M of stock-token volume
 ([SQD](https://sqd.dev/learn/robinhood-stock-token-volume/)). It was also a day when no stock token can be
-minted or redeemed, so nobody could arbitrage. By 23:53 UTC, with minting still closed, pushing the HIMS/USDG
+minted or redeemed, so nobody could arbitrage it back to the stock. By 23:53 UTC, with minting still closed, pushing the HIMS/USDG
 v4 pool 10 % higher cost **12 USDG** in fees (it had cost 1,351 four hours earlier). When minting reopened
 the pool stood at **54.50 USDG** (its minute close had peaked at 71.23 at 23:31); the stock had closed Friday at **28.84**. Any lending market, perp or option
 settling on that pool would have paid out on a price no arbitrage could correct. HAKARI measures it: the largest
@@ -82,7 +82,7 @@ pushes, 18 % were undone within a minute, 34 % within ten minutes and 53 % withi
 within a minute, 7 within an hour. The one pool with an arbitrageur on call is AMD/USDG, where 65 % of 356 pushes
 were undone within a minute (median 17 s), yet 16 % not within an hour. SafeSettle wants the slow side, since a fast
 reversion overstates what faking costs, so the gauge's rule is: the shortest of 10 s, 1 min, 10 min and 1 h within
-which 90 % of at least ten fee-width weekday pushes were undone, else 0. It gives **0 for all 28 pools**. The
+which 90 % of at least ten fee-width weekday pushes were undone, else 0. It gives **0 for all 28 pools** (no pull-back counted). The
 weekday rows above describe faster arbitrage than this chain showed that week: measured, TSLA's weekday bound is its
 weekend one. Two caveats. A push and a genuine price move look alike in a swap tape, and a genuine move is never
 undone, so these times read slow, which is the safe side. And on the closed weekend pushes were undone at least as
