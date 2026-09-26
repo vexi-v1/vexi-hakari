@@ -664,3 +664,14 @@ English translation of the instruction. Work (Codex): set the ETHGlobal project-
 save the draft, preserving the user's existing other field values. Align the current submission text and the
 separate form-review draft with that spelling. Keep repository paths, Solidity identifiers and historical study
 names intact. This naming change does not finalize the event submission or publish repository changes.
+
+
+## 2026-09-27 — Abner: AAPL presentation example
+
+> Change the artifact content to use AAPL as the example.
+
+English translation of the instruction. Work (Codex): update both six-minute PowerPoint decks, embedded
+speaker notes, standalone scripts and the existing Google Slides versions to use an illustrative AAPL/USDG
+scenario. Preserve the dark Vexi design, charts, timing and original logo. Clearly distinguish the illustration
+from the unchanged TSLA/USDG fork evidence and website replay, retaining original HIMS historical attribution.
+Keep evidence data and contract code intact, verify both languages and commit locally without pushing.

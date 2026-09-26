@@ -5,6 +5,12 @@
 - [English PowerPoint](Vexi-Hakari-6min-EN.pptx) and [speaker script](Speaker-notes-6min-EN.md)
 - [Traditional Chinese PowerPoint](Vexi-Hakari-6min-ZH-TW.pptx) and [speaker script](Speaker-notes-6min-ZH-TW.md)
 
+The six-minute decks use **AAPL/USDG as the illustrative example** throughout the options, inventory,
+collateral-flow, band and exercise explanations. Quantities and the reference path are adapted from the
+recorded TSLA/USDG fixture. They are not AAPL execution records or current stock prices. The linked website
+replay keeps its original TSLA labels; slide 13 and the speaker notes explain that transition. The historical
+HIMS appendix retains its original asset and dates.
+
 Each deck has **14 timed slides for six minutes**, followed by **six optional discussion slides**. The Vexi
 logo and dark pink/green palette continue the website. Eleven native charts, two native tables, editable
 flow diagrams and timed speaker notes explain the options basics, motivation, shared inventory, price
