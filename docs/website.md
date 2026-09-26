@@ -108,9 +108,10 @@ publishes the repository wholesale. `source.zip` is also made from a source-file
 
 ## GitHub Pages
 
-The existing Pages URL is `https://vexi-v1.github.io/vexi-hakari/`. The repository was configured to publish the
-root of `main` when this work began. To use `.github/workflows/website.yml`, select **GitHub Actions** under
-**Settings → Pages → Build and deployment → Source**. Then publish the reviewed website changes to `main`.
+The Pages URL is `https://vexi-v1.github.io/vexi-hakari/`. On 2026-09-27, the repository's Pages source was changed
+from the root of `main` to **GitHub Actions** (`build_type: workflow`) for `.github/workflows/website.yml`.
+Pushes to `main` now trigger the workflow below. Check the deployment run and the live site when verifying a
+publication; changing the source setting alone does not publish a new artifact.
 
 The workflow checks the calculator, verifies the committed evidence and uploads only `_site`. The deploy job
 requires `pages: write` and `id-token: write`, targets the `github-pages` environment, and runs only on `main`.

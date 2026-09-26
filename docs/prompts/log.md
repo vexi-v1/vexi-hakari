@@ -585,3 +585,15 @@ record their commits, paths, blob IDs and checksums, and label selected band-doc
 file-to-tool/human-contribution map and explain obsolete track, team and API statements in the originals. This is
 an import and indexing task performed on 2026-09-27, not a reconstruction dated as earlier work. No missing raw
 conversation or review transcript is invented. The private pricing and risk policy stays outside the package.
+
+## 2026-09-27 — Abner: merge, publish and verify GitHub Pages
+
+> merge all into main and push
+>
+> check github pages working
+
+Work (Codex): publish the public integration branch, including the recovered AI development documents, to
+`main` while preserving its commits. Verify the remote branch first, run the website checks, switch Pages from
+legacy branch publishing to the existing GitHub Actions workflow, and check its deployment and the live site.
+This instruction authorizes publication of the current public repository; it does not import any additional
+private product code or broadcast blockchain transactions.
