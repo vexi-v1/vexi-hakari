@@ -257,3 +257,17 @@ default and 繁中 via `#zh`, written separately (not translated); every number 
 load and checked at build time (`build-plain.mjs`). Read by a lay English reader, a lay Taiwanese reader, an accuracy
 check and a design pass before the fixes; English at Flesch–Kincaid grade ≤ 8. The detailed replay's English mode was
 swept for Chinese text (none but the 繁中 switch) and both pages take `#en` / `#zh` links (`a310e51`).
+
+## 2026-09-26 18:30 — Abner: add Vexi so the result is more useful
+
+> hakari 現在有點單薄 / 成果有點不足 / 能不能加上 Vexi 做出更有用的方案
+> ("HAKARI feels a bit thin right now, the result is a bit short. Can we add Vexi and make something more useful?")
+
+Context given with the prompt: Vexi is our own options venue (pre-hackathon, BUSL-1.1, none of its code may be
+pasted); it fixes a settlement price from six hookless v4 pools on the official PoolManager on testnet 46630 every
+15 minutes, so for that one consumer the exposure settling on a pool's price is readable from its ERC-6909 supply
+and HAKARI's bound can be checked against every fix the venue has made. Planned as three parallel lanes: the gauge
+collector (`npm run vexi`), a hook-free on-chain consumer (`ExposureGuard`) with a 46630 fork test, and a static
+board under `web/vexi/` plus the README section; the video stays Vexi-free.
+
+Output: in progress; completed at the last commit.
