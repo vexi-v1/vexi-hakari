@@ -1,0 +1,45 @@
+Ran 2 tests for test/fork/ExposureGuard.fork.t.sol:ExposureGuardForkTest
+[PASS] test_sixMarkets_poolOfHashesToThePricingPool_andTheBoundIsComplete() (gas: 1525896)
+Logs:
+  block / timestamp 124542896 1790419106
+  AI: tick 304736
+  AI: liquidity / quote reserve / max safe exposure (USDG, 6 dec) 1000000000000000000 241583328870 662750067
+  AI: binding move (ticks) / up? / cost to fake it (USDG, 6 dec) 1823 false 132525621
+  PONS: tick 280964
+  PONS: liquidity / quote reserve / max safe exposure (USDG, 6 dec) 1000000000000000000 792918402078 2176091473
+  PONS: binding move (ticks) / up? / cost to fake it (USDG, 6 dec) 1823 false 435138204
+  MEME: tick 298940
+  MEME: liquidity / quote reserve / max safe exposure (USDG, 6 dec) 1000000000000000000 322786370481 885609448
+  MEME: binding move (ticks) / up? / cost to fake it (USDG, 6 dec) 1823 false 177089295
+  NVDA: tick 222161
+  NVDA: liquidity / quote reserve / max safe exposure (USDG, 6 dec) 1000000000000000000 14998954092282 41157620577
+  NVDA: binding move (ticks) / up? / cost to fake it (USDG, 6 dec) 1823 false 8230009315
+  MU: tick -206629
+  MU: liquidity / quote reserve / max safe exposure (USDG, 6 dec) 1000000000000000000 32609837492406 89411244846
+  MU: binding move (ticks) / up? / cost to fake it (USDG, 6 dec) 1823 true 17878958201
+  TSLA: tick 217614
+  TSLA: liquidity / quote reserve / max safe exposure (USDG, 6 dec) 1000000000000000000 18827240902479 51670689807
+  TSLA: binding move (ticks) / up? / cost to fake it (USDG, 6 dec) 1823 false 10332236229
+[PASS] test_venueVerdict_onTheNextExpiry_sumsTheOpenSeriesAndPricesThemAtThePool() (gas: 21425799)
+Logs:
+  series opened in the last blocks scanned / at block 1236 124542896
+  AI: next expiry / series / contracts (base, 18 dec) 1790419500 19 0
+  AI: spot (USDG per base, 18 dec) / exposure / max safe exposure (USDG, 6 dec) 58362504788047408 0 662750067
+  AI: trusted? / gas of the venue read and the walk true 839760
+  PONS: next expiry / series / contracts (base, 18 dec) 1790419500 19 0
+  PONS: spot (USDG per base, 18 dec) / exposure / max safe exposure (USDG, 6 dec) 628719592353999938 0 2176091473
+  PONS: trusted? / gas of the venue read and the walk true 828517
+  MEME: next expiry / series / contracts (base, 18 dec) 1790419500 20 0
+  MEME: spot (USDG per base, 18 dec) / exposure / max safe exposure (USDG, 6 dec) 104191040968909790 0 885609448
+  MEME: trusted? / gas of the venue read and the walk true 861515
+  NVDA: next expiry / series / contracts (base, 18 dec) 1790419500 20 0
+  NVDA: spot (USDG per base, 18 dec) / exposure / max safe exposure (USDG, 6 dec) 224968623862396163559 0 41157620577
+  NVDA: trusted? / gas of the venue read and the walk true 861189
+  MU: next expiry / series / contracts (base, 18 dec) 1790419500 19 0
+  MU: spot (USDG per base, 18 dec) / exposure / max safe exposure (USDG, 6 dec) 1063401501281185213377 0 89411244846
+  MU: trusted? / gas of the venue read and the walk true 826420
+  TSLA: next expiry / series / contracts (base, 18 dec) 1790419500 18 0
+  TSLA: spot (USDG per base, 18 dec) / exposure / max safe exposure (USDG, 6 dec) 354464999999999987982 0 51670689807
+  TSLA: trusted? / gas of the venue read and the walk true 797601
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 144.00s (148.07s CPU time)
+Ran 1 test suite in 144.00s (144.00s CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
