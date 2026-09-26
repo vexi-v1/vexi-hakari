@@ -22,3 +22,8 @@ web/node_modules/
 /tmp/
 gauge/cache/
 archive/hakari-v1/gauge/cache/
+
+# generated website build and intermediate evidence
+_site/
+aqua/deployments/website-*.json
+scripts/__pycache__/

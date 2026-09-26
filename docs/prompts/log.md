@@ -521,6 +521,16 @@ submission complete in the readiness checklist, recorded the user-provided confi
 draft's status to submitted while retaining it as a preparation copy. Final field values were not supplied;
 other submission checks were not marked complete.
 
+## 2026-09-27 — Abner: implement a reproducible public website
+
+> Explain recommendation 5, the complete reproducible public demonstration. Can it be an independent website
+> shared through GitHub Pages? Execute it.
+
+English translation of the user instructions. Work (Codex): implement a static website in this public repository,
+backed by a continuous local-fork contract test and generated JSON/call traces. Keep recorded evidence distinct
+from an interactive fixed-percentage band illustration. Include adverse quote and experimental settlement cases,
+source/provenance links, and a Pages build workflow. No private pricing or risk code is used.
+
 ## 2026-09-27 05:00 — Abner: publish the router deployed on testnet 46630
 
 > option 1
