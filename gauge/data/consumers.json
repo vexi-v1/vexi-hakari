@@ -1,0 +1,1201 @@
+{
+  "chainId": 4663,
+  "block": "73168332",
+  "timestamp": 1790434308,
+  "at": "2026-09-26T14:51:48.000Z",
+  "generatedAt": "2026-09-26T14:54:46.018Z",
+  "mintWindowClosed": true,
+  "method": "Morpho: CreateMarket logs from block 0; each oracle's runtime code searched for the v4 PoolManager address and the extsload, observe, slot0, latestRoundData, latestAnswer, convertToAssets and uiMultiplier selectors; market() for supply and borrow. Panoptic: PoolDeployed logs from both factories; trackers' asset() and totalAssets(); risk-engine constants; getCurrentTick / getTWAP / isSafeMode. Bound: CostModel.maxSafeExposure with nobody pushing back, from PushCostLens.roundTripCosts by eth_call state override (web/live/core.js maxSafeFromQuotes), the same call the live board makes.",
+  "morpho": {
+    "address": "0x9D53d5E3bd5E8d4Cbfa6DB1ca238AEA02E651010",
+    "markets": 285,
+    "oracles": 276,
+    "marketsByOracleKind": {
+      "no-known-selector": 86,
+      "chainlink": 185,
+      "uniswap-v3-twap": 7,
+      "uniswap-v4-spot": 2,
+      "uniswap-v3-twap+chainlink": 5
+    },
+    "usdgLoanMarketsByOracleKind": {
+      "no-known-selector": {
+        "markets": 59,
+        "supplyUsdg": 339193633.37985307,
+        "borrowUsdg": 300019813.14698607
+      },
+      "chainlink": {
+        "markets": 173,
+        "supplyUsdg": 172972165.9013979,
+        "borrowUsdg": 152922476.5856159
+      },
+      "uniswap-v3-twap": {
+        "markets": 7,
+        "supplyUsdg": 100,
+        "borrowUsdg": 0
+      },
+      "uniswap-v4-spot": {
+        "markets": 2,
+        "supplyUsdg": 226.832126,
+        "borrowUsdg": 123.874831
+      },
+      "uniswap-v3-twap+chainlink": {
+        "markets": 5,
+        "supplyUsdg": 28398.384081,
+        "borrowUsdg": 165.740357
+      }
+    },
+    "uniswapPricedMarkets": [
+      {
+        "id": "0xbe3a53552a5600381ca1d858cc425a2601becbd77c43c753698890a22adbbb0d",
+        "createdBlock": "50134057",
+        "createdAt": "2026-08-30T15:58:47.000Z",
+        "collateral": "NVDA",
+        "collateralToken": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0xcf29960266420A42f12061699ec2daBd7eEa8D6e",
+        "oracleKind": "uniswap-v3-twap",
+        "oracleMarks": [
+          "observe"
+        ],
+        "oracleCodeBytes": 3513,
+        "lltv": 0.385,
+        "supply": 100,
+        "borrow": 0,
+        "price": 224.71476900000002,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0x63dd2e68d9f41e912930d1dd7e60ea629ec1860d07d433614e9967fb32ff8b70",
+        "createdBlock": "51955871",
+        "createdAt": "2026-09-01T19:06:39.000Z",
+        "collateral": "NOTHING",
+        "collateralToken": "0x9B52d1C25c002BA6Ff5b68E8F9Ff4f2A27099e8f",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x1BC7d345753ef007A656b8932D3C48EBF75E6762",
+        "oracleKind": "uniswap-v4-spot",
+        "oracleMarks": [
+          "poolManager",
+          "extsload"
+        ],
+        "oracleCodeBytes": 1333,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 0.6046669255194665,
+        "longbowListed": false,
+        "poolIdCandidates": [
+          "0x75a59aee86b2193f53399b8327f48d55027f41ce6668865803ee6c29fcb21656"
+        ],
+        "poolId": "0x75a59aee86b2193f53399b8327f48d55027f41ce6668865803ee6c29fcb21656",
+        "poolKey": {
+          "currency0": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+          "currency1": "0x9B52d1C25c002BA6Ff5b68E8F9Ff4f2A27099e8f",
+          "fee": 9000,
+          "tickSpacing": 90,
+          "hooks": "0xB1A660B86c85561263DE93cb9aa534C46a5d0044"
+        },
+        "poolInitBlock": "39863408",
+        "oracleEqualsSlot0": true
+      },
+      {
+        "id": "0x0b6969a5312a72617720a9c992760b12884a6faab277ce8f410b939b17ce52d5",
+        "createdBlock": "52016493",
+        "createdAt": "2026-09-01T20:48:44.000Z",
+        "collateral": "PONS",
+        "collateralToken": "0x39dBED3a2bd333467115dE45665cC57F813C4571",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x07a8b7c2efe8cb37b4a3FE01f87d711B205c5aFf",
+        "oracleKind": "uniswap-v3-twap+chainlink",
+        "oracleMarks": [
+          "observe",
+          "slot0",
+          "latestRoundData"
+        ],
+        "oracleCodeBytes": 6527,
+        "lltv": 0.385,
+        "supply": 12393.005074,
+        "borrow": 9.001738,
+        "price": 0.6283474051635621,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0x071fb8a90e74f8b3ff3f517f581db96875f3b609a4f0f42efa5c158da9f4b0be",
+        "createdBlock": "52087237",
+        "createdAt": "2026-09-01T22:48:16.000Z",
+        "collateral": "NOTHING",
+        "collateralToken": "0x9B52d1C25c002BA6Ff5b68E8F9Ff4f2A27099e8f",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x0F932e0fE68B0219820ffcB4C2B1906E29BedacC",
+        "oracleKind": "uniswap-v4-spot",
+        "oracleMarks": [
+          "poolManager",
+          "extsload"
+        ],
+        "oracleCodeBytes": 1333,
+        "lltv": 0.385,
+        "supply": 226.832126,
+        "borrow": 123.874831,
+        "price": 0.6046669255194665,
+        "longbowListed": true,
+        "poolIdCandidates": [
+          "0x75a59aee86b2193f53399b8327f48d55027f41ce6668865803ee6c29fcb21656"
+        ],
+        "poolId": "0x75a59aee86b2193f53399b8327f48d55027f41ce6668865803ee6c29fcb21656",
+        "poolKey": {
+          "currency0": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+          "currency1": "0x9B52d1C25c002BA6Ff5b68E8F9Ff4f2A27099e8f",
+          "fee": 9000,
+          "tickSpacing": 90,
+          "hooks": "0xB1A660B86c85561263DE93cb9aa534C46a5d0044"
+        },
+        "poolInitBlock": "39863408",
+        "oracleEqualsSlot0": true
+      },
+      {
+        "id": "0xf9566d437f9ad34df3084aea5866d2765d5afb519b619ec3b9b2c2c4c1221bc8",
+        "createdBlock": "54573484",
+        "createdAt": "2026-09-04T21:08:13.000Z",
+        "collateral": "HIMS",
+        "collateralToken": "0xCceE82fE024c36fA15E1005edE3E9e4787e23D09",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x13Ed9699E98B15a1AEA6B09B043b29D3C89457Cd",
+        "oracleKind": "uniswap-v3-twap",
+        "oracleMarks": [
+          "observe"
+        ],
+        "oracleCodeBytes": 2652,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 29.175636077336936,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0x802aecb45c6701afc9dc8bfc46c94fdf113f96bf220444907155b1bdaa80c7b3",
+        "createdBlock": "54573539",
+        "createdAt": "2026-09-04T21:08:18.000Z",
+        "collateral": "PONS",
+        "collateralToken": "0x39dBED3a2bd333467115dE45665cC57F813C4571",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x1E5c7F62eda4E75F6897614f381cF35BE8647dF8",
+        "oracleKind": "uniswap-v3-twap",
+        "oracleMarks": [
+          "observe"
+        ],
+        "oracleCodeBytes": 2652,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 0.6267083533533906,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0xb32df78a9ad7f3d6dfe451833567288493a8d6d1551fec18b0554a0759b253f8",
+        "createdBlock": "54573555",
+        "createdAt": "2026-09-04T21:08:20.000Z",
+        "collateral": "CASHCAT",
+        "collateralToken": "0x020bfC650A365f8BB26819deAAbF3E21291018b4",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0xC343BC067236ead2542AF9B317B7A6F64b9020b3",
+        "oracleKind": "uniswap-v3-twap",
+        "oracleMarks": [
+          "observe"
+        ],
+        "oracleCodeBytes": 2652,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 0.18024978657210297,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0xb3c8e5e13e9d30cb7365097ab97d22cadd755bad1a7e530a43eca99770d28523",
+        "createdBlock": "54921211",
+        "createdAt": "2026-09-05T06:52:46.000Z",
+        "collateral": "pSPY-MAR27",
+        "collateralToken": "0xE8b23dD27b1F4fEA3d036B2856a018507558d2d2",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0xA5d188944e489FaF68012C618f6882bf0514031a",
+        "oracleKind": "uniswap-v3-twap+chainlink",
+        "oracleMarks": [
+          "observe",
+          "latestRoundData"
+        ],
+        "oracleCodeBytes": 3771,
+        "lltv": 0.625,
+        "supply": 0.358397,
+        "borrow": 0,
+        "price": 765.4851458151588,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0x40b8233028846e58fc22dca599a503d77bfc131b1f02d8c622bf8efa64ea6c97",
+        "createdBlock": "55136163",
+        "createdAt": "2026-09-05T12:54:04.000Z",
+        "collateral": "RDDT",
+        "collateralToken": "0x05b37Fb53A299a1b874A619e1c4C404D52C36F4C",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0xAc527aF81B3b37bF876243A6502EfD3674e9A504",
+        "oracleKind": "uniswap-v3-twap",
+        "oracleMarks": [
+          "observe"
+        ],
+        "oracleCodeBytes": 2731,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 151.14682804912144,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0xccdfcd98e6779322b28ecdc0c513ed3bd510ccb2fd15ee6a70d6cf142398db41",
+        "createdBlock": "55136218",
+        "createdAt": "2026-09-05T12:54:09.000Z",
+        "collateral": "COST",
+        "collateralToken": "0x4EA005168D7F09a7A0Ba9D1DEf21a479950E44C2",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x3a1C456e53EAB70164f46d26f81504235ac09014",
+        "oracleKind": "uniswap-v3-twap",
+        "oracleMarks": [
+          "observe"
+        ],
+        "oracleCodeBytes": 2731,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 921.7382933578899,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0x892a0adf84e7e752d8ad2ad61c9248dcc9657e41c6c7f7b94267491e60f0b382",
+        "createdBlock": "55152746",
+        "createdAt": "2026-09-05T13:21:54.000Z",
+        "collateral": "NFLX",
+        "collateralToken": "0xE0444EF8BF4eD74f74FD73686e2ddF4C1c5591E8",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x66e5Da27b5f095394891B6d5dEe1c33ca3987B06",
+        "oracleKind": "uniswap-v3-twap",
+        "oracleMarks": [
+          "observe"
+        ],
+        "oracleCodeBytes": 2731,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 71.043295220941,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0x39a5d135de0968d4fe870452a42f65fbf83f6ebd686e54578e50c4566f85f1b7",
+        "createdBlock": "57222312",
+        "createdAt": "2026-09-07T23:21:11.000Z",
+        "collateral": "AI",
+        "collateralToken": "0x2E8c31162b855A2ffa90F6F8634643Ad6F111e18",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x70500DCd498BD4FF20A84883b4cb1A389e14F149",
+        "oracleKind": "uniswap-v3-twap+chainlink",
+        "oracleMarks": [
+          "observe",
+          "slot0",
+          "latestRoundData"
+        ],
+        "oracleCodeBytes": 6527,
+        "lltv": 0.385,
+        "supply": 6004.842396,
+        "borrow": 0,
+        "price": 0.2648163080793529,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0x3c538ee562f18ce6be5080f2915a0c4d25decd99d565bad14052a2586cd8e31a",
+        "createdBlock": "59611346",
+        "createdAt": "2026-09-10T18:18:10.000Z",
+        "collateral": "Index",
+        "collateralToken": "0x56910D4409F3a0C78C64DD8D0545FF0705389870",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0x9df17489D63dF44f103F7261f3b826BB0c032667",
+        "oracleKind": "uniswap-v3-twap+chainlink",
+        "oracleMarks": [
+          "observe",
+          "slot0",
+          "latestRoundData"
+        ],
+        "oracleCodeBytes": 6527,
+        "lltv": 0.385,
+        "supply": 0,
+        "borrow": 0,
+        "price": 0.027797584016963545,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      },
+      {
+        "id": "0xd255e25cbab14a13292a127be2bce3f5c9a0fe620e4537d5bbc54daf5309458b",
+        "createdBlock": "66071105",
+        "createdAt": "2026-09-18T08:10:19.000Z",
+        "collateral": "pSPY-DEC27",
+        "collateralToken": "0x1d0d084ee243eC25876547E69Ca54A499E253ac9",
+        "loan": "USDG",
+        "loanToken": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "oracle": "0xc2414099151326C5d238B9F00609f1a12283B723",
+        "oracleKind": "uniswap-v3-twap+chainlink",
+        "oracleMarks": [
+          "observe",
+          "latestRoundData"
+        ],
+        "oracleCodeBytes": 6703,
+        "lltv": 0.625,
+        "supply": 10000.178214,
+        "borrow": 156.738619,
+        "price": 760.6019280029677,
+        "longbowListed": false,
+        "poolIdCandidates": []
+      }
+    ],
+    "longbow": {
+      "source": "https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/longbow/index.js",
+      "listed": 55,
+      "foundOnChain": 55,
+      "byOracleKind": {
+        "chainlink": 52,
+        "no-known-selector": 2,
+        "uniswap-v4-spot": 1
+      },
+      "usdgSupply": 1257313.2404950007,
+      "usdgBorrow": 1148821.4597189995
+    }
+  },
+  "panoptic": {
+    "factoryV4": "0x0000000000000c51d0f8cf4bd9adE7191372a625",
+    "factoryV3": "0x0000000000000aDC9A108591e718F2aee963a2a7",
+    "source": "https://github.com/panoptic-labs/panoptic-v2-core (contracts/RiskEngine.sol, contracts/RiskEngineXStocks.sol, contracts/libraries/V4StateReader.sol)",
+    "pools": [
+      {
+        "uniswap": "v4",
+        "panopticPool": "0x00000000989bcb6f24af4a1Ab2A6d6a31c98A58E",
+        "poolId": "0xfe2a80bb5618fd14984b92ca6d45bf5ba67443ddb1435e28b2e48df2fc1526cd",
+        "key": {
+          "currency0": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+          "currency1": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+          "fee": 3000,
+          "tickSpacing": 60,
+          "hooks": "0x0000000000000000000000000000000000000000"
+        },
+        "pair": "SPY/USDG",
+        "deployedBlock": "62901925",
+        "deployedAt": "2026-09-14T15:07:21.000Z",
+        "deployTx": "0x421da1de5637b85e8d57b906b46b129fc07fd70d08e64fada7070f148860aeea",
+        "riskEngine": {
+          "address": "0x0000000000000fE1E261f66ce2F44def4F5Ae0CB",
+          "maxTicksDelta": 953,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            120,
+            240,
+            480,
+            1920
+          ],
+          "sellerCollateralRatio": 3.3,
+          "profile": "xstocks"
+        },
+        "collateral": [
+          {
+            "tracker": "0x49eaAC32A7CD4B8fB2209a12859a95E0b20aB0e5",
+            "asset": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+            "symbol": "SPY",
+            "totalAssets": 12.453865165351806
+          },
+          {
+            "tracker": "0x670C44a0FC35dbC410498e47A6290a1C3196d191",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 7611.67342
+          }
+        ],
+        "oracle": {
+          "currentTick": -209846,
+          "twapTick": -209899,
+          "safeMode": 0
+        }
+      },
+      {
+        "uniswap": "v4",
+        "panopticPool": "0x000000000c21b38c54AcA7c7145Df01ff09d69Bb",
+        "poolId": "0xe5923c8a8be481ec89a2ca784a2bbfa4235de6d88f92260fd66b660c4babf907",
+        "key": {
+          "currency0": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+          "currency1": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+          "fee": 500,
+          "tickSpacing": 5,
+          "hooks": "0x0000000000000000000000000000000000000000"
+        },
+        "pair": "SPY/USDG",
+        "deployedBlock": "72457529",
+        "deployedAt": "2026-09-25T18:54:54.000Z",
+        "deployTx": "0x961c902f3c851443f7db9c4106b13edee7aa47147f4f226cda61bb0e21200056",
+        "riskEngine": {
+          "address": "0x0000000000000fE1E261f66ce2F44def4F5Ae0CB",
+          "maxTicksDelta": 953,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            120,
+            240,
+            480,
+            1920
+          ],
+          "sellerCollateralRatio": 3.3,
+          "profile": "xstocks"
+        },
+        "collateral": [
+          {
+            "tracker": "0xDc508622CD7e3850c8240e88c10361Cf493465b6",
+            "asset": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+            "symbol": "SPY",
+            "totalAssets": 1e-18
+          },
+          {
+            "tracker": "0x9212d804953bAf89C24ceFa6545aA293bA08a876",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 0.000001
+          }
+        ],
+        "oracle": {
+          "currentTick": -209836,
+          "twapTick": -209829,
+          "safeMode": 0
+        }
+      },
+      {
+        "uniswap": "v3",
+        "panopticPool": "0x0000000005Cc182d3c65B982eA2F65d5F27AA333",
+        "uniswapPool": "0x34D0dC122CF9A8Eb296fC5e0D3A233625D7d19b7",
+        "pair": "GOOGL/USDG",
+        "fee": 500,
+        "deployedBlock": "72456508",
+        "deployedAt": "2026-09-25T18:53:11.000Z",
+        "deployTx": "0x97601da540f4754ad503e2b120e7170525737a965f68a11c14a0e170e9833ba0",
+        "riskEngine": {
+          "address": "0x0000000000000fE1E261f66ce2F44def4F5Ae0CB",
+          "maxTicksDelta": 953,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            120,
+            240,
+            480,
+            1920
+          ],
+          "sellerCollateralRatio": 3.3,
+          "profile": "xstocks"
+        },
+        "collateral": [
+          {
+            "tracker": "0x079fEBDad1c0Af0FFbf141593522401d24E47820",
+            "asset": "0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3",
+            "symbol": "GOOGL",
+            "totalAssets": 1e-18
+          },
+          {
+            "tracker": "0xC4a0950e87f9896fc3e9A73d51CebE59d0efC5e8",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 0.000001
+          }
+        ]
+      },
+      {
+        "uniswap": "v3",
+        "panopticPool": "0x000000000567861dfB86e396e30e5Ceca1883789",
+        "uniswapPool": "0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca",
+        "pair": "WETH/USDG",
+        "fee": 100,
+        "deployedBlock": "72457476",
+        "deployedAt": "2026-09-25T18:54:49.000Z",
+        "deployTx": "0x525887775945606692cf2b8bccfca2fd1e7022381d8f626326a14994dcb76e8e",
+        "riskEngine": {
+          "address": "0x000000000000075E29Cdaa9cb640A69e148ca7da",
+          "maxTicksDelta": 724,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            60,
+            120,
+            240,
+            960
+          ],
+          "sellerCollateralRatio": 2,
+          "profile": "default"
+        },
+        "collateral": [
+          {
+            "tracker": "0xd4d7cAd0166b5e8b6be7729Bda500b871Ee08EEC",
+            "asset": "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73",
+            "symbol": "WETH",
+            "totalAssets": 1e-18
+          },
+          {
+            "tracker": "0xF04f20EB6FC0eCbdA7510367446e0D517E658060",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 0.000001
+          }
+        ]
+      },
+      {
+        "uniswap": "v3",
+        "panopticPool": "0x000000000D77fF63E3a051F46028A5e972DB4E00",
+        "uniswapPool": "0xd4EB21209C4D6093f80B5b84f5C45cc093EA14a3",
+        "pair": "USDG/NVDA",
+        "fee": 500,
+        "deployedBlock": "72457580",
+        "deployedAt": "2026-09-25T18:54:59.000Z",
+        "deployTx": "0xe5411d50b143a05326177d245097c77166e8def651a68b90029393c5919ac006",
+        "riskEngine": {
+          "address": "0x0000000000000f3fb82469581A74776178E76Ca4",
+          "maxTicksDelta": 953,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            120,
+            240,
+            480,
+            1920
+          ],
+          "sellerCollateralRatio": 3.3,
+          "profile": "xstocks"
+        },
+        "collateral": [
+          {
+            "tracker": "0x2E1Fe224060A053E44446d77F7e82bDEeaE00984",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 0.000001
+          },
+          {
+            "tracker": "0xc46d455ECb30c490ACA5535b1FEa4E9bDeF69efa",
+            "asset": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+            "symbol": "NVDA",
+            "totalAssets": 1e-18
+          }
+        ]
+      },
+      {
+        "uniswap": "v3",
+        "panopticPool": "0x000000000e7356536bBc5753D892cd21c91B7b28",
+        "uniswapPool": "0xc61284332117c3FB23A2A56cceFFD07F7aF60029",
+        "pair": "SPCX/USDG",
+        "fee": 500,
+        "deployedBlock": "72457628",
+        "deployedAt": "2026-09-25T18:55:04.000Z",
+        "deployTx": "0x9350502dbacb976c71c6c40ee272f507520f7c2df710f30669691c148206e2c3",
+        "riskEngine": {
+          "address": "0x0000000000000fE1E261f66ce2F44def4F5Ae0CB",
+          "maxTicksDelta": 953,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            120,
+            240,
+            480,
+            1920
+          ],
+          "sellerCollateralRatio": 3.3,
+          "profile": "xstocks"
+        },
+        "collateral": [
+          {
+            "tracker": "0xcf6c7FAB99bbDd832EE756A2d62C00B8171A67fC",
+            "asset": "0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa",
+            "symbol": "SPCX",
+            "totalAssets": 1e-18
+          },
+          {
+            "tracker": "0xe8eF1D9ef86942BD5A0f11Dd267e46188828AD45",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 0.000001
+          }
+        ]
+      },
+      {
+        "uniswap": "v3",
+        "panopticPool": "0x0000000003977B00A4F6b6E12E760B0d77260F66",
+        "uniswapPool": "0xBA2f1ed4cEB2169D538d1e614D847E83C5A55913",
+        "pair": "USDG/GLD",
+        "fee": 500,
+        "deployedBlock": "72457678",
+        "deployedAt": "2026-09-25T18:55:09.000Z",
+        "deployTx": "0xc38eb32174c3deb2a44041fc19cef7888acd0895ba374d28d7dae82a6d760af8",
+        "riskEngine": {
+          "address": "0x0000000000000f3fb82469581A74776178E76Ca4",
+          "maxTicksDelta": 953,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            120,
+            240,
+            480,
+            1920
+          ],
+          "sellerCollateralRatio": 3.3,
+          "profile": "xstocks"
+        },
+        "collateral": [
+          {
+            "tracker": "0x26EA99091dD3F01029bE5fF75Fb9D04427590CEA",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 0.000001
+          },
+          {
+            "tracker": "0x16075A7F627b4c2765D67B261Be7E85873CDed53",
+            "asset": "0xC9a981FEE1F9DEc688bb123ccDeCc63D0deBFC4e",
+            "symbol": "GLD",
+            "totalAssets": 1e-18
+          }
+        ]
+      },
+      {
+        "uniswap": "v3",
+        "panopticPool": "0x000000000287126A6CdbA8E713B4930bf806a527",
+        "uniswapPool": "0xD60A5d14dB690B7Afad71F76B108071D7175597d",
+        "pair": "USDG/QQQ",
+        "fee": 500,
+        "deployedBlock": "72457730",
+        "deployedAt": "2026-09-25T18:55:14.000Z",
+        "deployTx": "0x0bbb55d3c095454baa0a4adc525e007631ff75d8c060343a2c8bd909bc59fd9c",
+        "riskEngine": {
+          "address": "0x0000000000000f3fb82469581A74776178E76Ca4",
+          "maxTicksDelta": 953,
+          "maxTwapDeltaDispatch": 513,
+          "maxClampDelta": 149,
+          "emaPeriodsSeconds": [
+            120,
+            240,
+            480,
+            1920
+          ],
+          "sellerCollateralRatio": 3.3,
+          "profile": "xstocks"
+        },
+        "collateral": [
+          {
+            "tracker": "0xD6E3DD7d3b0bf064BF8D3dcD58eB2FC83aC64A1c",
+            "asset": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+            "symbol": "USDG",
+            "totalAssets": 0.000001
+          },
+          {
+            "tracker": "0x1644f716186353c5E85eF39a4bF4f25c2678866E",
+            "asset": "0xD5f3879160bc7c32ebb4dC785F8a4F505888de68",
+            "symbol": "QQQ",
+            "totalAssets": 1e-18
+          }
+        ]
+      }
+    ]
+  },
+  "bounds": [
+    {
+      "consumer": "Panoptic V2",
+      "reads": "the pool's current tick (extsload) into an 8-slot median ring and four EMAs; liquidations use twapEMA",
+      "pool": "SPY/USDG",
+      "poolId": "0xfe2a80bb5618fd14984b92ca6d45bf5ba67443ddb1435e28b2e48df2fc1526cd",
+      "key": {
+        "currency0": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+        "currency1": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "hooked": false,
+      "priceUsdg": 770.8699875110925,
+      "tick": -209846,
+      "lpFee": 3000,
+      "protocolFee": 2048500,
+      "liquidity": "8416889288005726926",
+      "maxSafeExposureUsdg": 57084.769519522306,
+      "complete": true,
+      "binding": {
+        "ticks": 1823,
+        "assetUp": true,
+        "roundTripCostUsdg": 11414.852907,
+        "complete": true
+      },
+      "rungs": [
+        {
+          "ticks": 50,
+          "assetUp": true,
+          "roundTripCostUsdg": 3404.626782,
+          "exposureUsdg": 679258.507232473,
+          "complete": true
+        },
+        {
+          "ticks": 50,
+          "assetUp": false,
+          "roundTripCostUsdg": 3773.25991,
+          "exposureUsdg": 756577.9160377058,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": true,
+          "roundTripCostUsdg": 5941.57514,
+          "exposureUsdg": 591221.3848674794,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": false,
+          "roundTripCostUsdg": 6657.023388,
+          "exposureUsdg": 669069.6822891772,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": true,
+          "roundTripCostUsdg": 8782.271424,
+          "exposureUsdg": 434759.0270903686,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": false,
+          "roundTripCostUsdg": 10777.905904,
+          "exposureUsdg": 544329.1546264349,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": true,
+          "roundTripCostUsdg": 10831.490797,
+          "exposureUsdg": 216596.174994933,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": false,
+          "roundTripCostUsdg": 14234.825671,
+          "exposureUsdg": 298887.1279110786,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": true,
+          "roundTripCostUsdg": 11367.983523,
+          "exposureUsdg": 113698.5259175212,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": false,
+          "roundTripCostUsdg": 15167.832796,
+          "exposureUsdg": 166871.0989715234,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": true,
+          "roundTripCostUsdg": 11414.852907,
+          "exposureUsdg": 57084.769519522306,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": false,
+          "roundTripCostUsdg": 15506.921175,
+          "exposureUsdg": 93055.79792744885,
+          "complete": true
+        }
+      ],
+      "exposureUsdg": 17211.984304479578,
+      "exposureNote": "collateral on deposit in its two trackers, the stock side valued at the pool's price: the most a mispriced liquidation could move",
+      "ratio": 0.30151622664594074,
+      "stockToken": "SPY"
+    },
+    {
+      "consumer": "Panoptic V2",
+      "reads": "the pool's current tick (extsload) into an 8-slot median ring and four EMAs; liquidations use twapEMA",
+      "pool": "SPY/USDG",
+      "poolId": "0xe5923c8a8be481ec89a2ca784a2bbfa4235de6d88f92260fd66b660c4babf907",
+      "key": {
+        "currency0": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+        "currency1": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "fee": 500,
+        "tickSpacing": 5,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "hooked": false,
+      "priceUsdg": 771.6273535216783,
+      "tick": -209836,
+      "lpFee": 500,
+      "protocolFee": 512125,
+      "liquidity": "4208929613669292472",
+      "maxSafeExposureUsdg": 1877.2643072425185,
+      "complete": true,
+      "binding": {
+        "ticks": 1823,
+        "assetUp": true,
+        "roundTripCostUsdg": 375.383769,
+        "complete": true
+      },
+      "rungs": [
+        {
+          "ticks": 50,
+          "assetUp": true,
+          "roundTripCostUsdg": 252.056402,
+          "exposureUsdg": 50287.87773922532,
+          "complete": true
+        },
+        {
+          "ticks": 50,
+          "assetUp": false,
+          "roundTripCostUsdg": 203.96048,
+          "exposureUsdg": 40896.20079006172,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": true,
+          "roundTripCostUsdg": 276.098385,
+          "exposureUsdg": 27473.399846521934,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": false,
+          "roundTripCostUsdg": 300.719359,
+          "exposureUsdg": 30224.049737758713,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": true,
+          "roundTripCostUsdg": 303.14894,
+          "exposureUsdg": 15007.135609325996,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": false,
+          "roundTripCostUsdg": 413.583068,
+          "exposureUsdg": 20887.668140496262,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": true,
+          "roundTripCostUsdg": 342.812058,
+          "exposureUsdg": 6855.176438455421,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": false,
+          "roundTripCostUsdg": 540.565197,
+          "exposureUsdg": 11350.190224610331,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": true,
+          "roundTripCostUsdg": 368.315742,
+          "exposureUsdg": 3683.7629868913427,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": false,
+          "roundTripCostUsdg": 579.852959,
+          "exposureUsdg": 6379.335915130674,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": true,
+          "roundTripCostUsdg": 375.383769,
+          "exposureUsdg": 1877.2643072425185,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": false,
+          "roundTripCostUsdg": 594.523624,
+          "exposureUsdg": 3567.688878642835,
+          "complete": true
+        }
+      ],
+      "exposureUsdg": 0.0000010000000007716273,
+      "exposureNote": "collateral on deposit in its two trackers, the stock side valued at the pool's price: the most a mispriced liquidation could move",
+      "ratio": 5.326900409886928e-10,
+      "stockToken": "SPY"
+    },
+    {
+      "consumer": "Morpho Blue market 0x63dd2e68…",
+      "reads": "the pool's slot0 through the PoolManager's extsload: the live spot price, no averaging",
+      "pool": "USDG/NOTHING",
+      "poolId": "0x75a59aee86b2193f53399b8327f48d55027f41ce6668865803ee6c29fcb21656",
+      "key": {
+        "currency0": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "currency1": "0x9B52d1C25c002BA6Ff5b68E8F9Ff4f2A27099e8f",
+        "fee": 9000,
+        "tickSpacing": 90,
+        "hooks": "0xB1A660B86c85561263DE93cb9aa534C46a5d0044"
+      },
+      "quoteIsCurrency0": true,
+      "hooked": true,
+      "priceUsdg": 0.6046669255194665,
+      "tick": 281355,
+      "lpFee": 9000,
+      "protocolFee": 0,
+      "liquidity": "33884045239295591",
+      "maxSafeExposureUsdg": 217.51118234219942,
+      "complete": true,
+      "binding": {
+        "ticks": 1823,
+        "assetUp": true,
+        "roundTripCostUsdg": 43.494231,
+        "complete": true
+      },
+      "rungs": [
+        {
+          "ticks": 50,
+          "assetUp": false,
+          "roundTripCostUsdg": 1.189744,
+          "exposureUsdg": 238.55606494342032,
+          "complete": true
+        },
+        {
+          "ticks": 50,
+          "assetUp": true,
+          "roundTripCostUsdg": 1.192272,
+          "exposureUsdg": 237.87068327628373,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": false,
+          "roundTripCostUsdg": 2.380773,
+          "exposureUsdg": 239.28157404164003,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": true,
+          "roundTripCostUsdg": 2.383301,
+          "exposureUsdg": 237.1523517879888,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": false,
+          "roundTripCostUsdg": 4.762923,
+          "exposureUsdg": 240.5474563642844,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": true,
+          "roundTripCostUsdg": 4.765451,
+          "exposureUsdg": 235.90967989727486,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": false,
+          "roundTripCostUsdg": 11.62469,
+          "exposureUsdg": 244.08238550016284,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": true,
+          "roundTripCostUsdg": 11.627219,
+          "exposureUsdg": 232.50826764547818,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": false,
+          "roundTripCostUsdg": 25.62087,
+          "exposureUsdg": 281.8716945926528,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": true,
+          "roundTripCostUsdg": 22.712762,
+          "exposureUsdg": 227.16496322243043,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": false,
+          "roundTripCostUsdg": 62.455633,
+          "exposureUsdg": 374.7912753466941,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": true,
+          "roundTripCostUsdg": 43.494231,
+          "exposureUsdg": 217.51118234219942,
+          "complete": true
+        }
+      ],
+      "exposureUsdg": 0,
+      "exposureNote": "USDG supplied to the market (0.00 borrowed): the most its lenders can lose to a mispriced liquidation or an over-borrow",
+      "ratio": 0,
+      "oracle": "0x1BC7d345753ef007A656b8932D3C48EBF75E6762",
+      "lltv": 0.385,
+      "oraclePriceUsdg": 0.6046669255194665
+    },
+    {
+      "consumer": "Morpho Blue market 0x071fb8a9… (Longbow-listed)",
+      "reads": "the pool's slot0 through the PoolManager's extsload: the live spot price, no averaging",
+      "pool": "USDG/NOTHING",
+      "poolId": "0x75a59aee86b2193f53399b8327f48d55027f41ce6668865803ee6c29fcb21656",
+      "key": {
+        "currency0": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "currency1": "0x9B52d1C25c002BA6Ff5b68E8F9Ff4f2A27099e8f",
+        "fee": 9000,
+        "tickSpacing": 90,
+        "hooks": "0xB1A660B86c85561263DE93cb9aa534C46a5d0044"
+      },
+      "quoteIsCurrency0": true,
+      "hooked": true,
+      "priceUsdg": 0.6046669255194665,
+      "tick": 281355,
+      "lpFee": 9000,
+      "protocolFee": 0,
+      "liquidity": "33884045239295591",
+      "maxSafeExposureUsdg": 217.51118234219942,
+      "complete": true,
+      "binding": {
+        "ticks": 1823,
+        "assetUp": true,
+        "roundTripCostUsdg": 43.494231,
+        "complete": true
+      },
+      "rungs": [
+        {
+          "ticks": 50,
+          "assetUp": false,
+          "roundTripCostUsdg": 1.189744,
+          "exposureUsdg": 238.55606494342032,
+          "complete": true
+        },
+        {
+          "ticks": 50,
+          "assetUp": true,
+          "roundTripCostUsdg": 1.192272,
+          "exposureUsdg": 237.87068327628373,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": false,
+          "roundTripCostUsdg": 2.380773,
+          "exposureUsdg": 239.28157404164003,
+          "complete": true
+        },
+        {
+          "ticks": 100,
+          "assetUp": true,
+          "roundTripCostUsdg": 2.383301,
+          "exposureUsdg": 237.1523517879888,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": false,
+          "roundTripCostUsdg": 4.762923,
+          "exposureUsdg": 240.5474563642844,
+          "complete": true
+        },
+        {
+          "ticks": 200,
+          "assetUp": true,
+          "roundTripCostUsdg": 4.765451,
+          "exposureUsdg": 235.90967989727486,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": false,
+          "roundTripCostUsdg": 11.62469,
+          "exposureUsdg": 244.08238550016284,
+          "complete": true
+        },
+        {
+          "ticks": 488,
+          "assetUp": true,
+          "roundTripCostUsdg": 11.627219,
+          "exposureUsdg": 232.50826764547818,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": false,
+          "roundTripCostUsdg": 25.62087,
+          "exposureUsdg": 281.8716945926528,
+          "complete": true
+        },
+        {
+          "ticks": 953,
+          "assetUp": true,
+          "roundTripCostUsdg": 22.712762,
+          "exposureUsdg": 227.16496322243043,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": false,
+          "roundTripCostUsdg": 62.455633,
+          "exposureUsdg": 374.7912753466941,
+          "complete": true
+        },
+        {
+          "ticks": 1823,
+          "assetUp": true,
+          "roundTripCostUsdg": 43.494231,
+          "exposureUsdg": 217.51118234219942,
+          "complete": true
+        }
+      ],
+      "exposureUsdg": 226.832126,
+      "exposureNote": "USDG supplied to the market (123.87 borrowed): the most its lenders can lose to a mispriced liquidation or an over-borrow",
+      "ratio": 1.0428527101799134,
+      "oracle": "0x0F932e0fE68B0219820ffcB4C2B1906E29BedacC",
+      "lltv": 0.385,
+      "oraclePriceUsdg": 0.6046669255194665
+    }
+  ]
+}

@@ -22,7 +22,8 @@
     "live:baseline": "tsx src/live-baseline.ts",
     "reversion": "tsx src/reversion.ts",
     "amc": "tsx src/amc.ts",
-    "vexi": "tsx src/vexi.ts"
+    "vexi": "tsx src/vexi.ts",
+    "consumers": "tsx src/consumers.ts"
   },
   "dependencies": {
     "@types/node": "^26.6.2",
