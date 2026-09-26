@@ -56,7 +56,7 @@ stand-ins: a `FixedPremium` pricer (one expiring premium per series, with an opt
  1inch Aqua ──── strategy A: app = AquaWriter    StabilityBandPricer ── FixedPremium  HookTwapExpiryPrice
    │         └── strategy B: SwapVM spot pool      (±5 % around the 1 h TWAP)           (5-min TWAP, ±5 % check)
    │                 │                                   │ ask(series, n)                    │ priceAt(expiry)
-   │                 └ ExposureGuard: depth ≤ wallet − promised                             │
+   │                 └ ExposureGuard: depth ≤ wallet − min(promised, shipped)                             │
    │                                                     ▼                                   ▼
    └── pull at a fill, push at close ◄────────── OptionBook: post · buy · settle · exercise · close
 ```
@@ -97,6 +97,14 @@ the router deployed on Robinhood Chain 4663). Canonical Aqua and the deployed Sw
 | Router subclass: the deployed router's opcode table plus `ExposureGuard`, every existing opcode keeps its number | [`WriterSwapVMRouter.sol`](aqua/src/swapvm/WriterSwapVMRouter.sol) |
 | The router the team's vaults use on testnet 46630, with a second custom instruction, `DeltaSkew` (opcode 35: the spot price leans against the delta the option book added), published as deployed | [`aqua/deployed-46630/`](aqua/deployed-46630/) |
 | Proofs, on a fork of 4663 against canonical Aqua and the deployed router | [`test/Lifecycle.t.sol`](aqua/test/Lifecycle.t.sol) (the Aqua invariants), [`test/ExposureGuard.t.sol`](aqua/test/ExposureGuard.t.sol) (without the guard a spot fill takes promised collateral and the option buyer is refused), [`test/ExposureGuardCanonical.t.sol`](aqua/test/ExposureGuardCanonical.t.sol) (the guard on `0x111111338c…`), [`test/CanonicalAqua.t.sol`](aqua/test/CanonicalAqua.t.sol), [`test/GuardProperties.t.sol`](aqua/test/GuardProperties.t.sol) (fuzzed) |
+
+### Multiple series, one backing balance
+
+The guard reserves `min(open promises, remaining writer strategy balance)` in Aqua. If a wallet holds 30 tokens,
+the option strategy has 10 and two series each quote 100, only 10 are reserved; spot can still trade against the
+other 20. Buying 5 from one series leaves 5 available to the other. Aggregate posted size is not guaranteed
+simultaneous fill capacity. Run `bash scripts/judge-demo.sh shared` for the canonical-router trace, including
+exhausted-backing refusal and the quote-token side for puts. See [the reconciliation](docs/integration-sync.md).
 
 ## For Uniswap reviewers: v4 hook and band
 

@@ -20,12 +20,13 @@ the repository root:
 bash scripts/judge-demo.sh 1inch
 bash scripts/judge-demo.sh uniswap
 bash scripts/judge-demo.sh limits
+bash scripts/judge-demo.sh shared
 ```
 
 The runner defaults to the public archive endpoint `https://rpc.ordofi.network` and pins block **72,248,228**
 on Robinhood Chain 4663. Set `RH_MAINNET_RPC` in the environment to use another archive endpoint. It needs no
 wallet key. First compilation and cold RPC reads may take time; compile and rehearse before recording.
-`bash scripts/judge-demo.sh all` runs all three sections. Any failed command stops the runner.
+`bash scripts/judge-demo.sh all` runs all sections. Any failed command stops the runner.
 
 These are existing tests, selected for a presentation; each test starts from its own fixture. They are not one
 continuous transaction history. Accounts are synthetic addresses funded with Foundry `deal`; `prank` acts as
@@ -89,3 +90,12 @@ transfer demonstration directly. See the [event submission instructions](https:/
 ---
 
 Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.
+
+## Latest shared-balance demonstration
+
+`bash scripts/judge-demo.sh shared` runs two additional canonical-router tests. The call test posts two
+100-contract series against one 10-token Aqua strategy in a 30-token wallet. The guarded spot swap succeeds,
+then buying five calls reduces both series' shared backing to five. A second five-call fill exhausts that
+strategy; a further buy is refused even though the wallet still has tokens reserved for spot. The put test
+shows the same policy for quote-token collateral. These are separate fixtures from the website lifecycle.
+The [integration reconciliation](integration-sync.md) distinguishes current code from historical deployments.

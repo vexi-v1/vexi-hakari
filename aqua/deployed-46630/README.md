@@ -3,7 +3,7 @@
 The team's vaults on Robinhood Chain testnet 46630 quote spot through a SwapVM router that carries two custom
 instructions. It modifies 1inch SwapVM, whose license asks for the modification's source to be published under the
 same license (LicenseRef-Degensoft-SwapVM-1.1 §3.1 A, [copy](../../LICENSES/SwapVM-1.1.txt)). This folder is that
-source. The rest of this repository does not use it: `aqua/src/swapvm/` is the same router with `ExposureGuard` alone.
+source. The rest of this repository does not use it: `aqua/src/swapvm/` is the review router with `ExposureGuard` alone and the later shared-balance update.
 
 | | |
 |---|---|
@@ -16,7 +16,7 @@ source. The rest of this repository does not use it: `aqua/src/swapvm/` is the s
 | File | What |
 |---|---|
 | [`src/WriterSwapVMRouter.sol`](src/WriterSwapVMRouter.sol) | `WriterOpcodes` (the AquaOpcodes table with both instructions appended, so every existing opcode keeps its number) and `WriterSwapVMRouter`, adapted from swap-vm's `AquaSwapVMRouter` |
-| [`src/ExposureGuard.sol`](src/ExposureGuard.sol) | Opcode 34: the spot pool may sell only what open option orders have not promised, at the same price. Same code as [`aqua/src/swapvm/ExposureGuard.sol`](../src/swapvm/ExposureGuard.sol) |
+| [`src/ExposureGuard.sol`](src/ExposureGuard.sol) | Opcode 34: the spot pool may sell only what open option orders have not promised, at the same price. Historical wallet-minus-promises policy; the active [`guard`](../src/swapvm/ExposureGuard.sol) additionally caps the reserve at the writer strategy balance |
 | [`src/DeltaSkew.sol`](src/DeltaSkew.sol) | Opcode 35, after the curve: leans the spot price against the delta the option book added, reading `optionDelta()` from the writer named in the program. Every short call counts as −0.5 base token and every short put as +0.5; the skew is `min(maxSkewBps, maxSkewBps × |delta| / fullSkewAt)`, and a skew in the taker's favour never takes more than the pool's `balanceOut` |
 
 The instruction arguments (the writer, and for `DeltaSkew` the base token, `maxSkewBps` and `fullSkewAt`) are not in

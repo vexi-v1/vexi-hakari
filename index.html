@@ -41,6 +41,14 @@
 
 
 
+    <section id="shared-balance" class="section wrap" aria-labelledby="shared-balance-title">
+      <div class="section-heading"><div><p class="eyebrow">1INCH / SHARED BALANCE</p><h2 id="shared-balance-title">Many series. One backing balance.</h2></div><p>Additional canonical SwapVM fork demonstration</p></div>
+      <p>Two series each quote 100 calls against the same 10 TSLA in Aqua. In a 30 TSLA wallet, the guard leaves 20 TSLA for spot. Buying five calls from either series leaves five available to the other; after ten fills in total, further buys refuse.</p>
+      <div class="review-facts"><div><span>Wallet / shared backing</span><code>30 / 10 TSLA</code></div><div><span>Aggregate posted size</span><code>200 calls</code></div><div><span>Free for spot</span><code>30 − min(200, 10) = 20 TSLA</code></div><div><span>Backing after five fills</span><code>10 − 5 = 5 TSLA</code></div></div>
+      <p>Posted size is not simultaneous fill capacity. This separate test uses fixed premiums and a plain maker wallet; it is not a private vault UI or an extension of the lifecycle replay below.</p>
+      <p><code>bash scripts/judge-demo.sh shared</code> · <a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/integration-sync.md">Integration reconciliation ↗</a></p>
+    </section>
+
     <section id="uniswap" class="section uniswap-section wrap" aria-labelledby="uniswap-title">
       <div class="section-heading"><div><p class="eyebrow">01 / UNISWAP · IMPLEMENTATION</p><h2 id="uniswap-title">A v4 oracle.<br>An enforced quote gate.</h2></div><p>Read the contracts, then the assertions.<br>Public implementation · fixed-width band</p></div>
       <p class="uniswap-intro">The integration wraps any IPremium with a pool-derived quote policy. OpenZeppelin supplies the observation engine; Hakari adds a paired-TWAP helper, the band pricer and enforcement inside the option book. The hook records prices; the book decides whether a new option buy can execute.</p>

@@ -5,8 +5,8 @@ set -euo pipefail
 
 mode="${1:-all}"
 case "$mode" in
-  all|1inch|uniswap|limits) ;;
-  *) printf 'Usage: bash scripts/judge-demo.sh [all|1inch|uniswap|limits]\n' >&2; exit 2 ;;
+  all|1inch|uniswap|limits|shared) ;;
+  *) printf 'Usage: bash scripts/judge-demo.sh [all|1inch|uniswap|limits|shared]\n' >&2; exit 2 ;;
 esac
 command -v forge >/dev/null || { printf 'Install Foundry first: https://getfoundry.sh\n' >&2; exit 1; }
 task_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -37,4 +37,9 @@ if [[ "$mode" == all || "$mode" == limits ]]; then
   printf '\nLimits: quote expiry and fixed anchor; a rolling TWAP cannot renew either\n'
   forge test --match-contract '^FixedPremiumTest$' --match-test '^test_ExpiredQuoteBlocksBookBuyWithoutMovingFundsAndDoesNotBlockSettlement\(' -vv
   forge test --match-contract '^StabilityBandTest$' --match-test '^test_AnchorRefusesAfterRollingBandRecovers\(' -vv
+fi
+
+if [[ "$mode" == all || "$mode" == 1inch || "$mode" == shared ]]; then
+  printf '\n1inch: multiple series share backing while the canonical router still trades spot\n'
+  forge test --match-contract '^ExposureGuardCanonicalTest$' --match-test '^test_Shared' -vvvv
 fi

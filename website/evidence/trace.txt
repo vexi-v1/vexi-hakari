@@ -1,13 +1,5 @@
-Compiling 1 files with Solc 0.8.30
-Solc 0.8.30 finished in 7.47s
-Compiler run successful with warnings:
-Warning (3075): Comparison of internal function pointers can yield unexpected results in the legacy pipeline with the optimizer enabled, and will be disallowed entirely in the next breaking release.
-  --> lib/swap-vm/test/utils/ProgramBuilder.sol:36:17:
-   |
-36 |             if (self.opcodes[i] == targetOpcode) {
-   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-2026-09-26T20:00:59.737741Z  WARN traces::etherscan: etherscan config not found
+No files changed, compilation skipped
+2026-09-26T22:53:36.523844Z  WARN traces::etherscan: etherscan config not found
 
 Ran 5 tests for test/WebsiteEvidence.t.sol:WebsiteEvidenceTest
 [PASS] test_WebsiteAnchor() (gas: 12254170)
@@ -3307,9 +3299,9 @@ Traces:
     │   └─ ← [Return]
     └─ ← [Return]
 
-[PASS] test_WebsiteLifecycle() (gas: 50861701)
+[PASS] test_WebsiteLifecycle() (gas: 50864909)
 Traces:
-  [51207301] WebsiteEvidenceTest::test_WebsiteLifecycle()
+  [51210509] WebsiteEvidenceTest::test_WebsiteLifecycle()
     ├─ [0] VM::toString(0) [staticcall]
     │   └─ ← [Return] "0"
     ├─ [0] VM::serializeString("<stringified JSON>", "id", "initial")
@@ -4168,10 +4160,10 @@ Traces:
     │   └─ ← [Return] true
     ├─ [5618] AquaPrograms::takerData(SpotTaker: [0xC0cA3436B9E6e97001C490ee2756af1B8baa108a], true) [staticcall]
     │   └─ ← [Return] 0x00000000000000000000000000000000000000000041
-    ├─ [152409] CanonicalSwapVMRouter::swap(Order({ maker: 0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489, traits: 28948022309329048855892746252171976963317496166410141009864396001978282409984 [2.894e76], data: 0x2028d6bbde9174b1cdaa358d2cf4d57d1a9f7178fbffa0cb889707d426a7a386870a03bc70d1b0697598110014080000000000000001 }), USDG: [0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168], TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d], 400000000 [4e8], 0x00000000000000000000000000000000000000000041)
+    ├─ [155617] CanonicalSwapVMRouter::swap(Order({ maker: 0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489, traits: 28948022309329048855892746252171976963317496166410141009864396001978282409984 [2.894e76], data: 0x2028d6bbde9174b1cdaa358d2cf4d57d1a9f7178fbffa0cb889707d426a7a386870a03bc70d1b0697598110014080000000000000001 }), USDG: [0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168], TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d], 400000000 [4e8], 0x00000000000000000000000000000000000000000041)
     │   ├─ [1483] Aqua::safeBalances(Maker: [0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489], CanonicalSwapVMRouter: [0x111111338c5091E8440b67B168bAe16a668AC0De], 0x2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802, USDG: [0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168], TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d]) [staticcall]
     │   │   └─ ← [Return] 16000000000 [1.6e10], 40000000000000000000 [4e19]
-    │   ├─ [5015] ExposureGuardExtruction::extruction(false, 42, SwapQuery({ orderHash: 0x2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802, maker: 0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489, taker: 0xC0cA3436B9E6e97001C490ee2756af1B8baa108a, tokenIn: 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168, tokenOut: 0x322F0929c4625eD5bAd873c95208D54E1c003b2d, isExactIn: true }), SwapRegisters({ balanceIn: 16000000000 [1.6e10], balanceOut: 40000000000000000000 [4e19], amountIn: 400000000 [4e8], amountOut: 0, amountNetPulled: 0 }), 0xa0cb889707d426a7a386870a03bc70d1b0697598, 0x)
+    │   ├─ [8223] ExposureGuardExtruction::extruction(false, 42, SwapQuery({ orderHash: 0x2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802, maker: 0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489, taker: 0xC0cA3436B9E6e97001C490ee2756af1B8baa108a, tokenIn: 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168, tokenOut: 0x322F0929c4625eD5bAd873c95208D54E1c003b2d, isExactIn: true }), SwapRegisters({ balanceIn: 16000000000 [1.6e10], balanceOut: 40000000000000000000 [4e19], amountIn: 400000000 [4e8], amountOut: 0, amountNetPulled: 0 }), 0xa0cb889707d426a7a386870a03bc70d1b0697598, 0x)
     │   │   ├─ [1801] TSLA::balanceOf(Maker: [0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489]) [staticcall]
     │   │   │   ├─ [425] 0xe10b6f6B275de231345c20D14Ab812db62151b00::implementation() [staticcall]
     │   │   │   │   └─ ← [Return] 0x000000000000000000000000b35490d6f9163de4f80d88dc75c3516eb64c5ae2
@@ -4180,6 +4172,12 @@ Traces:
     │   │   │   └─ ← [Return] 30000000000000000000 [3e19]
     │   │   ├─ [701] AquaWriter::promised(TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d]) [staticcall]
     │   │   │   └─ ← [Return] 10000000000000000000 [1e19]
+    │   │   ├─ [377] AquaWriter::AQUA() [staticcall]
+    │   │   │   └─ ← [Return] Aqua: [0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a]
+    │   │   ├─ [638] AquaWriter::strategyHash() [staticcall]
+    │   │   │   └─ ← [Return] 0x572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9
+    │   │   ├─ [789] Aqua::rawBalances(Maker: [0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489], AquaWriter: [0xa0Cb889707d426A7A386870A03bc70d1b0697598], 0x572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9, TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d]) [staticcall]
+    │   │   │   └─ ← [Return] 30000000000000000000 [3e19], 2
     │   │   └─ ← [Return] 42, 0, SwapRegisters({ balanceIn: 8000000000 [8e9], balanceOut: 20000000000000000000 [2e19], amountIn: 400000000 [4e8], amountOut: 0, amountNetPulled: 0 })
     │   ├─ [46143] Aqua::pull(Maker: [0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489], 0x2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802, TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d], 952380952380952380 [9.523e17], SpotTaker: [0xC0cA3436B9E6e97001C490ee2756af1B8baa108a])
     │   │   ├─ [42577] TSLA::transferFrom(Maker: [0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489], SpotTaker: [0xC0cA3436B9E6e97001C490ee2756af1B8baa108a], 952380952380952380 [9.523e17])
@@ -11675,6 +11673,6 @@ Traces:
     │   └─ ← [Return]
     └─ ← [Return]
 
-Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 459.37ms (47.66ms CPU time)
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 474.99ms (47.93ms CPU time)
 
-Ran 1 test suite in 481.22ms (459.37ms CPU time): 5 tests passed, 0 failed, 0 skipped (5 total tests)
+Ran 1 test suite in 493.49ms (474.99ms CPU time): 5 tests passed, 0 failed, 0 skipped (5 total tests)

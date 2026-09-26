@@ -145,3 +145,10 @@ are distinct from experimental settlement-window selection. A later accepted win
 a persistent genuine gap can result in pooled-premium refunds. See [settlement.md](settlement.md).
 
 Aqua — © Degensoft Ltd 2025. Powered by SwapVM — © Degensoft Ltd 2025.
+
+## Shared-balance update
+
+The bilingual shared-balance section explains the additional canonical-router test in
+[integration-sync.md](integration-sync.md): two series quote the same backing while the remaining wallet balance
+still trades spot. It is explicitly separate from the five exported replay scenarios. The replay evidence and
+source archive were regenerated after updating the guard; its existing fully backed fixture retains its behavior.

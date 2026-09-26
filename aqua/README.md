@@ -8,7 +8,7 @@ src/aqua/AquaWriter.sol              the 1inch Aqua app: collateral pulled from 
 src/book/OptionBook.sol              a small book of covered calls and cash-secured puts, settled by delivery
 src/book/FixedPremium.sol            expiring quotes, optional captured price anchors
 src/book/IPremium.sol, IQuoteReference.sol, ICollateralSource.sol
-src/swapvm/ExposureGuard.sol         custom SwapVM instruction: spot depth ≤ wallet − promised, same price
+src/swapvm/ExposureGuard.sol         custom SwapVM instruction: spot depth ≤ wallet − min(promised, shipped), same price
 src/swapvm/ExposureGuardExtruction.sol   the same guard on the canonical router, through Extruction
 src/swapvm/WriterSwapVMRouter.sol    the deployed router's opcode table plus the guard
 deployed-46630/                      the router deployed on testnet 46630 (guard + DeltaSkew), as deployed; own build profile

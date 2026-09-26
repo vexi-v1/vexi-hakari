@@ -1,6 +1,17 @@
 // SPDX-License-Identifier: MIT
 // English is the source locale. Contract identifiers and evidence payloads stay verbatim.
 export const translations = {
+  "1INCH / SHARED BALANCE": "1INCH / 共用餘額",
+  "Many series. One backing balance.": "多個系列，共用一份資金。",
+  "Additional canonical SwapVM fork demonstration": "新增：canonical SwapVM 本機 fork 展示",
+  "Two series each quote 100 calls against the same 10 TSLA in Aqua. In a 30 TSLA wallet, the guard leaves 20 TSLA for spot. Buying five calls from either series leaves five available to the other; after ten fills in total, further buys refuse.": "兩個系列各報價 100 份買權，共用 Aqua 中的 10 TSLA。錢包共有 30 TSLA，Guard 留下 20 TSLA 供現貨交易。任一系列買入五份後，另一系列也只剩五份可用額；合計成交十份後，後續買入會被拒絕。",
+  "Wallet / shared backing": "錢包／共用擔保額",
+  "Aggregate posted size": "掛單總數",
+  "Free for spot": "可供現貨使用",
+  "Backing after five fills": "成交五份後的擔保額",
+  "Posted size is not simultaneous fill capacity. This separate test uses fixed premiums and a plain maker wallet; it is not a private vault UI or an extension of the lifecycle replay below.": "掛單總數不代表可同時成交的數量。這個獨立測試使用固定權利金與普通造市者錢包；不是私人 vault 介面，也不延續下方生命週期回放。",
+  "Integration reconciliation ↗": "整合核對紀錄 ↗",
+
   "No premium is set, or the quote was disabled.": "尚未設定權利金，或報價已停用。",
   "The quote’s exclusive deadline has been reached.": "已到報價的排他性截止時間。",
   "An enabled anchor’s source returns zero; a source revert also propagates.": "已啟用的錨定來源回傳零；來源自身的回退也會向上傳遞。",
