@@ -464,3 +464,14 @@ only current band entries 13–20 and one historical link. Updated the archive i
 Outcome (Codex): the current feedback has a concise introduction, eight top-level entries numbered 1–8 and a
 single historical link at the end. The historical document numbers its entries 1–13. Updated the extraction
 inventory and prepared feedback-form references; earlier prompt entries remain chronological records.
+
+## 2026-09-27 — Abner: how do projects with tokenized stocks handle the same problem, and file it as a reference
+
+> SafeSettle: Panoptic has this too. How do they do it? Search other projects that hit the same problem and their
+> solutions. Focus on projects that support tokenized stocks. What are the Aave Equities Hub rules? Put the
+> report into vexi-hakari as a reference file.
+
+English translation of the user's instructions, given in Traditional Chinese over several turns. Outcome (Claude
+Code): `docs/prior-art-tokenized-stocks.md`, a survey of Chainlink's equity feeds, Aave's V4 Equities Hub, Kamino,
+Hyperliquid/trade.xyz, Kraken, Ostium, Ondo, Panoptic v2 and GapGuard, from pages actually opened, with what could
+not be confirmed listed; one link added at the end of `docs/band.md`. No code changed.

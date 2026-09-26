@@ -128,6 +128,9 @@ See [the settlement state flow and economic outcomes](settlement.md).
   an out-of-the-money holder gets the premium back, an in-the-money writer keeps its collateral. Whoever loses at
   expiry can buy that outcome by holding the pool outside the band for six windows, at the cost of holding it.
 
+How other projects that carry tokenized stocks handle the same closed-market problem, and where the band sits
+among them: [prior-art-tokenized-stocks.md](prior-art-tokenized-stocks.md).
+
 ## Parameters
 
 | Parameter | Default | What it does |
