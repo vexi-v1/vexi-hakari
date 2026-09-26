@@ -19,7 +19,7 @@
   }
   function resolveLang() {
     var h = hashLang();
-    if (h) return h;
+    if (h) { S.store.set('lang', h); return h; } // a #en / #zh link also sets the language the plain page and later visits use
     var s = S.store.get('lang');
     if (s === 'en' || s === 'zh') return s;
     var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);

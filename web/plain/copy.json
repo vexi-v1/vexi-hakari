@@ -415,8 +415,8 @@
           "zh": "HAKARI 為這個池子算出的安全金額，逐分鐘重播。紅底：1,000 USDG 的結算會被拒絕的分鐘。{firstMintShort} 之後新代幣已能把價格拉回，那之後的拒絕屬於保守判斷。"
         },
         "alt": {
-          "en": "Log-scale line chart of HAKARI's replayed safe amount: about {safe1940} USDG at 19:40, falling to {safeMin} at 23:25, below the 1,000 line from {runFrom} to {runTo}, and back above it after the new tokens. This pool never had HAKARI.",
-          "zh": "HAKARI 重播安全金額的對數刻度折線：19:40 約 {safe1940} USDG，23:25 掉到 {safeMin}，{runFrom} 到 {runTo} 低於 1,000 那條線，新代幣出現後回到線上。這個池子從未裝上 HAKARI。"
+          "en": "Log-scale line chart of HAKARI's replayed safe amount: about {safe1940} USDG at 19:40, falling to {safeMin} at 23:25. It is under the 1,000 line for {refused} minutes in all, in several stretches; the longest runs from {runFrom} to {runTo}, and {refusedAfter} of those minutes come after the new tokens arrive. This pool never had HAKARI.",
+          "zh": "HAKARI 重播安全金額的對數刻度折線：19:40 約 {safe1940} USDG，23:25 掉到 {safeMin}。它一共有 {refused} 分鐘低於 1,000 那條線，分成好幾段；最長一段從 {runFrom} 到 {runTo}，其中 {refusedAfter} 分鐘是在新代幣出現之後。這個池子從未裝上 HAKARI。"
         }
       },
       "more": { "chapter": "peak", "label": { "en": "Minute by minute: HAKARI's replayed read →", "zh": "逐分鐘看：HAKARI 的重播判讀 →" } }

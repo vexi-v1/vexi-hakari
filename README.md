@@ -26,6 +26,8 @@ the `PoolKey`. This is its own swaps replayed through our rules, `npm run hims:h
 between the raw and the truncated TWAP, would have settled on it; an internal review showed why, and the rule
 changed ([What the review found](#what-the-review-found-and-what-changed)).
 
+**New to this? The whole story in plain words:** [`web/plain/`](web/plain/) (English, 繁中 with `#zh`), no jargon, every number drawn from the same data.
+
 **See it minute by minute:** [the replay page](https://vexi-v1.github.io/vexi-hakari/web/squeeze/) ([`web/squeeze/`](web/squeeze/)) replays the weekend from Robinhood Chain's own logs —
 HIMS, BONER and USDG prices and pool inventories, the float, HAKARI's cost to push, and what X said at the time, in
 English and 繁中 (data and checks: [`gauge/src/squeeze/`](gauge/src/squeeze/), `npm run squeeze`).

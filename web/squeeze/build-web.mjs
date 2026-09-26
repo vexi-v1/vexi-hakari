@@ -65,6 +65,8 @@ const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || 'HIMS Weekend 
 const headLinks = between('<!-- bundle:head-start -->', '<!-- bundle:head-end -->');
 let body = between('<!-- bundle:body-start -->', '<!-- bundle:body-end -->');
 body = body.replace(/href="\.\.\/index\.html"/g, `href="${REPO_URL}"`);
+// the header's link to the plain-language page: its GitHub Pages address (live once the repo is public)
+body = body.replace(/href="\.\.\/plain\/"/g, 'href="https://vexi-v1.github.io/vexi-hakari/web/plain/" target="_blank" rel="noopener"');
 const scriptList = [...between('<!-- bundle:scripts-start -->', '<!-- bundle:scripts-end -->').matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
 const css = read(rel('squeeze.css'));
 const parts = [];

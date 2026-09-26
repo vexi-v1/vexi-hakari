@@ -428,6 +428,7 @@
   // ------------------------------------------------------------------ init
   function init() {
     var hl = langFromHash(), st = store.get();
+    if (hl) store.set(hl); // arriving by a #en / #zh link: keep that language when the reader moves to the detailed page
     setLang(hl || (st === 'zh' || st === 'en' ? st : 'en'), true);
     var gone = PF.missing(D);
     if (!gone.length) {
