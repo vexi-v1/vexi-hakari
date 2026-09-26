@@ -79,7 +79,7 @@ export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio
   const fri = new Date(`${d.friday}T00:00:00Z`);
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" ${FONT}>`;
   s += `<rect width="${W}" height="${H}" rx="12" fill="${C.card}"/>`;
-  s += `<text x="24" y="32" font-size="18" font-weight="700" fill="${C.ink}">Every stock pool, the weekend of ${fri.toISOString().slice(0, 10)}: the largest settlement it could carry</text>`;
+  s += `<text x="24" y="32" font-size="18" font-weight="700" fill="${C.ink}">13 stock pools, the weekend of ${fri.toISOString().slice(0, 10)}: the largest settlement it could carry</text>`;
   s += `<text x="24" y="54" font-size="13" fill="${C.ink2}">Deepest USDG pool per Robinhood stock token, rebuilt from its logs. USDG, log scale.</text>`;
   s += `<text x="24" y="72" font-size="13" fill="${C.ink2}"><tspan fill="${C.friday}" font-weight="700">●</tspan> Friday's US close   <tspan fill="${C.weekend}" font-weight="700">●</tspan> the lowest while minting was closed</text>`;
   for (let v = lo; v <= hi; v *= 10) s += `<line x1="${x(v)}" x2="${x(v)}" y1="${top - 14}" y2="${H - 48}" stroke="${C.grid}"/><text x="${x(v)}" y="${top - 20}" font-size="11" text-anchor="middle" fill="${C.ink2}">${fmt(v, v < 1 ? 2 : 0)}</text>`;

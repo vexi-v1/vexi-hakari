@@ -832,8 +832,8 @@
         "zh": "無人拉回價格"
       },
       "def": {
-        "en": "The replay's assumption that no arbitrageur pulls a pushed price back (arbitrage reversion time 0 seconds), so a fake only has to be pushed once. It held while minting was closed; before and after, arbitrage was possible, so there a refusal is conservative. Measured afterwards (npm run reversion, the week of 2026-09-19), the gauge's rule gives 0 for every stock pool on the chain.",
-        "zh": "重播的假設：沒有套利者會把被推走的價格拉回來（套利回復時間 0 秒），所以造假只需要推一次。鑄造關閉期間這個假設成立；在那之前與之後都能套利，所以那段時間的拒絕是保守的判斷。事後實測（npm run reversion，2026-09-19 那一週），量測規則對鏈上每個股票池都給出 0。"
+        "en": "The replay's assumption that no arbitrageur pulls a pushed price back (arbitrage reversion time 0 seconds), so a fake only has to be pushed once. It held while minting was closed; before and after, arbitrage was possible, so there a refusal is conservative. Measured afterwards (npm run reversion, the week of 2026-09-19), the gauge's rule gives 0 for all 28 stock pools it measured.",
+        "zh": "重播的假設：沒有套利者會把被推走的價格拉回來（套利回復時間 0 秒），所以造假只需要推一次。鑄造關閉期間這個假設成立；在那之前與之後都能套利，所以那段時間的拒絕是保守的判斷。事後實測（npm run reversion，2026-09-19 那一週），量測規則對量到的 28 個股票池都給出 0。"
       }
     },
     {
@@ -943,7 +943,7 @@
       "note": "Source of the ~91% / ~9% attribution, the LP add/remove counts, the BONER/HIMS principal figures and the arbitrage gross figures. The reconstruction itself is not public; the README's Provenance section describes it, and HAKARI's own collector re-derives the HIMS/USDG points."
     },
     {
-      "label": "HAKARI: every stock pool, weekend of 2026-09-18 (gauge/data/weekend-2026-09-18.json)",
+      "label": "HAKARI: 13 stock pools, weekend of 2026-09-18 (gauge/data/weekend-2026-09-18.json)",
       "url": "../../gauge/data/weekend-2026-09-18.json",
       "note": "The control weekend: 13 pools rebuilt every six hours; the 12 with a Friday point held (MSTR has none). HIMS's cheapest cost to push +10% while minting was closed was 0.96x Friday's; its max safe exposure, 1.06x."
     },

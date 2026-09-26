@@ -240,7 +240,7 @@ if (hims) {
   $("hims-table").innerHTML = `<tr><th>block</th><th>time (UTC)</th><th>mint window</th><th>max safe exposure (USDG)</th><th>USDG/HIMS</th><th>+10 % cost (USDG)</th><th>+10 % capital (USDG)</th><th>HIMS in pool</th><th>USDG in pool</th><th>live positions</th><th>+85 % capital (USDG)</th><th>rebuilt L = Swap L</th></tr>` + pts.map((p) => `<tr><td>${Number(p.block).toLocaleString()}</td><td>${p.time.slice(0, 19).replace("T", " ")}</td><td><span class="pill ${p.mintWindowClosed ? "closed" : "open"}">${p.mintWindowClosed ? "closed" : "open"}</span></td><td><b>${fmt(p.maxSafeExposureUsdg.usdg, 0)}</b></td><td>${fmt(p.usdgPerHims, 4)}</td><td>${fmt(p.pushUp10.roundTripCostUsdg)}</td><td>${fmt(p.pushUp10.usdgIn, 0)}</td><td>${fmt(p.himsPrincipal)}</td><td>${fmt(p.usdgPrincipal, 0)}</td><td>${p.livePositions}</td><td>${fmt(p.pushUp85.usdgIn, 0)}</td><td>${p.liquidityMatches ? "yes" : "NO"}</td></tr>`).join("");
 }
 
-// ───────── weekend, every stock pool ─────────
+// ───────── weekend, 13 stock pools ─────────
 if (weekend) {
   const rows = weekend.series.filter((r) => r.fridayMaxSafeExposure && r.weekendMinMaxSafeExposure)
     .map((r) => ({ ...r, ratio: r.weekendMinMaxSafeExposure / r.fridayMaxSafeExposure })).sort((a, b) => a.ratio - b.ratio);
