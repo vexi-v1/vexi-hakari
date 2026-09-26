@@ -131,7 +131,7 @@ function renderHero() {
   const m = nextMintChange(now);
   const span = (ms) => { const h = Math.floor(ms / 3600_000), mi = Math.floor((ms % 3600_000) / 60_000); return h ? `${h} h ${mi} min` : `${mi} min`; };
   $("mint-v").innerHTML = `<span class="pill ${m.closed ? "closed" : "open"}">${m.closed ? "closed" : "open"}</span>`;
-  $("mint-s").textContent = m.at ? `${m.closed ? "reopens" : "closes"} ${m.at.toUTCString().slice(0, 22)} UTC, in ${span(m.at - now)}. ${m.closed ? "Nobody can mint or redeem, so nothing pulls these prices back." : "Arbitrage is open; the board still compares with Friday's close."}` : "";
+  $("mint-s").textContent = m.at ? `${m.closed ? "reopens" : "closes"} ${m.at.toUTCString().slice(0, 22)} UTC, in ${span(m.at - now)}. ${m.closed ? "Nobody can mint or redeem: nothing ties these prices to the stock." : "Arbitrage is open; the board still compares with Friday's close."}` : "";
   const ratios = pools.filter((p) => ratioOf(p) != null).map((p) => ({ p, r: ratioOf(p) }));
   const measured = ratios;
   const below = ratios.filter((x) => x.r < 0.5);

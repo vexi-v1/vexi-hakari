@@ -57,8 +57,8 @@ The same real TSLA/USDG liquidity, mirrored segment by segment into a pool with 
 | | Max safe exposure (v1's ladder, moves to 20 %) | Cheapest fake found | 100,000 USDG | 10,000 USDG |
 |---|---|---|---|---|
 | Weekend: nobody pushes back | 12,063 USDG | hold +20 % | **refused** | settle on raw |
-| Weekday, arbitrage pulls back every 60 s | 25,269 USDG | push 54,690 ticks, hold 60 s: 2 round trips | **refused** | settle on raw |
-| Weekday, arbitrage every 12 s | 58,044 USDG | push 102,400 ticks, hold 33 s: 4 round trips | **refused** | settle on raw |
+| Weekday, if arbitrage pulled back every 60 s | 25,269 USDG | push 54,690 ticks, hold 60 s: 2 round trips | **refused** | settle on raw |
+| Weekday, if arbitrage pulled back every 12 s | 58,044 USDG | push 102,400 ticks, hold 33 s: 4 round trips | **refused** | settle on raw |
 | Weekend, a +5 % push held for 10 s | 2,602 USDG | hold +20 % from the pushed price | **refused** | **refused** |
 
 Arbitrage helps less than it looks. Holding a 20 % move for 30 minutes against a pull-back every 60 s costs 31
@@ -69,9 +69,22 @@ tried push widths only up to 4× the move, reported 112,262 and 486,467 USDG her
 weekday. A second review measured the real book with the lens and found the wide push
 ([What the review found](#what-the-review-found-and-what-changed)).
 
-The reversion time is the caller's input, not a measurement. The test asserts what is derivable (with arbitrage
-open at least twice the weekend bound; faster arbitrage never lowers it), not the decisions, which move with the
-live book. The shadow pool charges 0.3 %; the real pool also takes a 0.05 % protocol fee (`FEEDBACK.md` § 5), so
+**The reversion time, measured.** The weekday rows take the pull-back time as given. `npm run reversion`
+([`gauge/src/reversion.ts`](gauge/src/reversion.ts), [`gauge/data/reversion.json`](gauge/data/reversion.json))
+measures it: every swap of the 28 stock pools from Sat 2026-09-19 00:00 to Sat 09-26 00:00 UTC (a closed weekend,
+then an open week), timed from exact block timestamps. A push is a swap block that moves the tick at least 10 ticks;
+it is undone at the first later swap block that brings it back within 10 % of where it started. Of 2,756 weekday
+pushes, 18 % were undone within a minute, 34 % within ten minutes and 53 % within an hour. TSLA/USDG had 11: none
+within a minute, 7 within an hour. The one pool with an arbitrageur on call is AMD/USDG, where 65 % of 356 pushes
+were undone within a minute (median 17 s), yet 16 % not within an hour. SafeSettle wants the slow side, since a fast
+reversion overstates what faking costs, so the gauge's rule is: the shortest of 10 s, 1 min, 10 min and 1 h within
+which 90 % of at least ten fee-width weekday pushes were undone, else 0. It gives **0 for all 28 pools**. The
+weekday rows above describe faster arbitrage than this chain showed that week: measured, TSLA's weekday bound is its
+weekend one. Two caveats. A push and a genuine price move look alike in a swap tape, and a genuine move is never
+undone, so these times read slow, which is the safe side. And on the closed weekend pushes were undone at least as
+often (40 % of 400 within a minute), because pool-to-pool arbitrage runs all weekend: a closed mint window removes
+the link to the stock, not every pull-back. The fork test asserts what is derivable (with arbitrage open at least
+twice the weekend bound; faster arbitrage never lowers it), not the decisions, which move with the live book. The shadow pool charges 0.3 %; the real pool also takes a 0.05 % protocol fee (`FEEDBACK.md` § 5), so
 on the real pool each bound is about 1.17× these. One settlement on this book costs about 0.67M gas with arbitrage
 closed and 1.9M with it open (12 s), storage cold: one walk each way prices every move and push width.
 
@@ -238,7 +251,9 @@ move back across the gap it was pushed through, so a held push shows up as a low
   window. `test_knownLimit_aWallAcrossTransactions_buysTrust` demonstrates the limit.
 - **Three inputs are trusted.** `exposure` must be the total settling on that price (every position, every
   protocol), which no contract can see. `arbReversionSeconds` is the caller's statement about arbitrage: 0 while
-  mint/redeem is closed, and otherwise a slow, measured bound, since a fast one overstates what faking costs. With
+  mint/redeem is closed, and otherwise a slow, measured bound, since a fast one overstates what faking costs.
+  `npm run reversion` measures it from a pool's own swaps; over the week of 2026-09-21 the slow side was 0 for all 28
+  stock pools ([The reversion time, measured](#why-not-just-truncate-the-oracle)). With
   arbitrage closed the bound is a lower bound (fees on an exact retrace); with it open, it is only as good as the
   reversion time. `quoteIsCurrency0` says which side is the quote; the wrong side prices cost and gain in the
   wrong unit. `settle` is permissionless: a `Settled` log is only as meaningful as its caller.
@@ -329,8 +344,9 @@ and the review's fixes are in the history. The pace of the commit history is the
 ## Next
 
 - **Time-weighted liquidity in the hook**, so a liquidity wall has to stand for the whole window.
-- **Measure the reversion time** per pool from the `Swap` stream instead of taking it as an input, and feed the
-  mint-window flag from the gauge.
+- **Put the measured inputs on-chain.** The gauge now measures each pool's reversion time (`npm run reversion`) and
+  knows the mint window (`mint-window.ts`); a keeper or the hook itself (recording how fast pushes are undone) could
+  supply both, instead of the caller.
 - **A wider, adaptive ladder**, searching for the cheapest move instead of sampling six.
 - Upstream: a price-limit quote on `V4Quoter` and a directional tick search next to `ReservesLens`
   (`FEEDBACK.md` § 1, § 3).

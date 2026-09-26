@@ -19,7 +19,9 @@
     "squeeze:build": "tsx src/squeeze/build.ts",
     "squeeze:hakari": "tsx src/squeeze/hakari-read.ts",
     "hims:hook": "tsx src/squeeze/hakari-read.ts",
-    "live:baseline": "tsx src/live-baseline.ts"
+    "live:baseline": "tsx src/live-baseline.ts",
+    "reversion": "tsx src/reversion.ts",
+    "amc": "tsx src/amc.ts"
   },
   "dependencies": {
     "@types/node": "^26.6.2",
