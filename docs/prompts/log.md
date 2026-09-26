@@ -475,3 +475,13 @@ English translation of the user's instructions, given in Traditional Chinese ove
 Code): `docs/prior-art-tokenized-stocks.md`, a survey of Chainlink's equity feeds, Aave's V4 Equities Hub, Kamino,
 Hyperliquid/trade.xyz, Kraken, Ostium, Ondo, Panoptic v2 and GapGuard, from pages actually opened, with what could
 not be confirmed listed; one link added at the end of `docs/band.md`. No code changed.
+
+## 2026-09-27 — Abner: refine the English Uniswap feedback-form draft
+
+> Please improve the English draft.
+
+English translation of the user instruction. Outcome (Codex): rewrote the form answers around the concrete
+quote-staleness problem, the enforced v4-to-Aqua purchase path, and observed integration friction. Matched the
+current form questions, replaced stale feedback numbering with descriptive references, credited the upstream
+oracle, and kept testnet deployments distinct from local-fork demonstrations. Personal ratings, contact details
+and consent remain for the participant. No form was filled or submitted, and no contract behavior changed.

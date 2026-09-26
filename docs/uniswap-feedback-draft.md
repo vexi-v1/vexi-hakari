@@ -1,64 +1,92 @@
-# Uniswap Developer Feedback Form — prepared answers
+# Uniswap Developer Feedback Form — ready-to-paste draft
 
 Form: [developers.uniswap.org/hackathon-feedback](https://developers.uniswap.org/hackathon-feedback).
-**Status: prepared, not submitted.** The sponsor requires the completed form in addition to the repository file.
-After publishing the final revision, include this link in the long-form feedback answer:
+**Status: draft; not submitted.** Paste the text beneath each matching question into the form.
+Publish the reviewed integration and confirm the public links before submitting. This document contains no
+participant contact details, ratings or consent.
 
-<https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md>
+## Selections and participant details
 
-The visible form was checked on 2026-09-27. Contact details, actual elapsed integration time, numerical ratings,
-future plans and consent must come from the participant; they are deliberately not invented here.
-
-| Form field | Prepared answer / input needed |
+| Form field | Answer |
 |---|---|
-| First name, last name, email, Telegram | Participant's actual details; do not put private contact details in this public repository |
-| Hackathon | ETHGlobal Tokyo 2026 |
-| Completed a project? | Yes — a working contract integration demonstrated through local-fork tests; publish its current revision first |
-| AI-powered or agentic project? | No autonomous agent in this public integration. AI-assisted development is disclosed separately; that is different from an agentic product |
-| Successfully integrated Uniswap? | Yes — v4 PoolManager, HAKARI oracle hook, state reads and quote/refusal flows |
-| Time to first integration | Participant selects their actual elapsed time; deployment timestamps are not a substitute |
-| Documentation / support scores | Participant selects their honest ratings |
-| Continue building? | Participant's actual plan |
-| Support used | Technical documentation and code examples are evidenced by the repository. Select office hours, mentorship or Discord only if actually used |
-| Follow-up permission / terms | Participant's choice; no consent has been recorded by this draft |
+| First name, email, Telegram handle | Enter the submitting participant's actual details. Last name is optional |
+| Which hackathon did you participate in? | ETHGlobal Tokyo 2026 |
+| Did you complete a project during the hackathon? | Yes |
+| Are you building an AI-powered or agentic project? | No — this public integration has no autonomous agent; AI assistance during development is disclosed below |
+| Were you able to successfully integrate Uniswap into your project? | Yes |
+| How long did it take to get your first successful integration working? | Select the actual elapsed time |
+| Documentation and overall support ratings | Choose each rating from your own experience |
+| Do you plan to continue building? | Select the team's actual plan |
+| What type of support did you use? | Technical docs; Code examples / templates. Add other options only if actually used |
+| Follow-up permission and legal consent | The participant must make these choices |
 
 ## What did you build?
 
-HAKARI is an options-writer integration on Robinhood Chain. Canonical 1inch Aqua keeps unfilled collateral in a
-maker's wallet; a SwapVM guard restricts a shared spot strategy to unpromised inventory. Our Uniswap v4 consumer
-reads a hooked pool's raw and truncated TWAPs and live state, reduces quote size and widens spreads near a fixed
-demonstration band, then rejects new fills outside it. Fixed quotes also expire and can retain their original
-price anchor. An experimental adapter explores settlement-window selection with explicit deferral and refund
-limitations. The hook is based on OpenZeppelin BaseOracleHook, which we credit. The public repository includes
-the integration source, local-fork tests, testnet hook/pool records and feedback.
+We built HAKARI, a Uniswap v4 quote guard for options writers on Robinhood Chain. It addresses a practical problem:
+a fixed option quote can remain available after its reference market has moved.
 
-## Biggest blocker
+Our hook extends OpenZeppelin's BaseOracleHook. A pricing wrapper reads the pool's live state and its raw and
+truncated time-weighted average prices (TWAPs). As the current price moves away from the one-hour TWAP, the wrapper
+reduces the maximum size of each fill and increases the quoted premium. Beyond a configurable band, the option
+book rejects new purchases. We also added quote deadlines and optional original-price anchors, so a rolling TWAP
+catching up with a sustained move cannot silently renew stale terms.
 
-Keeping usable oracle history required understanding the v4 oracle hook's observation ring. With one observation,
-a later swap overwrites the old history; increasing cardinality must happen before building the window, and growth
-takes effect on a later write. We grew the ring, generated swap observations, and made consumers refuse when the
-requested window was unavailable. Same-timestamp swaps and truncated-oracle extrapolation also needed explicit
-tests so that we did not overstate what the TWAP protected. Current FEEDBACK.md items 18 and 19 describe the
-ring issue; the earlier oracle experiments are preserved in archive/feedback-history.md.
+This check runs within the same purchase transaction that pulls collateral from the writer's wallet through
+1inch Aqua. A SwapVM instruction limits a shared spot strategy to inventory not promised to option orders.
 
-## Hardest part of an agentic app
+We deployed the hook and a hooked pool on testnet, and verified successful purchases, token transfers and rejected
+fills on a local mainnet fork. The 5% demo band illustrates the policy; it does not establish a correct external
+market price.
 
-Not applicable to the runtime product. Claude Code and Codex assisted implementation and review under human
-direction; the public prompt record explains that development process.
+## What was the biggest blocker you faced?
 
-## Missing support / what could be better
+The main challenge was getting from a deployed oracle hook to a usable TWAP history. After pool initialization,
+the observation ring holds only one entry. Without increasing its capacity first, a swap at a later timestamp
+overwrites the earlier observation, leaving the hook unable to answer our one-hour TWAP request.
 
-A minimal oracle-consumer example should show growing observation cardinality, warming up a window, handling
-insufficient history and keeping a settlement record before history wraps. An oldest-observation timestamp getter
-would simplify fail-closed consumers. Clear testnet router guidance and a note explaining matching PoolManager
-addresses across Robinhood mainnet and testnet would also help integration tests.
+We addressed this by increasing observation cardinality before generating swap history, allowing the requested
+window to accumulate, and making the quote wrapper reject purchases when the history cannot be read. Our tests
+cover both a working window and an unavailable reference.
 
-## Additional feedback
+A short example covering initialization, ring growth, warm-up and the first successful observe call would have
+made this integration much easier. The relevant findings are documented under the observation-cardinality and
+oldest-observation sections of our FEEDBACK.md.
 
-Our detailed, concrete integration feedback is here:
+## If applicable: what was the hardest part of building an agentic app on Uniswap?
+
+Not applicable: HAKARI's public integration does not run an autonomous agent. We used Claude Code and Codex to
+assist implementation, tests and documentation under human direction, and recorded the development prompts in
+the repository.
+
+## What support was missing, or could have been better?
+
+Three practical additions would have helped us most:
+
+1. An end-to-end oracle-consumer example: grow the observation ring, build enough history, read a TWAP, and handle
+   unavailable history explicitly. An oldest-observation timestamp getter would also make readiness checks simpler.
+2. A tested price-conversion recipe for sqrtPriceX96 that handles token order, token decimals and intermediate
+   overflow. We implemented this using the approach in v3's OracleLibrary; a v4 example would save other consumers
+   from repeating that work.
+3. A complete Foundry script for the first liquidity position, including ERC-20 approval to Permit2, Permit2
+   approval to PositionManager, action encoding and liquidity calculation. Clear guidance on which minimal swap
+   router to use on each testnet would help complete the workflow.
+
+These suggestions come from the integration issues we encountered during the build and documented in FEEDBACK.md.
+
+## Any additional feedback?
+
+Detailed integration feedback:
 https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md
 
-Items 13–20 concern the current options-band integration. Earlier study findings and the unrechecked research
-note are preserved separately in archive/feedback-history.md. We used v4 StateLibrary reads, TickMath/FullMath, hook observations, PositionManager, Permit2 and
-swap/liquidity test routers. The mainnet-fork demo uses actual PoolManager code with the deployed testnet hook
-runtime and synthetic pool activity; it is not a claim of live adoption or independent price security.
+Project repository:
+https://github.com/vexi-v1/vexi-hakari
+
+The v4 hook interface and StateLibrary let us connect pool observations to a rule enforced during an option
+purchase without modifying PoolManager. One particularly useful testing detail was that Robinhood Chain's mainnet
+and testnet use the same PoolManager address: we could install our deployed testnet hook bytecode on a local
+mainnet fork and exercise it against the real PoolManager. The test accounts and pool activity were generated
+locally.
+
+This is a Continuity Track extension of Vexi. The repository separates the new integration from the existing
+product and documents its development history. FEEDBACK.md contains eight findings from the current integration,
+each with the issue, our workaround and a suggested improvement; earlier research is archived separately.
