@@ -1,0 +1,31 @@
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = ["lib"]
+# 1inch swap-vm and aqua pin 0.8.30; v4-core's libraries accept it.
+solc = "0.8.30"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 700
+via_ir = true
+# forge script mis-decodes constructor args when it compiles through the dynamic-linking preprocessor.
+dynamic_test_linking = false
+fs_permissions = [{ access = "read-write", path = "./deployments" }]
+
+[fuzz]
+runs = 256
+
+# The fork source. Set RH_MAINNET_RPC in .env (an endpoint that serves historical state); every fork test pins
+# RH_MAINNET_FORK_BLOCK.
+[rpc_endpoints]
+robinhood = "${RH_MAINNET_RPC}"
+robinhood_testnet = "https://rpc.testnet.chain.robinhood.com/rpc"
+
+[fmt]
+line_length = 120
+tab_width = 4
+bracket_spacing = true
+int_types = "long"
+number_underscore = "thousands"

@@ -1,21 +1,20 @@
-MIT License
+vexi-hakari is licensed file by file. A Solidity file's SPDX header is authoritative.
 
-Copyright (c) 2026 HAKARI contributors
+MIT (LICENSES/MIT.txt), unless listed below:
+  src/, test/, script/ (HakariOracleHook, its tests and its deploy script)
+  aqua/src/band/ (the stability band, the hook-TWAP settlement, BandMath)
+  aqua/src/book/IPremium.sol, aqua/src/book/FixedPremium.sol
+  aqua/src/price/
+  aqua/test/ and aqua/script/, except the SwapVM-derived helpers below
+  docs/, archive/, and everything else
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+BUSL-1.1 (LICENSES/BUSL-1.1.txt; the Change License is MIT, from 2028-09-27):
+  aqua/src/aqua/AquaWriter.sol
+  aqua/src/book/OptionBook.sol, aqua/src/book/ICollateralSource.sol
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+LicenseRef-Degensoft-SwapVM-1.1 (aqua/lib/swap-vm/LICENSES/SwapVM-1.1.txt), as extensions of 1inch SwapVM:
+  aqua/src/swapvm/
+  aqua/test/helpers/AquaPrograms.sol, WriterPrograms.sol, OrderBuilders.sol
+  Powered by SwapVM — © Degensoft Ltd 2025. Uses Aqua — © Degensoft Ltd 2025 (called through its published ABI).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+lib/ and aqua/lib/: each dependency under its own license.
