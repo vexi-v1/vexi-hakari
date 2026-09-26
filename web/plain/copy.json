@@ -389,13 +389,13 @@
       "body": {
         "en": [
           "**This pool never had HAKARI.** We replayed that weekend's real trades through HAKARI's rules, minute by minute. So this is a what-if replay, not a record. In the replay, the safe amount was about {safe1940} USDG at 19:40 on Sunday. By 23:25, it had fallen to about {safeMinRound}.",
-          "So, in the replay, a payout worth 1,000 USDG would have been refused for **{refused}** minutes, about three hours in all. The longest stretch ran two hours, from {runFrom} to {runTo}. Our first version of the rule would have paid out in those minutes, at prices up to {v0Max}. That is nearly 80% above Friday's close. An internal review caught this, and we replaced that version.",
+          "So, in the replay, a payout worth 1,000 USDG would have been refused for **{refused}** minutes, about three hours in all. {refusedClosed} of those minutes came while no new tokens could be made, unbroken from {runClosedFrom} until the first new tokens at {runClosedTo}. Our first version of the rule would have paid out in those minutes, at prices up to {v0Max}. That is nearly 80% above Friday's close. An internal review caught this, and we replaced that version.",
           "The new rule has a limit too. HAKARI checks how cheap a price is to fake. It does not know what the stock is worth. In the replay, new tokens had made the pool deeper again by {trustTime} on Monday. So HAKARI would have let a 1,000 USDG payout through, at its {twapMin}-minute average price of {trust0051}. The pool itself was already down to {pool0051}.",
           "Even on a calm evening, this small pool could safely carry only about {safe1940} USDG in the replay. So a 10,000 USDG payout would have been refused anyway. That is the pool's normal size, not the squeeze."
         ],
         "zh": [
           "**先講清楚：那個池子當時沒有裝 HAKARI。**我們是拿它那晚真實的每一筆交易，套上 HAKARI 的規則逐分鐘重跑一遍，所以這是重播推演，不是紀錄。重播中，安全金額從 19:40 的約 {safe1940} USDG，掉到 23:25 只剩約 {safeMinRound} USDG。",
-          "換成一筆 1,000 USDG 的結算：在重播中，HAKARI 會拒絕 **{refused}** 分鐘，加起來大約三小時。最長一次從 {runFrom} 到 {runTo}，連續兩小時。我們第一版的規則，在這些分鐘裡會照付，價格最高算到 {v0Max}，比週五收盤價高了將近八成。內部審查抓到這個問題，那一版已經換掉。",
+          "換成一筆 1,000 USDG 的結算：在重播中，HAKARI 會拒絕 **{refused}** 分鐘，加起來大約三小時。其中 {refusedClosed} 分鐘發生在還不能鑄造新代幣的時候，從 {runClosedFrom} 一路到 {runClosedTo} 第一批新代幣出現，一分鐘都沒有中斷。我們第一版的規則，在這些分鐘裡會照付，價格最高算到 {v0Max}，比週五收盤價高了將近八成。內部審查抓到這個問題，那一版已經換掉。",
           "新規則也有它的極限。HAKARI 算的是造假有多便宜，不是股票值多少。在重播中，到了週一 {trustTime}，新代幣已經讓池子變深，HAKARI 就會放行一筆 1,000 USDG 的結算。它用的是 {twapMin} 分鐘平均價 {trust0051}，但那時池子本身的價格已經掉到 {pool0051}。",
           "在重播中，即使是平靜的傍晚，這個小池子也只能安全承載約 {safe1940} USDG。所以 10,000 USDG 的結算，本來就會被拒絕。那是它平常的深度，不是擠壓造成的。"
         ]
@@ -415,8 +415,8 @@
           "zh": "HAKARI 為這個池子算出的安全金額，逐分鐘重播。紅底：1,000 USDG 的結算會被拒絕的分鐘。{firstMintShort} 之後新代幣已能把價格拉回，那之後的拒絕屬於保守判斷。"
         },
         "alt": {
-          "en": "Log-scale line chart of HAKARI's replayed safe amount: about {safe1940} USDG at 19:40, falling to {safeMin} at 23:25. It is under the 1,000 line for {refused} minutes in all, in several stretches; the longest runs from {runFrom} to {runTo}, and {refusedAfter} of those minutes come after the new tokens arrive. This pool never had HAKARI.",
-          "zh": "HAKARI 重播安全金額的對數刻度折線：19:40 約 {safe1940} USDG，23:25 掉到 {safeMin}。它一共有 {refused} 分鐘低於 1,000 那條線，分成好幾段；最長一段從 {runFrom} 到 {runTo}，其中 {refusedAfter} 分鐘是在新代幣出現之後。這個池子從未裝上 HAKARI。"
+          "en": "Log-scale line chart of HAKARI's replayed safe amount: about {safe1940} USDG at 19:40, falling to {safeMin} at 23:25. It is under the 1,000 line for {refused} minutes in all, in several stretches; while no new tokens could be made, the longest runs unbroken from {runClosedFrom} to {runClosedTo}, and {refusedAfter} of the refused minutes come after the new tokens arrive. This pool never had HAKARI.",
+          "zh": "HAKARI 重播安全金額的對數刻度折線：19:40 約 {safe1940} USDG，23:25 掉到 {safeMin}。它一共有 {refused} 分鐘低於 1,000 那條線，分成好幾段；還不能鑄造新代幣的期間，最長一段從 {runClosedFrom} 不間斷到 {runClosedTo}；被拒絕的分鐘裡有 {refusedAfter} 分鐘是在新代幣出現之後。這個池子從未裝上 HAKARI。"
         }
       },
       "more": { "chapter": "peak", "label": { "en": "Minute by minute: HAKARI's replayed read →", "zh": "逐分鐘看：HAKARI 的重播判讀 →" } }
@@ -591,6 +591,9 @@
     "refusedAfter": { "en": "… of them after the first new tokens", "zh": "…其中在第一批新代幣之後的" },
     "runFrom": { "en": "Longest refused stretch: start", "zh": "最長連續拒絕：開始" },
     "runTo": { "en": "Longest refused stretch: end", "zh": "最長連續拒絕：結束" },
+    "runClosedFrom": { "en": "Longest refused stretch while minting was closed: start", "zh": "鑄造關閉期間最長連續拒絕：開始" },
+    "runClosedTo": { "en": "Longest refused stretch while minting was closed: end (the first mint's minute)", "zh": "鑄造關閉期間最長連續拒絕：結束（首次鑄造那一分鐘）" },
+    "runClosedMin": { "en": "Longest refused stretch while minting was closed: minutes", "zh": "鑄造關閉期間最長連續拒絕：分鐘數" },
     "runMin": { "en": "Longest refused stretch: minutes", "zh": "最長連續拒絕：分鐘數" },
     "v0Max": { "en": "Highest price our first rule would have paid out on meanwhile", "zh": "同一段時間，第一版規則會用的最高價" },
     "trustTime": { "en": "When HAKARI first trusted 1,000 USDG again on Monday (replay)", "zh": "週一 HAKARI 再次信任 1,000 USDG 的時間（重播）" },

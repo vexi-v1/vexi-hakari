@@ -178,6 +178,10 @@
     put('runFrom', isoTs(R.longestRun.from), hm(isoTs(R.longestRun.from)), '… .1000.longestRun.from, replay');
     put('runTo', isoTs(R.longestRun.to), hm(isoTs(R.longestRun.to)), '… .1000.longestRun.to, replay');
     put('runMin', R.longestRun.minutes, String(R.longestRun.minutes), '… .1000.longestRun.minutes, replay');
+    var RC = R.longestRunWhileMintClosed;
+    put('runClosedFrom', isoTs(RC.from), hm(isoTs(RC.from)), '… .1000.longestRunWhileMintClosed.from, replay');
+    put('runClosedTo', isoTs(RC.to), hm(isoTs(RC.to)), '… .1000.longestRunWhileMintClosed.to, replay');
+    put('runClosedMin', RC.minutes, String(RC.minutes), '… .1000.longestRunWhileMintClosed.minutes, replay');
     put('v0Max', R.v0SettledMeanwhileUsdgPerHims.max, fix(R.v0SettledMeanwhileUsdgPerHims.max, 2), '… .1000.v0SettledMeanwhileUsdgPerHims.max, replay');
     var worst = D.hakari.derived.afterFirstMint.byExposureUsdg['1000'].v1.onRawOverPool.worst;
     put('trustTime', isoTs(worst.at), hm(isoTs(worst.at)), 'hakari.derived.afterFirstMint.byExposureUsdg.1000.v1.onRawOverPool.worst.at, replay');
@@ -190,7 +194,7 @@
     var claims = [
       ['"more than 100 times cheaper" (cost at 19:40 ÷ cost at 23:53)', cost[at(TS.sun1940)] / cost[at(TS.sun2353)] > 100],
       ['"nearly 80 % above Friday\'s close" (v0Max ÷ nav)', R.v0SettledMeanwhileUsdgPerHims.max / nav > 1.75 && R.v0SettledMeanwhileUsdgPerHims.max / nav < 1.8],
-      ['"two unbroken hours" (longest refused run)', R.longestRun.minutes === 120],
+      ['"unbroken … until the first new tokens" (the longest refused run while minting was closed ends in the first mint\'s minute)', isoTs(RC.to) === Math.floor(fm.ts / 60) * 60 && RC.minutes === (isoTs(RC.to) - isoTs(RC.from)) / 60 + 1],
       ['"about three hours in all" (refused minutes)', R.minutesRefused >= 170 && R.minutesRefused <= 190],
       ['"within 2 %" at backTime', pg.amount < 2],
       ['"stayed within 10 % of it through Monday dataEnd" (every minute close from backTime to t[last] within ±10 % of nav)', hiAfter / nav < 1.1 && loAfter / nav > 0.9],
