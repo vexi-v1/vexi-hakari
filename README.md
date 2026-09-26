@@ -81,7 +81,7 @@ closed and 1.9M with it open (12 s), storage cold: one walk each way prices ever
 We rebuilt the 12 deepest Robinhood stock pools plus HIMS for the weekend of 2026-09-18 → 21, from Friday's
 US close to Monday, every six hours and around the mint reopening: 187 points, and at every one the rebuilt
 liquidity equals the chain's own `Swap` record ([`gauge/data/weekend-2026-09-18.json`](gauge/data/weekend-2026-09-18.json)).
-**Nothing collapsed.** The lowest max safe exposure while minting was closed was 0.69× (GOOGL) to 2.4× (GLD)
+**Nothing collapsed.** The lowest max safe exposure while minting was closed was 0.69× (GOOGL) to 2.37× (GLD)
 of Friday's; HIMS 1.06×. On 2026-08-30, by the same measure on a minute grid, HIMS fell to 0.006× (3,533 USDG at Friday's close to 20
 at Sunday 23:25, [`web/squeeze/data.json`](web/squeeze/data.json) `series.hakari`; 7,259 → 115 from 19:40 to 23:53). Two caveats: MSTR is left out, since
 its pool has no Friday point to compare with (it could carry 0.04 USDG while minting was closed), and GLD's is a
@@ -171,7 +171,7 @@ decided on 2,915 USDG ([`hims-hook-replay.json`](gauge/data/hims-hook-replay.jso
 
 **Cost ladder**, mainnet 4663, block 72,241,051 ([`gauge/data/ladder.json`](gauge/data/ladder.json)). Pushing
 the stock *up*; fees lost / capital needed, in USDG. A snapshot: the book moves (TSLA's +5 % cost ranged about
-1.3k–2.3k USDG within an hour on 2026-09-25), and the web page's **Refresh live** re-measures at the head:
+1.3k–2.3k USDG within an hour on 2026-09-25, measured live and not saved in the repo), and the web page's **Refresh live** re-measures at the head:
 
 | Pool | Price | +1 % | +5 % | +10 % |
 |---|---|---|---|---|
@@ -247,8 +247,9 @@ move back across the gap it was pushed through, so a held push shows up as a low
   source) is the integrator's call, and that fallback is where the next attack goes. HAKARI does not choose it.
 - **The ladder samples moves up to 20 %.** On the pools we measured the bound was usually set by the 20 % rung,
   where liquidity thins, so a larger move could be cheaper still and the true bound lower. It is: measured live at
-  mainnet block 72,505,303, v1's bound on TSLA/USDG was 14,302 USDG while a +100 % push broke even at 2,951 (HIMS/USDG at
-  72,505,393: 6,144 vs 1,288), so the TSLA table's "settle on raw" at 10,000 USDG holds only within v1's ladder. The web page's Measure
+  mainnet block 72,712,660 ([`docs/demo-outputs/measure-live-2026-09-26.json`](docs/demo-outputs/measure-live-2026-09-26.json)),
+  v1's bound on TSLA/USDG was 14,458 USDG while a +100 % push broke even at 2,982 (HIMS/USDG at 72,712,685: 6,145
+  vs 1,289), so the TSLA table's "settle on raw" at 10,000 USDG holds only within v1's ladder. The web page's Measure
   prices +30/+50/+100 % pushes and leads with the lower figure.
 - **Push widths are sampled too.** Each move is priced at its own width, at its one-interval width (the narrowest
   push that moves the TWAP within one reversion interval) and at doublings in between. The cheapest hold can fall
@@ -259,7 +260,7 @@ move back across the gap it was pushed through, so a held push shows up as a low
   heavy on L1; a wider ladder would cost more.
 - **View mode sees stored fees only.** `depthToMove` / `roundTripCost` fold in the LP and protocol fee from
   `slot0`; hook-taken charges and per-swap fee overrides appear only in the exact `quotePush`. Measured in review
-  on BONER/HIMS (dynamic fee, hooked): view ≈ 0.066 × exact. Where a hook adds charges, as there, the cost is
+  on BONER/HIMS (dynamic fee, hooked; not saved in the repo): view ≈ 0.066 × exact. Where a hook adds charges, as there, the cost is
   understated and the bound reads low: conservative, it refuses more than it needs to. A hook that discounts the
   fee would make it read high. On a hooked pool, check with `quotePush`. GLD's pool in the weekend chart is one
   (marked †).

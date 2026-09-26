@@ -1,0 +1,334 @@
+{
+ "what": "Live read-only Measure on the HAKARI gauge page (web/index.html § 3) at two mainnet blocks, saved so README § Limitations can cite it: SafeSettle v1's bound (ladder to +20 %) next to the break-even exposure of a +100 % push past the ladder. Numbers change every block; re-measure with the page's Measure button.",
+ "capturedAtUtc": "2026-09-26T02:03:37.519Z",
+ "capturedAtJst": "2026-09-26T11:03:37+09:00",
+ "chainId": 4663,
+ "rpc": "https://rpc.mainnet.chain.robinhood.com (public; eth_call with a state override only, nothing sent)",
+ "page": "vexi-hakari web/ served from the repo root on 127.0.0.1 (HEAD c8a81cf), headless Chrome, 1600x900, light theme",
+ "pools": [
+  {
+   "pool": "TSLA/USDG",
+   "poolId": "0x8517f8071ae5b831b738052f12125e8e3d6c158b78728aa44ce3b25e5104d32e",
+   "block": 72712660,
+   "blockTimeUtc": "2026-09-26T02:03:37Z",
+   "blockTimeJst": "2026-09-26T11:03:37+09:00",
+   "measuredInSeconds": 0.8,
+   "headline": {
+    "text": "Largest settlement this pool can safely carry right now, if nobody pushes back: at most 2,982 USDG (pushing TSLA +100 %, past SafeSettle's ladder)",
+    "maxSafeExposureUsdg": 2982.0,
+    "basis": "a +100 % push, past SafeSettle's ladder (the page leads with the lower figure)"
+   },
+   "safeSettleV1": {
+    "maxSafeExposureUsdg": 14458.0,
+    "bindingMove": "+20.0 %",
+    "bindingCostUsdg": 2891.0
+   },
+   "pastLadder": {
+    "push": "+100 %",
+    "costUsdg": 2983.0,
+    "breakEvenExposureUsdg": 2982.0
+   },
+   "priceUsdg": 372.2291,
+   "lpFeePips": 3000.0,
+   "protocolFee": "on (500/500 pips)",
+   "inRangeLiquidity": "938176631314082704",
+   "push5pct": {
+    "feesUsdg": 2318.43,
+    "capitalUsdg": 335313.0
+   },
+   "mintWindowPill": "closed: nobody can arbitrage, pass arbReversionSeconds = 0",
+   "twelveMoves": [
+    {
+     "move": "+0.5 %",
+     "ticks": "50",
+     "costToFakeUsdg": "317",
+     "earnsPer1UsdgSettling": "0.0050",
+     "breakEvenExposureUsdg": "63,316"
+    },
+    {
+     "move": "−0.5 %",
+     "ticks": "50",
+     "costToFakeUsdg": "255",
+     "earnsPer1UsdgSettling": "0.0050",
+     "breakEvenExposureUsdg": "51,198"
+    },
+    {
+     "move": "+1.0 %",
+     "ticks": "100",
+     "costToFakeUsdg": "639",
+     "earnsPer1UsdgSettling": "0.0100",
+     "breakEvenExposureUsdg": "63,559"
+    },
+    {
+     "move": "−1.0 %",
+     "ticks": "100",
+     "costToFakeUsdg": "456",
+     "earnsPer1UsdgSettling": "0.0099",
+     "breakEvenExposureUsdg": "45,851"
+    },
+    {
+     "move": "+2.0 %",
+     "ticks": "200",
+     "costToFakeUsdg": "1,172",
+     "earnsPer1UsdgSettling": "0.0202",
+     "breakEvenExposureUsdg": "58,040"
+    },
+    {
+     "move": "−2.0 %",
+     "ticks": "200",
+     "costToFakeUsdg": "789",
+     "earnsPer1UsdgSettling": "0.0198",
+     "breakEvenExposureUsdg": "39,855"
+    },
+    {
+     "move": "+5.0 %",
+     "ticks": "488",
+     "costToFakeUsdg": "2,318",
+     "earnsPer1UsdgSettling": "0.0500",
+     "breakEvenExposureUsdg": "46,359"
+    },
+    {
+     "move": "−4.8 %",
+     "ticks": "488",
+     "costToFakeUsdg": "1,679",
+     "earnsPer1UsdgSettling": "0.0476",
+     "breakEvenExposureUsdg": "35,250"
+    },
+    {
+     "move": "+10.0 %",
+     "ticks": "953",
+     "costToFakeUsdg": "2,712",
+     "earnsPer1UsdgSettling": "0.1000",
+     "breakEvenExposureUsdg": "27,127"
+    },
+    {
+     "move": "−9.1 %",
+     "ticks": "953",
+     "costToFakeUsdg": "2,874",
+     "earnsPer1UsdgSettling": "0.0909",
+     "breakEvenExposureUsdg": "31,620"
+    },
+    {
+     "move": "+20.0 % ◀ binding",
+     "ticks": "1823",
+     "costToFakeUsdg": "2,891",
+     "earnsPer1UsdgSettling": "0.2000",
+     "breakEvenExposureUsdg": "14,458"
+    },
+    {
+     "move": "−16.7 %",
+     "ticks": "1823",
+     "costToFakeUsdg": "3,784",
+     "earnsPer1UsdgSettling": "0.1666",
+     "breakEvenExposureUsdg": "22,710"
+    }
+   ],
+   "exactSwaps": [
+    {
+     "move": "+1.0 %",
+     "ticks": "100",
+     "reached": "yes",
+     "capital": "91,664 USDG",
+     "costUsdg": "638.75"
+    },
+    {
+     "move": "+5.0 %",
+     "ticks": "488",
+     "reached": "yes",
+     "capital": "335,313 USDG",
+     "costUsdg": "2,318.43"
+    },
+    {
+     "move": "+10.0 %",
+     "ticks": "953",
+     "reached": "yes",
+     "capital": "393,609 USDG",
+     "costUsdg": "2,712.37"
+    },
+    {
+     "move": "−1.0 %",
+     "ticks": "100",
+     "reached": "yes",
+     "capital": "175.8411 TSLA",
+     "costUsdg": "456.21"
+    },
+    {
+     "move": "−4.8 %",
+     "ticks": "488",
+     "reached": "yes",
+     "capital": "652.7862 TSLA",
+     "costUsdg": "1,678.90"
+    },
+    {
+     "move": "−9.1 %",
+     "ticks": "953",
+     "reached": "yes",
+     "capital": "1,128.8173 TSLA",
+     "costUsdg": "2,874.30"
+    }
+   ]
+  },
+  {
+   "pool": "HIMS/USDG",
+   "poolId": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
+   "block": 72712685,
+   "blockTimeUtc": "2026-09-26T02:03:39Z",
+   "blockTimeJst": "2026-09-26T11:03:39+09:00",
+   "measuredInSeconds": 0.6,
+   "headline": {
+    "text": "Largest settlement this pool can safely carry right now, if nobody pushes back: at most 1,289 USDG (pushing HIMS +100 %, past SafeSettle's ladder)",
+    "maxSafeExposureUsdg": 1289.0,
+    "basis": "a +100 % push, past SafeSettle's ladder (the page leads with the lower figure)"
+   },
+   "safeSettleV1": {
+    "maxSafeExposureUsdg": 6145.0,
+    "bindingMove": "+20.0 %",
+    "bindingCostUsdg": 1229.0
+   },
+   "pastLadder": {
+    "push": "+100 %",
+    "costUsdg": 1289.0,
+    "breakEvenExposureUsdg": 1289.0
+   },
+   "priceUsdg": 29.4538,
+   "lpFeePips": 9000.0,
+   "protocolFee": "on (1000/1000 pips)",
+   "inRangeLiquidity": "324584938582491504",
+   "push5pct": {
+    "feesUsdg": 704.58,
+    "capitalUsdg": 35846.0
+   },
+   "mintWindowPill": "closed: nobody can arbitrage, pass arbReversionSeconds = 0",
+   "twelveMoves": [
+    {
+     "move": "+0.5 %",
+     "ticks": "50",
+     "costToFakeUsdg": "84.86",
+     "earnsPer1UsdgSettling": "0.0050",
+     "breakEvenExposureUsdg": "16,931"
+    },
+    {
+     "move": "−0.5 %",
+     "ticks": "50",
+     "costToFakeUsdg": "88.27",
+     "earnsPer1UsdgSettling": "0.0050",
+     "breakEvenExposureUsdg": "17,698"
+    },
+    {
+     "move": "+1.0 %",
+     "ticks": "100",
+     "costToFakeUsdg": "162",
+     "earnsPer1UsdgSettling": "0.0100",
+     "breakEvenExposureUsdg": "16,079"
+    },
+    {
+     "move": "−1.0 %",
+     "ticks": "100",
+     "costToFakeUsdg": "178",
+     "earnsPer1UsdgSettling": "0.0099",
+     "breakEvenExposureUsdg": "17,925"
+    },
+    {
+     "move": "+2.0 %",
+     "ticks": "200",
+     "costToFakeUsdg": "310",
+     "earnsPer1UsdgSettling": "0.0202",
+     "breakEvenExposureUsdg": "15,337"
+    },
+    {
+     "move": "−2.0 %",
+     "ticks": "200",
+     "costToFakeUsdg": "356",
+     "earnsPer1UsdgSettling": "0.0198",
+     "breakEvenExposureUsdg": "17,992"
+    },
+    {
+     "move": "+5.0 %",
+     "ticks": "488",
+     "costToFakeUsdg": "705",
+     "earnsPer1UsdgSettling": "0.0500",
+     "breakEvenExposureUsdg": "14,088"
+    },
+    {
+     "move": "−4.8 %",
+     "ticks": "488",
+     "costToFakeUsdg": "847",
+     "earnsPer1UsdgSettling": "0.0476",
+     "breakEvenExposureUsdg": "17,774"
+    },
+    {
+     "move": "+10.0 %",
+     "ticks": "953",
+     "costToFakeUsdg": "1,095",
+     "earnsPer1UsdgSettling": "0.1000",
+     "breakEvenExposureUsdg": "10,955"
+    },
+    {
+     "move": "−9.1 %",
+     "ticks": "953",
+     "costToFakeUsdg": "1,489",
+     "earnsPer1UsdgSettling": "0.0909",
+     "breakEvenExposureUsdg": "16,379"
+    },
+    {
+     "move": "+20.0 % ◀ binding",
+     "ticks": "1823",
+     "costToFakeUsdg": "1,229",
+     "earnsPer1UsdgSettling": "0.2000",
+     "breakEvenExposureUsdg": "6,145"
+    },
+    {
+     "move": "−16.7 %",
+     "ticks": "1823",
+     "costToFakeUsdg": "1,940",
+     "earnsPer1UsdgSettling": "0.1666",
+     "breakEvenExposureUsdg": "11,640"
+    }
+   ],
+   "exactSwaps": [
+    {
+     "move": "+1.0 %",
+     "ticks": "100",
+     "reached": "yes",
+     "capital": "8,147 USDG",
+     "costUsdg": "161.60"
+    },
+    {
+     "move": "+5.0 %",
+     "ticks": "488",
+     "reached": "yes",
+     "capital": "35,846 USDG",
+     "costUsdg": "704.58"
+    },
+    {
+     "move": "+10.0 %",
+     "ticks": "953",
+     "reached": "yes",
+     "capital": "56,157 USDG",
+     "costUsdg": "1,095.50"
+    },
+    {
+     "move": "−1.0 %",
+     "ticks": "100",
+     "reached": "yes",
+     "capital": "305.3238 HIMS",
+     "costUsdg": "178.36"
+    },
+    {
+     "move": "−4.8 %",
+     "ticks": "488",
+     "reached": "yes",
+     "capital": "1,462.8531 HIMS",
+     "costUsdg": "846.64"
+    },
+    {
+     "move": "−9.1 %",
+     "ticks": "953",
+     "reached": "yes",
+     "capital": "2,597.7345 HIMS",
+     "costUsdg": "1,489.15"
+    }
+   ]
+  }
+ ]
+}

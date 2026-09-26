@@ -65,7 +65,7 @@ export function himsChart(d: any): string {
   return s + "</svg>";
 }
 
-export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio: number }): string {
+export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio: number; label?: string }): string {
   const rows = d.series
     .filter((r: any) => r.fridayMaxSafeExposure && r.weekendMinMaxSafeExposure)
     .map((r: any) => ({ ...r, fri: r.fridayMaxSafeExposure, wk: r.weekendMinMaxSafeExposure, ratio: r.weekendMinMaxSafeExposure / r.fridayMaxSafeExposure }))
@@ -90,9 +90,9 @@ export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio
     s += `<line x1="${x(r.fri)}" x2="${x(r.wk)}" y1="${cy}" y2="${cy}" stroke="${C.muted}" stroke-width="2"/>`;
     s += `<circle cx="${x(r.fri)}" cy="${cy}" r="6" fill="${C.friday}" stroke="${C.card}" stroke-width="2"/>`;
     s += `<circle cx="${x(r.wk)}" cy="${cy}" r="6" fill="${C.weekend}" stroke="${C.card}" stroke-width="2"/>`;
-    s += `<text x="${W - R + 8}" y="${cy + 4}" font-size="12" fill="${C.ink2}">×${fmt(r.ratio, r.ratio < 1 ? 2 : 1)}</text>`;
+    s += `<text x="${W - R + 8}" y="${cy + 4}" font-size="12" fill="${C.ink2}">×${fmt(r.ratio, 2)}</text>`;
   });
-  if (himsRef) s += `<text x="24" y="${H - 54}" font-size="12" fill="${C.ink}">For comparison, HIMS on Sunday 2026-08-30: ${fmt(himsRef.from)} → ${fmt(himsRef.to)} USDG (×${himsRef.ratio.toFixed(3)}).</text>`;
+  if (himsRef) s += `<text x="24" y="${H - 54}" font-size="12" fill="${C.ink}">${himsRef.label ?? `For comparison, HIMS on Sunday 2026-08-30: ${fmt(himsRef.from)} → ${fmt(himsRef.to)} USDG (×${himsRef.ratio.toFixed(3)}).`}</text>`;
   s += `<text x="24" y="${H - 34}" font-size="11" fill="${C.muted}">SafeSettle's bound with nobody pushing back. ×N = weekend minimum ÷ Friday. Data: gauge/data/weekend-${d.friday}.json</text>`;
   if (rows.some((r: any) => r.hooked)) s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">† Hooked pool: the hook's own charges are not in the bound, so it may read low (conservative).</text>`;
   return s + "</svg>";
@@ -103,9 +103,23 @@ export function main() {
   out("hims-weekend.svg", himsChart(JSON.parse(readFileSync(dataDir + "hims-replay.json", "utf8"))));
   const friday = process.argv[2];
   if (friday && existsSync(`${dataDir}weekend-${friday}.json`)) {
-    const hims = JSON.parse(readFileSync(dataDir + "hims-replay.json", "utf8"));
-    const safe = hims.points.map((p: any) => Number(p.maxSafeExposureUsdg.usdg));
-    const ref = { from: safe[0], to: Math.min(...safe), ratio: Math.min(...safe) / safe[0] };
+    // HIMS 2026-08-30 by the chart's own measure (weekend minimum ÷ Friday's US close), from the squeeze page's
+    // minute replay when it is there (web/squeeze/data.json, npm run hims:hook + squeeze:build); otherwise the
+    // five-point hims-replay (19:40 → min), labelled as such.
+    const squeeze = new URL("../../web/squeeze/data.json", import.meta.url).pathname;
+    let ref: { from: number; to: number; ratio: number; label?: string };
+    if (existsSync(squeeze)) {
+      const sq = JSON.parse(readFileSync(squeeze, "utf8"));
+      const safe: (number | null)[] = sq.series.hakari.maxSafeUsdg;
+      const fri = safe[(1_787_947_200 - sq.t[0]) / 60]!; // Fri 2026-08-28 20:00 UTC, the NYSE close
+      const lo = Math.min(...safe.filter((x): x is number => x !== null));
+      ref = { from: fri, to: lo, ratio: lo / fri };
+      ref.label = `For comparison, HIMS on 2026-08-28 → 08-30, same measure: ${fmt(fri)} USDG at Friday's close → ${fmt(lo)} at Sunday 23:25 (×${fmt(lo / fri, 3)}).`;
+    } else {
+      const hims = JSON.parse(readFileSync(dataDir + "hims-replay.json", "utf8"));
+      const safe = hims.points.map((p: any) => Number(p.maxSafeExposureUsdg.usdg));
+      ref = { from: safe[0], to: Math.min(...safe), ratio: Math.min(...safe) / safe[0] };
+    }
     out(`weekend-${friday}.svg`, weekendChart(JSON.parse(readFileSync(`${dataDir}weekend-${friday}.json`, "utf8")), ref));
   }
 }

@@ -137,6 +137,11 @@ contract HakariOracleHook is BaseOracleHook {        // OpenZeppelin uniswap-hoo
 
 ### 3.3 `SafeSettle` (Solidity): a demo settlement decision
 
+> **Superseded (2026-09-26).** This is the H0 interface. The contract now exposes `settlePrice(…)` returning a
+> `Decision` and emits `Settled(id, rawTick, truncTick, trusted, exposure, maxSafeExposure, bindingTicks, bindingUp)`:
+> it prices the largest exposure the pool can safely carry and trusts the raw TWAP only below it. See README
+> § "What it is" and `src/SafeSettle.sol`.
+
 A simple cash-settlement contract (a demo, not a product) that decides at expiry which price
 to use, and writes *why* into an event.
 
