@@ -380,3 +380,26 @@ no cost where nobody pulls back; a venue's behavioural limit lives in its sizing
 "enforced", "guarded", "protected" only where they point at a call that refuses. The answer to the opening
 objection, as the opposing session put it: the line is not the rule; the rule can only live where money is at
 risk and refuses, and what HAKARI supplies is the input that rule needs and only it measures, depth at settlement.
+
+## 2026-09-27 03:30 — Abner: bring the Aqua seam and the Uniswap band here; archive the study
+
+> 決定把 Eric 新加入的部分：1inch aqua 與 hakari pivot 的 "uniswap band" 相關內容抽出來，放入到 vexi-hakari 中。
+> vexi-hakari 已經是 public repo …… 為了 EthGlobal Tokyo 2026 比賽需求，所以得為了 1inch, Uniswap 需要審查的部分，抽出獨立的部分。
+> 1. 無關文件與說明都放進 archive 並標注這些內容用途 2. 說明文件解釋需求與主題改變的歷史脈絡
+> 3. 盤點如何抽出來只把比賽 1inch, Uniswap 需要的部分
+>
+> ("Take what Eric added, the 1inch Aqua work and the Uniswap band HAKARI pivoted into, and put it in vexi-hakari,
+> which is already public. The other repositories stay private, so for ETHGlobal extract only what 1inch and Uniswap
+> review. 1. Archive what no longer applies and say what each part was for. 2. Explain how the requirements and the
+> topic changed. 3. Inventory what to extract.") A fourth item set the band's width: a percentage for the
+> tokenized-stock demo, chosen by the AI with its reason. The parts of the instruction about what stays private are
+> not reproduced here.
+
+Asked back, Abner chose: only the integration seam (the Aqua writer, a small book, the SwapVM guard, the band and the
+settlement), a fixed-premium pricer in place of the product's pricer, no pointers to deployments of code that is not
+in this repository (a redeploy script instead), and an archive of everything from the study but the hook.
+
+Outcome: the study moved to `archive/hakari-v1/` with `archive/README.md`; `aqua/` holds the seam and the band as a
+Foundry project of its own; the band's half-width is 5 %, the Limit Up-Limit Down band of a Tier 1 US stock
+(`docs/band.md`); `docs/history.md`, `docs/extraction.md` and `docs/submission.md` are new; `FEEDBACK.md` gained
+items 13 to 21. Each step is its own commit.

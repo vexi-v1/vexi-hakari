@@ -1,6 +1,6 @@
 ---
 name: uniswap-v4-hooks
-description: Uniswap v4 hook development reference for the HAKARI repo. Use whenever you write, extend, or review a v4 hook (HakariOracleHook, ExposureGuard, SafeSettle, or a new one), reason about hook permission flags, CREATE2 salt mining, or a deployment script, need to score a hook's security risk, or need any Uniswap protocol reference (v2/v3/v4, UniswapX, Permit2, SDKs, Unichain) not already answered by the vendored libraries under lib/. Trigger even on a short ask like "add a hook", "mine the salt", "is this hook safe", or a passing Uniswap docs question.
+description: Uniswap v4 hook development reference for the HAKARI repo. Use whenever you write, extend, or review a v4 hook (HakariOracleHook, a consumer of it such as the band in aqua/, or a new one), reason about hook permission flags, CREATE2 salt mining, or a deployment script, need to score a hook's security risk, or need any Uniswap protocol reference (v2/v3/v4, UniswapX, Permit2, SDKs, Unichain) not already answered by the vendored libraries under lib/. Trigger even on a short ask like "add a hook", "mine the salt", "is this hook safe", or a passing Uniswap docs question.
 ---
 
 ## Read the vendored code first, docs second
@@ -89,7 +89,7 @@ This is a different thing from HAKARI's own cost-to-manipulate model (SPEC.md's 
 layers). The Foundation's framework scores *how much a hook could go wrong* (its own attack
 surface); HAKARI's model scores *what it costs to move a price on a given pool*, independent of
 hook code quality. Use the Foundation's rubric when reviewing a third-party hook, writing the
-security section of the README, or sanity-checking HakariOracleHook/ExposureGuard/SafeSettle
+security section of the README, or sanity-checking HakariOracleHook or a contract that reads it
 against an external standard — not as a substitute for HAKARI's own cost model.
 
 ## Building a new hook from scratch

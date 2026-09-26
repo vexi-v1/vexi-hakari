@@ -98,5 +98,5 @@ This framework scores *how much a given hook could go wrong* (its own attack sur
 own model (SPEC.md's three trust layers, `CostModel.sol`) scores something different: *what it
 costs an outsider to move a pool's price*, independent of whether the hook reading that price is
 itself well-written. Use this framework to size review effort for a hook — including
-HakariOracleHook/ExposureGuard/SafeSettle themselves, or a third party's hook shown at the demo —
+HakariOracleHook and the contracts that read it, or a third party's hook shown at the demo —
 not as a substitute for HAKARI's cost model.
