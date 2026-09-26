@@ -1,0 +1,69 @@
+# Demo script
+
+Everything runs on a local anvil fork of Robinhood Chain 4663, pinned at `RH_MAINNET_FORK_BLOCK`. Nothing is ever
+sent to mainnet. One recorded run is in [demo-run.md](demo-run.md).
+
+One command runs it end to end (about 40 seconds): it compiles, starts a fresh fork with every account unlocked, runs
+the four phases of `script/Demo.s.sol` (`DemoFund`, `DemoSetup`, `DemoExpiry`, `DemoClose`) with time warps on the
+node between them, prints the decoded Aqua `Pulled`/`Pushed` events after every step, and lists all of them at the end
+straight from the node's logs:
+
+```bash
+./demo.sh
+```
+
+`./demo.sh --serve` keeps the fork up afterwards and serves the position view at `http://localhost:8787/web/`
+(wallet, promises, escrow, the four strategies, both orders, guard and skew, and the decoded Aqua events; refreshes
+every five seconds).
+
+## The roles
+
+| Who | What | Funded with |
+|---|---|---|
+| maker | The option writer. One wallet, never deposits. | 30 TSLA, 20,000 USDG |
+| operator | Deploys the shared contracts (book, price source, routers). Not the maker, so the writer cannot touch the settlement source. | gas |
+| callBuyer, putBuyer | Buy 5 calls and 3 puts. The put buyer holds 3 TSLA to deliver at exercise. | 5,000 USDG each |
+| taker | Trades spot against the maker's SwapVM strategies. | 40,000 USDG |
+
+All five are plain addresses on the fork. TSLA (`0x322F…`) and USDG (`0x5fc5…`) are the real Robinhood Chain tokens;
+Aqua (`0x1111113C…`) and the SwapVM v1.0.2 router (`0x111111338c…`) are the canonical deployments.
+
+## What each step prints, and what to say over it
+
+Video rules (ETHGlobal): 2–4 minutes, at least 720p, real voices, no sped-up footage, opening under 20 seconds, at
+most four bullet points per slide.
+
+1. **0:00–0:15 · The claim.** One slide: "A writer should lock nothing that hasn't been sold." Then the terminal.
+2. **0:15–0:45 · Deploy and ship.** Step 1 lists the five contracts, with the canonical Aqua and router addresses on
+   top. Step 2 prints the wallet before and after shipping four strategies (50 + 40 + 40 + 40 TSLA promised on a
+   30 TSLA wallet) and the eight `Pushed` events: "Aqua records virtual balances; the wallet did not move."
+3. **0:45–1:15 · Post and buy.** Step 3: ten calls and ten puts posted, promised 10 TSLA and 4,000 USDG, wallet still
+   unchanged. Step 4: "callBuyer buys 5 calls" and the line `Aqua.Pulled 5.0000 TSLA out of the maker's wallet, by
+   AquaWriter`; then 1,200 USDG for the puts. Point at the wallet line: 25 TSLA / 18,800 USDG. Escrow at the book.
+4. **1:15–2:15 · Spot and the guard.** Step 5 is the heart:
+   - "wallet 25 − promised 5 = free 20; the spot pools claim 40."
+   - For 400 USDG: unguarded 0.9756 TSLA; canonical router + guard 0.9523 (pool 8,000/20: same price, less depth);
+     our router + guard + skew 0.9504.
+   - For 21 TSLA: the unguarded pool would sell them for 17,684 USDG "and leave 4 TSLA for 5 promised calls"; the
+     guarded one is refused. This is the before/after.
+   - DeltaSkew: option delta −1 TSLA; bid for a taker's TSLA 390.24 → 391.02.
+   - Two real fills: 0.9523 TSLA `Pulled` by the canonical router, 0.9482 by ours, 400 USDG `Pushed` each.
+5. **2:15–2:45 · Expiry.** Step 6: the Chainlink round at or before expiry, 379.0772 vs strike 400. Calls expire, the
+   put holder delivers 3 TSLA for 1,200 USDG.
+6. **2:45–3:15 · Close and position.** Step 7: four `Pushed` lines (5 TSLA back, 3 TSLA delivered, 25 + 15 USDG of
+   premium). Step 8: the position table; wallet 31.0994 TSLA / 19,640 USDG against 30 / 20,000 at the start; promised
+   and delta back to zero; book empty. Last line: "the maker signed approvals and Aqua calls only."
+7. **3:15–3:30 · The view.** Switch to `http://localhost:8787/web/` for the same numbers, then the event list.
+
+## 1inch booth
+
+Open with the decoded events of step 4 and step 5, then the opcode table (`WriterOpcodes._opcodes`: 34 and 35 appended
+after the deployed table) and the `Extruction` program that runs the guard on their router.
+
+1. Ship: the wallet balance is unchanged.
+2. The buy: `Pulled` from the wallet inside the buy transaction.
+3. The spot taker is capped by `ExposureGuard`, on the canonical router and on ours, at the same price.
+4. Expiry: `Pushed` back, then the position table.
+
+Question to ask the 1inch team: how is a fee-charging venue whose writers use Aqua treated under the Aqua license (§2.2
+and §5.3)?

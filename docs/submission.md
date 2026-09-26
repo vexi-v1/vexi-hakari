@@ -103,6 +103,16 @@ Uniswap v4 is the price the writer's book is checked against, through HAKARI's h
   `aqua/test/StabilityTwapSettle.t.sol`, `test/HakariOracleHook.t.sol`.
 - Developer feedback: `FEEDBACK.md`.
 
+## AI assistance
+
+Claude and Claude Code assisted the original specs, contracts, tests and documentation. Codex assisted later
+quote-validity changes, review, submission documents and the public website. Eric directed the Aqua specification,
+build gates and review/rework; Abner directed HAKARI review, extraction, public-scope decisions and the website.
+The file-level disclosure is [docs/ai-usage.md](ai-usage.md). The [prompt index](prompts/README.md) includes the
+original HAKARI spec and the recovered Aqua specs, build plan, demo/facts and AI-usage log with the original build
+and review briefs. A manifest records source revisions and checksums; source-band excerpts and unavailable raw
+transcripts are explicitly identified. These records must be accessible at the repository revision submitted.
+
 ## Continuity Track: what existed before the event, and what was built at it
 
 **Before the event.** Vexi, the team's options venue on Robinhood Chain: vaults that write covered calls and

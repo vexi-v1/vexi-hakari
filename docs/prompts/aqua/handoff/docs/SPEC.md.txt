@@ -1,0 +1,150 @@
+# vexi-aqua — spec
+
+> Write options from a wallet that never deposits: collateral stays in the writer's own wallet or Safe and moves only
+> when a buyer buys.
+
+Status: spec, written 2026-09-25 (JST) during ETHGlobal Tokyo 2026. Implementation starts from this document.
+Also: [1inch track details](spec-1inch.md) · [demo script](demo.md) · [build plan](plan.md) · [facts and addresses](facts.md) · [AI usage](ai-usage.md).
+
+## 1. The problem
+
+To write a fully collateralised option today, a writer deposits the collateral into a venue or a vault **before**
+anyone buys, and it sits there idle. That rules out the writers who would bring the most depth: professional market
+makers and institutions whose custody policy forbids handing funds to a third-party contract.
+
+1inch Aqua solves this for spot. A maker's tokens stay in its own wallet, strategies hold *virtual* balances, and tokens
+move only when a trade fills. vexi-aqua applies the same model to option writing.
+
+Options differ from spot in one way: once an option is sold, its collateral must stay escrowed until expiry. So the claim
+is not "the writer never locks anything". It is **"the writer locks nothing that has not been sold"**, and the unsold
+balance keeps working elsewhere in the meantime.
+
+## 2. The position
+
+One wallet runs "the wheel" and a spot market on a single balance:
+
+- **Covered calls** on TSLA. Collateral is TSLA, pulled from the wallet only when a buyer buys.
+- **Cash-secured puts** on TSLA. Collateral is USDG, same rule.
+- **A SwapVM spot strategy** quoting TSLA/USDG from the same balance.
+- **ExposureGuard**, a custom SwapVM instruction. The spot strategy may only use the part of the balance that open option
+  orders have not promised, so a buyer who sees option depth can actually fill it.
+- **Premiums** flow back into the same Aqua strategy and back new writes.
+
+```mermaid
+flowchart LR
+  W[Writer wallet / Safe<br/>TSLA + USDG] -- approve once --> A[1inch Aqua<br/>virtual balances]
+  A --> S[SwapVM spot strategy<br/>+ ExposureGuard]
+  A --> AW[AquaWriter<br/>Aqua app]
+  AW -- sourced orders --> MB[MiniBook<br/>options]
+  B[Buyer] -- premium --> MB
+  MB -- pull at fill --> AW
+  O[Expiry price source<br/>Chainlink on 4663] --> MB
+```
+
+## 3. Components
+
+| Component | Language | License | Spec |
+|---|---|---|---|
+| `MiniBook` | Solidity | MIT | §4 below |
+| `ICollateralSource` | Solidity | MIT | §4 below |
+| `IExpiryPrice` + `ChainlinkExpiryPrice` (+ `FixedExpiryPrice` for tests) | Solidity | MIT | §5 below |
+| `AquaWriter` | Solidity | MIT | [spec-1inch.md §3.2](spec-1inch.md#32-aquawriter-mit-the-aqua-app-that-writes-options) |
+| `ExposureGuard` (custom SwapVM instruction) + router subclass | Solidity | LicenseRef-Degensoft-SwapVM-1.1 | [spec-1inch.md §3.3](spec-1inch.md#33-exposureguard-custom-swapvm-instruction) |
+| Demo scripts + position view | Solidity scripts, TypeScript | MIT | [demo.md](demo.md) |
+
+## 4. MiniBook — a deliberately small options book
+
+It exists so the writer has something real to supply. It has no pricing engine: premiums are fixed per order.
+
+- **Series** are `(base, quote, strike, expiry, isCall)`. `strike` is WAD (1e18 quote per base) regardless of token
+  decimals. `seriesId = uint256(keccak256(abi.encode(...)))`.
+- **Orders**: a maker posts `(seriesId, premiumPerContract, maxContracts)`.
+  - A *sourced* order holds a promise, not tokens.
+  - The maker must be a contract implementing `ICollateralSource`, and posting refuses a maker with no code.
+- **Buy** `buy(orderId, n, maxPremium)`:
+  1. The buyer pays `n × premiumPerContract` in quote.
+  2. The book asks the source `available(...)` and refuses if it is short.
+  3. It calls `provide(...)` for exactly the collateral: `n` whole base units for a call, `n × strike` in quote for a put.
+  4. It checks arrival by balance delta and credits the buyer `n` contracts (ERC-1155, id = `seriesId`).
+- **Settle** `settle(seriesId)` after `expiry` reads `IExpiryPrice.priceAt(base, quote, expiry)` and stores it.
+- **Exercise** `exercise(seriesId, n)` runs inside a window after settlement and is physical:
+  - A call holder pays `n × strike` quote and receives `n` base.
+  - A put holder delivers `n` base and receives `n × strike` quote.
+  - It is refused when out of the money at the settled price.
+- **Close**, after the window:
+  - Collateral not delivered goes back to the maker through `onReturned(...)`.
+  - Premiums go to the maker through `claimPremium(orderId)`.
+
+```solidity
+/// The seam between a book and a writer whose collateral is a promise until a fill.
+interface ICollateralSource {
+    /// How much `collateral` the source can hand over right now. Must be cheap: a book may call it under a gas stipend.
+    function available(uint256 seriesId, address base, address collateral) external view returns (uint256);
+    /// Transfer exactly `amount` of `collateral` to msg.sender (the book).
+    function provide(uint256 seriesId, address base, address collateral, uint256 amount) external;
+    /// The book has just transferred `amount` of `collateral` back to the source (unexercised escrow).
+    function onReturned(uint256 seriesId, address base, address collateral, uint256 amount) external;
+}
+```
+
+## 5. The expiry price
+
+`MiniBook` does not pick a price itself; it asks an `IExpiryPrice`.
+
+```solidity
+interface IExpiryPrice {
+    /// WAD quote per base at `at`. Reverts if no price covers `at`.
+    function priceAt(address base, address quote, uint64 at) external view returns (uint256);
+}
+```
+
+- **`ChainlinkExpiryPrice`** (the demo): reads Chainlink's TSLA reference feed on Robinhood Chain 4663.
+  - Chainlink is Robinhood Chain's official oracle layer and has reference prices for about 95 stock tokens.
+  - Pick the round at or just before `at`, and refuse a stale round.
+  - Find the feed address and its heartbeat at G0.
+  - SwapVM's own `OraclePriceAdjuster` reads the same kind of feed, so the spot strategy and the options settle against
+    one reference.
+- **`FixedExpiryPrice`** (tests): set by the test, so ITM/OTM paths are deterministic.
+- **Out of scope for vexi-aqua:** pricing settlement from a pool that can be pushed. That is a separate project.
+
+## 6. Chains and environment
+
+| Where | What runs there | Why |
+|---|---|---|
+| **Local anvil fork of Robinhood Chain 4663** | The whole demo | 4663 has canonical 1inch Aqua and the SwapVM router, real TSLA and USDG, and Chainlink feeds. |
+| **Robinhood Chain testnet 46630** | Nothing Aqua-related | Aqua and the SwapVM router are **not** deployed on 46630. |
+| **Robinhood Chain mainnet 4663** | Nothing. Read-only. | We never send a transaction to mainnet. |
+
+Environment variables are in [`.env.example`](../.env.example).
+
+## 7. Rules for everyone building this (people and AI)
+
+1. **Mainnet 4663 is read-only.** Every transaction goes to the local fork (or to testnet 46630).
+2. **From Scratch track.** No code written before the event goes in, from any other project. Knowledge and public chain
+   data may be reused; code is written here, now. Public libraries are fine: 1inch aqua and swap-vm as dependencies,
+   OpenZeppelin, forge-std, viem.
+3. **Secrets.** Never print or commit `.env` or a private key. Load keys from the environment inside scripts, never on
+   the command line.
+4. **Git history.** Commit early and often from the first hour; a single final-day commit disqualifies.
+5. **AI disclosure.** This project is spec-driven with AI assistance. Specs live in `docs/`, and the prompts used to
+   generate code are appended to [`docs/ai-usage.md`](ai-usage.md).
+6. **Licenses.** Anything that modifies or extends SwapVM lives under `contracts/swapvm/` with the Degensoft SwapVM
+   license header; everything else is MIT.
+
+## 8. Proposed repository layout
+
+```
+contracts/
+  book/MiniBook.sol
+  book/ICollateralSource.sol
+  price/IExpiryPrice.sol
+  price/ChainlinkExpiryPrice.sol
+  price/FixedExpiryPrice.sol
+  aqua/AquaWriter.sol
+  swapvm/ExposureGuard.sol          # LicenseRef-Degensoft-SwapVM-1.1
+  swapvm/WriterSwapVMRouter.sol     # LicenseRef-Degensoft-SwapVM-1.1
+test/                               # forge tests against the 4663 fork
+script/                             # demo scripts on the fork
+web/                                # optional position view
+docs/
+```

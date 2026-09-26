@@ -1,0 +1,135 @@
+# Facts, addresses and sources
+
+Everything here was read on 2026-09-25. Before relying on an address, re-check it with `eth_getCode` and checksum it
+with viem's `getAddress`; never retype the letter case by hand.
+
+## Robinhood Chain mainnet 4663: RPC endpoints (read-only)
+
+Probed on 2026-09-25 with `eth_call` at old blocks. Only endpoints that serve historical state can back a fork
+pinned at a block.
+
+| Endpoint | Historical state | Notes |
+|---|---|---|
+| `https://rpc.ordofi.network` | Yes, back to at least block 67,108,864 (`0x4000000`); not at 50,331,648 (`0x3000000`) | Listed on chainlist for 4663. Block hash at `0x44e6ba4` matches the official endpoint. ~0.2–0.4 s per call. **Used as `RH_MAINNET_RPC`.** |
+| `https://rpc.mainnet.chain.robinhood.com` | Only the last ~5,000–10,000 blocks (about 10–15 minutes) | Official public endpoint. Fine for `latest` reads; a pinned fork goes stale within minutes. |
+| `https://robinhood-rpc.publicnode.com` | No ("Archive requests require a personal token") | |
+| `https://robinhood.drpc.org` | No ("Unknown state") on the keyless tier | |
+| `https://rpc.arrowrpc.com` | Blocked (Cloudflare 1033) | |
+
+Alchemy, QuickNode, dRPC and Dwellir sell archive access for 4663 if a keyed endpoint is ever needed.
+
+Chain facts: `eth_chainId` = `0x1237` (4663); blocks arrive roughly every 0.5 s (the `eth_blockNumber` value is the
+L2 block; `block.number` inside the EVM is the L1 block, see `l1BlockNumber` in block headers). Explorers:
+robinscan.io, robinhoodchain.blockscout.com (API behind a bot check), hoodscan.co, stonkscan.io.
+
+Fork pin: `RH_MAINNET_FORK_BLOCK=72248228` (`0x44e6ba4`, timestamp 1790341471 = 2026-09-25 12:24:31 UTC, hash
+`0x84436e8349e7971a97d30b389d447fbd186dd1079d231a2f1bf562caa2531e12`).
+
+## Robinhood Chain mainnet 4663: 1inch
+
+| Contract | Address | Notes |
+|---|---|---|
+| Aqua | `0x1111113ccf1426a8e30e2bff5e005d929bf6a90a` | Same bytecode as on Ethereum, Arbitrum and Base. About 4.9k `Shipped`, 17.0k `Pulled`, 18.4k `Pushed` and 4.8k `Docked` events in the last 20M blocks. |
+| SwapVM router | `0x111111338c5091e8440b67b168bae16a668ac0de` | Reports itself as "1inch SwapVM v1.0", version 1.0.2, with `swap(order, tokenIn, tokenOut, amount, takerData)`. |
+
+- Neither contract is deployed on testnet 46630.
+- The 1inch swap, data and Web3 APIs have supported 4663 since 2026-07-07.
+- The Aqua README lists Robinhood among its networks, and `@1inch/aqua-sdk` 0.3.4 includes `NetworkEnum.ROBINHOOD`.
+
+## Tokens
+
+| Item | Value |
+|---|---|
+| USDG | `0x5fc5360d0400a0fd4f2af552add042d716f1d168` (6 decimals; ERC-1967 proxy, implementation `0x68184c449e1a8f34fa18d289737129fd27b66f8f`) |
+| TSLA | `0x322F0929c4625eD5bAd873c95208D54E1c003b2d` (18 decimals, name "Tesla • Robinhood Token"; beacon proxy, beacon `0xe10b6f6b275de231345c20d14ab812db62151b00`, implementation `0xb35490d6f9163de4f80d88dc75c3516eb64c5ae2`). From `GET https://api.robinhood.com/rhj/assets` (195 assets listed, TSLA `currentMultiplier` = 1.000000000000000000, status ACTIVE) and confirmed by `symbol()`/`decimals()`/`name()` on chain. `paused()` returns false. |
+
+Stock-token multipliers are not always exactly 1 (NVDA was 1.000775… on 2026-09-25). Apply the multiplier whenever a
+token price is compared with a share price.
+
+## Chainlink on 4663
+
+- Chainlink Data Feeds have been Robinhood Chain's official oracle layer since the 2026-07-01 mainnet launch, with
+  reference prices for about 95 stock tokens.
+- Feed directory: `https://reference-data-directory.vercel.app/feeds-robinhood-mainnet.json` (the JSON behind
+  docs.chain.link's "Robinhood" network page).
+- **TSLA / USD** (`description()` on chain returns `RHTSLA / USD`):
+
+  | Field | Value |
+  |---|---|
+  | Proxy (use this) | `0x4A1166a659A55625345e9515b32adECea5547C38` |
+  | Aggregator behind the proxy | `0x7A6b81ba7FbCB90104d8C496158Cf383cD7233b1` |
+  | Decimals | 8 |
+  | Heartbeat | 86400 s |
+  | Deviation threshold | 0.5 % |
+  | Feed category / path | `custom` / `robinhood-tsla-usd-shared-svr` (market hours: US equities 24/5) |
+  | `version()` | 6 |
+  | Sample `latestRoundData()` (2026-09-25 12:20 UTC) | roundId `0x1000000000000053b`, answer 37910674120 (= $379.10674120), updatedAt 1790341248 |
+
+- Testnet availability of stock feeds is unconfirmed.
+
+## Aqua at the pinned commit (verified against `src/Aqua.sol` at `ef24220`)
+
+| Function | Signature | Notes |
+|---|---|---|
+| `ship` | `ship(address app, bytes strategy, address[] tokens, uint256[] amounts) returns (bytes32 strategyHash)` | `strategyHash = keccak256(strategy)`. Caller is the maker. Re-shipping the same hash for the same app reverts (`StrategiesMustBeImmutable`). At most 254 tokens. Emits `Shipped` then one `Pushed` per token. |
+| `pull` | `pull(address maker, bytes32 strategyHash, address token, uint256 amount, address to)` | `msg.sender` is the app. Subtracts from the virtual balance (reverts on underflow) and `safeTransferFrom(maker, to, amount)`. Emits `Pulled(maker, app, strategyHash, token, amount)`. |
+| `push` | `push(address maker, address app, bytes32 strategyHash, address token, uint256 amount)` | Anyone can call. Requires an active strategy. Adds to the virtual balance and `safeTransferFrom(msg.sender, maker, amount)`. Emits `Pushed`. |
+| `dock` | `dock(address app, bytes32 strategyHash, address[] tokens)` | Maker only; must list every token of the strategy. |
+| `safeBalances` | `safeBalances(address maker, address app, bytes32 strategyHash, address token0, address token1) view returns (uint256, uint256)` | Reverts if either token is not in an active strategy. |
+| `rawBalances` | `rawBalances(address maker, address app, bytes32 strategyHash, address token) view returns (uint248 balance, uint8 tokensCount)` | `tokensCount` 0 = never shipped, 0xff = docked. |
+
+`AquaApp` (base for apps) gives `AQUA`, `nonReentrantStrategy(maker, strategyHash)` and `_safeCheckAquaPush`.
+
+## SwapVM v1.0.2 as deployed on 4663
+
+- `eip712Domain()` on `0x111111338c5091e8440b67b168bae16a668ac0de` returns name `1inch SwapVM v1.0`, version `1.0.2`, chainId 4663.
+- `swap(Order order, address tokenIn, address tokenOut, uint256 amount, bytes takerTraitsAndData)` and the same shape for `quote`; `Order = (address maker, uint256 traits, bytes data)`.
+- For an Aqua order (`useAquaInsteadOfSignature` bit 254 of `traits`), `hash(order) = keccak256(abi.encode(order))`, and that is exactly the `strategyHash` the maker ships with `Aqua.ship(router, abi.encode(order), tokens, amounts)`.
+- `swap()` seeds `balanceIn/balanceOut` from `Aqua.safeBalances(maker, router, orderHash, tokenIn, tokenOut)`, runs the program, then `Aqua.pull(maker, orderHash, tokenOut, amountOut, to)`; the taker either pushes in its `preTransferInCallback` or sets taker flag `useTransferFromAndAquaPush` (0x40) so the router does `transferFrom` + `Aqua.push`.
+- Program bytecode is a sequence of `opcode (1 byte) | argsLength (1 byte) | args`. The opcode is an index into the router's `_opcodes()` table, so a program is only valid for the router class it was built against.
+
+## 1inch sources
+
+| Source | Notes |
+|---|---|
+| `github.com/1inch/aqua` | Pinned at `ef24220` (main on 2026-09-25). `src/` is ABI-identical to tag `v1.0.0` (only formatting differs); tag `0.1.0` differs from `v1.0.0` only in `AquaRouter.sol`. |
+| `github.com/1inch/swap-vm` | Pinned at tag `v1.0.2` (commit `32c687c`) to match the deployed router's interface. Its `package.json` depends on aqua `0.1.0`, solidity-utils `6.9.7`, OpenZeppelin `5.4.0`, forge-std `v1.11.0`. |
+| `github.com/1inch/solidity-utils` | Pinned at tag `6.9.8`. `contracts/` is identical from `6.9.8` through `6.9.16`; `6.9.7` → `6.9.8` only adds `TransientUnsafe`/`TransientLockUnsafe` and touches `Transient.sol`, so `6.9.8` satisfies both aqua (npm `6.9.9`, no git tag) and swap-vm (`6.9.7`). |
+| `OpenZeppelin/openzeppelin-contracts` | Pinned at tag `v5.4.0` (what aqua and swap-vm build against). |
+| `foundry-rs/forge-std` | Pinned at tag `v1.11.0` (what aqua and swap-vm build against). |
+| SDKs | `@1inch/aqua-sdk` 0.3.4 and `@1inch/swap-vm-sdk` 0.4.4 |
+| Licenses | `LicenseRef-Degensoft-Aqua-Source-1.1` and `LicenseRef-Degensoft-SwapVM-1.1` |
+| Deploy guides | Both repos include one; third-party deployment is allowed. |
+
+SwapVM instruction families:
+
+| Family | Instructions |
+|---|---|
+| control | `Stop`, `Revert`, `Salt`, `Jump`, `Extruction` |
+| guards | `Deadline`, `JumpIf*`, `PrivateOrder`, `Whitelist*`, `OnlyTaker*`, `OnlyTxOrigin*` |
+| invalidators | `InvalidateBit`, `InvalidateTokenIn/Out`, `ValidateSeriesEpoch` |
+| balances | `Static`, `Dynamic`, `DutchAuctionBalanceIn/Out`, `PiecewiseLinearScale*`, `Decay` |
+| curves | `LimitSwap*`, `XYCSwap`, `XYCConcentrateSwap`, `PeggedSwap` |
+| rates | `RequireMinRate`, `AdjustMinRate`, `OraclePriceAdjuster`, `BaseFeeAdjuster` |
+| fees | `FeeFlatIn/Out`, `FeeProtocol` |
+
+- Opcodes `0xf0`–`0xff` are reserved.
+- SwapVM supports ERC-20 only (plus WETH/ETH).
+
+## Past 1inch Aqua winners (for positioning)
+
+| Event | Winners |
+|---|---|
+| Buenos Aires | Aqua Outcome Market (1st); aqua-flash-loans, Cleverly Using Money, Coco (2nd); 1Wave, Aqua0, ProaqctiveMM (4th) |
+| Lisbon 2026 | ArcBook (1st); Votive (2nd); KSwap-VM (3rd); Continuity track: Pool Party (1st), Agora Markets (2nd) |
+| New York 2026 | RiverSwap (1st); Lotus (2nd); TenorFi (3rd); Ballast (4th) |
+
+The pattern is new pricing curves or financial instruments, not wrappers.
+
+## Prize page
+
+- https://ethglobal.com/events/tokyo2026/prizes: 1inch "Build an Aqua App" is $5,000, unchanged on 2026-09-25. The
+  1inch workshop "Reimagining the AMM with 1inch Aqua" was at 17:00 JST on 09-25.
+- A team claims at most three partner prizes, and one sponsor counts once.
+- From Scratch projects must be built during the event.
+- AI use must be disclosed, and spec-driven projects attach their specs and prompts.

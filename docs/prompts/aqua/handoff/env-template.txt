@@ -1,0 +1,21 @@
+# Copy to .env and fill in. Never commit .env.
+
+# Robinhood Chain testnet (chain id 46630). Writes allowed: deploys and demo transactions.
+RH_TESTNET_RPC=
+
+# Robinhood Chain mainnet (chain id 4663). READ-ONLY.
+# Used only as the fork source for a local anvil. Never send a transaction to this endpoint.
+RH_MAINNET_RPC=
+
+# Block to fork 4663 at. Pin it so every run sees the same pools and balances. Empty = latest.
+RH_MAINNET_FORK_BLOCK=
+
+# The local anvil fork of 4663 (anvil --fork-url $RH_MAINNET_RPC --fork-block-number $RH_MAINNET_FORK_BLOCK).
+FORK_RPC=http://127.0.0.1:8545
+
+# Deployer for testnet 46630 only. Load it from the environment inside scripts;
+# never pass it on the command line (argv shows up in process lists) and never log it.
+TESTNET_DEPLOYER_PRIVATE_KEY=
+
+# Optional: Blockscout API endpoint for source verification on 46630.
+RH_TESTNET_EXPLORER_API=

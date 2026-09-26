@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "importedOn": "2026-09-27",
+  "sourceRepository": "vexi-aqua (private; not a public review URL)",
+  "entryRepository": "https://github.com/vexi-v1/vexi-hakari",
+  "scope": "Original Aqua handoff, public-integration development and review record, and explicit public-interface excerpts from the source band document.",
+  "limitations": [
+    "Git object IDs and dates identify local source records; they are not independent proof of creation time.",
+    "Historical instruction summaries and translated briefs are preserved as recorded, not represented as full raw conversation transcripts.",
+    "Source commit IDs do not resolve in the public entry repository.",
+    "Private product pricing and risk policy is outside this package; the source band document is explicitly excerpted."
+  ],
+  "artifacts": [
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": "README.md",
+      "sourceBlob": "8035ce283a8ca0eac406ae55450305984336b902",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "d89b1b257e8a8fa29f578ed28edc57444bd52ae1103c0cb57f78545955ec2b2f",
+      "sourceLineCount": 46,
+      "artifactPath": "handoff/README.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "d89b1b257e8a8fa29f578ed28edc57444bd52ae1103c0cb57f78545955ec2b2f",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": ".env.example",
+      "sourceBlob": "98a26984a82379b18140e1e2485eafa2947d8741",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "b581d5f430475bc505fcb94097e9d203537865233b419e41667d63dfe0e0bdc3",
+      "sourceLineCount": 21,
+      "artifactPath": "handoff/env-template.txt",
+      "mode": "verbatim",
+      "artifactSha256": "b581d5f430475bc505fcb94097e9d203537865233b419e41667d63dfe0e0bdc3",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": "docs/SPEC.md",
+      "sourceBlob": "92f3c7ade264816e3ada4556f4412e3f1c0ad752",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "9c06dae36be8d43786d575184bcedc96f9b2b27b1193a7d49b308e3d98ae8441",
+      "sourceLineCount": 150,
+      "artifactPath": "handoff/docs/SPEC.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "9c06dae36be8d43786d575184bcedc96f9b2b27b1193a7d49b308e3d98ae8441",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": "docs/spec-1inch.md",
+      "sourceBlob": "29d4a5867843684b50d3fbd347c886f8d4a72bcb",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "4bcc99a55a4778b1ae2284953cbbbdd3f12f61835cf9294329cbff90d0f168b2",
+      "sourceLineCount": 128,
+      "artifactPath": "handoff/docs/spec-1inch.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "4bcc99a55a4778b1ae2284953cbbbdd3f12f61835cf9294329cbff90d0f168b2",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": "docs/plan.md",
+      "sourceBlob": "3b35a3bd43b29fcf08c20e19456645ebb352914b",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "abc404a85e903202b9f7371b26aeb09184eab8ee9a0cae97e62ab9bc8c947d06",
+      "sourceLineCount": 37,
+      "artifactPath": "handoff/docs/plan.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "abc404a85e903202b9f7371b26aeb09184eab8ee9a0cae97e62ab9bc8c947d06",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": "docs/demo.md",
+      "sourceBlob": "fc9d4a41fdea2dee29116014cf4d18cdb5c3e210",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "5e5d5bb66a36dc563c4deb6f472c245a6c42b7ea4e8d2dd73345575cf307d338",
+      "sourceLineCount": 39,
+      "artifactPath": "handoff/docs/demo.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "5e5d5bb66a36dc563c4deb6f472c245a6c42b7ea4e8d2dd73345575cf307d338",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": "docs/facts.md",
+      "sourceBlob": "1af053f1b6c03ad3d3c583e81d25ae615b98410a",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "d3c341f7b17aa81e1b62219ad85a34938d8e195ced6f7fb20245ef7ffae9f2e5",
+      "sourceLineCount": 76,
+      "artifactPath": "handoff/docs/facts.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "d3c341f7b17aa81e1b62219ad85a34938d8e195ced6f7fb20245ef7ffae9f2e5",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "d941521119a4e985f389fe0180b68db7e696c4d5",
+      "sourcePath": "docs/ai-usage.md",
+      "sourceBlob": "82964de869930b53ed800862965ff56e09e2bb8d",
+      "sourceAuthorDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDate": "2026-09-25T08:52:46-04:00",
+      "sourceCommitterDateJst": "2026-09-25T21:52:46+09:00",
+      "sourceSha256": "beeb50f6f13fe14dafae34259afd1da545bf23d5557ab163c81bd1ce434f121a",
+      "sourceLineCount": 22,
+      "artifactPath": "handoff/docs/ai-usage.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "beeb50f6f13fe14dafae34259afd1da545bf23d5557ab163c81bd1ce434f121a",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "53ab29a5da9e76391fca4524b820b8328a67b69b",
+      "sourcePath": "docs/spec-1inch.md",
+      "sourceBlob": "34f54111678e3b21fa3bed9cb566deea49d1bb61",
+      "sourceAuthorDate": "2026-09-26T02:18:59+08:00",
+      "sourceCommitterDate": "2026-09-26T02:18:59+08:00",
+      "sourceCommitterDateJst": "2026-09-26T03:18:59+09:00",
+      "sourceSha256": "b5cd9bd73293c69ab0e058b02d4ff0ff3ec93cea80be9b830c8baacf258d2809",
+      "sourceLineCount": 187,
+      "artifactPath": "revisions/spec-1inch-53ab29a.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "b5cd9bd73293c69ab0e058b02d4ff0ff3ec93cea80be9b830c8baacf258d2809",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "3696f0f5917374d6d2e174ab5b4a6965c6f24dac",
+      "sourcePath": "docs/ai-usage.md",
+      "sourceBlob": "4340b450086fbbb9cfaf35f13986ef96a49bde0b",
+      "sourceAuthorDate": "2026-09-26T15:02:30+08:00",
+      "sourceCommitterDate": "2026-09-26T15:02:30+08:00",
+      "sourceCommitterDateJst": "2026-09-26T16:02:30+09:00",
+      "sourceSha256": "3b1ac87d75440a83ddc5549a3f7e717f46ee27ba38440be3577a4d223bbcdfbb",
+      "sourceLineCount": 92,
+      "artifactPath": "revisions/ai-usage-3696f0f.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "3b1ac87d75440a83ddc5549a3f7e717f46ee27ba38440be3577a4d223bbcdfbb",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "36e7553da229ae41edb9f7eb3607033f3ebdcd48",
+      "sourcePath": "docs/facts.md",
+      "sourceBlob": "e497842d34d3d2f41efddad1151b2efb491181dc",
+      "sourceAuthorDate": "2026-09-25T21:09:27+08:00",
+      "sourceCommitterDate": "2026-09-25T21:09:27+08:00",
+      "sourceCommitterDateJst": "2026-09-25T22:09:27+09:00",
+      "sourceSha256": "4f7b336653652b2b92807d910c2111e673724621cc3ab7e79808e9289bbff02d",
+      "sourceLineCount": 135,
+      "artifactPath": "revisions/facts-36e7553.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "4f7b336653652b2b92807d910c2111e673724621cc3ab7e79808e9289bbff02d",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "e6329d7648b984bf3c7c6700227973b94c9c4562",
+      "sourcePath": "docs/demo.md",
+      "sourceBlob": "37ca83795685a2eeefc3ab313c6a4d6e34262eca",
+      "sourceAuthorDate": "2026-09-25T22:48:42+08:00",
+      "sourceCommitterDate": "2026-09-25T22:48:42+08:00",
+      "sourceCommitterDateJst": "2026-09-25T23:48:42+09:00",
+      "sourceSha256": "18e9367cefaec1894d1e3a0b370ea19bb7556f64eafd2818cd59021cf11ab3a5",
+      "sourceLineCount": 69,
+      "artifactPath": "revisions/demo-e6329d7.md.txt",
+      "mode": "verbatim",
+      "artifactSha256": "18e9367cefaec1894d1e3a0b370ea19bb7556f64eafd2818cd59021cf11ab3a5",
+      "transformations": [
+        "File extension changed for literal historical display; content bytes unchanged."
+      ]
+    },
+    {
+      "sourceCommit": "bf0bbed6a5d54d06bf067649f16906c3027fcbba",
+      "sourcePath": "docs/stability.md",
+      "sourceBlob": "5f8e093f3657ab4ba71ce23dba073683b6cb4952",
+      "sourceAuthorDate": "2026-09-27T02:32:00+09:00",
+      "sourceCommitterDate": "2026-09-27T02:32:00+09:00",
+      "sourceCommitterDateJst": "2026-09-27T02:32:00+09:00",
+      "sourceSha256": "5590f16634dc1a6398c882c14ae302932f7fef9c8de7eaea7a80a21a755b2018",
+      "sourceLineCount": 293,
+      "artifactPath": "band-source-excerpts.txt",
+      "mode": "excerpts",
+      "artifactSha256": "86a0bfaf6cee7c44bc29d50a361b1683410607b25794483e64dfc8b6ec5466a7",
+      "includedRanges": [
+        {
+          "startLine": 15,
+          "endLine": 19,
+          "sha256": "efc9dd692300a64ba58d6d165a372017c8f0f954d606bb675486ae07415ca036"
+        },
+        {
+          "startLine": 182,
+          "endLine": 187,
+          "sha256": "bccfee9179ae935ac9767a9afa01939f6beb6963f4019cc708d77f931bcc1187"
+        },
+        {
+          "startLine": 212,
+          "endLine": 213,
+          "sha256": "7a8692f71fd43edec6aa771760fd736acb5bc96027d3663411e7357372741b66"
+        },
+        {
+          "startLine": 222,
+          "endLine": 224,
+          "sha256": "520507a0123f073c93b589ad880fc7b93a44896b4d21016b900bd27c48f7cada"
+        }
+      ],
+      "omittedRanges": [
+        {
+          "startLine": 1,
+          "endLine": 14
+        },
+        {
+          "startLine": 20,
+          "endLine": 181
+        },
+        {
+          "startLine": 188,
+          "endLine": 211
+        },
+        {
+          "startLine": 214,
+          "endLine": 221
+        },
+        {
+          "startLine": 225,
+          "endLine": 293
+        }
+      ],
+      "omissionReason": "Non-selected context includes private product pricing/risk policy, private deployment examples, source-specific parameters and tools outside the public entry. No omitted text is reconstructed here."
+    }
+  ]
+}

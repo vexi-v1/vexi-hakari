@@ -28,6 +28,16 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 The website additionally reuses the existing Vexi logo as [`website/vexi-logo.svg`](../website/vexi-logo.svg),
 unchanged, at the owner's explicit request on 2026-09-27. This branding asset does not include product UI code.
 
+The owner also requested the missing AI development records on 2026-09-27. The
+[Aqua artifact package](prompts/aqua/README.md) brings in the original Aqua handoff README, specs, build plan,
+demo plan, public integration facts and AI-usage log from identified event-time Git revisions. Literal historical
+documents are stored as text, with source commits, paths, Git blob IDs and SHA-256 checksums in the manifest.
+The early handoff's empty environment template is included as a text artifact; no `.env` or key is read or copied.
+Later records are limited to the Aqua integration and its review. The source band's document is included only as
+explicitly identified excerpts about the public hook and settlement interfaces; private product pricing, risk
+policy and private deployment details remain excluded. These artifacts record earlier designs, not the current
+entry's track, roster, APIs or deployment claims. [AI usage](ai-usage.md) maps them to the public files.
+
 ## Written here
 
 | Part | Why |

@@ -1,0 +1,22 @@
+# AI usage disclosure
+
+ETHGlobal asks teams to disclose which code and assets AI generated, and spec-driven projects to attach their specs and
+prompts. This file is that record.
+
+## Specs
+
+Every file under `docs/` was drafted with Claude (Anthropic) on 2026-09-25, during the event, from the team's own
+research and public chain data, and reviewed by the team. These specs are what the implementation follows.
+
+## Code
+
+Append one entry per AI-assisted change: date and time (JST), tool, the prompt or a faithful summary, the files it
+produced or changed, and what a human reviewed or rewrote.
+
+| When (JST) | Tool | Prompt (or summary) | Files | Human review |
+|---|---|---|---|---|
+| | | | | |
+
+## Assets
+
+List any AI-generated images, diagrams or copy here.

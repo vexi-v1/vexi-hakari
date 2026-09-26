@@ -1,0 +1,38 @@
+Historical excerpts, imported on 2026-09-27. This is NOT the complete source document.
+Source: vexi-aqua (private), bf0bbed6a5d54d06bf067649f16906c3027fcbba, docs/stability.md.
+Only the public hook and settlement-interface passages below are included.
+See README.md and manifest.json for scope, current-design differences and the omitted ranges.
+
+SOURCE LINES 15-19
+
+Both read one thing: the oracle that [HAKARI's `HakariOracleHook`](../../vexi-hakari/src/HakariOracleHook.sol) keeps
+for any v4 pool that names it as its hook. That hook is OpenZeppelin's `BaseOracleHook`, which is Panoptic's truncated
+oracle for v4: one observation per block timestamp with a swap, written *before* the swap, a raw and a truncated
+cumulative tick. It is deployed on testnet 46630 at
+[`0x3b58D774cE351227B24A91103b20bA4fc068D080`](https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080).
+
+---
+
+SOURCE LINES 182-187
+
+The price is the first accepted attempt's TWAP. An attempt whose window has not ended reverts `NotYet(windowEnd)`,
+so `MiniBook.settle` reverts and the book's grace waits; a push through the settle window defers settlement to the
+next window instead of setting the price. If no attempt is accepted, `NoWindowInBand`, and after the book's grace
+MiniBook's unsettled path runs: holders get their premiums back (`refund`), the maker its collateral.
+`maxDelay = attempts × settleWindow`, which MiniBook requires to be below its grace. A source is set once per pair
+and cannot change.
+
+---
+
+SOURCE LINES 212-213
+
+- `record(base, quote, at)` stores the answer once it can be computed, so a settlement no longer depends on the
+  hook's ring; anyone may call it (`test_RecordKeepsTheAnswerWhenTheRingIsGone`).
+
+---
+
+SOURCE LINES 222-224
+
+- **The ring again.** Settlement reads observations back to `at − settleWindow − bandWindow`. A spam of swaps in
+  distinct seconds can wrap the ring before anyone settles; `record` right after the accepted window closes that.
+- Chainlink stays the default source; this one is for pairs Chainlink does not cover or does not update.

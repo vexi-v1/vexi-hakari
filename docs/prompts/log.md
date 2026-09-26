@@ -574,3 +574,14 @@ explicit bilingual request overrides this repository's default English-only lang
 English translation of the instruction. Work (Codex): use the exact Vexi Hakari name for the browser title and
 site branding in both languages. Reuse the existing Vexi SVG mark unchanged for the header, footer and favicon,
 explicitly authorized by this request. Add this brand asset to the public extraction inventory and Pages allowlist.
+
+## 2026-09-27 — Abner: restore the missing AI development artifacts
+
+> fix P1: missing AI development documents
+
+English translation of the instruction. Work (Codex): recover the Aqua handoff specs, plan, integration facts,
+demo plan and AI-usage records from their original event-time Git revisions. Preserve literal source documents,
+record their commits, paths, blob IDs and checksums, and label selected band-document excerpts. Add a current
+file-to-tool/human-contribution map and explain obsolete track, team and API statements in the originals. This is
+an import and indexing task performed on 2026-09-27, not a reconstruction dated as earlier work. No missing raw
+conversation or review transcript is invented. The private pricing and risk policy stays outside the package.

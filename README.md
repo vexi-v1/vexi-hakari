@@ -162,7 +162,10 @@ the entry's only public repository; [docs/history.md](docs/history.md) lists whe
 any other project, is included. Public libraries are pinned submodules, unmodified: v4-core,
 OpenZeppelin `uniswap-hooks` and `openzeppelin-contracts`, forge-std, 1inch `aqua`, `swap-vm` and `solidity-utils`.
 
-Built with Claude Code (Anthropic), with subsequent quote-validity and documentation work using Codex (OpenAI). The prompts that shaped the work are in [docs/prompts/](docs/prompts/); the rules
+Built with Claude Code (Anthropic), with subsequent quote-validity, documentation and website work using Codex
+(OpenAI). [AI usage by file and human contribution](docs/ai-usage.md) links the [HAKARI prompt record](docs/prompts/)
+and the [recovered Aqua specs, plan and build/review briefs](docs/prompts/aqua/README.md). The source manifest
+distinguishes literal historical documents from excerpts and identifies unavailable raw transcripts. The rules
 every AI session follows are in [AGENTS.md](AGENTS.md).
 
 ## License

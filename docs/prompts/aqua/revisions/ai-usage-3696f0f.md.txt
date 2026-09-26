@@ -1,0 +1,92 @@
+# AI usage disclosure
+
+ETHGlobal asks teams to disclose which code and assets AI generated, and spec-driven projects to attach their specs and
+prompts. This file is that record. Times are JST and match `git log` (the commits are the ground truth).
+
+## How the project was built
+
+Eric (the only human on the team) wrote the specs in `docs/` with Claude (Opus 5.5) during 2026-09-25 and committed
+them at 21:46 and 21:52 JST, then handed the build to Claude Code (model: Claude Fable 5.1) with the brief below,
+reviewed each gate's evidence, and directed the review and rework described in the last rows. Every code commit was
+authored through Claude Code. Commits carry a `Co-Authored-By` trailer except `9f1f145` and `9687370`, whose messages
+were written to files and committed without the trailer by mistake; they are Claude Code's work like the others. All
+code in this repository was written during the event; the specs were written from the team's own research and public
+chain data.
+
+### The brief given to Claude Code (2026-09-25, 21:58 JST, translated from Chinese)
+
+> Take over the ETHGlobal Tokyo 2026 entry vexi-aqua and build it. Read README, SPEC, spec-1inch, plan, demo and
+> facts in that order. Hard rules: Robinhood Chain 4663 is read-only and every transaction goes to a local anvil fork;
+> From Scratch, no pre-event code from any repo; never read or print .env or keys; commit every small step with
+> `git add -- <files>` and never amend or force-push; every AI change gets a row in docs/ai-usage.md; SwapVM-derived
+> files live in contracts/swapvm under the Degensoft license; English only inside the repo. Gates: G0 build + pinned
+> deps + pinned fork; G1 ship a stock strategy through canonical Aqua and fill it with the deployed v1.0.2 router, pull
+> TSLA from an EOA through a minimal app, read the Chainlink TSLA feed; G2 MiniBook + AquaWriter with the five
+> invariants; G3 ExposureGuard in a subclassed router and one command for the whole demo. Tests must assert exact
+> deltas, never just inequalities.
+
+## Specs
+
+Every file under `docs/` was drafted with Claude (Anthropic) on 2026-09-25, during the event, from the team's own
+research and public chain data, and reviewed by the team. These specs are what the implementation follows.
+
+## Code
+
+One row per AI-assisted change, in order. "Human review" is what Eric checked before or after the commit.
+
+| When (JST) | Commit | Prompt (or faithful summary) | Files | Human review |
+|---|---|---|---|---|
+| 22:09 | `36e7553` | "Read the specs, pin the dependencies and resolve the G0 facts": verify the Aqua and SwapVM signatures at the pinned commits, find the TSLA token address from Robinhood's asset API, the Chainlink TSLA feed (address, decimals, heartbeat) and an RPC that serves historical state; record everything in `docs/facts.md`. | `docs/facts.md`, `docs/ai-usage.md` | Addresses re-checked against the explorer. |
+| 22:21 | `7df1cd2` | "Set up the Foundry project with pinned dependencies and write the G1 fork test": foundry.toml, remappings, submodules at the pinned revisions, `ICollateralSource`, `IExpiryPrice`, `FixedExpiryPrice`, `ChainlinkExpiryPrice`, `MiniBook`, `AquaWriter`, test helpers, `test/ForkG1.t.sol`. | `foundry.toml`, `remappings.txt`, `.gitmodules`, `lib/*`, `contracts/**`, `test/**` | G0/G1 evidence: 3/3 fork tests, anvil fork at 72248228. |
+| 22:26 | `a766aab` | "Write the G2 lifecycle tests on the fork with the five invariants of spec-1inch §3.2, both legs, Chainlink settlement"; then "write ExposureGuard as a SwapVM instruction and a router subclass that appends it to the AquaOpcodes table". | `test/Lifecycle.t.sol`, `test/helpers/ForkFixture.sol`, `contracts/swapvm/ExposureGuard.sol`, `contracts/swapvm/WriterSwapVMRouter.sol` | G2 evidence: 13/13. |
+| 22:30 | `caf8264` | "Prove ExposureGuard on the fork": opcode slot, cap, zero quote, fills and releases, the put side; shared `OrderBuilders`. | `test/ExposureGuard.t.sol`, `test/helpers/*` | G3 evidence: 5/5. |
+| 22:37 | `b831b72` | "One command runs the whole demo on the anvil fork": four-phase forge script with `demo.sh` warping the node between phases and decoding the Aqua events; docs and README line table. | `script/Demo.s.sol`, `demo.sh`, `README.md`, `docs/*` | Demo output checked against the spec numbers. |
+| 22:42 | `e9940a3` | "Make the guard run on the canonical router too": `ExposureGuardExtruction` through the deployed router's `Extruction` opcode; fork test against `0x111111338c…`. | `contracts/swapvm/ExposureGuardExtruction.sol`, `test/ExposureGuardCanonical.t.sol` | — |
+| 22:56 | `655e4f7` | "Do DeltaSkew" and "build the position view": delta tracking in `AquaWriter`, the `DeltaSkew` instruction as opcode 35, five tests; dependency-free `web/index.html` served by `./demo.sh --serve`. | `contracts/aqua/AquaWriter.sol`, `contracts/swapvm/DeltaSkew.sol`, `test/DeltaSkew.t.sol`, `web/index.html`, `script/Demo.s.sol`, `demo.sh` | View checked in a browser against the script output. |
+| 23:00–23:30 | (review) | Eric asked for two independent reviews (a "sponsor judge" and a "technical auditor", both Claude Fable 5.1 subagents, read-only). Their findings drove the rework below; the reviews themselves are not in the repo, their prompts are in the appendix. | — | Eric chose to act on all of it. |
+| 23:48 | `ff706be`, `8cf8f91`, `e6329d7` | "Fix everything the reviews found": (1) README line anchors and this file's timestamps corrected, git identity set; (2) `ExposureGuard` now shrinks both reserves so the price is unchanged and only depth is capped, shared `capToFree` with the `Extruction` form, negative test (a spot fill without the guard takes promised TSLA and the option buyer is refused), equivalence test, depth test; (3) `ChainlinkExpiryPrice.setFeed` is set-once, the demo deploys it from an operator, `AquaWriter.post` refuses series on other tokens, `MiniBook.createSeries` refuses dust strikes and same-token pairs, pro-rata test across two makers; (4) `AquaWriter` no longer derives from `AquaApp` (pure caller of Aqua, MIT), SwapVM attribution strings in README, LICENSE and the UI, `OrderBuilders` relabelled; (5) the demo ships an `Extruction`-guarded strategy on the canonical router and fills it; (6) `netDelta` renamed `optionDelta` with the model stated (delta of the option legs, on purpose); (7) round walk-back across Chainlink phases, verified round hints through `MiniBook.settle(seriesId, hint)`, mock-proxy tests. Demo rewritten around a clean maker and an operator, per-step decoded events, before/after of the guard; video script in `docs/demo.md`. | `contracts/**`, `test/**`, `script/Demo.s.sol`, `demo.sh`, `web/index.html`, `README.md`, `LICENSE`, `docs/*` | Eric to run `./demo.sh --serve` and walk the video script before recording. |
+| 02:23 (09-26) | `9f1f145`, `9687370` | Second review round (two fresh Claude Fable 5.1 subagents, read-only, prompts in the appendix). Rework: the settlement rule gained the fallback to the first round after expiry, an overlap-safe notion of "next round", a `covers` check at series creation, an exercise window that counts from settlement and a grace after which an unsettleable series closes with the escrow returned; `capToFree` uses `mulDiv`; fuzz tests for the guard's price and cap properties and for the skew's bounds; the demo's own number (0.9504 TSLA) is now asserted in a test; exact-out equivalence and swap (announced here, but that edit had silently failed, see the next row); explicit division panics; tests and the demo use plain funded addresses, nobody is impersonated; the position view serves only `web/` and `deployments/`; the LICENSE exception lists the helpers. | `contracts/price/*`, `contracts/book/MiniBook.sol`, `contracts/swapvm/*`, `test/**`, `script/Demo.s.sol`, `demo.sh`, `foundry.toml`, `LICENSE`, `docs/*`, `README.md` | Eric to re-run `./demo.sh --serve` and read `docs/spec-1inch.md` §6a. |
+| 02:49 (09-26) | `62ccd11` | Third review round, this time with two Claude Opus 5.5 subagents (same prompts). They found that the exact-out equivalence test announced in the previous row had not actually been written (the edit had silently failed), that the round hint could reject the very round the walk picked while phases overlap, that the demo's grace was shorter than the feed's `maxAge`, and several stale comments and claims. Rework: the hint names only the last round at or before expiry and the contract derives the fallback itself, with a walk-versus-hint agreement fuzz; `createSeries` requires the grace to cover the source's `maxDelay`, constructor bounds; premiums stay in the book until settlement and holders of an unsettleable series get them back through `refund`; the exact-out equivalence test and swap really exist now; the demo requires the refusal reason, labels ship events as virtual credits and anchors close on the settlement time; comments and this file corrected. | `contracts/price/*`, `contracts/book/MiniBook.sol`, `test/**`, `script/Demo.s.sol`, `demo.sh`, `docs/*`, `README.md`, `.env.example` | Eric to check the refund rule and the grace value used in the demo. |
+| 02:55 (09-26) | `6b83c7f` | "The title 'Hedge by quote' invites the wrong test; call it what it is": DeltaSkew's NatSpec title becomes "Lean by quote, not by order". No behaviour change. | `contracts/swapvm/DeltaSkew.sol`, `docs/ai-usage.md` | Eric's call. |
+| 03:18 (09-26) | see `git log` | Fourth review round (two Claude Opus 5.5 subagents, same prompts). They found that the `refund` added in the previous round depended on every order of the series being closed, so one maker whose `onReturned` reverts could block every holder's refund; that the hint check could accept a second round when a phase is empty or has ids without data; that the agreement fuzz used a fixed interleaving and the walk's own output; and stale claims (hashes, "off chain", invariant 5). Rework: premiums are pooled per series at `buy` and `refund` depends on time alone; the next-round rule skips empty ids and empty phases the same way on both paths; a uniqueness fuzz tries every existing round as a hint; a mock-based `test/Settlement.t.sol` runs the F path through the book and the unblockable refund; the grace must strictly exceed the source's delay; docs and this file corrected. | `contracts/book/MiniBook.sol`, `contracts/price/ChainlinkExpiryPrice.sol`, `test/**`, `docs/*`, `README.md`, `web/index.html` | Eric to decide whether the fifth round is needed. |
+| 16:02 (09-26) | see `git log` | "The demo needs a public trail: real transactions on the testnet that anyone can open on the explorer, step by step." `script/Testnet.s.sol` deploys our own copy of the pinned Aqua source, our router, test TSLA/USDG, the book and the writer on Robinhood Chain testnet 46630 (Aqua and the router are not deployed there; Chainlink has no stock feed there, so `FixedExpiryPrice` is set by the operator), with the maker, buyers and taker as wallets derived from the operator key and funded by it; `testnet.sh` runs the steps and prints an explorer link per transaction; contracts verified on Blockscout; the position view gained a network selector and explorer links. Because the machine slept through the first run's grace, the first series was closed through the unsettled path on the testnet (escrow back, premiums refunded) and a second run completed the settle/exercise/close path. | `script/Testnet.s.sol`, `testnet.sh`, `deployments/testnet.json`, `web/index.html`, `script/Demo.s.sol`, `README.md`, `docs/demo.md`, `docs/facts.md`, `.gitignore` | Eric to open the maker wallet on the explorer (https://explorer.testnet.chain.robinhood.com/address/0x97E16aF86d8E6aDF4A6226A782684118689A3754) and walk the trail before the booth. |
+
+### Notes a reader of `git log` will want
+
+- The two docs-only commits (`5c5313d`, `d941521`) were made from a machine set to UTC−4 and carry a Claude Opus 5.5
+  co-author trailer; everything after was made from a machine set to UTC+8 with Claude Fable 5.1. The event is in
+  Tokyo (UTC+9); the times in this file are converted to JST.
+- Seven commits (`36e7553` … `655e4f7`) were authored as `Eric-Air <eric-air@…local>` because the repository had no
+  git identity configured; the identity was set afterwards. No history was rewritten.
+- The rework commits after each review (`ff706be`/`8cf8f91`/`e6329d7`, then `9f1f145`/`9687370`) were committed
+  within the same second because they were staged from one prepared, fully tested working tree and committed back to
+  back by path group. A consequence: `9f1f145` on its own does not compile (its script half is in `9687370`); the
+  pair together does, and the 59-test figure in its message refers to that working tree. `7df1cd2`, titled "build",
+  also carried the first cut of the contracts and the G1 test.
+
+## Assets
+
+None. The position view is hand-written HTML; there are no AI-generated images or copy outside this repository's
+Markdown, which is covered above.
+
+## Appendix: the review prompts
+
+Every review round used the same two prompts, with the previous round's findings prepended for verification
+(translated to English where the brief was in Chinese; the reviews themselves are not part of the repository).
+
+**Sponsor judge.** "You are role-playing a 1inch sponsor judge at ETHGlobal Tokyo 2026 evaluating the 'Build an Aqua
+App' prize. Read the repo read-only (never .env, never run the demo), run `forge test`, and judge it as a sponsor
+engineer would in a 5-minute booth review plus a 15-minute repo read. Score 1–10: sophisticated position vs wrapper;
+depth and correctness of Aqua usage; SwapVM usage (custom instructions, router subclass, canonical router);
+demonstration quality; code quality and test rigor; git history and From-Scratch credibility; originality versus
+past winners; repo readability. Give the three strongest points, the three biggest risks (disqualification first),
+a probability of 1st/2nd/3rd/unplaced, and the top changes under two hours each. Cite file paths and line numbers."
+
+**Technical auditor.** "You are an AI technical reviewer auditing the project before submission, read-only. For each
+contract give a correctness and security review (settlement, pro-rata close, exercise window, decimals and strike
+maths, reentrancy, rounding, promise accounting, access control, dock and allowance changes, quote/swap consistency,
+direction handling, rounding and caps in the skew, Chainlink round search, opcode table construction), classified
+critical / should-fix / nit and demo vs production. Judge test rigor (do the tests prove the five invariants, do they
+assert exact deltas, what is untested, what is tautological), compliance (From Scratch, licensing, AI disclosure,
+secrets, official Aqua/SwapVM contracts), list the technologies used with versions and addresses, and give a
+probability of placing with the three fixes you would make first. Be exact and skeptical."

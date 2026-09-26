@@ -1,0 +1,76 @@
+# Facts, addresses and sources
+
+Everything here was read on 2026-09-25. Before relying on an address, re-check it with `eth_getCode` and checksum it
+with viem's `getAddress`; never retype the letter case by hand.
+
+## Robinhood Chain mainnet 4663: 1inch
+
+| Contract | Address | Notes |
+|---|---|---|
+| Aqua | `0x1111113ccf1426a8e30e2bff5e005d929bf6a90a` | Same bytecode as on Ethereum, Arbitrum and Base. About 4.9k `Shipped`, 17.0k `Pulled`, 18.4k `Pushed` and 4.8k `Docked` events in the last 20M blocks. |
+| SwapVM router | `0x111111338c5091e8440b67b168bae16a668ac0de` | Reports itself as "1inch SwapVM v1.0", version 1.0.2, with `swap(order, tokenIn, tokenOut, amount, takerData)`. |
+
+- Neither contract is deployed on testnet 46630.
+- The 1inch swap, data and Web3 APIs have supported 4663 since 2026-07-07.
+- The Aqua README lists Robinhood among its networks, and `@1inch/aqua-sdk` 0.3.4 includes `NetworkEnum.ROBINHOOD`.
+
+## Tokens
+
+| Item | Value |
+|---|---|
+| USDG | `0x5fc5360d0400a0fd4f2af552add042d716f1d168` (6 decimals) |
+| TSLA | Take the token address from Robinhood's public asset API at G0 |
+
+Stock-token multipliers are not always exactly 1 (NVDA was 1.000775… on 2026-09-25). Apply the multiplier whenever a
+token price is compared with a share price.
+
+## Chainlink on 4663
+
+- Chainlink Data Feeds have been Robinhood Chain's official oracle layer since the 2026-07-01 mainnet launch, with
+  reference prices for about 95 stock tokens.
+- The TSLA feed's address, decimals and heartbeat are not recorded here yet. Find them at G0 from Chainlink's feed
+  directory for Robinhood Chain.
+- Testnet availability of stock feeds is unconfirmed.
+
+## 1inch sources
+
+| Source | Notes |
+|---|---|
+| `github.com/1inch/aqua` | main was `ef24220` when read. Pin your own commit. |
+| `github.com/1inch/swap-vm` | Use tag `v1.0.2` to match the deployed router's interface. |
+| SDKs | `@1inch/aqua-sdk` 0.3.4 and `@1inch/swap-vm-sdk` 0.4.4 |
+| Licenses | `LicenseRef-Degensoft-Aqua-Source-1.1` and `LicenseRef-Degensoft-SwapVM-1.1` |
+| Deploy guides | Both repos include one; third-party deployment is allowed. |
+
+SwapVM instruction families:
+
+| Family | Instructions |
+|---|---|
+| control | `Stop`, `Revert`, `Salt`, `Jump`, `Extruction` |
+| guards | `Deadline`, `JumpIf*`, `PrivateOrder`, `Whitelist*`, `OnlyTaker*`, `OnlyTxOrigin*` |
+| invalidators | `InvalidateBit`, `InvalidateTokenIn/Out`, `ValidateSeriesEpoch` |
+| balances | `Static`, `Dynamic`, `DutchAuctionBalanceIn/Out`, `PiecewiseLinearScale*`, `Decay` |
+| curves | `LimitSwap*`, `XYCSwap`, `XYCConcentrateSwap`, `PeggedSwap` |
+| rates | `RequireMinRate`, `AdjustMinRate`, `OraclePriceAdjuster`, `BaseFeeAdjuster` |
+| fees | `FeeFlatIn/Out`, `FeeProtocol` |
+
+- Opcodes `0xf0`–`0xff` are reserved.
+- SwapVM supports ERC-20 only (plus WETH/ETH).
+
+## Past 1inch Aqua winners (for positioning)
+
+| Event | Winners |
+|---|---|
+| Buenos Aires | Aqua Outcome Market (1st); aqua-flash-loans, Cleverly Using Money, Coco (2nd); 1Wave, Aqua0, ProaqctiveMM (4th) |
+| Lisbon 2026 | ArcBook (1st); Votive (2nd); KSwap-VM (3rd); Continuity track: Pool Party (1st), Agora Markets (2nd) |
+| New York 2026 | RiverSwap (1st); Lotus (2nd); TenorFi (3rd); Ballast (4th) |
+
+The pattern is new pricing curves or financial instruments, not wrappers.
+
+## Prize page
+
+- https://ethglobal.com/events/tokyo2026/prizes: 1inch "Build an Aqua App" is $5,000, unchanged on 2026-09-25. The
+  1inch workshop "Reimagining the AMM with 1inch Aqua" was at 17:00 JST on 09-25.
+- A team claims at most three partner prizes, and one sponsor counts once.
+- From Scratch projects must be built during the event.
+- AI use must be disclosed, and spec-driven projects attach their specs and prompts.

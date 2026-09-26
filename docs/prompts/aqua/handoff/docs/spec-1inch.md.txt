@@ -1,0 +1,128 @@
+# vexi-aqua — 1inch track (Build an Aqua App)
+
+Prize: **Build an Aqua App** ($5,000: 1st $2,500 / 2nd $1,500 / 3rd $1,000).
+
+> "Create a custom Aqua app that implements a sophisticated DeFi position. If you use SwapVM, you may modify SwapVM
+> opcodes and define your own instructions. The final positions must be demonstrated through test scripts or a UI.
+> Projects that utilize SwapVM will be scored higher."
+
+Back to the [overview](SPEC.md). The problem, the position and `MiniBook` are described there. This file covers the
+Aqua and SwapVM parts.
+
+## 1. The sophisticated position
+
+One wallet, one balance:
+
+- the wheel: cash-secured puts in USDG and covered calls in TSLA;
+- a SwapVM spot market on TSLA/USDG;
+- a custom instruction so the two never promise the same tokens.
+
+Collateral leaves the wallet only when an option is bought. Unexercised collateral and premiums come back into the same
+Aqua strategy.
+
+## 2. Why Aqua is the right primitive
+
+| Need | Aqua gives |
+|---|---|
+| The writer keeps custody until a trade | Tokens stay in the maker's wallet; Aqua pulls with `transferFrom` at fill |
+| One balance backs several strategies | Virtual balances per `(maker, app, strategyHash, token)` |
+| A book can take collateral inside the buy transaction | An **app** contract can `pull` from the maker directly to any recipient |
+| Collateral and premium return to where they came from | `push` pays the maker's wallet and credits the strategy |
+
+## 3. Contracts
+
+### 3.1 How Aqua is used (verify against the pinned source)
+
+These names come from `github.com/1inch/aqua` (main `ef24220`) as read on 2026-09-25. **Pin a commit at H0 and check
+every name below against it.**
+
+- The maker approves Aqua once per token.
+- `ship(...)` records virtual balances for `(maker, app, strategyHash, token)`.
+  - No token moves.
+  - Aqua does not check the wallet's real balance, so one balance can be promised to many strategies.
+- `pull(...)` is called by the **app**. It lowers the virtual balance and `transferFrom`s the maker's wallet to a
+  recipient. If the wallet is short, it reverts: first come, first served.
+- `push(...)` pays tokens into the maker's wallet and credits the virtual balance.
+- `dock(...)` zeroes a strategy.
+- `safeBalances(...)` reads virtual balances.
+- Events: `Shipped`, `Pulled`, `Pushed`, `Docked`.
+
+Canonical Aqua `0x1111113ccf1426a8e30e2bff5e005d929bf6a90a` is live on Robinhood Chain **4663** and absent from 46630.
+The demo runs on a local fork of 4663.
+
+### 3.2 `AquaWriter` (MIT): the Aqua app that writes options
+
+`AquaWriter` plays two roles: it is the **Aqua app** in a maker's strategy, and it implements `ICollateralSource` for
+`MiniBook`. The simplest shape is one `AquaWriter` per maker, owned by that maker.
+
+| Function | Behaviour |
+|---|---|
+| `post(seriesId, premiumPerContract, maxContracts)` | Owner only. Posts a sourced order on `MiniBook` with this contract as maker, and records the promise. |
+| `available(seriesId, base, collateral) view` | Returns the smallest of: the Aqua virtual balance for (maker, this, strategyHash, collateral); `IERC20(collateral).balanceOf(maker)`; and the maker's allowance to Aqua. Must stay cheap. |
+| `provide(seriesId, base, collateral, amount)` | Book only. `AQUA.pull(maker, strategyHash, collateral, amount, book)`: tokens go straight from the maker's wallet to the book. |
+| `onReturned(seriesId, base, collateral, amount)` | Book only. The book has sent unexercised escrow here; `AQUA.push(...)` it back into the maker's strategy, so it lands in the wallet and is promised again. |
+| `claimPremium(orderId)` | Takes the order's premium from the book and pushes it into the strategy's quote balance. |
+| `promised(token) view` | The collateral that open, unfilled orders still promise. Read by ExposureGuard. |
+
+Invariants to test:
+
+1. Shipping strategies does not change the maker's wallet balance.
+2. A fill moves exactly the collateral for `n` contracts, from the maker's wallet, in the same transaction as the buy.
+3. `available` never overstates what `provide` can deliver.
+4. Unexercised collateral returns to the wallet and is promised again.
+5. Premiums end up credited to the maker's strategy.
+
+### 3.3 `ExposureGuard` (custom SwapVM instruction)
+
+License: `LicenseRef-Degensoft-SwapVM-1.1`; the files live in `contracts/swapvm/`.
+
+- **Router.** Subclass the SwapVM router and register the instruction in a free opcode slot.
+  - The router deployed on 4663 (`0x111111338c5091e8440b67b168bae16a668ac0de`) is **v1.0.2**, whose swap is
+    `swap(order, tokenIn, tokenOut, amount, takerData)`. Main has changed that signature, so build against tag `v1.0.2`
+    throughout.
+  - Redeploying a modified router is allowed by the prize rules. Canonical Aqua is used unmodified.
+- **Behaviour.** Before the curve instruction runs, cap the balance available for `tokenOut` at
+  `walletBalance(tokenOut) − AquaWriter.promised(tokenOut)`. At zero or below, the strategy quotes nothing on that side.
+- **Honest framing.** This is a policy: options first. Without it, a spot fill can take tokens that an open option order
+  still advertises. A book that re-reads `available` would size the option fill down, so nothing breaks, but the depth
+  the buyer saw was not real.
+- **Stretch: `DeltaSkew`.** Skew the spot price by the writer's net option delta, so that short calls make the strategy
+  bid for TSLA more eagerly. That hedges by quote rather than by order. Build it only if time allows; the guard comes
+  first.
+- **Reference price.** SwapVM's `OraclePriceAdjuster` can peg the spot curve to the same Chainlink TSLA feed that
+  `ChainlinkExpiryPrice` uses.
+
+## 4. Demo (1inch booth, about 90 seconds, all on the 4663 fork)
+
+See [demo.md](demo.md).
+
+## 5. Requirements checklist
+
+| Requirement | How |
+|---|---|
+| Official Aqua/SwapVM contracts (redeploying a modified SwapVM is allowed) | Canonical Aqua `0x1111113c…` on the 4663 fork, unmodified; the SwapVM router subclass deployed on the fork |
+| Token transfers executed on chain in the final demo (local forks are fine) | `Pulled` and `Pushed` on the fork, with ERC-20 `Transfer`s from the maker's EOA |
+| Proper git history | continuous commits from H0 |
+| Final positions shown through test scripts or a UI | a forge script plus the position view |
+
+## 6. Licenses (read before anything goes past the hackathon)
+
+- Aqua (`LicenseRef-Degensoft-Aqua-Source-1.1`) and SwapVM (`LicenseRef-Degensoft-SwapVM-1.1`) are
+  **source-available**, not open source.
+- Hackathon use is free (§4 of the license).
+- A custom instruction counts as a modification. Publish it under the same license, with "Powered by SwapVM"
+  attribution.
+- **Pure caller use** (calling Aqua through its published ABIs) needs no commercial license. But §2.2 of the license
+  says that charging or keeping any fee in connection with that use makes it commercial use, which needs a commercial
+  license from Degensoft.
+- §5.3 currently waives enforcement for routing, aggregation, arbitrage and market-making. Degensoft can revoke that
+  waiver.
+- **Ask at the 1inch booth:** how is a fee-charging options venue treated when its writers use Aqua?
+
+## 7. Open questions to settle at H0–H6
+
+- The exact Aqua and SwapVM function signatures at the pinned commits: `ship`, `pull`, `push`, `safeBalances`, and how
+  the strategy hash is computed.
+- Can Aqua `pull` TSLA from an EOA on the fork? Robinhood stock tokens moved as ordinary ERC-20s in the v4 pools we
+  tested, but prove the Aqua path in the first smoke test. The fallback is a 4663 memecoin.
+- The Chainlink TSLA feed address, its heartbeat, and its decimals on 4663.

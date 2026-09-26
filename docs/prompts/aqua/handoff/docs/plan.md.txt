@@ -1,0 +1,37 @@
+# Build plan
+
+Submission closes **2026-09-27 09:00 JST**. Aim to submit by **06:00 JST**, leaving three hours of slack. All times
+below are JST.
+
+## Lanes
+
+| Lane | Scope |
+|---|---|
+| Contracts | `MiniBook`, `ICollateralSource`, `IExpiryPrice` + `ChainlinkExpiryPrice` + `FixedExpiryPrice`, `AquaWriter`, `ExposureGuard` + router subclass, fork tests |
+| Demo | the maker script (approve, ship, post), buyer and taker scripts, the expiry run, the position view, the video |
+
+## Gates
+
+| Gate | When | Must be true |
+|---|---|---|
+| **G0** | 09-25 23:00 | The repo builds. Pinned: 1inch aqua (a commit), 1inch swap-vm (tag `v1.0.2`), OpenZeppelin, forge-std. An anvil fork of 4663 is up at a pinned block. |
+| **G1** | 09-26 04:00 | On the fork: ship a stock SwapVM strategy through canonical Aqua and fill it with the v1.0.2 router; `pull` TSLA from an EOA through a minimal app; the Chainlink TSLA feed reads. |
+| **G2** | 09-26 16:00 | `MiniBook` + `AquaWriter`: buy → `Pulled` from the EOA → settle → return → `Pushed`, all in forge tests with the five invariants in spec-1inch §3.2. |
+| **G3** | 09-26 22:00 | `ExposureGuard` in a subclassed router: the spot strategy caps at the unpromised balance, in a test. One command runs the whole demo. |
+| **Freeze** | 09-27 00:00 | README line table filled in, `docs/ai-usage.md` up to date. |
+| — | 09-27 00:00–04:00 | Video and booth rehearsal |
+| **Submit** | 09-27 by 06:00 | From Scratch; 1inch prize ticked; the repo public. |
+
+## Cut order (first to go at the top)
+
+1. `DeltaSkew` (stretch)
+2. The position view in the browser (keep the script output)
+3. The put leg (keep the covered calls)
+4. `ChainlinkExpiryPrice` (fall back to `FixedExpiryPrice` and say so)
+
+## Floor (never cut)
+
+- `AquaWriter` + `MiniBook`.
+- One buy that pulls from the maker's EOA, and one return that pushes back.
+- `ExposureGuard` (SwapVM scores higher).
+- The git history.

@@ -68,6 +68,12 @@ own:
 What was brought in, what was left out and why: [`extraction.md`](extraction.md). The Aqua and band code arrives here
 in a few commits on 09-27; when each part was first written is the table above.
 
+On 09-27 the owner also requested the missing AI development documents. The
+[Aqua artifact package](prompts/aqua/README.md) preserves the original handoff specs and plan, the recorded build
+and review prompts, later integration corrections and explicit public-interface excerpts from the source band's
+document. Its manifest identifies the source Git objects separately from the import date. This recovers documents;
+it does not merge the private repository's development history or make its commits publicly resolvable here.
+
 ---
 
 Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

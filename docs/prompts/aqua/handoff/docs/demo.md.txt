@@ -1,0 +1,39 @@
+# Demo script
+
+Everything runs on a local anvil fork of Robinhood Chain 4663, pinned at `RH_MAINNET_FORK_BLOCK`.
+
+Video rules (ETHGlobal):
+
+- 2–4 minutes, at least 720p.
+- Real voices: no TTS and no AI voice.
+- No sped-up footage.
+- The opening lasts under 20 seconds.
+- At most four bullet points per slide.
+
+## Video (about 3 minutes)
+
+1. **0:00–0:20 · The claim.** "A writer should lock nothing that hasn't been sold."
+2. **0:20–0:50 · Ship.** The maker's wallet holds TSLA and USDG and approves Aqua once. It ships two strategies: the
+   SwapVM spot strategy and the `AquaWriter` strategy. **The wallet balance does not move.**
+3. **0:50–1:30 · The buy.** A buyer buys 5 TSLA calls. In that one transaction, `Pulled` sends 5 TSLA **from the
+   maker's EOA** to the book, and the buyer holds 5 contracts. A second buyer buys cash-secured puts, and USDG leaves
+   the same wallet the same way.
+4. **1:30–2:00 · The guard.** A spot taker hits the maker's SwapVM strategy. `ExposureGuard` quotes only the balance
+   that the options have not promised. Show the capped output next to what an unguarded strategy would have offered.
+5. **2:00–2:40 · Expiry.** The Chainlink price settles the series.
+   - The calls expire out of the money, so `onReturned` pushes the 5 TSLA back into the maker's strategy.
+   - A put expires in the money, so its holder exercises: TSLA is delivered and USDG paid.
+   - Show the decoded `Pulled` and `Pushed` events and the wallet at the end: whole again, plus premium.
+6. **2:40–3:00 · The position.** Promised, sold, earned and returned, per token, from the script or the position view.
+
+## 1inch booth
+
+Open with the opcode diff and the decoded `Pulled` and `Pushed` events.
+
+1. Ship: the wallet balance is unchanged.
+2. The buy: `Pulled` from the EOA inside the buy transaction.
+3. The spot taker is capped by `ExposureGuard`.
+4. Expiry: `Pushed` back, then the position table.
+
+Question to ask the 1inch team: how is a fee-charging venue whose writers use Aqua treated under the Aqua license (§2.2
+and §5.3)?
