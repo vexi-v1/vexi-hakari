@@ -21,6 +21,7 @@ Uniswap study and changed shape during the event; [docs/history.md](docs/history
 
 | Start here | |
 |---|---|
+| [Interactive website](https://vexi-v1.github.io/vexi-hakari/) · [Reproduce the website](docs/website.md) | A continuous local-fork lifecycle, recorded refusals, an illustrative band lab and downloadable evidence |
 | [Submission readiness](docs/submission-review.md) · [Judge demo](docs/demo.md) | Remaining submission checks and runnable transfer/refusal demonstrations |
 | [Reviewer code map](docs/reviewer-code-map.md) · [Uniswap form draft](docs/uniswap-feedback-draft.md) | Exact source lines and prepared feedback answers |
 | [How it fits together](#how-it-fits-together) | One picture and the path of a trade |
@@ -99,16 +100,28 @@ the router deployed on Robinhood Chain 4663). Canonical Aqua and the deployed Sw
 
 ## For Uniswap reviewers: v4 hook and band
 
+Start with the [successful option buy](aqua/test/StabilityBandFork.t.sol#L311) and the
+[out-of-band refusal](aqua/test/StabilityBandFork.t.sol#L359): the same consumer reads the v4 hook and decides whether
+the book may pull collateral through Aqua. Reproduce them with `bash scripts/judge-demo.sh uniswap`
+([fixture and trace details](docs/demo.md)). This creates a synthetic hooked pool on a local mainnet fork;
+it does not install a hook on an existing mainnet pool.
+
+Our contribution is the quote consumer and its integration; OpenZeppelin/Panoptic supplies the underlying oracle.
+The band is a configurable policy, not a guarantee of an external fair price. Read [the limits](docs/band.md)
+and [developer feedback](FEEDBACK.md). The feedback form is [recorded as submitted](docs/submission-review.md#uniswap-feedback-submission--confirmed-2026-09-27);
+that confirmation does not establish which URL was entered or whether its contents are current.
+
 | What | Where |
 |---|---|
-| The hook: OpenZeppelin's `BaseOracleHook` (Panoptic's truncated oracle) plus both TWAPs in one call; deployed on 46630 at [`0x3b58…D080`](https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080), its address mined for its flag bits | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol#L24), [`script/Deploy.s.sol`](script/Deploy.s.sol) (CREATE2 salt loop), [`test/HakariOracleHook.t.sol`](test/HakariOracleHook.t.sol) |
+| The hook: OpenZeppelin's `BaseOracleHook` (Panoptic's truncated oracle) plus both TWAPs in one call; deployed on 46630 at [`0x3b58…D080`](https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080), its address mined for its flag bits | [`HakariOracleHook.twaps`](src/HakariOracleHook.sol#L24), [`Deploy._mine`](script/Deploy.s.sol#L51), [same-second round-trip test](test/HakariOracleHook.t.sol#L29) |
 | The band reads the reference pool: `slot0` and in-range liquidity through v4-core's `StateLibrary` (`extsload`), raw and truncated cumulative ticks from the hook's `observe` | [`StabilityBandPricer.status`](aqua/src/band/StabilityBandPricer.sol#L199) |
-| The oracle is read from the pool key: `key.hooks` is the hook | `StabilityBandPricer` constructor, `HookTwapExpiryPrice.setSource` |
-| Tick → price through `TickMath.getSqrtPriceAtTick`, √P² without a 320-bit overflow, either token order, any decimals | [`BandMath.priceOf`](aqua/src/band/BandMath.sol) |
-| The hook's truncation used as a check: raw and truncated TWAPs more than a half-width apart pause the book | `StabilityBandPricer.status` (`SeriesDisagree`) |
-| Experimental settlement-window selection, including deferral and refund outcomes | [`HookTwapExpiryPrice.sol`](aqua/src/band/HookTwapExpiryPrice.sol) |
-| A hooked pool on testnet: `PositionManager.initializePool`, full-range `MINT_POSITION` + `SETTLE_PAIR` through Permit2, `increaseObservationCardinalityNext`, `PoolSwapTest` swaps | [`aqua/script/HookedPool.s.sol`](aqua/script/HookedPool.s.sol), record [`aqua/deployments/46630-hooked-pool.json`](aqua/deployments/46630-hooked-pool.json) |
-| Proofs | [`test/StabilityBand.t.sol`](aqua/test/StabilityBand.t.sol) (the band on a mock PoolManager that `StateLibrary` reads like the real one), [`test/StabilityTwapSettle.t.sol`](aqua/test/StabilityTwapSettle.t.sol), and [`test/StabilityBandFork.t.sol`](aqua/test/StabilityBandFork.t.sol): the hook's **deployed 46630 bytecode**, etched at its own address on a 4663 fork, as the hook of a new TSLA/USDG pool on the **real PoolManager** |
+| The oracle is read from the pool key: `key.hooks` is the hook | [Band constructor](aqua/src/band/StabilityBandPricer.sol#L116), [`HookTwapExpiryPrice.setSource`](aqua/src/band/HookTwapExpiryPrice.sol#L92) |
+| Tick → price through `TickMath.getSqrtPriceAtTick`, √P² without a 320-bit intermediate overflow, either token order; constructors accept token decimals up to 18 | [`BandMath.priceOf`](aqua/src/band/BandMath.sol#L30), [decimal validation and scaling](aqua/src/band/StabilityBandPricer.sol#L130) |
+| Raw and truncated TWAPs disagreeing by more than the configured half-width pause new quotes | [`SeriesDisagree` check](aqua/src/band/StabilityBandPricer.sol#L236), [refusal test](aqua/test/StabilityBand.t.sol#L320) |
+| A quote is enforced before the book moves collateral; unavailable history, a paused band or an excessive size refuses the buy | [`StabilityBandPricer.ask`](aqua/src/band/StabilityBandPricer.sol#L281), [`OptionBook.buy`](aqua/src/book/OptionBook.sol#L221), [unavailable-history test](aqua/test/StabilityBand.t.sol#L284) |
+| Experimental settlement-window selection, including deferral and refund outcomes | [`HookTwapExpiryPrice.priceAt`](aqua/src/band/HookTwapExpiryPrice.sol#L141), [window selection](aqua/src/band/HookTwapExpiryPrice.sol#L156), [deferred-settlement fork test](aqua/test/StabilityBandFork.t.sol#L506), [outcome limitations](docs/settlement.md) |
+| A hooked pool on testnet: `PositionManager.initializePool`, full-range `MINT_POSITION` + `SETTLE_PAIR` through Permit2, observation growth and `PoolSwapTest` swaps | [`HookedPool.run`](aqua/script/HookedPool.s.sol#L88), [both Permit2 approvals](aqua/script/HookedPool.s.sol#L195), [deployment record](aqua/deployments/46630-hooked-pool.json) |
+| Fork fixture: deployed testnet hook bytecode installed at its own address, a new TSLA/USDG pool on the real PoolManager, and synthetic observation history | [`StabilityBandForkTest.setUp`](aqua/test/StabilityBandFork.t.sol#L172), [pool/hook assertions](aqua/test/StabilityBandFork.t.sol#L276) |
 
 ## Run it
 

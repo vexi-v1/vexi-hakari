@@ -1,13 +1,94 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HAKARI</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Replay HAKARI's options lifecycle: one wallet, Aqua and SwapVM strategies, and a Uniswap v4 stability band. Reproducible local-fork evidence.">
+  <meta name="theme-color" content="#f4f3ed">
+  <title>HAKARI — One wallet. Two strategies.</title>
+  <link rel="stylesheet" href="website/style.css">
+  <script type="module" src="website/app.js"></script>
 </head>
 <body>
-<p><a href="https://github.com/vexi-v1/vexi-hakari">HAKARI on GitHub</a> ·
-<a href="archive/hakari-v1/web/">the first study's pages (archived)</a> ·
-<a href="archive/hakari-v1/web/squeeze/">the HIMS weekend, minute by minute</a></p>
+  <a class="skip" href="#replay">Skip to the contract replay</a>
+  <header class="header wrap">
+    <a href="#" class="brand" aria-label="HAKARI home"><span class="brand-mark" aria-hidden="true">H</span> HAKARI<span class="brand-note">PUBLIC LAB</span></a>
+    <nav aria-label="Main navigation"><a href="#replay">01 / Replay</a><a href="#lab">02 / Band lab</a><a href="#evidence">03 / Evidence</a><a class="repo-link" href="https://github.com/vexi-v1/vexi-hakari">GitHub ↗</a></nav>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow"><span class="dot"></span> ETHGLOBAL TOKYO 2026 / CONTINUITY</p>
+        <h1 id="hero-title">One wallet.<br>Two strategies.<br><span>A band that says no.</span></h1>
+        <p class="hero-copy">Keep unfilled option collateral in the maker’s wallet. Share that wallet with spot trading. Let a Uniswap v4 reference narrow — or stop — new quotes.</p>
+        <div class="hero-actions"><a class="button dark" href="#replay">Explore the lifecycle <span>↗</span></a><a href="#evidence" class="text-link">Reproduce the evidence ↓</a></div>
+      </div>
+      <div class="hero-visual" aria-label="Mechanism: a Uniswap v4 reference gates option fills; Aqua connects a maker wallet to the book and guarded SwapVM spot trading.">
+        <div class="visual-label"><span>THE PUBLIC MECHANISM</span><span>TSLA / USDG</span></div>
+        <div class="reference"><span class="tiny">REFERENCE</span><strong>Uniswap v4 + oracle hook</strong><span class="tiny">TWAP center · live price · fixed ±5% band</span></div>
+        <div class="signal-line"><span>↓</span><small>QUOTE POLICY</small></div>
+        <div class="visual-band"><span>−5%</span><span class="band-point"></span><span>+5%</span></div>
+        <div class="visual-states"><span>PAUSE</span><b>QUOTE / TAPER</b><span>PAUSE</span></div>
+        <div class="mechanism"><div><span class="tiny">MAKER</span><strong>One wallet</strong></div><span class="connection">→<small>AQUA</small></span><div><span class="tiny">TWO STRATEGIES</span><strong>Options + guarded spot</strong></div></div>
+        <p class="visual-foot">Ship records virtual balances.<br>Tokens move when a trade fills.</p>
+      </div>
+    </section>
+    <div class="proof-strip wrap"><div><b>4663</b><span>Read-only fork source</span></div><div><b>72,248,228</b><span>Pinned block</span></div><div><b id="proof-count">…</b><span>Executed scenarios</span></div><div><b>0</b><span>Mainnet broadcasts</span></div></div>
+    <div class="scope wrap"><span class="tag">RECORDED LOCAL FORK</span><p>Real protocol calls in a local test EVM, with synthetic accounts and market history. This page replays the exported results. It does not connect a wallet or send transactions.</p></div>
+
+    <section id="replay" class="section wrap" aria-labelledby="replay-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / FOLLOW THE FUNDS</p><h2 id="replay-title">From promise to settlement.</h2></div><p>The same maker. The same wallet.<br>One continuous, asserted contract test.</p></div>
+      <p id="load-status" role="status">Loading recorded evidence…</p>
+      <div class="replay-layout" id="replay-content" hidden>
+        <aside><p class="tiny sidebar-label">LIFECYCLE STEPS</p><ol class="steps" id="steps" aria-label="Choose a lifecycle step"></ol></aside>
+        <div class="replay-stage">
+          <div class="stage-top"><span class="tag"><span class="dot"></span> EXECUTED EVIDENCE</span><span id="step-time" class="mono"></span></div>
+          <div class="stage-heading"><span id="step-number" class="big-number"></span><div><h3 id="step-title"></h3><p id="step-copy"></p></div></div>
+          <div id="flow" class="flow" aria-label="Contract call path"></div>
+          <div class="fund-grid" id="funds"></div>
+          <div class="recorded-band">
+            <div class="band-heading"><strong>Quote checks at this step</strong><span class="tag" id="quote-state"></span></div>
+            <div class="band-bar"><div class="safe-zone"></div><span class="center-line"></span><span id="recorded-marker" class="price-marker"></span></div>
+            <div class="bar-labels"><span>−5% edge</span><span>TWAP center</span><span>+5% edge</span></div>
+            <div id="band-metrics" class="metric-row"></div>
+            <p class="note">Band status is one gate. Quote deadline, original anchor, remaining inventory and live collateral availability also matter.</p>
+          </div>
+          <details class="evidence-details"><summary>Before / after balances & recorded EVM logs <span id="event-count"></span></summary><div class="table-scroll"><table id="balance-table"><thead><tr><th>Asset / account</th><th>Before</th><th>After</th><th>Change</th></tr></thead><tbody></tbody></table></div><p class="note">Logs are captured in the local test EVM. They are not public transaction receipts. Amounts in the raw JSON retain their exact integer units.</p><pre id="event-json" tabindex="0"></pre></details>
+          <div class="stage-bottom"><a id="step-source" href="https://github.com/vexi-v1/vexi-hakari/blob/main/aqua/test/WebsiteEvidence.t.sol">Read the asserting test ↗</a><div class="step-controls"><button id="previous" aria-label="Previous lifecycle step">← Previous</button><span id="step-position" class="mono"></span><button id="next" aria-label="Next lifecycle step">Next →</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="lab" class="lab-section" aria-labelledby="lab-title"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">02 / CHANGE THE REFERENCE</p><h2 id="lab-title">Move the price.<br>Watch the quote respond.</h2></div><p><span class="tag">ILLUSTRATIVE CALCULATOR</span><br>Independent of the recorded fork.<br>No contract calls are made here.</p></div>
+      <div class="lab-grid">
+        <div class="lab-controls"><p>Fixed center: <strong>400 USDG</strong> · Half-width: <strong>5%</strong></p><label for="deviation">Live reference vs. TWAP center <output id="deviation-value" for="deviation">+2.5%</output></label><input type="range" id="deviation" min="-700" max="700" step="10" value="250"><div class="bar-labels"><span>−7%</span><span>0%</span><span>+7%</span></div>
+          <div class="presets" aria-label="Reference price presets"><button data-deviation="0">Center</button><button data-deviation="250">Halfway</button><button data-deviation="510">Outside</button></div>
+          <label class="checkbox"><input id="expired-toggle" type="checkbox"><span>Quote deadline has elapsed</span></label><label class="checkbox"><input id="anchor-toggle" type="checkbox"><span>Center has moved 6% above the original anchor</span></label>
+          <p class="note">Base premium: 8 USDG · Maximum extra: 20% · Maximum size: 50 contracts per call. This example assumes readable observations, sufficient liquidity and raw / truncated agreement.</p>
+        </div>
+        <div class="lab-output"><div class="band-heading"><span class="tiny">QUOTE OUTCOME</span><span id="lab-state" class="tag"></span></div><div class="lab-values"><div><strong id="lab-price"></strong><span>Live reference / USDG</span></div><div><strong id="lab-cap"></strong><span>Band cap / contracts per call</span></div><div><strong id="lab-premium"></strong><span>Ask / USDG per contract</span></div></div>
+          <svg id="lab-chart" viewBox="0 0 560 130" role="img" aria-labelledby="chart-title chart-desc"><title id="chart-title">Quote size tapers toward either band edge</title><desc id="chart-desc">The cap is 50 at the center, 25 halfway to the edge and zero at the edge. The marker follows the selected live price.</desc><path class="chart-grid" d="M30 30H530 M30 70H530 M30 110H530"/><path class="chart-area" d="M101 110L280 20L459 110Z"/><path class="chart-line" d="M30 110H101L280 20L459 110H530"/><line id="lab-chart-marker" x1="369" y1="12" x2="369" y2="116"/><text x="30" y="128">−7%</text><text x="275" y="128">0</text><text x="512" y="128">+7%</text></svg>
+          <p id="lab-explanation" class="lab-explanation" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="formula"><code>u = |live − center| / (5% × center)</code><code>ask = inner ask × (1 + 20% × u²)</code><code>cap = floor(50 × (1 − u))</code></div>
+      <p class="note">The 5% width is a configurable demonstration parameter. The band limits each call; splitting buys can exceed a single call’s cap. A sustained move can become the rolling center. An anchor checks movement against an earlier pool price, not an independent stock valuation.</p>
+    </div></section>
+
+    <section id="cases" class="section wrap" aria-labelledby="cases-title">
+      <div class="section-heading"><div><p class="eyebrow">WHEN THE HAPPY PATH ENDS</p><h2 id="cases-title">The refusals are part of the demo.</h2></div><p>Four independent fixtures.<br>Each expected refusal is asserted.</p></div>
+      <div class="case-layout"><div class="case-buttons" id="case-buttons" aria-label="Choose an adverse scenario"></div><article class="case-detail" id="case-detail" aria-live="polite"></article></div>
+    </section>
+
+    <section id="evidence" class="section evidence-section wrap" aria-labelledby="evidence-title">
+      <div class="section-heading"><div><p class="eyebrow">03 / VERIFY IT YOURSELF</p><h2 id="evidence-title">A path back to the contracts.</h2></div><span class="tag">SOURCE → TEST → JSON → PAGE</span></div>
+      <div class="evidence-grid"><div><p>Rebuild the recorded data from the pinned fork. The website itself is plain HTML, CSS and JavaScript; viewing it needs no RPC connection, API key or backend.</p><div class="command"><code>python3 scripts/website-evidence.py</code><button id="copy-command" aria-label="Copy evidence generation command">Copy</button></div><p class="note">Requires Python 3, Foundry, initialized pinned submodules and an archive RPC. First compilation and fork reads take time.</p><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/website.md" id="reproduction-link" class="text-link">Full reproduction & deployment instructions ↗</a><div class="downloads"><a href="website/evidence/demo.json" download>Evidence JSON ↓</a><a href="website/evidence/trace.txt" download>Foundry call trace ↓</a><a href="website/evidence/source.zip" download>Exact source inputs ↓</a><a href="website/evidence/source-files.json" download>SHA-256 manifest ↓</a></div></div>
+      <dl id="provenance" class="provenance"><dt>Evidence</dt><dd>Loading…</dd></dl></div>
+      <div class="limitations"><h3>What this demonstration establishes</h3><p>Aqua pulls exact collateral when an option fills. A guarded SwapVM strategy respects this writer’s unfilled promises. The book enforces the v4-based quote policy. These are local-fork integration results, with test accounts funded using Foundry and a synthetic hooked pool on the canonical manager.</p><p>The maker can still withdraw assets or revoke approval; a later fill then refuses. The guard only constrains strategies that use it. Experimental settlement can accept a later price or refund pooled premiums after no accepted window. It does not establish fair expiry value or production readiness.</p><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/settlement.md">Read the settlement tradeoffs ↗</a></div>
+    </section>
+  </main>
+  <footer class="footer wrap"><div><a href="#" class="brand">HAKARI</a><p>A public integration study for Vexi.<br>Built with Uniswap v4, OpenZeppelin’s oracle, 1inch Aqua and SwapVM.</p><p class="attribution">Aqua — © Degensoft Ltd 2025.<br>Powered by SwapVM — © Degensoft Ltd 2025.</p></div><div class="footer-links"><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/LICENSE">File-by-file licenses ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/THIRD_PARTY_NOTICES.md">Third-party notices ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/tree/main/archive/hakari-v1">Archived first study ↗</a></div><span class="tiny">TOKYO / 2026</span></footer>
+  <noscript><p class="wrap">Enable JavaScript to step through the replay. The <a href="website/evidence/demo.json">evidence JSON</a> and <a href="website/evidence/trace.txt">call trace</a> can be read without it.</p></noscript>
 </body>
 </html>

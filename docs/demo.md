@@ -1,7 +1,10 @@
 # Judge demonstration: one wallet, two strategies, a price-dependent refusal
 
-The deliverable is a runnable contract integration. The old website is an archived price-manipulation study,
-not an interface for the current Aqua writer. The commands below show actual ERC-20 calls and Aqua events in
+The deliverable is a runnable contract integration with a [static interactive website](website.md). Its primary
+replay is one continuous local-fork test, from shipping and a guarded spot fill through physical exercise, close
+and premium returns. Generate its evidence with `python3 scripts/website-evidence.py`. The first study is archived.
+
+The terminal commands below select the earlier focused tests and show actual ERC-20 calls and Aqua events in
 Foundry's local fork EVM. They do not produce mainnet transactions or public explorer transaction hashes.
 
 ## Reproduce

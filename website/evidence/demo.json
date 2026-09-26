@@ -1,0 +1,3335 @@
+{
+  "schemaVersion": 1,
+  "mode": "local-fork",
+  "chainId": 4663,
+  "forkBlock": 72248228,
+  "sourceRevision": "4df6d7bf44d70195e3d9012758eeddd3b66e91d5",
+  "sourceInputsModified": false,
+  "sourceFingerprint": "ff435600658e7a99bda41624b45b3077f677621c80983afbbacc7d1e9beaa976",
+  "forgeVersion": "forge Version: 1.3.5-v1.3.5\nCommit SHA: 9979a41b5daa5da1572d973d7ac5a3dd2afc0221\nBuild Timestamp: 2025-09-08T15:21:19.466988000Z (1757344879)\nBuild Profile: maxperf",
+  "submodules": "ef24220ed9647555727b06867bf509cd6959d84b aqua/lib/aqua (v1.0.0-23-gef24220)\n 8e40513d678f392f398620b3ef2b418648b33e89 aqua/lib/forge-std (v1.11.0)\n c64a1edb67b6e3f4a15cca8909c9482ad33a02b0 aqua/lib/openzeppelin-contracts (v4.8.0-952-gc64a1edb)\n-232ff9ba8194e406967f52ecc5cb52ed764209e9 aqua/lib/openzeppelin-contracts/lib/erc4626-tests\n-3b20d60d14b343ee4f908cb8079495c07f5e8981 aqua/lib/openzeppelin-contracts/lib/forge-std\n-7328abe100445fc53885c21d0e713b95293cf14c aqua/lib/openzeppelin-contracts/lib/halmos-cheatcodes\n 6f7837417b7271cd267f9774a2bff4a973d7ce15 aqua/lib/solidity-utils (6.9.7-13-g6f78374)\n 32c687c2b73101fc26549e48fa1ff8a4d73afbac aqua/lib/swap-vm (v1.0.2)\n e50237c43811bd9b526eff40f26772152a42daba aqua/lib/v4-core (v4.0.0)\n-1de6eecf821de7fe2c908cc48d3ab3dced20717f aqua/lib/v4-core/lib/forge-std\n-dbb6104ce834628e473d2173bbc9d47f81a9eec3 aqua/lib/v4-core/lib/openzeppelin-contracts\n-4b47a19038b798b4a33d9749d25e570443520647 aqua/lib/v4-core/lib/solmate\n bf647bd6046f2f7da30d0c2bf435e5c76a780c1b lib/forge-std (v1.16.2)\n acbd604c409a827f7f98c9517236da860c4fca1a lib/uniswap-hooks (v1.2.0-rc.0-21-gacbd604)\n a6d71da563bbb8d6eef8fbec3a16c61c603d2764 lib/uniswap-hooks/lib/forge-std (v1.11.0-6-ga6d71da)\n fcbae5394ae8ad52d8e580a3477db99814b9d565 lib/uniswap-hooks/lib/openzeppelin-contracts (v4.8.0-1034-gfcbae539)\n 232ff9ba8194e406967f52ecc5cb52ed764209e9 lib/uniswap-hooks/lib/openzeppelin-contracts/lib/erc4626-tests (v0.1.1)\n 3b20d60d14b343ee4f908cb8079495c07f5e8981 lib/uniswap-hooks/lib/openzeppelin-contracts/lib/forge-std (v1.9.6)\n 7328abe100445fc53885c21d0e713b95293cf14c lib/uniswap-hooks/lib/openzeppelin-contracts/lib/halmos-cheatcodes (7328abe)\n d153b048868a60c2403a3ef5b2301bb247884d46 lib/uniswap-hooks/lib/v4-core (v4.0.0-19-gd153b048)\n 1de6eecf821de7fe2c908cc48d3ab3dced20717f lib/uniswap-hooks/lib/v4-core/lib/forge-std (v1.9.3-24-g1de6eec)\n dbb6104ce834628e473d2173bbc9d47f81a9eec3 lib/uniswap-hooks/lib/v4-core/lib/openzeppelin-contracts (v5.0.0-12-gdbb6104c)\n 8b1d7c2ac248c33c3506b1bff8321758943c5e11 lib/uniswap-hooks/lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests (v0.1.0)\n eb980e1d4f0e8173ec27da77297ae411840c8ccb lib/uniswap-hooks/lib/v4-core/lib/openzeppelin-contracts/lib/forge-std (v1.2.0)\n cd98eff28324bfac652e63a239a60632a761790b lib/uniswap-hooks/lib/v4-core/lib/openzeppelin-contracts/lib/forge-std/lib/ds-test (remotes/origin/windows-compat-17-gcd98eff)\n 4b47a19038b798b4a33d9749d25e570443520647 lib/uniswap-hooks/lib/v4-core/lib/solmate (v6-200-g4b47a19)\n cd98eff28324bfac652e63a239a60632a761790b lib/uniswap-hooks/lib/v4-core/lib/solmate/lib/ds-test (remotes/origin/windows-compat-17-gcd98eff)\n 7ebd04b161745b75ed0c24ba2df3bc7c25f65606 lib/uniswap-hooks/lib/v4-periphery (remotes/origin/df47aa9-2-g7ebd04b1)\n cc56ad0f3439c502c246fc5cfcc3db92bb8b7219 lib/uniswap-hooks/lib/v4-periphery/lib/permit2 (0x000000000022D473030F116dDEE9F6B43aC78BA3-19-gcc56ad0)\n 3c5d52a26169876a144f7690d2f9ef0200eb0791 lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot (remotes/origin/update-readme-4-g3c5d52a)\n 2c7cbfc6fbede6d7c9e6b17afe997e3fdfe22fef lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/lib/forge-std (v0.1.0-69-g2c7cbfc)\n 9310e879db8ba3ea6d5c6489a579118fd264a3f5 lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/forge-gas-snapshot/lib/forge-std/lib/ds-test (remotes/origin/windows-compat-15-g9310e87)\n 66bf4e2c92cf507531599845e8d5a08cc2e3b5bb lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/forge-std (v1.5.6-2-g66bf4e2)\n e282159d5170298eb2455a6c05280ab5a73a4ef0 lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/forge-std/lib/ds-test (heads/master)\n d3ff81b37f3c773b44dcaf5fda212c7176eef0e2 lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/openzeppelin-contracts (v4.4.1-260-gd3ff81b3)\n 8d910d876f51c3b2585c9109409d601f600e68e1 lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/solmate (v6-180-g8d910d8)\n 9310e879db8ba3ea6d5c6489a579118fd264a3f5 lib/uniswap-hooks/lib/v4-periphery/lib/permit2/lib/solmate/lib/ds-test (remotes/origin/windows-compat-15-g9310e87)\n 59d3ecf53afa9264a16bba0e38f4c5d2231f80bc lib/uniswap-hooks/lib/v4-periphery/lib/v4-core (v4.0.0-12-g59d3ecf5)\n 1de6eecf821de7fe2c908cc48d3ab3dced20717f lib/uniswap-hooks/lib/v4-periphery/lib/v4-core/lib/forge-std (v1.9.3-24-g1de6eec)\n dbb6104ce834628e473d2173bbc9d47f81a9eec3 lib/uniswap-hooks/lib/v4-periphery/lib/v4-core/lib/openzeppelin-contracts (v5.0.0-12-gdbb6104c)\n 8b1d7c2ac248c33c3506b1bff8321758943c5e11 lib/uniswap-hooks/lib/v4-periphery/lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests (v0.1.0)\n eb980e1d4f0e8173ec27da77297ae411840c8ccb lib/uniswap-hooks/lib/v4-periphery/lib/v4-core/lib/openzeppelin-contracts/lib/forge-std (v1.2.0)\n cd98eff28324bfac652e63a239a60632a761790b lib/uniswap-hooks/lib/v4-periphery/lib/v4-core/lib/openzeppelin-contracts/lib/forge-std/lib/ds-test (remotes/origin/windows-compat-17-gcd98eff)\n 4b47a19038b798b4a33d9749d25e570443520647 lib/uniswap-hooks/lib/v4-periphery/lib/v4-core/lib/solmate (v6-200-g4b47a19)\n cd98eff28324bfac652e63a239a60632a761790b lib/uniswap-hooks/lib/v4-periphery/lib/v4-core/lib/solmate/lib/ds-test (remotes/origin/windows-compat-17-gcd98eff)\n d153b048868a60c2403a3ef5b2301bb247884d46 lib/v4-core (v4.0.0-19-gd153b048)\n 1de6eecf821de7fe2c908cc48d3ab3dced20717f lib/v4-core/lib/forge-std (v1.9.3-24-g1de6eec)\n dbb6104ce834628e473d2173bbc9d47f81a9eec3 lib/v4-core/lib/openzeppelin-contracts (v5.0.0-12-gdbb6104c)\n 8b1d7c2ac248c33c3506b1bff8321758943c5e11 lib/v4-core/lib/openzeppelin-contracts/lib/erc4626-tests (v0.1.0)\n eb980e1d4f0e8173ec27da77297ae411840c8ccb lib/v4-core/lib/openzeppelin-contracts/lib/forge-std (v1.2.0)\n cd98eff28324bfac652e63a239a60632a761790b lib/v4-core/lib/openzeppelin-contracts/lib/forge-std/lib/ds-test (remotes/origin/windows-compat-17-gcd98eff)\n 4b47a19038b798b4a33d9749d25e570443520647 lib/v4-core/lib/solmate (v6-200-g4b47a19)\n cd98eff28324bfac652e63a239a60632a761790b lib/v4-core/lib/solmate/lib/ds-test (remotes/origin/windows-compat-17-gcd98eff)",
+  "command": "python3 scripts/website-evidence.py",
+  "passedTests": 5,
+  "scenarios": [
+    {
+      "aqua": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+      "band": "0xA4AD4f68d0b91CFD19687c881e50f3A00242828c",
+      "book": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+      "buyer": "0x8163EBB8aBF9D5213c151BB1c0Fdec58a63e60E0",
+      "callSeries": "21471209558862616384438948559253098384664841590460052455974886973308440261845",
+      "expiry": "1790355876",
+      "hook": "0x3b58D774cE351227B24A91103b20bA4fc068D080",
+      "hookCodeHash": "0x2569c0c71dbb59cba1eff60049c00bbabe94de8faba2be3443d33ccca522713b",
+      "maker": "0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489",
+      "poolId": "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+      "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "putSeries": "55460515272649468066028093295964912633392492825043070588190468348534105992342",
+      "router": "0x111111338c5091E8440b67B168bAe16a668AC0De",
+      "scenario": "lifecycle",
+      "steps": [
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "initial",
+          "logs": [],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "0",
+          "optionVirtualUsdg": "0",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "0",
+          "spotVirtualUsdg": "0",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "One maker wallet, before shipping",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "ship",
+          "logs": [
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000000000007",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d000000000000000000000000000000000000000000000001a055690d9db80000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000004a817c800",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x61dc95bdb753bc719d9793dbadf713750282141aa7bfbb6e0f0e5bf5a3ac438a",
+                "0x572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c4894000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000362028d6bbde9174b1cdaa358d2cf4d57d1a9f7178fbffa0cb889707d426a7a386870a03bc70d1b069759811001408000000000000000100000000000000000000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000022b1c8c1227a00000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb8020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000003b9aca000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "Two virtual strategies; no token transfer",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "post",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000ee6b2800",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "10 covered calls and 10 cash-secured puts promised",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "spot",
+          "logs": [
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000017d78400",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000d37896e2583cf3c",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000d37896e2583cf3c0000000000000000000000000000000000000000000000000d37896e2583cf3c",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000000d37896e2583cf3c",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000017d78400",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000017d78400",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000017d78400",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb8020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000017d78400",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000000000000017d784000000000000000000000000000000000000000000000000000d37896e2583cf3c",
+              "emitter": "0x111111338c5091E8440b67B168bAe16a668AC0De",
+              "topics": [
+                "0x54bc5c027d15d7aa8ae083f994ab4411d2f223291672ecd3a344f3d92dcaf8b2"
+              ]
+            }
+          ],
+          "makerTsla": "29047619047619047620",
+          "makerUsdg": "20400000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790348676",
+          "title": "Guarded canonical SwapVM swap uses only unpromised inventory",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "buy",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x00cd5a384f351d1c4f493087f7aa99325def324b1f8ea0c302b3e04dedd003eb",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d50000000000000000000000000000000000000000000000000000000000000005",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000500000000000000000000000000000000000000000000000000000000026269a00000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x0675d6cb16906b9df69999e74ea5483606d53cc3270575986f25a9fea5a69e90",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x00cd5a384f351d1c4f493087f7aa99325def324b1f8ea0c302b3e04dedd003eb",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            },
+            {
+              "data": "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c960000000000000000000000000000000000000000000000000000000000000003",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000016e3f600000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x0675d6cb16906b9df69999e74ea5483606d53cc3270575986f25a9fea5a69e90",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            }
+          ],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790348676",
+          "title": "5 calls + 3 puts: Aqua pulls 5 TSLA and 1,200 USDG",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "25",
+          "center": "378231285009885225465",
+          "current": "387687067135132356100",
+          "extraBps": "500",
+          "id": "taper",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000001c54febc5119bdb7edffffffffffffffffffffffffffffffffffffffffffffffffffffffd14243b1eb000000000000000000000000000000000000000000014a56ebbf2e53c51812c00000000000000000000000000000000000000000000000000b9402c14c2302fdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcb1700000000000000000000000000000000000000000000000000000000000000bb8",
+              "emitter": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+              "topics": [
+                "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+                "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+                "0x0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000002ebdbc4e15",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000001c54febc5119bdb7ed",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000001c54febc5119bdb7ed00000000000000000000000000000000000000000000001c54febc5119bdb7ed",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            }
+          ],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": true,
+          "quoteOne": "8400000",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790348676",
+          "title": "+2.5%: less size and a wider premium",
+          "truncatedCenter": "378231285009885225465",
+          "u": "500000000000000000"
+        },
+        {
+          "bandQuoting": false,
+          "bandReason": "4",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "0",
+          "center": "378231285009885225465",
+          "current": "397521080545389371962",
+          "extraBps": "0",
+          "id": "pause",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000001c96fcb8985fe91cd4ffffffffffffffffffffffffffffffffffffffffffffffffffffffcfa66681e9000000000000000000000000000000000000000000014e80c2a311ddadb649b80000000000000000000000000000000000000000000000000b9402c14c2302fdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcb26b0000000000000000000000000000000000000000000000000000000000000bb8",
+              "emitter": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+              "topics": [
+                "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+                "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+                "0x0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000003059997e17",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000001c96fcb8985fe91cd4",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000001c96fcb8985fe91cd400000000000000000000000000000000000000000000001c96fcb8985fe91cd4",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            }
+          ],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x8f121e430000000000000000000000000000000000000000000000000000000000000004",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790348676",
+          "title": "+5.1%: a real buy is refused; funds unchanged",
+          "truncatedCenter": "378231285009885225465",
+          "u": "1020000000000000000"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "recover",
+          "logs": [
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffc6e82b9608ba1b4c7d0000000000000000000000000000000000000000000000000000005ece4e1db90000000000000000000000000000000000000000000146508c16ef0137129fac0000000000000000000000000000000000000000000000000b9402c14c2302fdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcb07b0000000000000000000000000000000000000000000000000000000000000bb8",
+              "emitter": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+              "topics": [
+                "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+                "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+                "0x0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000003917d469f745e4b383",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000003917d469f745e4b38300000000000000000000000000000000000000000000003917d469f745e4b383",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000005ece4e1db9",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            }
+          ],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790348676",
+          "title": "Reference returns; a fresh quote is available",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "expired",
+          "logs": [],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0xbbe9c0962f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5000000000000000000000000000000000000000000000000000000006ab68fdc",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790349276",
+          "title": "Band recovered, but the original quote has expired",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "renew",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab6a9a4000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab6a9a4000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            }
+          ],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790349276",
+          "title": "Only an explicit maker update renews the quote",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378269108138386213987",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "settle",
+          "logs": [
+            {
+              "data": "0x0000000000000000000000000000000000000000000000148189d5b23c554c630000000000000000000000000000000000000000000000000000000000000000",
+              "emitter": "0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9",
+              "topics": [
+                "0x4fefb24257040c8aa01202f95b8dcc98b7b1d36359ba40e7b1aa6af20b93086a",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168",
+                "0x000000000000000000000000000000000000000000000000000000006ab6a9a4"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000148189d5b23c554c63",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xf5b268a3ff315cc44ccceeef86259c9e8eef81ceecb14001543809115380dd62",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000148189d5b23c554c63",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xf5b268a3ff315cc44ccceeef86259c9e8eef81ceecb14001543809115380dd62",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            }
+          ],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "378269108138386213987",
+          "settled": true,
+          "settlementPrice": "378269108138386213987",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790355876",
+          "title": "First five-minute window accepted and recorded",
+          "truncatedCenter": "378269108138386213987",
+          "u": "1494141270735394"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "8000000000000000000",
+          "bookUsdg": "64006400",
+          "buyerTsla": "7000000000000000000",
+          "buyerUsdg": "11135993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378269108138386213987",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "exercise",
+          "logs": [
+            {
+              "data": "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c960000000000000000000000000000000000000000000000000000000000000003",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c000000000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000029a2241af62c00000000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x5adfa9c230606f0f0f2aecdc5d1db0ee346862934a453a920d9d78bc57e442c7",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            }
+          ],
+          "makerTsla": "24047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "378269108138386213987",
+          "settled": true,
+          "settlementPrice": "378269108138386213987",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790355876",
+          "title": "Physical put exercise: deliver 3 TSLA, receive 1,200 USDG",
+          "truncatedCenter": "378269108138386213987",
+          "u": "1494141270735394"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "64006400",
+          "buyerTsla": "7000000000000000000",
+          "buyerUsdg": "11135993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378269108138386213987",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "close",
+          "logs": [
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x3287d0903fab6157e0587a1e22a9523e456d718705a1ab5b14e2f3c50db07c1f",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000000000000000000000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x95b630824ad6e94ddef40548c81e9ea6d2359c3c61fc11f37e1633bb7b1e3e25",
+                "0x0000000000000000000000000000000000000000000000000000000000000001"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c000000000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c000000000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d00000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x3287d0903fab6157e0587a1e22a9523e456d718705a1ab5b14e2f3c50db07c1f",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000029a2241af62c0000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x95b630824ad6e94ddef40548c81e9ea6d2359c3c61fc11f37e1633bb7b1e3e25",
+                "0x0000000000000000000000000000000000000000000000000000000000000002"
+              ]
+            }
+          ],
+          "makerTsla": "32047619047619047620",
+          "makerUsdg": "19200000000",
+          "optionVirtualTsla": "33000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "378269108138386213987",
+          "settled": true,
+          "settlementPrice": "378269108138386213987",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790356477",
+          "title": "Aqua pushes 5 unused TSLA + 3 exercise TSLA to the maker",
+          "truncatedCenter": "378269108138386213987",
+          "u": "1494141270735394"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "7000000000000000000",
+          "buyerUsdg": "11135993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378269108138386213987",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "premium",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xd166a9f3b9dbf9df8e4a48ba5d4efeefec496ced15af2172e887bd16aea9e5b9",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x2ec37eab578f86de11929981720753fd12bf687d261607d6c7812f3a83f6a0fc",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xd166a9f3b9dbf9df8e4a48ba5d4efeefec496ced15af2172e887bd16aea9e5b9",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x2ec37eab578f86de11929981720753fd12bf687d261607d6c7812f3a83f6a0fc",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "32047619047619047620",
+          "makerUsdg": "19264006400",
+          "optionVirtualTsla": "33000000000000000000",
+          "optionVirtualUsdg": "18864006400",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "378269108138386213987",
+          "settled": true,
+          "settlementPrice": "378269108138386213987",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790356477",
+          "title": "Premiums are claimed separately through Aqua",
+          "truncatedCenter": "378269108138386213987",
+          "u": "1494141270735394"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "7000000000000000000",
+          "buyerUsdg": "11135993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378269108138386213987",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "release",
+          "logs": [
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000000000005",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xa761582a460180d55522f9f5fdc076390a1f48a7a62a8afbd45c1bb797948edb",
+                "0x0000000000000000000000000000000000000000000000000000000000000001"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x394593ddca5552845635df2a4fc0d224d35cfe508f4dc57dd06eb12bc0460168",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000000000007",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xa761582a460180d55522f9f5fdc076390a1f48a7a62a8afbd45c1bb797948edb",
+                "0x0000000000000000000000000000000000000000000000000000000000000002"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000a6e49c00",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x394593ddca5552845635df2a4fc0d224d35cfe508f4dc57dd06eb12bc0460168",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "32047619047619047620",
+          "makerUsdg": "19264006400",
+          "optionVirtualTsla": "33000000000000000000",
+          "optionVirtualUsdg": "18864006400",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "378269108138386213987",
+          "settled": true,
+          "settlementPrice": "378269108138386213987",
+          "spotVirtualTsla": "39047619047619047620",
+          "spotVirtualUsdg": "16400000000",
+          "takerTsla": "952380952380952380",
+          "takerUsdg": "0",
+          "timestamp": "1790356477",
+          "title": "Expired unfilled promises released; the wallet is reusable",
+          "truncatedCenter": "378269108138386213987",
+          "u": "1494141270735394"
+        }
+      ],
+      "strike": "400000000000000000000",
+      "taker": "0xC0cA3436B9E6e97001C490ee2756af1B8baa108a",
+      "tsla": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+      "usdg": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "writer": "0xa0Cb889707d426A7A386870A03bc70d1b0697598"
+    },
+    {
+      "aqua": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+      "band": "0xA4AD4f68d0b91CFD19687c881e50f3A00242828c",
+      "book": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+      "buyer": "0x8163EBB8aBF9D5213c151BB1c0Fdec58a63e60E0",
+      "callSeries": "21471209558862616384438948559253098384664841590460052455974886973308440261845",
+      "expiry": "1790355876",
+      "hook": "0x3b58D774cE351227B24A91103b20bA4fc068D080",
+      "hookCodeHash": "0x2569c0c71dbb59cba1eff60049c00bbabe94de8faba2be3443d33ccca522713b",
+      "maker": "0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489",
+      "poolId": "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+      "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "putSeries": "55460515272649468066028093295964912633392492825043070588190468348534105992342",
+      "router": "0x111111338c5091E8440b67B168bAe16a668AC0De",
+      "scenario": "anchor",
+      "steps": [
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "ship",
+          "logs": [
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000000000007",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d000000000000000000000000000000000000000000000001a055690d9db80000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000004a817c800",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x61dc95bdb753bc719d9793dbadf713750282141aa7bfbb6e0f0e5bf5a3ac438a",
+                "0x572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c4894000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000362028d6bbde9174b1cdaa358d2cf4d57d1a9f7178fbffa0cb889707d426a7a386870a03bc70d1b069759811001408000000000000000100000000000000000000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000022b1c8c1227a00000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb8020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000003b9aca000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "Two virtual strategies; no token transfer",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "post",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000ee6b2800",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "10 covered calls and 10 cash-secured puts promised",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": false,
+          "bandReason": "4",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "0",
+          "center": "378231285009885225465",
+          "current": "400995209563442819941",
+          "extraBps": "0",
+          "id": "anchor-push",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab6a9a4000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000042c50669de2f9cdb3fffffffffffffffffffffffffffffffffffffffffffffffffffffff8ff89c9931000000000000000000000000000000000000000000014ff623ac54a43e0894370000000000000000000000000000000000000000000000000b9402c14c2302fdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcb2c20000000000000000000000000000000000000000000000000000000000000bb8",
+              "emitter": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+              "topics": [
+                "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+                "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+                "0x0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000070076366cf",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000042c50669de2f9cdb3f",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000042c50669de2f9cdb3f000000000000000000000000000000000000000000000042c50669de2f9cdb3f",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x8f121e430000000000000000000000000000000000000000000000000000000000000004",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "A sustained 6% reference move",
+          "truncatedCenter": "378231285009885225465",
+          "u": "1203703948125954216"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "400976552812048229822",
+          "current": "400995209563442819941",
+          "extraBps": "1",
+          "id": "anchor-refused",
+          "logs": [],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x25bf1d9b2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5000000000000000000000000000000000000000000000015bced2a88c654b36500000000000000000000000000000000000000000000001481ee3b728acd7dc6",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790352277",
+          "title": "Rolling TWAP catches up; the original anchor still refuses",
+          "truncatedCenter": "387844551427903374732",
+          "u": "930565703343517"
+        }
+      ],
+      "strike": "400000000000000000000",
+      "taker": "0xC0cA3436B9E6e97001C490ee2756af1B8baa108a",
+      "tsla": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+      "usdg": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "writer": "0xa0Cb889707d426A7A386870A03bc70d1b0697598"
+    },
+    {
+      "aqua": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+      "band": "0xA4AD4f68d0b91CFD19687c881e50f3A00242828c",
+      "book": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+      "buyer": "0x8163EBB8aBF9D5213c151BB1c0Fdec58a63e60E0",
+      "callSeries": "21471209558862616384438948559253098384664841590460052455974886973308440261845",
+      "expiry": "1790355876",
+      "hook": "0x3b58D774cE351227B24A91103b20bA4fc068D080",
+      "hookCodeHash": "0x2569c0c71dbb59cba1eff60049c00bbabe94de8faba2be3443d33ccca522713b",
+      "maker": "0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489",
+      "poolId": "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+      "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "putSeries": "55460515272649468066028093295964912633392492825043070588190468348534105992342",
+      "router": "0x111111338c5091E8440b67B168bAe16a668AC0De",
+      "scenario": "delayed",
+      "steps": [
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "ship",
+          "logs": [
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000000000007",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d000000000000000000000000000000000000000000000001a055690d9db80000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000004a817c800",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x61dc95bdb753bc719d9793dbadf713750282141aa7bfbb6e0f0e5bf5a3ac438a",
+                "0x572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c4894000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000362028d6bbde9174b1cdaa358d2cf4d57d1a9f7178fbffa0cb889707d426a7a386870a03bc70d1b069759811001408000000000000000100000000000000000000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000022b1c8c1227a00000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb8020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000003b9aca000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "Two virtual strategies; no token transfer",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "post",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000ee6b2800",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "10 covered calls and 10 cash-secured puts promised",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "buy",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x00cd5a384f351d1c4f493087f7aa99325def324b1f8ea0c302b3e04dedd003eb",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d50000000000000000000000000000000000000000000000000000000000000005",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000500000000000000000000000000000000000000000000000000000000026269a00000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x0675d6cb16906b9df69999e74ea5483606d53cc3270575986f25a9fea5a69e90",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x00cd5a384f351d1c4f493087f7aa99325def324b1f8ea0c302b3e04dedd003eb",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            },
+            {
+              "data": "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c960000000000000000000000000000000000000000000000000000000000000003",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000016e3f600000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x0675d6cb16906b9df69999e74ea5483606d53cc3270575986f25a9fea5a69e90",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            }
+          ],
+          "makerTsla": "25000000000000000000",
+          "makerUsdg": "18800000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "5 calls + 3 puts: Aqua pulls 5 TSLA and 1,200 USDG",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": false,
+          "bandReason": "4",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "0",
+          "center": "380089073282899605240",
+          "current": "400995209563442819941",
+          "extraBps": "0",
+          "id": "deferred",
+          "logs": [
+            {
+              "data": "0x000000000000000000000000000000000000000000000042c50669de2f9cdb3fffffffffffffffffffffffffffffffffffffffffffffffffffffff8ff89c9931000000000000000000000000000000000000000000014ff623ac54a43e0894370000000000000000000000000000000000000000000000000b9402c14c2302fdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcb2c20000000000000000000000000000000000000000000000000000000000000bb8",
+              "emitter": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+              "topics": [
+                "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+                "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+                "0x0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000070076366cf",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000042c50669de2f9cdb3f",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000042c50669de2f9cdb3f000000000000000000000000000000000000000000000042c50669de2f9cdb3f",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            }
+          ],
+          "makerTsla": "25000000000000000000",
+          "makerUsdg": "18800000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790355876",
+          "title": "Window 0 refused; window 1 is not complete",
+          "truncatedCenter": "379026365497378562671",
+          "u": "1100065103159796206"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "45",
+          "center": "380089073282899605240",
+          "current": "378297367512681905606",
+          "extraBps": "18",
+          "id": "later-window",
+          "logs": [
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffbd078aa4730e202b050000000000000000000000000000000000000000000000000000006fb159a1a10000000000000000000000000000000000000000000146508c16ef0137129fac0000000000000000000000000000000000000000000000000b9402c14c2302fdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcb07b0000000000000000000000000000000000000000000000000000000000000bb8",
+              "emitter": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+              "topics": [
+                "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+                "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+                "0x0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000042f8755b8cf1dfd4fb",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000042f8755b8cf1dfd4fb000000000000000000000000000000000000000000000042f8755b8cf1dfd4fb",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000006fb159a1a1",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000148189d5b23c554c630000000000000000000000000000000000000000000000000000000000000001",
+              "emitter": "0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9",
+              "topics": [
+                "0x4fefb24257040c8aa01202f95b8dcc98b7b1d36359ba40e7b1aa6af20b93086a",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168",
+                "0x000000000000000000000000000000000000000000000000000000006ab6a9a4"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000148189d5b23c554c63",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xf5b268a3ff315cc44ccceeef86259c9e8eef81ceecb14001543809115380dd62",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000148189d5b23c554c63",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xf5b268a3ff315cc44ccceeef86259c9e8eef81ceecb14001543809115380dd62",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            }
+          ],
+          "makerTsla": "25000000000000000000",
+          "makerUsdg": "18800000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "378269108138386213987",
+          "settled": true,
+          "settlementPrice": "378269108138386213987",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790356176",
+          "title": "Window 1 accepted at a later price; this changes expiry economics",
+          "truncatedCenter": "379026365497378562671",
+          "u": "94278204566229995"
+        }
+      ],
+      "strike": "400000000000000000000",
+      "taker": "0xC0cA3436B9E6e97001C490ee2756af1B8baa108a",
+      "tsla": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+      "usdg": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "writer": "0xa0Cb889707d426A7A386870A03bc70d1b0697598"
+    },
+    {
+      "aqua": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+      "band": "0xA4AD4f68d0b91CFD19687c881e50f3A00242828c",
+      "book": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+      "buyer": "0x8163EBB8aBF9D5213c151BB1c0Fdec58a63e60E0",
+      "callSeries": "21471209558862616384438948559253098384664841590460052455974886973308440261845",
+      "expiry": "1790355876",
+      "hook": "0x3b58D774cE351227B24A91103b20bA4fc068D080",
+      "hookCodeHash": "0x2569c0c71dbb59cba1eff60049c00bbabe94de8faba2be3443d33ccca522713b",
+      "maker": "0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489",
+      "poolId": "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+      "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "putSeries": "55460515272649468066028093295964912633392492825043070588190468348534105992342",
+      "router": "0x111111338c5091E8440b67B168bAe16a668AC0De",
+      "scenario": "refund",
+      "steps": [
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "ship",
+          "logs": [
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000000000007",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d000000000000000000000000000000000000000000000001a055690d9db80000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000004a817c800",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x61dc95bdb753bc719d9793dbadf713750282141aa7bfbb6e0f0e5bf5a3ac438a",
+                "0x572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c4894000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000362028d6bbde9174b1cdaa358d2cf4d57d1a9f7178fbffa0cb889707d426a7a386870a03bc70d1b069759811001408000000000000000100000000000000000000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000022b1c8c1227a00000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb8020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000003b9aca000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "Two virtual strategies; no token transfer",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "post",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000ee6b2800",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "10 covered calls and 10 cash-secured puts promised",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "buy",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x00cd5a384f351d1c4f493087f7aa99325def324b1f8ea0c302b3e04dedd003eb",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d50000000000000000000000000000000000000000000000000000000000000005",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000500000000000000000000000000000000000000000000000000000000026269a00000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x0675d6cb16906b9df69999e74ea5483606d53cc3270575986f25a9fea5a69e90",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x00cd5a384f351d1c4f493087f7aa99325def324b1f8ea0c302b3e04dedd003eb",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            },
+            {
+              "data": "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c960000000000000000000000000000000000000000000000000000000000000003",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000016e3f600000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x0675d6cb16906b9df69999e74ea5483606d53cc3270575986f25a9fea5a69e90",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            }
+          ],
+          "makerTsla": "25000000000000000000",
+          "makerUsdg": "18800000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "5 calls + 3 puts: Aqua pulls 5 TSLA and 1,200 USDG",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "5000000000000000000",
+          "bookUsdg": "1264006400",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "9935993600",
+          "callLong": "5",
+          "cap": "1",
+          "center": "396709188174547385199",
+          "current": "416127104263950096165",
+          "extraBps": "1917",
+          "id": "no-window",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000006c36e893cc46b85786ffffffffffffffffffffffffffffffffffffffffffffffffffffff470a07017f00000000000000000000000000000000000000000001563ddeb02271af18b1e20000000000000000000000000000000000000000000000000b9402c14c2302fdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffcb4340000000000000000000000000000000000000000000000000000000000000bb8",
+              "emitter": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+              "topics": [
+                "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f",
+                "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+                "0x0000000000000000000000002e234dae75c793f67a35089c9d99245e1c58470b"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000b8f5f8fe81",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000006c36e893cc46b85786",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000006c36e893cc46b8578600000000000000000000000000000000000000000000006c36e893cc46b85786",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x0000000000000000000000008366a39cc670b4001a1121b8f6a443a643e40951",
+                "0x000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a"
+              ]
+            }
+          ],
+          "makerTsla": "25000000000000000000",
+          "makerUsdg": "18800000000",
+          "optionVirtualTsla": "25000000000000000000",
+          "optionVirtualUsdg": "18800000000",
+          "promisedTsla": "5000000000000000000",
+          "promisedUsdg": "2800000000",
+          "putLong": "3",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790357376",
+          "title": "All six windows refused; collateral waits for the grace deadline",
+          "truncatedCenter": "383026908408489592056",
+          "u": "978949652200092521"
+        },
+        {
+          "bandQuoting": false,
+          "bandReason": "3",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "0",
+          "center": "416089800657275892545",
+          "current": "416127104263950096165",
+          "extraBps": "0",
+          "id": "refund",
+          "logs": [
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x30a1d12d7a94011f3afd9ddf3c7526bd2f7714cb0a826c74264ac98e45ee26fb",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x3287d0903fab6157e0587a1e22a9523e456d718705a1ab5b14e2f3c50db07c1f",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f400000000000000000000000000000000000000000000000000000000000000000000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x95b630824ad6e94ddef40548c81e9ea6d2359c3c61fc11f37e1633bb7b1e3e25",
+                "0x0000000000000000000000000000000000000000000000000000000000000001"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x30a1d12d7a94011f3afd9ddf3c7526bd2f7714cb0a826c74264ac98e45ee26fb",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c00",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x3287d0903fab6157e0587a1e22a9523e456d718705a1ab5b14e2f3c50db07c1f",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000047868c000000000000000000000000000000000000000000000000000000000000000000",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x95b630824ad6e94ddef40548c81e9ea6d2359c3c61fc11f37e1633bb7b1e3e25",
+                "0x0000000000000000000000000000000000000000000000000000000000000002"
+              ]
+            },
+            {
+              "data": "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d50000000000000000000000000000000000000000000000000000000000000005",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000500000000000000000000000000000000000000000000000000000000026269a0",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x279ac10417b4a21068fc6d3150dd2e5fc45320cb722f60a07d37a113a3bf3acd",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c960000000000000000000000000000000000000000000000000000000000000003",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x0000000000000000000000000000000000000000000000000000000000000000"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000016e3f60",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x279ac10417b4a21068fc6d3150dd2e5fc45320cb722f60a07d37a113a3bf3acd",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000000000005",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xa761582a460180d55522f9f5fdc076390a1f48a7a62a8afbd45c1bb797948edb",
+                "0x0000000000000000000000000000000000000000000000000000000000000001"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000004563918244f40000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x394593ddca5552845635df2a4fc0d224d35cfe508f4dc57dd06eb12bc0460168",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000000000007",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0xa761582a460180d55522f9f5fdc076390a1f48a7a62a8afbd45c1bb797948edb",
+                "0x0000000000000000000000000000000000000000000000000000000000000002"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000a6e49c00",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x394593ddca5552845635df2a4fc0d224d35cfe508f4dc57dd06eb12bc0460168",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790359477",
+          "title": "Collateral returned; holders receive pooled premium refunds",
+          "truncatedCenter": "387844551427903374732",
+          "u": "1793055567104842"
+        }
+      ],
+      "strike": "400000000000000000000",
+      "taker": "0xC0cA3436B9E6e97001C490ee2756af1B8baa108a",
+      "tsla": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+      "usdg": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "writer": "0xa0Cb889707d426A7A386870A03bc70d1b0697598"
+    },
+    {
+      "aqua": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+      "band": "0xA4AD4f68d0b91CFD19687c881e50f3A00242828c",
+      "book": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+      "buyer": "0x8163EBB8aBF9D5213c151BB1c0Fdec58a63e60E0",
+      "callSeries": "21471209558862616384438948559253098384664841590460052455974886973308440261845",
+      "expiry": "1790355876",
+      "hook": "0x3b58D774cE351227B24A91103b20bA4fc068D080",
+      "hookCodeHash": "0x2569c0c71dbb59cba1eff60049c00bbabe94de8faba2be3443d33ccca522713b",
+      "maker": "0xEF0b534f8292FdC1262AfFbDfbc1f284E101c489",
+      "poolId": "0xc00e175a97416ed7be79cf8a1e9eba096ad73ad376aa9497155649811e9abc62",
+      "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "putSeries": "55460515272649468066028093295964912633392492825043070588190468348534105992342",
+      "router": "0x111111338c5091E8440b67B168bAe16a668AC0De",
+      "scenario": "unguarded",
+      "steps": [
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "ship",
+          "logs": [
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d1680000000000000000000000000000000000000000000000000000000000000007",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d000000000000000000000000000000000000000000000001a055690d9db80000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc90000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000004a817c800",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x61dc95bdb753bc719d9793dbadf713750282141aa7bfbb6e0f0e5bf5a3ac438a",
+                "0x572c525d2871363472748e2bfeddb9b334530be94c53a9cfa3ef46ad39e18fc9"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c4894000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000362028d6bbde9174b1cdaa358d2cf4d57d1a9f7178fbffa0cb889707d426a7a386870a03bc70d1b069759811001408000000000000000100000000000000000000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb802000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000022b1c8c1227a00000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de2b18e6dc6b9a28e74159baab4018b4640addae324fc6563dabf09e8c7cbdb8020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000003b9aca000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "0",
+          "promisedUsdg": "0",
+          "putLong": "0",
+          "quoteAvailable": false,
+          "quoteOne": "0",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "Two virtual strategies; no token transfer",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "post",
+          "logs": [
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000007a1200000000000000000000000000000000000000000000000000000000006ab68fdc000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c00000000000000000000000000000000000000000000001481ee3b728acd7dc600000000000000000000000000000000000000000000000000000000000001f4",
+              "emitter": "0x1d1499e622D69689cdf9004d05Ec547d650Ff211",
+              "topics": [
+                "0x7a7631f002a2c9639de177a066f8d0bc8bc50390956a31f414ef8ba462697893",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x2f7846219595d8a7e5ec50bd054ec245af5c512025acbb6dae6950aaefadb4d5",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+                "0x000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000a4ad4f68d0b91cfd19687c881e50f3a00242828c000000000000000000000000000000000000000000000000000000000000000a",
+              "emitter": "0xc7183455a4C133Ae270771860664b6B7ec320bB1",
+              "topics": [
+                "0x36167ec28ae906c659af8b0b8e6216e1f31f063ba23c64e9badb1f8c377e6396",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x7a9d8a0bb2306248bffd4e5a4ed53d5f0b2f053a26e56d9df3ae19a9782e6c96",
+                "0x000000000000000000000000a0cb889707d426a7a386870a03bc70d1b0697598"
+              ]
+            },
+            {
+              "data": "0x00000000000000000000000000000000000000000000000000000000ee6b2800",
+              "emitter": "0xa0Cb889707d426A7A386870A03bc70d1b0697598",
+              "topics": [
+                "0x87e6521468e5ac864255783ba563d3d9493841a2e5538e37fa1af17305b9ea98",
+                "0x0000000000000000000000000000000000000000000000000000000000000002",
+                "0x0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168"
+              ]
+            }
+          ],
+          "makerTsla": "30000000000000000000",
+          "makerUsdg": "20000000000",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "0",
+          "takerUsdg": "400000000",
+          "timestamp": "1790348676",
+          "title": "10 covered calls and 10 cash-secured puts promised",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        },
+        {
+          "bandQuoting": true,
+          "bandReason": "0",
+          "bookTsla": "0",
+          "bookUsdg": "0",
+          "buyerTsla": "10000000000000000000",
+          "buyerUsdg": "10000000000",
+          "callLong": "0",
+          "cap": "49",
+          "center": "378231285009885225465",
+          "current": "378297367512681905606",
+          "extraBps": "1",
+          "id": "unguarded",
+          "logs": [
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de24fbd94a218646bff80e747712fb7435779a90963bc0f0fd082a0b05c1966a02000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c48940000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000c1100140800000000000000020000000000000000000000000000000000000000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0xdc3622e06fb145651f567d421c9ef261d71d43e3778b761907bc0d70d42e52b0"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de24fbd94a218646bff80e747712fb7435779a90963bc0f0fd082a0b05c1966a02000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d0000000000000000000000000000000000000000000000022b1c8c1227a00000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de24fbd94a218646bff80e747712fb7435779a90963bc0f0fd082a0b05c1966a020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d16800000000000000000000000000000000000000000000000000000003b9aca000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000001236efcbcbb340000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000001236efcbcbb340000000000000000000000000000000000000000000000000001236efcbcbb340000",
+              "emitter": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+              "topics": [
+                "0x37e7f0db430edc9dd31bc66f25f8449353aa0818f503b906747dd8f286cd3802",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de24fbd94a218646bff80e747712fb7435779a90963bc0f0fd082a0b05c1966a02000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d000000000000000000000000000000000000000000000001236efcbcbb340000",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3ad61047071575417c75e3311e5d46ff042e292b5dd8769ff18b4b254098ca7a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000041e0fa35f",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000041e0fa35f",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de",
+                "0x0000000000000000000000001111113ccf1426a8e30e2bff5e005d929bf6a90a"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000000000000000000000000000000000041e0fa35f",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de",
+                "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489"
+              ]
+            },
+            {
+              "data": "0x000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000111111338c5091e8440b67b168bae16a668ac0de24fbd94a218646bff80e747712fb7435779a90963bc0f0fd082a0b05c1966a020000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168000000000000000000000000000000000000000000000000000000041e0fa35f",
+              "emitter": "0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a",
+              "topics": [
+                "0x3f18354abbd5306dd1665c2c90f614a4559e39dd620d04fbe5458e613b6588f3"
+              ]
+            },
+            {
+              "data": "0x24fbd94a218646bff80e747712fb7435779a90963bc0f0fd082a0b05c1966a02000000000000000000000000ef0b534f8292fdc1262affbdfbc1f284e101c489000000000000000000000000c0ca3436b9e6e97001c490ee2756af1b8baa108a0000000000000000000000005fc5360d0400a0fd4f2af552add042d716f1d168000000000000000000000000322f0929c4625ed5bad873c95208d54e1c003b2d000000000000000000000000000000000000000000000000000000041e0fa35f000000000000000000000000000000000000000000000001236efcbcbb340000",
+              "emitter": "0x111111338c5091E8440b67B168bAe16a668AC0De",
+              "topics": [
+                "0x54bc5c027d15d7aa8ae083f994ab4411d2f223291672ecd3a344f3d92dcaf8b2"
+              ]
+            },
+            {
+              "data": "0x0000000000000000000000000000000000000000000000000000000004c4d340",
+              "emitter": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+              "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000008163ebb8abf9d5213c151bb1c0fdec58a63e60e0",
+                "0x000000000000000000000000c7183455a4c133ae270771860664b6b7ec320bb1"
+              ]
+            }
+          ],
+          "makerTsla": "9000000000000000000",
+          "makerUsdg": "37684210527",
+          "optionVirtualTsla": "30000000000000000000",
+          "optionVirtualUsdg": "20000000000",
+          "promisedTsla": "10000000000000000000",
+          "promisedUsdg": "4000000000",
+          "putLong": "0",
+          "quoteAvailable": true,
+          "quoteOne": "8000800",
+          "quoteRefusal": "0x",
+          "recordedPrice": "0",
+          "settled": false,
+          "settlementPrice": "0",
+          "spotVirtualTsla": "40000000000000000000",
+          "spotVirtualUsdg": "16000000000",
+          "takerTsla": "21000000000000000000",
+          "takerUsdg": "32315789473",
+          "timestamp": "1790348676",
+          "title": "An unguarded spot swap takes 21 TSLA; a 10-call fill now refuses",
+          "truncatedCenter": "378231285009885225465",
+          "u": "3494290684862468"
+        }
+      ],
+      "strike": "400000000000000000000",
+      "taker": "0xC0cA3436B9E6e97001C490ee2756af1B8baa108a",
+      "tsla": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+      "usdg": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "writer": "0xa0Cb889707d426A7A386870A03bc70d1b0697598"
+    }
+  ],
+  "files": {
+    "source.zip": "8bcaf3bbaba52475a8bd431ef1dbfeded6f350638d94cbc08f28e9448f52bde7",
+    "source-files.json": "bcddb233abff9c19a6d8a357e1c3debd5d50d20f0b62f8b1bd29dfcd32ba1946",
+    "trace.txt": "22ae999c7b5881f266d13f6eced7e0dc0ed4b254740ca81f03be87f57897615c"
+  }
+}
