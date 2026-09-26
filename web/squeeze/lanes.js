@@ -118,9 +118,11 @@
   };
   // v1's bound: the ladder (nobody pushing back), lower where the gap between the two TWAPs binds (Δ 10, 30 min).
   // `eff` is the bound v1 decides with, so it is the one every "max safe exposure" on the page shows.
+  // himsUp is the binding move's HIMS direction (1 = HIMS up), the opposite of SafeSettle's Decision/Settled.bindingUp,
+  // which is the tick direction (USDG is currency0, so HIMS up = tick down).
   S.hkBound = function (i) {
     var ladder = S.val('hakari.maxSafeUsdg', i), gap = S.val('hakari.gapBoundUsdg', i);
-    return { ladder: ladder, gap: gap, eff: gap != null ? gap : ladder, ticks: S.val('hakari.bindingTicks', i), up: S.val('hakari.bindingUp', i) };
+    return { ladder: ladder, gap: gap, eff: gap != null ? gap : ladder, ticks: S.val('hakari.bindingTicks', i), himsUp: S.val('hakari.bindingHimsUp', i) };
   };
   var effArr = null;
   S.hkEffArr = function () {
@@ -133,7 +135,7 @@
   // a bound: two decimals under 100 USDG (the weekend low is 20.38 everywhere on the page), else as USDG amounts
   S.fmtBound = function (v) { return v == null || !isFinite(v) ? '—' : (Math.abs(v) < 100 ? S.fmtUsdg2(v) : S.fmtUsdg(v)); };
   // n ticks as a HIMS price move (USDG is currency0: HIMS up = tick down): up +(1.0001^n - 1), down -(1 - 1.0001^-n)
-  S.tickMovePct = function (n, up) { return n == null ? null : (up === false ? Math.pow(1.0001, -Math.abs(n)) - 1 : Math.pow(1.0001, Math.abs(n)) - 1) * 100; };
+  S.tickMovePct = function (n, himsUp) { return n == null ? null : (himsUp === false ? Math.pow(1.0001, -Math.abs(n)) - 1 : Math.pow(1.0001, Math.abs(n)) - 1) * 100; };
   S.tickGapPct = function (n) { return n == null ? '—' : '≈' + S.fmtFixed((Math.pow(1.0001, Math.abs(n)) - 1) * 100, 0) + '%'; };
   S.hkDecision = function (i, exp) { return S.val('hakari.decision.e' + (exp || S.hk.exp), i); };
   S.hkPrimary = function () { return S.hk.win === 1800 && S.hk.delta === 10; };
@@ -374,14 +376,14 @@
         var b = S.hkBound(i), dec = S.hkDecision(i), out = [];
         out.push({ v: b.eff == null ? '—' : S.fmtBound(b.eff) + ' USDG', l: tr('ro.maxSafe'), color: 'hakari' });
         if (b.gap != null) { var gt = S.hkGap(i, 1800, 10); out.push({ l: tr('ro.bindGap', { n: S.fmtInt(Math.abs(gt)), p: S.tickGapPct(gt), v: S.fmtBound(b.ladder) }) }); }
-        else if (b.ticks != null) out.push({ l: tr('ro.bind', { n: S.fmtInt(b.ticks), p: S.fmtPct(S.tickMovePct(b.ticks, !!b.up), 0) }) });
+        else if (b.ticks != null) out.push({ l: tr('ro.bind', { n: S.fmtInt(b.ticks), p: S.fmtPct(S.tickMovePct(b.ticks, !!b.himsUp), 0) }) });
         out.push({ v: S.hkDecisionText(dec), l: tr('ro.settlingV', { v: S.fmtInt(S.hk.exp) }), color: dec === 0 ? 'hakari' : (dec === 1 ? 'pool-usd' : null), rect: true });
         return out;
       },
       table: { cols: [
         { h: 's.maxSafe', get: function (i) { return S.fmtBound(S.hkBound(i).eff); } },
         { h: 'tbl.ladder', get: function (i) { return S.fmtBound(S.val('hakari.maxSafeUsdg', i)); } },
-        { h: 'tbl.binding', get: function (i) { var b = S.hkBound(i); if (b.gap != null) { var gt = S.hkGap(i, 1800, 10); return tr('tbl.bindGap', { n: S.fmtInt(Math.abs(gt)), p: S.tickGapPct(gt) }); } return b.ticks == null ? '—' : S.fmtInt(b.ticks) + ' (' + S.fmtPct(S.tickMovePct(b.ticks, !!b.up), 0) + ')'; } }
+        { h: 'tbl.binding', get: function (i) { var b = S.hkBound(i); if (b.gap != null) { var gt = S.hkGap(i, 1800, 10); return tr('tbl.bindGap', { n: S.fmtInt(Math.abs(gt)), p: S.tickGapPct(gt) }); } return b.ticks == null ? '—' : S.fmtInt(b.ticks) + ' (' + S.fmtPct(S.tickMovePct(b.ticks, !!b.himsUp), 0) + ')'; } }
       ].concat(EXPS.map(function (v) { return { h: function () { return tr('tbl.decide', { v: S.fmtExp(v) }); }, get: function (i) { return S.hkDecisionText(S.hkDecision(i, v)); } }; })) },
       marks: function (ctx) {
         var a = S.hkEffArr(); if (a) baseAndMin(ctx, a, S.fmtBound);

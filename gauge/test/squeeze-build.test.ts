@@ -153,6 +153,9 @@ test("hakariSeries reshapes the replay's per-minute file for the page and flags 
   assert.deepEqual(r.problems, []);
   const s = r.series;
   assert.deepEqual(s.maxSafeUsdg, [7258.82, 123.86, 5310.34]); // 6 significant digits
+  // HIMS direction under its own name, never SafeSettle's bindingUp (the tick direction, the opposite sign here)
+  assert.deepEqual(s.bindingHimsUp, [1, 1, 0]);
+  assert.ok(!("bindingUp" in s));
   assert.deepEqual(s.gapBoundUsdg, [null, null, 2907.56]);
   assert.deepEqual(s.decision.e1000, [null, 0, 1]);
   assert.deepEqual(s.decision.e100000, [null, 0, 0]);
@@ -237,7 +240,8 @@ test("web/squeeze/data.json follows the contract", { skip: !existsSync(dataFile)
   assert.ok(hk.caveats.length >= 4 && hk.caveats.every((c: any) => c.en && c.zh));
   assert.ok(hk.caveats.some((c: any) => /normal depth, not the squeeze/.test(c.en)));
   assert.ok(/hims-hook-replay\.json/.test(hk.summaryFile) && /hims:hook/.test(hk.command));
-  for (const k of ["maxSafeUsdg", "bindingTicks", "bindingUp", "gapBoundUsdg", "decision.e1000", "decision.e10000", "decision.e100000", "rawTick.w600", "rawTick.w1800", "rawTick.w3600", "gapTicks.d10.w1800", "gapTicks.d3.w3600", "v0Pick.d10.w1800", "v0Pick.d3.w600"]) {
+  assert.ok(!("bindingUp" in h), "series.hakari.bindingHimsUp is HIMS's direction, not SafeSettle's bindingUp (the tick direction)");
+  for (const k of ["maxSafeUsdg", "bindingTicks", "bindingHimsUp", "gapBoundUsdg", "decision.e1000", "decision.e10000", "decision.e100000", "rawTick.w600", "rawTick.w1800", "rawTick.w3600", "gapTicks.d10.w1800", "gapTicks.d3.w3600", "v0Pick.d10.w1800", "v0Pick.d3.w600"]) {
     const a = k.split(".").reduce((o: any, p) => o?.[p], h);
     assert.ok(Array.isArray(a) && a.length === 4081, k);
   }

@@ -235,7 +235,7 @@ export function hakariSeries(h: any, t: readonly number[]): { series: Record<str
     series: {
       maxSafeUsdg: r6(need("v1.maxSafeExposureUsdg")),
       bindingTicks: need("v1.bindingTicks", true),
-      bindingUp: need("v1.bindingStockUp", true),
+      bindingHimsUp: need("v1.bindingStockUp", true), // HIMS direction; SafeSettle's Decision/Settled.bindingUp is the tick direction, the opposite sign
       gapBoundUsdg: r6(need(`v1.gapBoundUsdg.d${pd}.w${pw}`)),
       decision,
       rawTick,
@@ -849,7 +849,8 @@ export async function main() {
       parameters: hk.meta.parameters,
       encoding: {
         maxSafeUsdg: "SafeSettle v1's max safe exposure with nobody pushing back (the ladder; the same for every Δ and window), USDG",
-        bindingTicks: "the ladder rung that sets it, in ticks; bindingUp: 1 = the move pushes HIMS up, 0 = down",
+        bindingTicks: "the ladder rung that sets it, in ticks",
+        bindingHimsUp: "that rung's direction for HIMS: 1 = the move pushes HIMS up, 0 = down. USDG is currency0, so HIMS up is the v4 tick going down: the opposite sign of SafeSettle's Decision.bindingUp / Settled.bindingUp, which is the tick direction",
         gapBoundUsdg: `Δ = ${P.delta}, ${P.window / 60}-minute TWAP: the bound where the gap between the two TWAPs, priced as one more move, is lower than the ladder's, else null. Effective bound = gapBoundUsdg ?? maxSafeUsdg. The per-minute file does not keep that move's direction`,
         decision: `Δ = ${P.delta}, ${P.window / 60}-minute TWAP: e1000 / e10000 / e100000 = 1 trust the raw TWAP, 0 refuse, null = no TWAP over that window yet`,
         rawTick: "HakariOracleHook.twaps' raw TWAP tick (int24) per window in seconds; USDG per HIMS = 1e12 / 1.0001^tick",
