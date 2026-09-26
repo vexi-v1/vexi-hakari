@@ -22,3 +22,6 @@
 [submodule "aqua/lib/aqua"]
 	path = aqua/lib/aqua
 	url = https://github.com/1inch/aqua
+[submodule "aqua/lib/v4-core"]
+	path = aqua/lib/v4-core
+	url = https://github.com/Uniswap/v4-core
