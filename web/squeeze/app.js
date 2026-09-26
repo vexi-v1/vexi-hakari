@@ -11,7 +11,15 @@
   var CH_SHORT = function (c) { return tr('ch.' + c.id) !== 'ch.' + c.id ? tr('ch.' + c.id) : S.L(c.title); };
 
   // ---------------------------------------------------------------- language
+  // A bare #en or #zh (exactly that, nothing else) picks the language, so a link can open either version.
+  // Any other hash keeps its meaning (a chapter id, #present, or an anchor such as #hakari / #lane-hakari).
+  function hashLang() {
+    var h = location.hash || '';
+    return h === '#en' ? 'en' : (h === '#zh' ? 'zh' : null);
+  }
   function resolveLang() {
+    var h = hashLang();
+    if (h) return h;
     var s = S.store.get('lang');
     if (s === 'en' || s === 'zh') return s;
     var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);
@@ -25,11 +33,14 @@
     l.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap';
     document.head ? document.head.appendChild(l) : document.body.appendChild(l);
   }
-  S.setLang = function (lang, initial) {
+  // initial: first paint, nothing to re-render. fromHash: chosen by a #en / #zh link, so the saved choice is left alone.
+  S.setLang = function (lang, initial, fromHash) {
     S.lang = lang;
     document.documentElement.lang = lang === 'zh' ? 'zh-Hant-TW' : 'en';
     if (lang === 'zh') loadNoto();
-    if (!initial) S.store.set('lang', lang);
+    if (!initial && !fromHash) S.store.set('lang', lang);
+    // switched by hand while the URL says #en / #zh: keep the URL true to what is on screen
+    if (!initial && !fromHash && hashLang() && hashLang() !== lang) { try { history.replaceState(null, '', '#' + lang); } catch (e) { /* sandboxed host */ } }
     ['en', 'zh'].forEach(function (l) { var b = $('lang-' + l); if (b) b.setAttribute('aria-pressed', l === lang ? 'true' : 'false'); });
     if (!initial) { applyTexts(); S.renderAll(); renderSections(); S.updateCursor(true); }
   };
@@ -1085,6 +1096,8 @@
   function fromHash() {
     var h = (location.hash || '').replace('#', '');
     if (!h) return false;
+    var hl = hashLang();
+    if (hl) { if (hl !== S.lang) S.setLang(hl, false, true); return false; }
     if (h === 'present') { S.setPresenting(true); return true; }
     if (h === 'overview' || S.chapterById(h)) { S.goChapter(h); return true; }
     return false;
