@@ -108,3 +108,15 @@ sits on a new pool, and why its HIMS replay is counterfactual: the real HIMS poo
 it. Nothing we read at pool creation said that choosing no hook means no manipulation-resistant price,
 ever. A sentence where pools are created, and a reference oracle hook per chain that creators can pick,
 would help.
+
+## 11. A dynamic-fee pool's stored fee is 0: a view reader cannot know what a swap will pay
+
+The live board (`web/live/`) prices every stock pool each minute with a view walk, as `SafeSettle` does. On the
+two dynamic-fee pools among them, GLD/USDG and AMZN/USDG (`fee = 0x800000`), `StateView.getSlot0` returns
+`protocolFee = 0, lpFee = 0` (read 2026-09-26), while their last swaps paid 6,000 and 3,450 pips (the `Swap`
+event's `fee`). So the walk prices a push there at zero fees and `SafeSettle`'s bound reads 0: it refuses every
+settlement. That is conservative, but it is not a measurement. The fee a swap will pay lives in the hook's
+`beforeSwap`, and only an exact quote (a swap inside `unlock`, the `quotePush` path) sees it. What we did: the
+board labels the two pools "dynamic fee: not compared" instead of showing a collapse, and README § Limitations
+says view mode sees stored fees only. What would help: a view convention for dynamic-fee hooks (the fee they would
+charge for given swap parameters), or a line in the StateView docs that `lpFee` means nothing on a `0x800000` pool.

@@ -98,6 +98,66 @@ export function weekendChart(d: any, himsRef?: { from: number; to: number; ratio
   return s + "</svg>";
 }
 
+/**
+ * One measure, three weekends: max safe exposure ÷ its value at Friday's US close, hour by hour after that close, log
+ * scale. HIMS/USDG 2026-08-28 (the squeeze page's minute replay, every 10th minute), AMC's ETH/AMC pool the same
+ * weekend, and AMC/USDG over Labor Day (gauge/data/amc-weekends.json).
+ */
+export function amcChart(amc: any, sq: any): string {
+  const W = 900, H = 420, L = 64, R = 220, T = 76, B = 336;
+  // gapEnd: hours after Friday's close until the first mint or burn after Saturday 00:00 UTC, as the chain shows it
+  const lines: { label: string; color: string; pts: { h: number; r: number }[]; gapEnd: number }[] = [];
+  const fridayOf = (iso: string) => Date.parse(iso) / 1000;
+  if (sq) {
+    // the minute replay, as the lowest minute of every ten, so the line keeps its lows
+    const safe: (number | null)[] = sq.series.hakari.maxSafeUsdg;
+    const f = 1_787_947_200;
+    const fri = safe[(f - sq.t[0]) / 60]!;
+    const pts: { h: number; r: number }[] = [];
+    for (let i = (f - sq.t[0]) / 60; i < sq.t.length; i += 10) {
+      const bucket = safe.slice(i, i + 10).filter((v): v is number => v !== null);
+      if (bucket.length) pts.push({ h: (sq.t[i] - f) / 3600, r: Math.min(...bucket) / fri });
+    }
+    const firstMint = Date.parse("2026-08-31T00:43:30Z") / 1000; // HIMS's first mint after the weekend (squeeze dataset)
+    lines.push({ label: "HIMS/USDG, 08-28", color: C.price, pts, gapEnd: (firstMint - f) / 3600 });
+  }
+  const add = (w: any, key: string, label: string, color: string) => {
+    const f = fridayOf(w.fridayClose);
+    const fri = w.summary[key].friday.maxSafeUsd;
+    const pts = w.series[key].filter((r: any) => !r.missing && Date.parse(r.t) / 1000 >= f).map((r: any) => ({ h: (Date.parse(r.t) / 1000 - f) / 3600, r: r.maxSafeUsd / fri }));
+    const end = w.observedMintGap.firstMintOrBurnAfter ? Date.parse(w.observedMintGap.firstMintOrBurnAfter.time) / 1000 : Date.parse(w.end) / 1000;
+    lines.push({ label, color, pts, gapEnd: (end - f) / 3600 });
+  };
+  add(amc.weekends[0], "ethAmc", "AMC (ETH/AMC), 08-28", C.cost);
+  add(amc.weekends[1], "amcUsdg", "AMC/USDG, Labor Day", "#1baf7a");
+  const hMax = 66, lo = 0.004, hi = 4;
+  const x = (h: number) => L + (Math.min(h, hMax) / hMax) * (W - L - R);
+  const y = (r: number) => T + (1 - (Math.log10(Math.min(hi, Math.max(lo, r))) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo))) * (B - T);
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" ${FONT}>`;
+  s += `<rect width="${W}" height="${H}" rx="12" fill="${C.card}"/>`;
+  s += `<text x="24" y="32" font-size="18" font-weight="700" fill="${C.ink}">One measure, three weekends: the largest settlement each price could carry</text>`;
+  s += `<text x="24" y="54" font-size="13" fill="${C.ink2}">SafeSettle's bound with nobody pushing back, ÷ its value at Friday's US close; rebuilt from Robinhood Chain's logs. Log scale.</text>`;
+  // mint window closed by the calendar rule: Sat 00:00 UTC (4 h after the close) to Mon 00:00 UTC (52 h)
+  s += `<rect x="${x(4)}" y="${T}" width="${x(52) - x(4)}" height="${B - T}" fill="${C.band}"/>`;
+  s += `<text x="${x(4) + 8}" y="${B - 8}" font-size="12" fill="${C.ink2}">mint / redeem closed, Sat 00:00 → Mon 00:00 UTC by the calendar (Labor Day: to Tue 00:57)</text>`;
+  for (const g of [0.01, 0.1, 1]) s += `<line x1="${L}" x2="${W - R}" y1="${y(g)}" y2="${y(g)}" ${g === 1 ? `stroke="${C.muted}" stroke-dasharray="6 4"` : `stroke="${C.grid}"`}/><text x="${L - 8}" y="${y(g) + 4}" font-size="12" text-anchor="end" fill="${C.ink2}">${g === 1 ? "Friday" : `×${g}`}</text>`;
+  for (let h = 0; h <= hMax; h += 12) s += `<text x="${x(h)}" y="${B + 18}" font-size="12" text-anchor="middle" fill="${C.ink2}">${h ? `+${h} h` : "Fri 20:00 UTC"}</text>`;
+  const labelY: number[] = [];
+  for (const ln of lines) {
+    s += `<polyline fill="none" stroke="${ln.color}" stroke-width="2" stroke-linejoin="round" points="${ln.pts.filter((p) => p.h <= hMax).map((p) => `${x(p.h).toFixed(1)},${y(p.r).toFixed(1)}`).join(" ")}"/>`;
+    const low = ln.pts.filter((p) => p.h >= 4 && p.h <= Math.min(hMax, ln.gapEnd)).reduce((m, p) => (p.r < m.r ? p : m));
+    s += `<circle cx="${x(low.h)}" cy="${y(low.r)}" r="5" fill="${ln.color}" stroke="${C.card}" stroke-width="2"/>`;
+    let ly = y(low.r);
+    while (labelY.some((v) => Math.abs(v - ly) < 34)) ly += 34;
+    labelY.push(ly);
+    s += `<text x="${W - R + 12}" y="${ly}" font-size="13" font-weight="700" fill="${ln.color}">${esc(ln.label)}</text>`;
+    s += `<text x="${W - R + 12}" y="${ly + 16}" font-size="12" fill="${C.ink2}">×${fmt(low.r, low.r < 0.1 ? 3 : 2)} at +${fmt(low.h, 1)} h, minting shut</text>`;
+  }
+  s += `<text x="24" y="${H - 34}" font-size="11" fill="${C.muted}">Dots: each price's low before its first mint or burn. HIMS: web/squeeze/data.json, the lowest minute of every ten.</text>`;
+  s += `<text x="24" y="${H - 18}" font-size="11" fill="${C.muted}">AMC: gauge/data/amc-weekends.json, 10-minute grid, ETH/AMC in USD through an ETH/USDG pool. The Labor Day low is a push down.</text>`;
+  return s + "</svg>";
+}
+
 export function main() {
   const dataDir = new URL("../data/", import.meta.url).pathname;
   out("hims-weekend.svg", himsChart(JSON.parse(readFileSync(dataDir + "hims-replay.json", "utf8"))));
@@ -121,6 +181,10 @@ export function main() {
       ref = { from: safe[0], to: Math.min(...safe), ratio: Math.min(...safe) / safe[0] };
     }
     out(`weekend-${friday}.svg`, weekendChart(JSON.parse(readFileSync(`${dataDir}weekend-${friday}.json`, "utf8")), ref));
+  }
+  if (existsSync(`${dataDir}amc-weekends.json`)) {
+    const squeeze = new URL("../../web/squeeze/data.json", import.meta.url).pathname;
+    out("amc-weekends.svg", amcChart(JSON.parse(readFileSync(`${dataDir}amc-weekends.json`, "utf8")), existsSync(squeeze) ? JSON.parse(readFileSync(squeeze, "utf8")) : null));
   }
 }
 

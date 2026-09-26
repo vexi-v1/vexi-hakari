@@ -233,4 +233,13 @@ FEEDBACK (§ 7 rewritten for v1, § 10 new) and this log corrected as listed.
 > a ~$2.59 stock, and that the market maker pre-minted about $1M of AMC tokens before the Labor Day weekend. Rebuild it with
 > the existing collectors and skill, to answer 'was HIMS a one-off?' head on.")
 
-Output so far: `web/live/` and `npm run live:baseline` (item 1).
+Output: (1) `web/live/`, every stock pool's max safe exposure measured each minute in the browser against Friday's
+close, and `npm run live:baseline`, which rebuilds Friday's close and every hour since from logs and checks the page's
+own lens call against the rebuild at one block (equal on every fixed-fee pool; GLD and AMZN, dynamic-fee, are labelled,
+FEEDBACK § 11). (2) `npm run reversion`: over 2026-09-19..26, 18 % of weekday pushes of 10+ ticks were undone within a
+minute and 53 % within an hour; the slow-side rule gives `arbReversionSeconds = 0` for all 28 stock pools, so the
+README's weekday rows became assumptions, and pushes were undone as often on the closed weekend (pool-to-pool
+arbitrage). (3) `npm run amc`: AMC's ETH/AMC pool printed 166.77 USD against 2.66 at Friday's close on 2026-08-30,
+its bound falling to 0.14×; over Labor Day one address minted 2.99M AMC on the Friday, the AMC/USDG price held, and
+its bound fell to 0.07× with the cheapest fake a push down. Minting stayed shut through Labor Day Monday, which the
+calendar rule does not know (README § Limitations).

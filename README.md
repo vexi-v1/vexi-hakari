@@ -40,8 +40,8 @@ ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · 
 | **`PushCostLens`** | What it costs to push any v4 pool to a price and sell straight back. **Exact mode** runs real swaps to a price limit inside `unlock` and reverts with the answer (the V4Quoter pattern, with a price limit V4Quoter lacks). **View mode** walks the tick bitmap through `StateLibrary`, from any starting price, so a contract already inside an unlock can still ask. Needs no deployment: inject its bytecode with an `eth_call` state override. | [`src/PushCostLens.sol`](src/PushCostLens.sol) |
 | **`HakariOracleHook`** | OpenZeppelin's truncated oracle hook plus `twaps()`: the raw **and** truncated TWAP in one call. Records before the first swap of each second, so a push undone in the same transaction is never seen. | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol) |
 | **`SafeSettle`** + **`CostModel`** | A demo settlement rule. For moves of 0.5–20 % (plus the gap between the two TWAPs), both ways from the price now, the lens prices holding the move over the window, re-pushing after every pull-back while arbitrage is open. Cost ÷ what the move earns per unit of exposure, minimised, is the **max safe exposure**. The total exposure settling on the price must be below it to settle on the raw TWAP; otherwise it refuses. Emits `Settled(id, raw, trunc, trusted, exposure, maxSafeExposure, bindingTicks, bindingUp)`. | [`src/SafeSettle.sol`](src/SafeSettle.sol), [`src/CostModel.sol`](src/CostModel.sol) |
-| **Gauge** (TypeScript) | Live cost ladder, Δ calibration from `Swap` events, any past weekend rebuilt from `ModifyLiquidity` logs, the Robinhood mint-window flag, and the HIMS weekend replayed minute by minute through the hook and `SafeSettle` as if the pool had the hook (it never did; `npm run hims:hook`). | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
-| **Web page** | Paste any pool → live cost to push it, fenced or not, suggested Δ. HIMS replay, every stock pool over a weekend, SafeSettle's decisions. | [`web/`](web/), hosted at <https://vexi-v1.github.io/vexi-hakari/web/>; locally `python3 -m http.server 8790 --bind 127.0.0.1` and open `/web/` |
+| **Gauge** (TypeScript) | Live cost ladder, Δ calibration from `Swap` events, any past weekend rebuilt from `ModifyLiquidity` logs, the Robinhood mint-window flag, and the HIMS weekend replayed minute by minute through the hook and `SafeSettle` as if the pool had the hook (it never did; `npm run hims:hook`), each pool's measured reversion time (`npm run reversion`), AMC over two weekends (`npm run amc`), and the live board's Friday baseline (`npm run live:baseline`). | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
+| **Web page** | The live board: every stock pool's max safe exposure now against Friday's close, every minute. Paste any pool → live cost to push it, fenced or not, suggested Δ. HIMS replay, every stock pool over a weekend, AMC, SafeSettle's decisions. | [`web/`](web/), hosted at <https://vexi-v1.github.io/vexi-hakari/web/>; locally `python3 -m http.server 8790 --bind 127.0.0.1` and open `/web/` |
 
 ### Why not just truncate the oracle?
 
@@ -101,11 +101,35 @@ at Sunday 23:25, [`web/squeeze/data.json`](web/squeeze/data.json) `series.hakari
 its pool has no Friday point to compare with (it could carry 0.04 USDG while minting was closed), and GLD's is a
 hooked pool whose hook's own charges the bound cannot see (†, [Limitations](#limitations)).
 
-So a closed mint window does not make a pool cheap to push. It removes the force that would push a price
-back, and on 08-30 the price left the LPs' ranges and the HIMS inventory moved to another pool. That can
-happen on a given weekend, and on the one other weekend we rebuilt, it didn't. This is why HAKARI measures at settlement instead
-of reading the calendar: a calendar rule would refuse every weekend, including the ones where the book held, while
-a big enough exposure is unsafe on any weekend. `npm run weekend -- <friday>` rebuilds any weekend.
+![One measure, three weekends: HIMS/USDG and AMC's ETH/AMC pool on 2026-08-28..31, AMC/USDG over Labor Day, each pool's max safe exposure over its value at Friday's close](docs/img/amc-weekends.svg)
+
+**AMC, the same weekend and the next long one** (`npm run amc`: [`gauge/src/amc.ts`](gauge/src/amc.ts),
+[`gauge/data/amc-weekends.json`](gauge/data/amc-weekends.json); a 10-minute grid, the rebuilt liquidity equal to the
+`Swap` record at every point, AMC's supply equal to `totalSupply()` at 24 of 24 checks). X posts said AMC's token
+"printed $166 against a $2.59 stock" on the HIMS weekend. It did. AMC had no USDG pool until Sunday afternoon, and its
+deepest pool was ETH/AMC (5 % fee). With 17,167 AMC tokens in existence and no mint from Friday until Monday
+09:02 UTC, that pool went from 2.66 USD at Friday's close to **166.77** at Sunday 20:00 UTC (one swap at 188.58; ETH
+at 2,487 USDG, from an ETH/USDG pool's own swaps). By the same measure as HIMS, its max safe exposure fell from
+2,148 USD to 295 (0.14×), and the cheapest fake was a push up at 98 % of the points. HIMS was not alone.
+
+The next long weekend (Labor Day, NYSE shut Monday) a post said the market maker had minted "$1 million AMC stock
+tokens as buffer supply". On Friday 2026-09-04, before that post, one address minted 2.99M AMC (supply 169,974 →
+2,867,758 in a day; another redeemed 0.29M), and nothing was minted or burned again until Tuesday 00:57 UTC. The
+price held: AMC/USDG (0.1 %, now AMC's deepest USDG pool) traded 2.53–2.70 on the grid against 2.67 on Friday. The
+bound did not: it fell from 2,905 USD to **214** (0.07×), and at the low the cheapest fake was a push *down*. The
+buffer was AMC itself, 100–200k tokens in the pool, which makes a squeeze up expensive and leaves the book below
+the price thin: the side a lender holding AMC as collateral cares about. A calendar rule would treat the two weekends
+alike, and a price watcher would call the second one safe. The bound tells them apart and says which way the second
+one was exposed.
+
+So a closed mint window does not by itself make a pool cheap to push. It removes the link between the token and the
+stock (pool-to-pool arbitrage runs all weekend: [measured](#why-not-just-truncate-the-oracle)), and then a price can
+leave the LPs' ranges while the inventory moves to a memecoin's pool, as HIMS's and AMC's did on 08-30, or a book can
+thin on one side while the price holds, as AMC/USDG's did on Labor Day. On the weekend of 09-18 none of the 12 pools
+with a Friday point did either. This is why HAKARI measures at settlement instead of reading the calendar: a calendar rule
+would refuse every weekend, including the ones where the book held, while a big enough exposure is unsafe on any
+weekend. `npm run weekend -- <friday>` rebuilds any weekend, and the [live board](https://vexi-v1.github.io/vexi-hakari/web/live/)
+shows this one as it happens.
 
 ## Where the Uniswap integration is
 
@@ -261,6 +285,10 @@ move back across the gap it was pushed through, so a held push shows up as a low
   thin at settlement: an LP pulling liquidity just before expiry, or a push into a thin stretch (the bound is read
   from the price now). What a refused settlement does next (wait and retry, extend the expiry, fall back to a slower
   source) is the integrator's call, and that fallback is where the next attack goes. HAKARI does not choose it.
+- **The mint-window rule is a calendar.** `mint-window.ts` (and the live board) close the window Saturday 02:00 to
+  Monday 02:00 Berlin. It knows no holidays: over Labor Day the chain shows no AMC mint or burn from Friday 23:xx to
+  Tuesday 00:57 UTC, and on 2026-08-31 AMC's first mint came at 09:02 UTC, not at the reopening. A pool's own mint
+  and burn record is the better signal, and `npm run amc` reads it.
 - **The ladder samples moves up to 20 %.** On the pools we measured the bound was usually set by the 20 % rung,
   where liquidity thins, so a larger move could be cheaper still and the true bound lower. It is: measured live at
   mainnet block 72,712,660 ([`docs/demo-outputs/measure-live-2026-09-26.json`](docs/demo-outputs/measure-live-2026-09-26.json)),
@@ -312,10 +340,13 @@ did not.
 git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari && cd vexi-hakari
 forge test --no-match-path 'test/fork/*'          # 44 tests, no RPC
 script/record-fork-tests.sh                       # 5 fork tests on real pools (public RPC, ~6 min), URLs masked
-cd gauge && npm ci && npm test                    # 78 tests (4 skip without `npm run squeeze`'s caches); the walk and the bound are pinned to the Solidity ones
+cd gauge && npm ci && npm test                    # 88 tests (4 skip without `npm run squeeze`'s caches); the walk and the bound are pinned to the Solidity ones
 npm run discover                                  # the deepest USDG pool of 30 stock tokens
 npm run weekend -- 2026-09-18                     # rebuild a weekend for every one of them
 npm run hims && npm run ladder && npm run calibrate && npm run charts
+npm run live:baseline                             # Friday's close for the live board (web/live/), rebuilt from logs
+npm run reversion                                 # how fast each pool's pushed price is pulled back
+npm run amc                                       # AMC over the HIMS weekend and Labor Day (needs an archive RPC for totalSupply)
 ```
 
 `.env.example` lists the variables. The gauge rotates across every mainnet RPC you list and checks each one
