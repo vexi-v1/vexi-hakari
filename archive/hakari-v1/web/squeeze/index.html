@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HIMS Weekend Float Squeeze</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="Minute-by-minute replay of the August 2026 HIMS weekend float squeeze on Robinhood Chain: HIMS, BONER and USDG prices, pool inventory and HAKARI's cost to push.">
+<!-- bundle:head-start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>/* link to web/plain/: one label per language, following the root lang attribute */
+.plain-link { margin-right: 0 !important; } .plain-link [lang="zh-Hant-TW"], :root[lang="zh-Hant-TW"] .plain-link [lang="en"] { display: none; } :root[lang="zh-Hant-TW"] .plain-link [lang="zh-Hant-TW"] { display: inline; }</style>
+<!-- bundle:head-end -->
+<link rel="stylesheet" href="squeeze.css">
+</head>
+<body>
+<!-- bundle:body-start -->
+<a class="skip" href="#stage" data-t="skip">Skip to the replay</a>
+<header class="topbar" id="topbar">
+  <div class="tb-in">
+    <a class="back" id="back-link" href="../index.html">← HAKARI gauge</a>
+    <a class="back plain-link" href="../plain/"><span lang="en">Plain-language version</span><span lang="zh-Hant-TW">白話版</span></a>
+    <h1 class="h1"><span id="h1" class="h1-mid">The HIMS weekend float squeeze</span><span id="h1-short" class="h1-short">HIMS float squeeze</span><span id="h1-long" class="h1-long">The HIMS weekend float squeeze, replayed on-chain</span></h1>
+    <nav class="stepper" id="stepper" aria-label="Chapters"></nav>
+    <div class="playback" role="group" aria-label="Playback">
+      <button type="button" class="icon-btn" id="btn-prev" data-t-label="prev"><span class="ic" aria-hidden="true">⏮</span></button>
+      <button type="button" class="icon-btn play" id="btn-play" aria-pressed="false" data-t-label="play"><span class="ic" aria-hidden="true">▶</span></button>
+      <button type="button" class="icon-btn" id="btn-next" data-t-label="next"><span class="ic" aria-hidden="true">⏭</span></button>
+      <select id="speed" class="speed" aria-label="Speed">
+        <option value="0.5">0.5×</option>
+        <option value="1" selected>1×</option>
+        <option value="2">2×</option>
+      </select>
+    </div>
+    <div class="seg lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" aria-pressed="true" lang="en">EN</button>
+      <button type="button" id="lang-zh" aria-pressed="false" lang="zh-Hant-TW">繁中</button>
+    </div>
+    <button type="button" class="icon-btn keys-btn" id="btn-keys" aria-expanded="false" aria-controls="keys-pop" data-t-label="keys"><span aria-hidden="true">?</span></button>
+    <button type="button" class="btn-primary" id="btn-present" aria-pressed="false">Present</button>
+  </div>
+</header>
+<div id="keys-pop" class="keys-pop" hidden></div>
+
+<div class="page">
+  <p id="notice" class="notice" hidden></p>
+  <main class="stage" id="stage" tabindex="-1">
+    <aside class="left" id="left">
+      <div class="clock" id="clock">
+        <p class="clk-day" id="clk-day">SUN 30 AUG</p>
+        <p class="clk-main"><span class="clk-time" id="clk-time">23:36</span> <span class="clk-zone" id="clk-zone">UTC</span></p>
+        <p class="clk-ny" id="clk-ny"></p>
+        <div class="chips">
+          <span class="status-chip" id="chip-nyse"></span>
+          <span class="status-chip" id="chip-session"></span>
+          <span class="status-chip" id="chip-gate"></span>
+        </div>
+      </div>
+      <p class="moment" id="moment" hidden></p>
+      <article class="card" id="card"></article>
+    </aside>
+
+    <div class="right" id="right">
+      <figure class="tri-row" id="tri-row">
+        <div class="tri-main">
+          <div id="tri-svg-host" class="tri-host"></div>
+          <ul class="tri-prices" id="tri-prices" hidden></ul>
+          <p id="tri-flow" class="tri-flow" hidden></p>
+          <p id="tri-look" class="tri-look" hidden></p>
+          <figcaption class="tri-cap"><span id="tri-caption"></span>
+            <button type="button" class="tool" id="tri-num" aria-pressed="false" aria-controls="tri-table" data-t="numbers">Numbers</button>
+          </figcaption>
+          <div class="tablewrap tri-table" id="tri-table" hidden>
+            <p id="tri-note" class="tri-note"></p>
+            <table class="num-table">
+              <caption id="tri-table-title"></caption>
+              <thead><tr><th data-t="tri.col.pool">Pool</th><th data-t="tri.col.price">Price</th><th data-t="tri.col.a">Token A held</th><th data-t="tri.col.b">Token B held</th></tr></thead>
+              <tbody id="tri-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tri-side">
+          <div class="hero" id="hero">
+            <p class="hero-label" id="hero-label">Cost to push HIMS +10% and sell back</p>
+            <p class="hero-num"><span class="hero-value" id="hero-value">—</span> <span class="hero-unit">USDG</span></p>
+            <p class="hero-delta" id="hero-delta"></p>
+            <div class="hero-spark" id="hero-spark"></div>
+            <div class="hero-mse" id="hero-mse" hidden>
+              <p class="hero-label" id="hero-mse-label">Max safe exposure (HAKARI replay)</p>
+              <p class="hero-num2"><span class="hero-value2" id="hero-mse-value">—</span> <span class="hero-unit2">USDG</span> <span class="hero-delta2" id="hero-mse-delta"></span></p>
+              <p class="hero-mse-sub" id="hero-mse-sub"></p>
+            </div>
+          </div>
+          <div class="pools">
+            <h3 class="panel-h" id="pools-title">Pools</h3>
+            <ul class="pools-legend" id="pools-legend"></ul>
+            <h3 class="panel-h" id="float-title">Where the supply sits</h3>
+            <div class="float-bar" id="float-bar" aria-hidden="true"></div>
+            <ul class="float-rows" id="float-rows"></ul>
+          </div>
+        </div>
+      </figure>
+
+      <div class="timeblock" id="timeblock">
+        <div class="tb-tools">
+          <span class="clock-pill"><i id="clock-pill-gate" class="st-icon" role="img"></i><span id="clock-pill"></span></span>
+          <span class="mm-label" id="mm-label">Replay time</span>
+          <div class="seg small" role="group" data-t-label="zoom.label">
+            <button type="button" id="zoom-chapter" aria-pressed="true" data-t="zoom.chapter">Chapter</button>
+            <button type="button" id="zoom-whole" aria-pressed="false" data-t="zoom.whole">Whole weekend</button>
+          </div>
+          <div class="seg small" role="group" data-t-label="y.label">
+            <button type="button" id="y-fixed" aria-pressed="true" data-t="y.fixed">y fixed</button>
+            <button type="button" id="y-fit" aria-pressed="false" data-t="y.fit">y fit to view</button>
+          </div>
+          <div class="seg small" role="group" data-t-label="tz.label">
+            <button type="button" id="tz-utc" aria-pressed="true">UTC</button>
+            <button type="button" id="tz-jst" aria-pressed="false">JST</button>
+          </div>
+        </div>
+        <div class="minimap" id="minimap" aria-label="Replay time"><svg id="minimap-svg" aria-hidden="true"></svg></div>
+        <svg id="funnel-svg" class="funnel-svg" aria-hidden="true"></svg>
+        <div id="moments-host"></div>
+      </div>
+
+      <div class="lanes" id="lanes"></div>
+      <div class="axis" id="axis" aria-hidden="true"><svg id="axis-svg"></svg><span class="time-flag" id="time-flag" hidden></span></div>
+    </div>
+  </main>
+
+  <div id="sections" class="sections"></div>
+  <footer class="footer"><p class="meta" id="footer-line">ETHGlobal Tokyo 2026 · MIT · <a href="https://github.com/vexi-v1/vexi-hakari">source</a></p></footer>
+</div>
+
+<nav class="phone-transport" id="phone-transport" aria-label="Playback">
+  <button type="button" class="icon-btn" id="pt-prev" data-t-label="prev"><span aria-hidden="true">‹</span></button>
+  <button type="button" class="icon-btn play" id="pt-play" aria-pressed="false" data-t-label="play"><span class="ic" aria-hidden="true">▶</span></button>
+  <button type="button" class="icon-btn" id="pt-next" data-t-label="next"><span aria-hidden="true">›</span></button>
+  <button type="button" class="pt-label" id="pt-label" aria-haspopup="dialog" aria-expanded="false" aria-controls="sheet"></button>
+</nav>
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet-head"><h2 id="sheet-title">Chapters</h2><button type="button" class="tool" id="sheet-close" data-t="x.close">Close</button></div>
+    <div class="sheet-list" id="sheet-list"></div>
+  </div>
+</div>
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<div class="sr-only" id="live" aria-live="polite"></div>
+<noscript><p class="notice">This replay needs JavaScript. The numbers it draws are in data.json next to this page.</p></noscript>
+<!-- bundle:body-end -->
+<!-- bundle:scripts-start -->
+<script src="data.js"></script>
+<script src="story.js"></script>
+<script src="social.js"></script>
+<script src="i18n.js"></script>
+<script src="core.js"></script>
+<script src="lanes.js"></script>
+<script src="triangle.js"></script>
+<script src="app.js"></script>
+<!-- bundle:scripts-end -->
+</body>
+</html>

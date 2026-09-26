@@ -3,121 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HAKARI live board</title>
-<link rel="icon" href="data:,">
-<meta name="description" content="Every Robinhood stock token's deepest Uniswap v4 USDG pool, measured every minute: the largest settlement its price can safely carry now, against Friday's US close.">
-<style>
-  :root {
-    color-scheme: light;
-    --surface-1: #fcfcfb; --surface-2: #f1f0ec; --line: #d9d7d0;
-    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #8a887f;
-    --series-1: #2a78d6; --series-2: #eb6834;
-    --good: #008300; --warning: #b86e00; --serious: #e34948;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      color-scheme: dark;
-      --surface-1: #1a1a19; --surface-2: #242422; --line: #3a3936;
-      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
-      --series-1: #3987e5; --series-2: #d95926;
-      --good: #4caf50; --warning: #e0a030; --serious: #e66767;
-    }
-  }
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-    --surface-1: #1a1a19; --surface-2: #242422; --line: #3a3936;
-    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
-    --series-1: #3987e5; --series-2: #d95926;
-    --good: #4caf50; --warning: #e0a030; --serious: #e66767;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--surface-1); color: var(--text-primary); font: 15px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
-  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
-  h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
-  h2 { font-size: 19px; margin: 36px 0 8px; }
-  p.lead { color: var(--text-secondary); margin: 0 0 8px; max-width: 76ch; }
-  .meta { color: var(--text-muted); font-size: 13px; }
-  a { color: var(--series-1); }
-  code { font-size: 13px; background: var(--surface-2); padding: 1px 4px; border-radius: 4px; }
-  .crumbs { font-size: 13px; margin: 0 0 12px; }
-  .hero { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
-  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
-  .tile { background: var(--surface-2); border-radius: 10px; padding: 12px 14px; }
-  .tile .k { font-size: 13px; color: var(--text-secondary); }
-  .tile .v { font-size: 26px; font-weight: 650; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
-  .tile .s { font-size: 13px; color: var(--text-secondary); }
-  .status { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; white-space: nowrap; }
-  .status i { font-style: normal; font-size: 12px; }
-  .status.collapsed { color: var(--serious); }
-  .status.thinning { color: var(--warning); }
-  .status.holding { color: var(--good); }
-  .status.unknown, .status.thin, .status.dynamic, .status.pending { color: var(--text-muted); }
-  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-  .pill.closed { background: color-mix(in oklab, var(--serious) 18%, transparent); color: var(--serious); }
-  .pill.open { background: color-mix(in oklab, var(--good) 18%, transparent); color: var(--good); }
-  .tablewrap { overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
-  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: middle; }
-  th:first-child, td:first-child { text-align: left; }
-  th { color: var(--text-secondary); font-weight: 600; font-size: 13px; }
-  td.ratio { font-weight: 650; }
-  td.spark { padding: 2px 8px; }
-  tr.fresh td { animation: fresh 1.2s ease-out; }
-  @keyframes fresh { from { background: color-mix(in oklab, var(--series-1) 12%, transparent); } to { background: transparent; } }
-  @media (prefers-reduced-motion: reduce) { tr.fresh td { animation: none; } }
-  svg.sparkline { display: block; overflow: visible; }
-  svg.sparkline .one { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 3 3; }
-  svg.sparkline .closed { fill: color-mix(in oklab, var(--text-muted) 14%, transparent); }
-  svg.sparkline .line { stroke: var(--series-1); stroke-width: 2; fill: none; stroke-linejoin: round; stroke-linecap: round; }
-  svg.sparkline .live { stroke: var(--series-2); stroke-width: 2; fill: none; }
-  svg.sparkline .dot { fill: var(--series-2); stroke: var(--surface-1); stroke-width: 2; }
-  svg.sparkline .hit { fill: transparent; }
-  svg.sparkline .hit:hover { fill: color-mix(in oklab, var(--series-1) 35%, transparent); }
-  .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-secondary); margin: 6px 0; }
-  .legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid; vertical-align: 4px; margin-right: 6px; }
-  .legend i.band { height: 10px; border: 0; background: color-mix(in oklab, var(--text-muted) 14%, transparent); vertical-align: -1px; }
-  .legend i.dash { border-top: 1px dashed var(--text-muted); }
-  .err { color: var(--serious); }
-  details summary { cursor: pointer; color: var(--text-secondary); }
-  details { margin: 10px 0; }
-  .row-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 8px 0; }
-  button { font: inherit; padding: 6px 10px; border-radius: 6px; cursor: pointer; background: var(--text-primary); color: var(--surface-1); border: 1px solid transparent; }
-  button:disabled { opacity: 0.5; cursor: wait; }
-  button:focus-visible, a:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
-</style>
+<title>HAKARI (archived)</title>
+<meta http-equiv="refresh" content="0; url=../../archive/hakari-v1/web/live/">
+<link rel="canonical" href="../../archive/hakari-v1/web/live/">
+<script>location.replace("../../archive/hakari-v1/web/live/" + location.search + location.hash);</script>
 </head>
 <body>
-<main>
-  <p class="crumbs"><a href="../">HAKARI</a> · <a href="../squeeze/">the HIMS weekend replay</a></p>
-  <h1>Right now: 29 stock pools against Friday's close</h1>
-  <p class="lead">The deepest Uniswap v4 USDG pool of 29 widely traded Robinhood stock tokens, measured every minute from your browser: the largest settlement (a loan, a perp, an option payout) its price can safely carry with nobody pushing back, next to the same figure at Friday's US close. While the mint window is shut nobody can mint or redeem, so nothing ties these prices to the stock: pool-to-pool arbitrage still runs, but a whole float can drift, as HIMS's did. On 2026-08-30 HIMS fell to <b>0.006×</b> of its Friday figure (<a href="../squeeze/">replay</a>); this board shows whether anything is doing that <em>now</em>.</p>
-
-  <div class="hero" aria-live="polite">
-    <div class="tile"><div class="k">Robinhood mint window</div><div class="v" id="mint-v">…</div><div class="s" id="mint-s"></div></div>
-    <div class="tile"><div class="k">Pools below half of Friday's bound</div><div class="v" id="count-v">…</div><div class="s" id="count-s"></div></div>
-    <div class="tile"><div class="k">Furthest below Friday</div><div class="v" id="low-v">…</div><div class="s" id="low-s"></div></div>
-  </div>
-
-  <div class="row-actions">
-    <button id="toggle">Pause</button>
-    <span class="meta" id="progress" aria-live="polite">loading…</span>
-  </div>
-  <div class="legend" aria-hidden="true">
-    <span><i style="border-color:var(--series-1)"></i>hourly since Friday's close (rebuilt from logs)</span>
-    <span><i style="border-color:var(--series-2)"></i>this page's minute readings</span>
-    <span><i class="dash"></i>Friday = 1×</span>
-    <span><i class="band"></i>mint window closed</span>
-  </div>
-  <div class="tablewrap"><table id="board"></table></div>
-  <p class="meta" id="board-note"></p>
-
-  <h2>What you are looking at</h2>
-  <p class="lead"><b>Max safe exposure</b> is <code>CostModel.maxSafeExposure</code> with <code>arbReversionSeconds = 0</code>: for moves of 0.5–20 % both ways, what pushing the pool there and selling straight back costs in fees, divided by what that move earns per USDG settling on the price. Above it, faking the price pays for itself. The page gets it the way <code>SafeSettle</code> does: it simulates <code>PushCostLens</code>'s deployment, injects the bytecode at a throwaway address with an <code>eth_call</code> state override, and runs <code>roundTripCosts</code> both ways against Robinhood Chain mainnet 4663. No wallet, no transaction, nothing deployed.</p>
-  <p class="lead"><b>Friday's close</b> (20:00 UTC, 16:00 ET) and the hourly line come from <code>npm run live:baseline</code>, which rebuilds each pool from its <code>ModifyLiquidity</code> logs, because the public RPC keeps logs but not old state. The two methods agree: at one recent block the script ran both, and the table below shows the ratio.</p>
-  <p class="lead">A falling ratio means the pool got cheaper to fake relative to Friday, usually because liquidity left or the price walked out of the LPs' ranges. It does not say anyone is faking it. A rising ratio can mean an LP added depth, or that the price moved into a thicker part of the book.</p>
-  <details id="check-wrap"><summary>The two methods at the same block (lens by state override ÷ rebuild from logs)</summary><div class="tablewrap"><table id="check"></table></div></details>
-  <p class="meta" style="margin-top:32px">ETHGlobal Tokyo 2026 · MIT · <a href="https://github.com/vexi-v1/vexi-hakari/tree/main/web/live">source</a> · data <a href="baseline.json">baseline.json</a></p>
-</main>
-<script type="module" src="app.js"></script>
+<p>This page moved with the first HAKARI study to <a href="../../archive/hakari-v1/web/live/">archive/hakari-v1/web/live/</a>.</p>
 </body>
 </html>

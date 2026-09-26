@@ -19,11 +19,7 @@ remappings = [
     "@openzeppelin/uniswap-hooks/=lib/uniswap-hooks/src/",
     "@openzeppelin/contracts/=lib/v4-core/lib/openzeppelin-contracts/contracts/",
 ]
-fs_permissions = [
-    { access = "read-write", path = "./deployments" },
-    { access = "read-write", path = "./test/fixtures" },
-    { access = "read-write", path = "./web" },
-]
+fs_permissions = [{ access = "read-write", path = "./deployments" }]
 
 [fuzz]
 runs = 256

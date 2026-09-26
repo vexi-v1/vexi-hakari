@@ -7,6 +7,8 @@ broadcast/**/dry-run/
 node_modules/
 gauge/dist/
 web/dist/
+archive/hakari-v1/gauge/dist/
+archive/hakari-v1/web/dist/
 web/node_modules/
 
 # secrets: never committed, never printed
@@ -19,3 +21,4 @@ web/node_modules/
 .DS_Store
 /tmp/
 gauge/cache/
+archive/hakari-v1/gauge/cache/
