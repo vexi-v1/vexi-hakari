@@ -12,3 +12,5 @@ Tooling: Claude Code (Anthropic), followed by Codex (OpenAI) for quote-validity 
 Abner directed the internal review and the docs passes. The public instruction record is in `log.md`;
 the AI wrote the code, tests and docs under `AGENTS.md`.
 See the root [README](../../README.md#provenance-and-ai-disclosure).
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

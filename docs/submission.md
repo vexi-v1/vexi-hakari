@@ -46,6 +46,8 @@ Integration tests use a fork of Robinhood Chain mainnet 4663: canonical Aqua, th
 TSLA and USDG, and the hook's deployed testnet bytecode on the real v4 PoolManager. Fork-free tests cover quote
 validity and original anchors, the taper's size-times-deviation arithmetic and experimental settlement outcomes.
 
+Aqua — © Degensoft Ltd 2025. Powered by SwapVM — © Degensoft Ltd 2025.
+
 ## How it's made
 
 - **Contracts:** Solidity, Foundry. The hook: solc 0.8.26 against v4-core and OpenZeppelin `uniswap-hooks`, its
@@ -111,3 +113,7 @@ through HAKARI, the Uniswap v4 band and settlement. HAKARI was built in this rep
 from `c65549c` (2026-09-25 21:29 JST). The Aqua writer, the band and the settlement were written in Vexi's private
 codebase from 2026-09-25 21:46 JST and brought into this repository on 2026-09-27; `docs/history.md` lists when each
 part was written. The repository holds only those additions.
+
+---
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

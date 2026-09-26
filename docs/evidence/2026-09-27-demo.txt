@@ -82,3 +82,5 @@ UNISWAP DEMONSTRATION LOGS
 
 EXPECTED REFUSAL TRACE (the enclosing test passed)
     │   │   │   └─ ← [Revert] Paused(4)
+
+# Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

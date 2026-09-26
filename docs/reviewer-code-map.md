@@ -26,3 +26,7 @@ relative links preserve the GitHub branch or commit being viewed. Recheck anchor
 
 Run the selected evidence with [the judge demo](demo.md). The [readiness review](submission-review.md)
 distinguishes implementation evidence from external actions still requiring confirmation.
+
+---
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

@@ -67,3 +67,7 @@ own:
 
 What was brought in, what was left out and why: [`extraction.md`](extraction.md). The Aqua and band code arrives here
 in a few commits on 09-27; when each part was first written is the table above.
+
+---
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

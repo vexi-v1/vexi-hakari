@@ -90,3 +90,7 @@ locally.
 This is a Continuity Track extension of Vexi. The repository separates the new integration from the existing
 product and documents its development history. FEEDBACK.md contains eight findings from the current integration,
 each with the issue, our workaround and a suggested improvement; earlier research is archived separately.
+
+---
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

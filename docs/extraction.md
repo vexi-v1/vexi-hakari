@@ -50,3 +50,7 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 - A copy of the files, not a merge of histories: Vexi's history carries the parts left out. The commits here that
   bring the code in say so, and [history.md](history.md) lists when each part was first written.
 - Every contract here compiles and is tested here: `cd aqua && forge test`.
+
+---
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

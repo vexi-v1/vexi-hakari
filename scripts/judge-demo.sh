@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.
 # Local Foundry execution only. No private key, forge script, or broadcast.
 set -euo pipefail
 

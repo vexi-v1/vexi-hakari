@@ -78,3 +78,7 @@ transfer demonstration directly. See the [event submission instructions](https:/
   Aqua/book/band stack is demonstrated on a local fork; the public band deployment script has not been broadcast.
 - **Does a failed settlement just wait safely?** A caller must retry. Later acceptance changes the selected
   time's price; a persistent genuine gap can lead to pooled-premium refunds. See [settlement.md](settlement.md).
+
+---
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

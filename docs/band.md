@@ -144,3 +144,7 @@ among them: [prior-art-tokenized-stocks.md](prior-art-tokenized-stocks.md).
 
 Settlement (`HookTwapExpiryPrice.Params`): `settleWindow` 300 s, `bandWindow` 1800 s, `attempts` 6,
 `halfWidthBps` 500, `bandFromExpiry` true. A book's settle grace must exceed `attempts × settleWindow`.
+
+---
+
+Aqua — © Degensoft Ltd 2025. SwapVM — © Degensoft Ltd 2025.

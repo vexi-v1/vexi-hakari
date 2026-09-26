@@ -485,3 +485,27 @@ quote-staleness problem, the enforced v4-to-Aqua purchase path, and observed int
 current form questions, replaced stale feedback numbering with descriptive references, credited the upstream
 oracle, and kept testnet deployments distinct from local-fork demonstrations. Personal ratings, contact details
 and consent remain for the participant. No form was filled or submitted, and no contract behavior changed.
+
+## 2026-09-27 04:10 — Abner: one public repository, Vexi as the pre-existing project, and the license by 1inch's rules
+
+> 1. 他清單上的「把 [the Aqua repository] 設成 public」-> 把這件事關掉(文件相關描述也要更新) … 3. 怎麼決定好呢？參考 1inch 相關規定，
+> 他最嚴格(只需要動公開的 vexi-hakari) 4. docs/history.md 列了私有 repo 的時間線，只列 aqua, uniswap 相關內容的脈絡，
+> Vexi 就是既有項目，我們黑客松後才加入了 Aqua 等等內容
+>
+> And, mid-way: 但是 1inch 似乎要的是 BUSL?
+>
+> ("Drop the item about making the Aqua repository public and update the docs; decide the license by 1inch's rules,
+> the strictest, changing only this public repository; in the history, list only the Aqua and Uniswap context: Vexi
+> is the existing project, and Aqua and the rest were added at the hackathon." Mid-way: "But doesn't 1inch seem to
+> want BUSL?")
+
+Outcome (Claude Code): the docs say this is the entry's only public repository and that Vexi, which existed before the
+event, stays private; `docs/history.md` lists only the steps that concern 1inch Aqua or Uniswap. The license question
+went to a workflow: four research tracks (the Aqua and SwapVM license texts, ETHGlobal's rules and prize pages,
+1inch's own docs, which files derive from 1inch code), one decision, three adversarial verifiers. Finding: neither
+1inch prize sets a license; 1inch's licenses reach only code derived from Aqua or SwapVM; ETHGlobal requires the new
+parts of a Continuity entry to remain open source, which BUSL-1.1 is not. So `AquaWriter`, `OptionBook` and
+`ICollateralSource` became MIT, the SwapVM extensions kept LicenseRef-Degensoft-SwapVM-1.1, the pinned license texts
+and `THIRD_PARTY_NOTICES.md` were added, the SwapVM files got Degensoft's notice where adapted and dated change notes,
+`aqua/README.md` got deploy instructions for them, and the docs that discuss Aqua or SwapVM carry the attribution
+line. Each step is its own commit.
