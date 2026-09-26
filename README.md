@@ -245,18 +245,19 @@ token of exposure each:
    9.56 tokens, settle on raw 1650 while truncation lags at 550. Thin: 9.6 × 10⁻⁶ tokens, refused. Where faking is
    cheap the rule cannot tell real from fake, and it says so instead of paying on a lagging price.
 
-### A second consumer: our own venue, on testnet
+## A second consumer of the pool's price: our own venue, on testnet
 
-Vexi is our other project: an options venue built before the hackathon (BUSL-1.1; none of its code is here. The four
-functions and five events we call are re-declared in our own words from the deployed contracts' signatures:
-[`gauge/src/vexi-abi.ts`](gauge/src/vexi-abi.ts), [`src/interfaces/IVexi.sol`](src/interfaces/IVexi.sol)). It sells
+Vexi is our other project, an options venue built before the hackathon (BUSL-1.1). None of its code is here: the four
+functions and five events we call are re-declared in our own words from the deployed contracts' signatures
+([`gauge/src/vexi-abi.ts`](gauge/src/vexi-abi.ts), [`src/interfaces/IVexi.sol`](src/interfaces/IVexi.sol)). It sells
 physically settled 15-minute options on testnet 46630 and fixes each settlement price S* once, from a 300-second TWAP
-of its own hookless v4 pool on the same official PoolManager. Every contract on an expiry is an ERC-6909 token with a
-public supply, so for this one consumer the exposure settling on a pool's price is readable, and the bound can be checked
-against every fix the venue has made. **What it is not: a market.** The tokens are mocks; each of the six pricing pools
-holds one full-range position we seeded (liquidity 10¹⁸, fee 0.3 %); the open interest was written by the venue's own
-Book (42 `Minted` logs, no burns); and all 240 swaps since its deploy came from its own adapter (AI and MEME were never
-swapped). What it shows is the pipeline on a real consumer's contracts, and one result about rate limiters.
+of its own hookless v4 pool on the same official PoolManager: a consumer of the pool's price, not of the bound. Every
+contract on an expiry is an ERC-6909 token with a public supply, so for this one consumer the exposure settling on a
+pool's price is readable, and the bound can be checked against every fix the venue has made. **What it is not: a
+market.** The tokens are mocks; each of the six pricing pools holds one full-range position we seeded (liquidity 10¹⁸,
+fee 0.3 %); the open interest was written by one address, the venue's own (42 `Minted` logs, no burns); and all 240
+swaps since its deploy came from its own swap adapter (AI and MEME were never swapped). What it shows is the pipeline on
+a real consumer's contracts, and one result about rate limiters.
 
 **What the six pools can carry** ([`gauge/data/vexi-fixes.json`](gauge/data/vexi-fixes.json) `markets`, `npm run vexi`,
 block 124,543,799, 2026-09-26 10:41 UTC: the deployed lens's `roundTripCosts` by address, equal to the gauge's rebuild
@@ -278,9 +279,10 @@ every one below the bound** at the pool's state before its fix window opened. Th
 16:30 UTC: 1,287.03 contracts × S* 0.63671 = 819.47 USDG against a bound of 2,189.48, **0.37** of the line.
 Strike-aware, that cell's payouts would have moved 59.34 USDG had the fix been pushed by the binding 1,823-tick rung,
 against a 437.82 USDG round trip: 0.14 of break-even, the highest of any cell. The other 421 cells settled nothing.
-The fix tracks the pool: S* was within 33 bps of the last pre-window swap on every cell (PONS's worst 33.3, TSLA's
-14.5, the rest 0); 0 of 8,873 fixes were late, none thin (4, 5 or 6 observations: 4,088 / 4,541 / 244); 9 swaps
-landed inside a fix window, all the venue's own.
+The fix tracks the pool: S* was within 33 bps of the pool's last pre-window price on every one of the 39 cells with
+exposure (PONS's worst 33.3, TSLA's 14.5, the rest 0; AI and MEME, never swapped, sit exactly on their Initialize
+price); 0 of 8,873 fixes were late, none thin (4, 5 or 6 observations: 4,088 / 4,541 / 244); 9 swaps landed inside
+the fix window of 8 of those 39 cells, all of them the venue's own.
 
 **The finding.** On a single full-range position the cost per move is nearly the same at every rung: the 0.5 % rung's
 bound is 7.6–9.2 % above the binding 20 % rung's, and the bound is 0.274 % of the quote-side reserve, on all six pools
@@ -289,12 +291,14 @@ atomic push per read and passes a small push held through the 300 s window untou
 line above fee × reserve. The limiter is not depth; the bound is what these pools can carry.
 
 **The +87 bps case, reworded.** On the previous venue and PoolManager (`0xe5600ECf…`, `0x09d159b5…`, 2026-09-18)
-a +5.0 % push of the PONS pricing pool moved the vault's FAST quote (+2.5 % in 5 s, its limiter's ceiling), not the
-fix, and a buy, push, sell netted +87 bps of S per contract after fees. Cited from vexi-research `2026-09-19-reference-price`
-finding 5, not re-run here; layer 1 above is the in-repo evidence for the atomic case.
+a +5.0 % push of the PONS pricing pool moved the vault's fast quote (+2.5 % in 5 s, its limiter's ceiling), not the
+fix, and a buy, push, sell netted +87 bps of S per contract after fees. Cited from our own pre-hackathon research notes
+(private; `2026-09-19-reference-price`, finding 5), not re-run here; layer 1 above is the in-repo evidence for the
+atomic case.
 
 **Read a fix yourself.** The venue is not verified on the explorer; the fix tx of the closest cell carries 60 `Fixed`
-logs, one per series settling at 16:30 (`id` indexed, then S*, the observation window and its count):
+logs (the venue batches fixes across markets: 19 of the PONS cell's 21 series, the other two in a second tx, plus 20
+MEME, 19 NVDA and 2 AI), the first of them PONS (`id` indexed, then S*, the observation window and its count):
 
 ```bash
 cast receipt 0x3393f089598c8a528ec0ede49ed4ed7bf8ef9d7d780d15bf692de9532a757c7d --rpc-url https://rpc.testnet.chain.robinhood.com/rpc --json \
@@ -303,21 +307,21 @@ cast receipt 0x3393f089598c8a528ec0ede49ed4ed7bf8ef9d7d780d15bf692de9532a757c7d 
 # 636712374045976715 (S* 0.636712 USDG), 1790353488, 1790353761 (16:24:48 to 16:29:21 UTC), 4 observations
 ```
 
-**On-chain, live.** `ExposureGuard` against the live venue on a 46630 fork at head − 60
-([`test/fork/ExposureGuard.fork.t.sol`](test/fork/ExposureGuard.fork.t.sol), transcript
+**Against the live venue, on a fork.** Nothing new was deployed for this: `ExposureGuard` runs against the live venue
+on a 46630 fork at head − 60 ([`test/fork/ExposureGuard.fork.t.sol`](test/fork/ExposureGuard.fork.t.sol), transcript
 [`docs/demo-outputs/vexi-guard-46630.txt`](docs/demo-outputs/vexi-guard-46630.txt), block 124,542,896): the six
 `poolOf` keys hash to the venue's pricing pool ids, `bound` agrees with the table above, and `venueVerdict` on the
 series settling at the next fix (18–20 per market, read from `SeriesOpened` logs at run time) sums 0 contracts, prices
 them at the pool and reports trusted, 0.80–0.86M gas each. The venue (`0xF91B7277217AC8E5Ff3E6144C1c5A66BbE1B06fA`)
 and its spot registry (`0xCEde7e1Eb7e67338BCA489C3d3e9697ae19Faa04`) are not ours to deploy; they are called by ABI.
-Nothing new was deployed for this: [`script/DeployExposureGuard.s.sol`](script/DeployExposureGuard.s.sol) and
+[`script/DeployExposureGuard.s.sol`](script/DeployExposureGuard.s.sol) and
 [`script/DemoVexiCheck.s.sol`](script/DemoVexiCheck.s.sol) were rehearsed in simulation without a broadcast, and the
 board at [`web/vexi/`](web/vexi/) reads the deployed lens and the PoolManager's storage directly.
 
 Three caveats. The venue's live fix reads that rate-limited ring, not a hook TWAP, and all six markets fix from
-hookless pools (its oracle-hook pool, RDR-0052 in its spec, is wired to none of them). `arbReversionSeconds` is 0 here
-because no third-party swap has been seen on these pools: conservative, not measured. And HAKARI discloses; nothing in
-the venue reads the bound, and a fix never reverts. Every fix so far passes because the open interest is tiny.
+hookless pools (the oracle-hook pricing pool its spec decided on is not deployed on 46630 yet). `arbReversionSeconds`
+is 0 here because no third-party swap has been seen on these pools: conservative, not measured. And HAKARI discloses;
+nothing in the venue reads the bound, and a fix never reverts. Every fix so far passes because the open interest is tiny.
 
 ## What the review found, and what changed
 
@@ -392,12 +396,11 @@ move back across the gap it was pushed through, so a held push shows up as a low
   (`costComplete = false`), so the bound is too.
 - **One Δ per hook**, fixed at deployment, and the hook only covers pools created with it. Δ now affects only the
   truncated TWAP reported alongside, not the decision.
-- **On our own venue the bound is a disclosure.** Vexi's live fix reads a rate-limited ring of its pool's TWAP, not a
-  hook TWAP, and all six markets fix from hookless pools (its oracle-hook pool, RDR-0052 in its spec, is wired to none
-  of them). `ExposureGuard` verifies the series ids it is handed, cannot enumerate them (ERC-6909 has no per-id
-  enumeration) and cannot gate `Venue.fix`, which nothing in the venue makes conditional on the bound. On those pools
-  every fix so far passes because the open interest is tiny (39 cells, 1,806 USDG in all): the replay shows the
-  pipeline, not a refusal.
+- **On our own venue the bound is a disclosure.** `ExposureGuard` verifies the series ids it is handed, cannot
+  enumerate them (ERC-6909 has no per-id enumeration) and cannot gate `Venue.fix`; on those pools every fix so far
+  passes because the open interest is tiny (39 cells, 1,806 USDG in all): the replay shows the pipeline, not a refusal.
+  The fix mechanics and the arbitrage setting are in
+  [A second consumer](#a-second-consumer-of-the-pools-price-our-own-venue-on-testnet).
 - **`SafeSettle` is a demo rule**, not a product, and `ExposureGuard`'s verdict is another. The contribution is the
   measurement (lens, bound, gauge) and the two-series hook; the rules show two ways to use them.
 
@@ -434,7 +437,7 @@ npm run hims && npm run ladder && npm run calibrate && npm run charts
 npm run live:baseline                             # Friday's close for the live board (web/live/), rebuilt from logs
 npm run reversion                                 # how fast each pool's pushed price is pulled back
 npm run amc                                       # AMC over the HIMS weekend and Labor Day (needs an archive RPC for totalSupply)
-npm run vexi                                      # every fix our venue made on 46630, replayed against the bound (public RPC, cached; ~40 s)
+npm run vexi                                      # every fix our venue made on 46630, replayed against the bound (public RPC; logs cached under gauge/cache/vexi/, a re-run fetches only the tail)
 ```
 
 `.env.example` lists the variables. The gauge rotates across every mainnet RPC you list and checks each one
@@ -476,5 +479,5 @@ three agent lanes working one plan in parallel, directed by Abner, with nothing 
 - Upstream: a price-limit quote on `V4Quoter` and a directional tick search next to `ReservesLens`
   (`FEEDBACK.md` § 1, § 3).
 - **To our own venue**, under its owner's tickets: a depth cap in its vault sizer from this bound over the fix
-  window (its DRAFT-008), a thin- or cheap-fix badge from the cost-to-move model (its DRAFT-013), and a re-run of
+  window and a thin- or cheap-fix badge from the cost-to-move model (both in its own draft specs), and a re-run of
   `npm run vexi` once a market is wired to its oracle-hook pool.

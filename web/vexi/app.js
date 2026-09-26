@@ -12,7 +12,7 @@ const LENS = "0xe1aa7dd1bd65bc9a88fbe62ce03aa4cbb7bfdca2"; // PushCostLens, depl
 const EXPLORER_TX = "https://explorer.testnet.chain.robinhood.com/tx/";
 const POOLS_SLOT = "0x0000000000000000000000000000000000000000000000000000000000000006"; // StateLibrary.POOLS_SLOT
 const LIQUIDITY_OFFSET = 3n; // StateLibrary.LIQUIDITY_OFFSET
-const A22_TICKS = 488; // the ladder's 5 % rung
+const FIVE_PERCENT_TICKS = 488; // the ladder's 5 % rung; "cost to move 5 %" is its round trip
 const PAUSE_BETWEEN_POOLS_MS = 900; // the public RPC rate-limits bursts: one pool (one batch of four calls) at a time
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -45,6 +45,9 @@ const markets = (baseline.markets ?? []).map((m) => ({ ...m, live: null, poolIdM
 const cells = (baseline.cells ?? []).filter((c) => !baseline.stub && c.expiry).sort((a, b) => (b.ratio ?? 0) - (a.ratio ?? 0));
 const summary = baseline.summary ?? {};
 const asOf = baseline.generatedAt ? `as of ${esc(baseline.generatedAt.slice(0, 16).replace("T", " "))} UTC` : "placeholder, not yet run";
+// the collector reads state a few blocks behind the head it saw; its figures are at stateBlock, not at head
+const stateBlock = baseline.stateBlock ?? baseline.head?.block ?? null;
+const stateLag = stateBlock && baseline.head?.block ? Number(baseline.head.block) - Number(stateBlock) : 0;
 const bySymbol = (s) => markets.find((m) => m.symbol === s);
 const decimalsOf = (m) => (m.quoteIsCurrency0 ? [quoteDec, 18] : [18, quoteDec]);
 
@@ -82,7 +85,7 @@ async function measure(m, blockNumber) {
     bindingTicks: b.binding.ticks,
     bindingAssetUp: b.binding.assetUp,
     boundAtRung: { 50: boundAtRung(b.rungs, 50) / unit, 1823: boundAtRung(b.rungs, 1823) / unit },
-    a22: { up: costAt(b.rungs, A22_TICKS, true), down: costAt(b.rungs, A22_TICKS, false) },
+    a22: { up: costAt(b.rungs, FIVE_PERCENT_TICKS, true), down: costAt(b.rungs, FIVE_PERCENT_TICKS, false) },
   };
 }
 
@@ -99,11 +102,13 @@ const hasWritable = markets.some((m) => m.writable != null);
 
 function renderHero() {
   const n = summary.fixesScanned ?? 0;
-  $("fixes-v").textContent = fmt(n);
-  $("fixes-s").textContent = `${fmt(summary.expiries ?? 0)} expiries across ${markets.length} pools, one fix per pool every ${step / 60} minutes · ${fmt(summary.fixedLate ?? 0)} fixed late`;
+  // one price fix per (pool, expiry); each fix settles every series on that expiry with its own Fixed log
+  const priceFixes = summary.cells ?? 0;
+  $("fixes-v").textContent = fmt(priceFixes);
+  $("fixes-s").textContent = `${fmt(summary.expiries ?? 0)} expiries across ${markets.length} pools, one fix per pool every ${step / 60} minutes · ${fmt(n)} Fixed logs, one per series · ${fmt(summary.fixedLate ?? 0)} fixed late`;
   const withExposure = summary.cellsWithExposure ?? cells.length;
   const above = cells.filter((c) => c.ratio != null && c.ratio >= 1).length;
-  $("cells-v").textContent = fmt(withExposure);
+  $("cells-v").textContent = n ? `${fmt(withExposure)} of ${fmt(priceFixes)}` : fmt(withExposure);
   $("cells-s").textContent = n ? `${fmt(summary.seriesWithExposure ?? 0)} series, ${fmtUsdg(summary.totalExposure)} USDG in total · ${above ? `${above} at or above the bound` : "every one below the bound"}` : "nothing to show yet";
   const top = cells[0];
   $("max-v").innerHTML = top && n ? `${fmtRatio(top.ratio)} ${meter(top.ratio)}` : "—";
@@ -127,10 +132,10 @@ function capacityRow(m, wi) {
     `<td>${lf.sStar ? `${price(lf.sStar)} · ${lf.nObs} obs · ${lf.span} s` : "—"}</td></tr>`;
 }
 function renderCapacity(fresh, wi) {
-  $("capacity").innerHTML = `<tr><th>pool</th><th>spot (USDG)</th><th>liquidity</th><th>quote-side reserve (USDG)</th><th>max safe now (binding rung)</th><th>at the 0.5 % rung</th><th>≈ fee × reserve</th><th>A22: cost to move 5 % up / down</th>${hasWritable ? "<th>writable by mandate</th>" : ""}<th>last fix: S* · nObs · span</th></tr>` +
+  $("capacity").innerHTML = `<tr><th>pool</th><th>spot (USDG)</th><th>liquidity</th><th>quote-side reserve (USDG)</th><th>max safe now (binding rung)</th><th>at the 0.5 % rung</th><th>≈ fee × reserve</th><th>cost to move 5 % up / down (USDG)</th>${hasWritable ? "<th>writable by mandate</th>" : ""}<th>last fix: S* · nObs · span</th></tr>` +
     markets.map((m) => capacityRow(m, wi)).join("");
   if (fresh) $("capacity").querySelector(`tr[data-symbol="${fresh}"]`)?.classList.add("fresh");
-  $("capacity-note").innerHTML = `Liquidity is the pool's whole book (one full-range position each). Reserve = L ÷ √P (L × √P where USDG is currency1, as on MU). A22 is the round trip of the ${A22_TICKS}-tick (5 %) rung in USDG. Collector figures${baseline.head?.block && baseline.head.block !== "0" ? ` at block ${fmt(baseline.head.block)}` : ""}: ${asOf}.` +
+  $("capacity-note").innerHTML = `Liquidity is the pool's whole book (one full-range position each). Reserve = L ÷ √P (L × √P where USDG is currency1, as on MU). Cost to move 5 % is the round trip of the ${FIVE_PERCENT_TICKS}-tick rung, in USDG. Collector figures${stateBlock && stateBlock !== "0" ? ` at block ${fmt(stateBlock)}${stateLag > 0 ? ` (the lens read ${stateLag} blocks behind the head)` : ""}` : ""}: ${asOf}.` +
     (hasWritable ? ` Writable by mandate: what the venue's USDG vaults could write at today's mock NAV, ÷ the bound.` : "");
 }
 
@@ -164,7 +169,7 @@ function initWhatIf() {
 // ───────── history and fix statistics ─────────
 function renderHistory() {
   const n = summary.fixesScanned ?? 0;
-  $("history-lead").textContent = n ? `${fmt(n)} fixes scanned; these ${fmt(cells.length)} are the ones with anything at stake, sorted by exposure ÷ bound. All open interest to date was written by the venue's own Book; every cell prices the pool as it stood before the ${fixWindow} s fix window opened.` : "No fixes replayed yet: the table fills from the collector's run.";
+  $("history-lead").textContent = n ? `${fmt(summary.cells ?? 0)} price fixes (${fmt(n)} Fixed logs) scanned; these ${fmt(cells.length)} are the ones with anything at stake, sorted by exposure ÷ bound. All open interest to date was written by one address, the venue's own; every cell prices the pool as it stood before the ${fixWindow} s fix window opened.` : "No fixes replayed yet: the table fills from the collector's run.";
   $("history").hidden = cells.length === 0;
   $("history-note").hidden = cells.length === 0;
   $("history").innerHTML = `<tr><th>pool</th><th>expiry</th><th>S* (USDG)</th><th>nObs</th><th>span (s)</th><th>contracts</th><th>exposure (USDG)</th><th>bound (USDG)</th><th>exposure ÷ bound</th><th>payout moved by the binding push (USDG)</th><th>÷ that push's cost</th><th>S* vs pre-window</th><th>fix</th></tr>` +
@@ -174,7 +179,7 @@ function renderHistory() {
       const tx = c.fixTx && !ZERO_TX.test(c.fixTx) ? `<a href="${EXPLORER_TX}${esc(c.fixTx)}?tab=logs" target="_blank" rel="noopener">${esc(c.fixTx.slice(0, 10))}… ↗</a>` : "—";
       return `<tr><td><b>${esc(c.symbol)}</b></td><td>${utc(c.expiry)}</td><td>${price(c.sStar)}</td><td>${c.nObs ?? "—"}${c.thin ? " †" : ""}</td><td>${c.span ?? "—"}</td><td>${contracts == null ? "—" : fmt(contracts, 2)}</td><td>${fmtUsdg(c.exposure)}</td><td>${fmtUsdg(c.bound)}</td>` +
         `<td class="ratio"><span class="status ${b}"><i aria-hidden="true">${BAND[b].icon}</i>${fmtRatio(c.ratio)}</span> ${meter(c.ratio, `${c.symbol} ${utc(c.expiry)}: ${fmtRatio(c.ratio)} of the bound`)}</td>` +
-        `<td>${fmtUsdg(c.transferAtBinding)}</td><td>${c.breakEven == null ? "—" : fmtRatio(c.breakEven)}</td><td title="${c.inWindowSwaps ?? 0} swaps inside the fix window">${c.sStarVsPreWindowBps == null ? "—" : `${c.sStarVsPreWindowBps >= 0 ? "+" : "−"}${fmt(Math.abs(c.sStarVsPreWindowBps), 1)} bps`}</td><td>${tx}</td></tr>`;
+        `<td>${fmtUsdg(c.transferAtBinding)}</td><td>${c.breakEven == null ? "—" : fmtRatio(c.breakEven)}</td><td title="${c.inWindowSwaps ?? 0} swaps inside the fix window">${c.sStarVsPreWindowBps == null ? "—" : Math.abs(c.sStarVsPreWindowBps) < 0.05 ? "0 bps" : `${c.sStarVsPreWindowBps >= 0 ? "+" : "−"}${fmt(Math.abs(c.sStarVsPreWindowBps), 1)} bps`}</td><td>${tx}</td></tr>`;
     }).join("");
   $("history-note").innerHTML = `Exposure is the delta-1 upper bound, contracts × S*, calls and puts alike (they share one S*). The strike-aware column is what the option payouts would actually have moved if the pool had been pushed by the binding rung, and that ÷ the round trip the push costs: above 1× the push would have paid for itself. † nObs ≤ 3 or span under 200 s. Contracts = exposure ÷ S*.`;
 }
@@ -186,7 +191,7 @@ function renderFixStats() {
   const bars = keys.length ? `<div class="bars" role="img" aria-label="fixes by number of TWAP observations">${keys.map((k) => `<span class="n">${k} obs</span><span class="bar" style="width:${((hist[k] / max) * 100).toFixed(1)}%"></span><span class="n">${fmt(hist[k])}${total ? ` (${fmt((hist[k] / total) * 100, 1)} %)` : ""}</span>`).join("")}</div>` : `<p class="meta">no histogram yet</p>`;
   const withBps = cells.filter((c) => c.sStarVsPreWindowBps != null && c.expiry);
   const abs = withBps.map((c) => Math.abs(c.sStarVsPreWindowBps));
-  const track = abs.length ? `Over the ${fmt(abs.length)} fixes with exposure, S* sat ${fmt(Math.min(...abs), 1)}–${fmt(Math.max(...abs), 1)} bps from the pool's last pre-window price${withBps.some((c) => c.inWindowSwaps) ? `; ${withBps.filter((c) => c.inWindowSwaps).length} of them had swaps inside the window` : ""}.` : "";
+  const track = abs.length ? `Over the ${fmt(abs.length)} fixes with exposure, S* sat ${fmt(Math.min(...abs), 1)}–${fmt(Math.max(...abs), 1)} bps from the pool's last pre-window price${withBps.some((c) => c.inWindowSwaps) ? `; ${withBps.filter((c) => c.inWindowSwaps).length} of them had swaps inside the window${summary.inWindowSwaps != null ? ` (${fmt(summary.inWindowSwaps)} swap${summary.inWindowSwaps === 1 ? "" : "s"}${summary.inWindowForeignSwaps === 0 ? ", all the venue's own" : ""})` : ""}` : ""}.` : "";
   $("fixstats").innerHTML = `<p class="lead">Each fix is the venue's rate-limited ring TWAP over the ${fixWindow} s before expiry: a handful of observations, last value held between them. Fixes by observation count:</p>${bars}<p class="lead">${track} ${fmt(summary.fixedLate ?? 0)} fix${summary.fixedLate === 1 ? "" : "es"} landed after the window (FixedLate).</p>`;
 }
 function renderChecks() {
