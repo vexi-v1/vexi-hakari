@@ -1,8 +1,14 @@
-# ETHGlobal Tokyo 2026: submission texts
+# VexiHakari — ETHGlobal Tokyo 2026 submission texts
 
 Draft text for the ETHGlobal form. Complete [the readiness checks](submission-review.md) before submitting. Track: **Continuity**. Partner prizes: 1inch **Build an Aqua App - Continuity Track** and
 Uniswap Foundation **Best Uniswap Stack Contribution**. Repository: <https://github.com/vexi-v1/vexi-hakari>, the
 entry's only public repository; Vexi's own codebase stays private and is not linked.
+
+## Project name
+
+**VexiHakari** is the official submission name. Use this spelling consistently in the ETHGlobal form and current
+submission prose. The repository path `vexi-v1/vexi-hakari`, contract identifiers such as `HakariOracleHook`, and
+historical references to the original HAKARI study retain their existing names.
 
 ## Tagline
 
@@ -17,7 +23,7 @@ Options collateral stays in the maker's wallet until a fill through 1inch Aqua. 
 Writing a fully collateralised option today means locking the collateral in a protocol before anyone buys. The
 writers with the most depth will not hand over custody, so option books stay thin.
 
-Here the writer's tokens stay in its own wallet. An `AquaWriter` is a 1inch Aqua app: the writer ships a strategy to
+In VexiHakari, the writer's tokens stay in its own wallet. An `AquaWriter` is a 1inch Aqua app: the writer ships a strategy to
 it and posts covered calls and cash-secured puts as promises. When a buyer buys, Aqua `pull`s exactly the collateral
 of the contracts sold from the writer's wallet, inside the buyer's transaction; at expiry, unexercised collateral,
 exercise proceeds and premiums come home through Aqua `push`, credited to the same strategy. The same wallet can
@@ -88,7 +94,7 @@ strategy, moved only at a fill. SwapVM is the spot pool and the place where the 
 
 ## How is Uniswap used
 
-Uniswap v4 is the price the writer's book is checked against, through HAKARI's hook.
+Uniswap v4 is the price the writer's book is checked against, through VexiHakari's oracle hook.
 
 - `src/HakariOracleHook.sol`: OpenZeppelin `BaseOracleHook` plus `twaps()`, deployed on 46630 at
   `0x3b58D774cE351227B24A91103b20bA4fc068D080`.
@@ -121,7 +127,7 @@ before the event is in the repository; public libraries are pinned submodules, u
 
 **At the event.** Two additions to Vexi, one per partner: the 1inch Aqua writer (collateral stays in the writer's
 wallet until a fill; a SwapVM guard keeps the spot pool on the same balance from selling promised tokens), and,
-through HAKARI, the Uniswap v4 band and settlement. HAKARI was built in this repository in public, commit by commit
+the Uniswap v4 band and settlement, submitted together as VexiHakari. The original HAKARI study was built in this repository in public, commit by commit
 from `c65549c` (2026-09-25 21:29 JST). The Aqua writer, the band and the settlement were written in Vexi's private
 codebase from 2026-09-25 21:46 JST and brought into this repository on 2026-09-27; `docs/history.md` lists when each
 part was written. The repository holds only those additions.
