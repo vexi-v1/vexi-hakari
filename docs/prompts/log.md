@@ -270,4 +270,22 @@ and HAKARI's bound can be checked against every fix the venue has made. Planned 
 collector (`npm run vexi`), a hook-free on-chain consumer (`ExposureGuard`) with a 46630 fork test, and a static
 board under `web/vexi/` plus the README section; the video stays Vexi-free.
 
-Output: in progress; completed at the last commit.
+Output: three lanes in parallel from one plan, nothing deployed and nothing broadcast. (1) Gauge: `gauge/src/chain.ts`
+(a 46630 client, `getLogsHalving` for the public RPC's 10,000-log cap), `gauge/src/vexi-abi.ts` and
+`gauge/data/vexi-markets.json` (`5138b83`); `npm run vexi` (`gauge/src/vexi.ts`, `3aec076`) writes
+`gauge/data/vexi-fixes.json`, `web/vexi/baseline.json` and `test/fixtures/vexi-series.json`: 8,873 fixes since the
+venue's deploy block, 39 of 460 cells with exposure (1,806 USDG), every one below the bound, closest 0.37 (PONS
+2026-09-25 16:30 UTC); the 0.5 % rung's bound 7.6–9.2 % above the 20 % rung's and 0.274 % of the quote-side reserve on all
+six pools. (2) Contract: `src/ExposureGuard.sol`, `src/interfaces/IVexi.sol`, `test/ExposureGuard.t.sol` and
+`test/utils/MockVexi.sol` (`a11de1b`, 9 tests); `test/fork/ExposureGuard.fork.t.sol` with `script/VexiSeries.sol`,
+transcript `docs/demo-outputs/vexi-guard-46630.txt` (`bdd5bf9`, run alone: `RH_TESTNET_RPC= forge test --match-path
+'test/fork/ExposureGuard*' -vv`, 2 pass, block 124,542,896); `script/DeployExposureGuard.s.sol` and
+`script/DemoVexiCheck.s.sol` (`f8478c4`), rehearsed with `forge script … --rpc-url robinhood_testnet` and
+`--sig 'rehearse()'`, no `--broadcast`, so `deployments/46630-vexi.json` does not exist. (3) Web and docs: the stub
+baseline (`f75fc5e`), `web/vexi/` with `gauge/test/vexi-core.test.ts` and the entry card in `web/index.html`
+(`5eac81a`), this entry (`4bd1be6`), then the README's "A second consumer: our own venue, on testnet" section, its
+`ExposureGuard` rows, Limitations, Run it (`forge test --no-match-path 'test/fork/*'` 53, `cd gauge && npm test` 118),
+Provenance, Next and AI disclosure, every figure typed from `gauge/data/vexi-fixes.json` and the fork transcript (the
+docs commit that closes this entry). Addresses called, not deployed: the venue `0xF91B7277…` and its spot registry
+`0xCEde7e1E…` on 46630. Cut: the writable-by-mandate column, the `Poked` observation weights, the deploy and demo
+transactions (left for a human with the key), and the board screenshot.

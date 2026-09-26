@@ -7,7 +7,8 @@ prices a push, and `CostModel` turns that cost into the largest exposure the poo
 
 **Try it:** [every stock pool right now vs Friday's close](https://vexi-v1.github.io/vexi-hakari/web/live/) (live, every minute) ·
 [measure any pool live](https://vexi-v1.github.io/vexi-hakari/web/) (read-only, nothing deployed) ·
-[the HIMS weekend, minute by minute](https://vexi-v1.github.io/vexi-hakari/web/squeeze/)\
+[the HIMS weekend, minute by minute](https://vexi-v1.github.io/vexi-hakari/web/squeeze/) ·
+[a live options venue, every fix checked](https://vexi-v1.github.io/vexi-hakari/web/vexi/) (our own, testnet 46630)\
 **Verify it:** [the on-chain refusal](https://explorer.testnet.chain.robinhood.com/tx/0xb2ca68bf6b448ffabe9eb8732524f21d6bd463477eb416331249ee591ac0ee88?tab=logs) ·
 [verified `SafeSettle`](https://explorer.testnet.chain.robinhood.com/address/0xf360b8ebe3A68e8029308A8CAa76E867B0F02c84?tab=contract) ·
 [the Uniswap code, line by line](#where-the-uniswap-integration-is)
@@ -42,8 +43,9 @@ ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · 
 | **`PushCostLens`** | What it costs to push any v4 pool to a price and sell straight back. **Exact mode** runs real swaps to a price limit inside `unlock` and reverts with the answer (the V4Quoter pattern, with a price limit V4Quoter lacks). **View mode** walks the tick bitmap through `StateLibrary`, from any starting price, so a contract already inside an unlock can still ask. Needs no deployment: inject its bytecode with an `eth_call` state override. | [`src/PushCostLens.sol`](src/PushCostLens.sol) |
 | **`HakariOracleHook`** | OpenZeppelin's truncated oracle hook plus `twaps()`: the raw **and** truncated TWAP in one call. Records before the first swap of each second, so a push undone in the same transaction is never seen. | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol) |
 | **`SafeSettle`** + **`CostModel`** | A demo settlement rule. For moves of 0.5–20 % (plus the gap between the two TWAPs), both ways from the price now, the lens prices holding the move over the window, re-pushing after every pull-back while arbitrage is open. Cost ÷ what the move earns per unit of exposure, minimised, is the **max safe exposure**. The total exposure settling on the price must be below it to settle on the raw TWAP; otherwise it refuses. Emits `Settled(id, raw, trunc, trusted, exposure, maxSafeExposure, bindingTicks, bindingUp)`. | [`src/SafeSettle.sol`](src/SafeSettle.sol), [`src/CostModel.sol`](src/CostModel.sol) |
-| **Gauge** (TypeScript) | Live cost ladder, Δ calibration from `Swap` events, any past weekend rebuilt from `ModifyLiquidity` logs, the Robinhood mint-window flag, and the HIMS weekend replayed minute by minute through the hook and `SafeSettle` as if the pool had the hook (it never did; `npm run hims:hook`), each pool's measured reversion time (`npm run reversion`), AMC over two weekends (`npm run amc`), and the live board's Friday baseline (`npm run live:baseline`). | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
-| **Web page** | The live board: every stock pool's max safe exposure now against Friday's close, every minute. Paste any pool → live cost to push it, fenced or not, suggested Δ. HIMS replay, every stock pool over a weekend, AMC, SafeSettle's decisions. | [`web/`](web/), hosted at <https://vexi-v1.github.io/vexi-hakari/web/>; locally `python3 -m http.server 8790 --bind 127.0.0.1` and open `/web/` |
+| **`ExposureGuard`** | A hook-free consumer of the bound: `CostModel` over the deployed lens on any pool key, hook or no hook (`SafeSettle` needs its own hook on the pool). For an ERC-6909 options venue it sums the supply of the series ids it is given, prices the sum at the pool's `slot0`, and emits `Checked(poolId, source, exposure, maxSafeExposure, trusted, bindingTicks, bindingUp, bindingCost, complete)`: `source` 0 is a what-if stated by the caller, 1 a venue read. It verifies the ids it is handed; it cannot enumerate a venue's series, and it cannot gate a fix. | [`src/ExposureGuard.sol`](src/ExposureGuard.sol), [`src/interfaces/IVexi.sol`](src/interfaces/IVexi.sol) |
+| **Gauge** (TypeScript) | Live cost ladder, Δ calibration from `Swap` events, any past weekend rebuilt from `ModifyLiquidity` logs, the Robinhood mint-window flag, and the HIMS weekend replayed minute by minute through the hook and `SafeSettle` as if the pool had the hook (it never did; `npm run hims:hook`), each pool's measured reversion time (`npm run reversion`), AMC over two weekends (`npm run amc`), the live board's Friday baseline (`npm run live:baseline`), and every fix our own options venue has made on testnet 46630, replayed against the bound (`npm run vexi`). | [`gauge/`](gauge/), data in [`gauge/data/`](gauge/data/) |
+| **Web page** | The live board: every stock pool's max safe exposure now against Friday's close, every minute. Paste any pool → live cost to push it, fenced or not, suggested Δ. HIMS replay, every stock pool over a weekend, AMC, SafeSettle's decisions, and the venue board (`web/vexi/`): six testnet pools' capacity now, every fix with exposure against the bound. | [`web/`](web/), hosted at <https://vexi-v1.github.io/vexi-hakari/web/>; locally `python3 -m http.server 8790 --bind 127.0.0.1` and open `/web/` |
 
 ### Why not just truncate the oracle?
 
@@ -137,7 +139,7 @@ shows this one as it happens.
 ## Where the Uniswap integration is
 
 Everything runs against the **official v4 PoolManager** `0x8366a39CC670B4001A1121B8F6A443A643e40951`
-(same address on Robinhood Chain 4663 and testnet 46630). Links are pinned to commit `44521a9`.
+(same address on Robinhood Chain 4663 and testnet 46630). Links are pinned to commit `44521a9` (the `ExposureGuard` row to `a11de1b`).
 
 | What | Code |
 |---|---|
@@ -152,6 +154,7 @@ Everything runs against the **official v4 PoolManager** `0x8366a39CC670B4001A112
 | Refuse to answer inside an unlock (`TransientStateLibrary.isUnlocked`) | [`SafeSettle.sol#L78`](https://github.com/vexi-v1/vexi-hakari/blob/44521a9/src/SafeSettle.sol#L78) |
 | The decision: max safe exposure vs the exposure settling | [`SafeSettle.sol#L79-L82`](https://github.com/vexi-v1/vexi-hakari/blob/44521a9/src/SafeSettle.sol#L79-L82), [`#L86`](https://github.com/vexi-v1/vexi-hakari/blob/44521a9/src/SafeSettle.sol#L86); [`CostModel.sol#L60`](https://github.com/vexi-v1/vexi-hakari/blob/44521a9/src/CostModel.sol#L60) (the bound), [`#L108`](https://github.com/vexi-v1/vexi-hakari/blob/44521a9/src/CostModel.sol#L108) (the push widths), [`#L146`](https://github.com/vexi-v1/vexi-hakari/blob/44521a9/src/CostModel.sol#L146) (the cheapest hold against arbitrage), [`#L170`](https://github.com/vexi-v1/vexi-hakari/blob/44521a9/src/CostModel.sol#L170) (what a fake earns) |
 | Hook salt mined against the CREATE2 proxy for the `0x1080` flag bits | [`script/Deploy.s.sol`](script/Deploy.s.sol) |
+| `CostModel` on any pool key, hook or no hook; a venue's ERC-6909 supply priced at `StateLibrary.getSlot0` | [`ExposureGuard.sol#L102`](https://github.com/vexi-v1/vexi-hakari/blob/a11de1b/src/ExposureGuard.sol#L102) (the bound), [`#L116`](https://github.com/vexi-v1/vexi-hakari/blob/a11de1b/src/ExposureGuard.sol#L116) (refuse inside an unlock), [`#L149`](https://github.com/vexi-v1/vexi-hakari/blob/a11de1b/src/ExposureGuard.sol#L149) (the venue read), [`#L225`](https://github.com/vexi-v1/vexi-hakari/blob/a11de1b/src/ExposureGuard.sol#L225) (spot from `slot0`) |
 
 ### On-chain, testnet 46630 (sources verified on the explorer)
 
@@ -242,9 +245,79 @@ token of exposure each:
    9.56 tokens, settle on raw 1650 while truncation lags at 550. Thin: 9.6 × 10⁻⁶ tokens, refused. Where faking is
    cheap the rule cannot tell real from fake, and it says so instead of paying on a lagging price.
 
-The atomic case is not hypothetical. On our own options venue on testnet 46630 (Vexi), a push-trade-push
-earned +87 bps per contract after fees. That measurement is not reproduced in this repo; layer 1 is the
-in-repo evidence.
+### A second consumer: our own venue, on testnet
+
+Vexi is our other project: an options venue built before the hackathon (BUSL-1.1; none of its code is here. The four
+functions and five events we call are re-declared in our own words from the deployed contracts' signatures:
+[`gauge/src/vexi-abi.ts`](gauge/src/vexi-abi.ts), [`src/interfaces/IVexi.sol`](src/interfaces/IVexi.sol)). It sells
+physically settled 15-minute options on testnet 46630 and fixes each settlement price S* once, from a 300-second TWAP
+of its own hookless v4 pool on the same official PoolManager. Every contract on an expiry is an ERC-6909 token with a
+public supply, so for this one consumer the exposure settling on a pool's price is readable, and the bound can be checked
+against every fix the venue has made. **What it is not: a market.** The tokens are mocks; each of the six pricing pools
+holds one full-range position we seeded (liquidity 10¹⁸, fee 0.3 %); the open interest was written by the venue's own
+Book (42 `Minted` logs, no burns); and all 240 swaps since its deploy came from its own adapter (AI and MEME were never
+swapped). What it shows is the pipeline on a real consumer's contracts, and one result about rate limiters.
+
+**What the six pools can carry** ([`gauge/data/vexi-fixes.json`](gauge/data/vexi-fixes.json) `markets`, `npm run vexi`,
+block 124,543,799, 2026-09-26 10:41 UTC: the deployed lens's `roundTripCosts` by address, equal to the gauge's rebuild
+at that block on all six pools; USDG; the bound with nobody pushing back):
+
+| Market | Spot | Quote-side reserve | Max safe exposure (binding rung, 20 %) | At the 0.5 % rung | Bound ÷ reserve | Cost to move 5 % up / down |
+|---|---|---|---|---|---|---|
+| AI/USDG | 0.0584 | 241,583 | **663** | 724 | 0.274 % | 35.44 / 35.40 |
+| PONS/USDG | 0.6287 | 792,918 | **2,176** | 2,343 | 0.274 % | 116.49 / 116.04 |
+| MEME/USDG | 0.1042 | 322,786 | **886** | 964 | 0.274 % | 47.37 / 47.29 |
+| NVDA/USDG | 224.97 | 14,998,954 | **41,158** | 44,537 | 0.274 % | 2,202.50 / 2,196.10 |
+| MU/USDG (USDG is currency1) | 1,063.40 | 32,609,837 | **89,411** | 96,289 | 0.274 % | 4,774.35 / 4,788.82 |
+| TSLA/USDG | 354.47 | 18,827,241 | **51,671** | 55,580 | 0.274 % | 2,766.27 / 2,755.01 |
+
+**Every fix, replayed.** 8,873 `Fixed` logs since the venue's deploy block (124,141,549, 2026-09-25 14:01 UTC), joined
+to 9,726 `SeriesOpened`, the open interest per series folded from 42 `Minted` and 0 `Burned`: 78 expiries, 460
+(market, expiry) cells, of which **39 cells (41 series: 28 calls, 13 puts) carried any exposure, 1,806 USDG in all,
+every one below the bound** at the pool's state before its fix window opened. The closest was PONS at 2026-09-25
+16:30 UTC: 1,287.03 contracts × S* 0.63671 = 819.47 USDG against a bound of 2,189.48, **0.37** of the line.
+Strike-aware, that cell's payouts would have moved 59.34 USDG had the fix been pushed by the binding 1,823-tick rung,
+against a 437.82 USDG round trip: 0.14 of break-even, the highest of any cell. The other 421 cells settled nothing.
+The fix tracks the pool: S* was within 33 bps of the last pre-window swap on every cell (PONS's worst 33.3, TSLA's
+14.5, the rest 0); 0 of 8,873 fixes were late, none thin (4, 5 or 6 observations: 4,088 / 4,541 / 244); 9 swaps
+landed inside a fix window, all the venue's own.
+
+**The finding.** On a single full-range position the cost per move is nearly the same at every rung: the 0.5 % rung's
+bound is 7.6–9.2 % above the binding 20 % rung's, and the bound is 0.274 % of the quote-side reserve, on all six pools
+(0.91 of the 0.3 % fee). The venue's fix is a rate-limited ring of 4–6 TWAP observations: the limiter clips a big
+atomic push per read and passes a small push held through the 300 s window untouched, so it does not raise the safe
+line above fee × reserve. The limiter is not depth; the bound is what these pools can carry.
+
+**The +87 bps case, reworded.** On the previous venue and PoolManager (`0xe5600ECf…`, `0x09d159b5…`, 2026-09-18)
+a +5.0 % push of the PONS pricing pool moved the vault's FAST quote (+2.5 % in 5 s, its limiter's ceiling), not the
+fix, and a buy, push, sell netted +87 bps of S per contract after fees. Cited from vexi-research `2026-09-19-reference-price`
+finding 5, not re-run here; layer 1 above is the in-repo evidence for the atomic case.
+
+**Read a fix yourself.** The venue is not verified on the explorer; the fix tx of the closest cell carries 60 `Fixed`
+logs, one per series settling at 16:30 (`id` indexed, then S*, the observation window and its count):
+
+```bash
+cast receipt 0x3393f089598c8a528ec0ede49ed4ed7bf8ef9d7d780d15bf692de9532a757c7d --rpc-url https://rpc.testnet.chain.robinhood.com/rpc --json \
+  | jq -r '[.logs[] | select(.topics[0]=="0x2dafb9d537c1392ab2f2a33aeb581a62b8da58324c4d0b7e24c6289cca3b425b")][0].data' \
+  | xargs cast abi-decode --input 'Fixed(uint256,uint32,uint32,uint16)'
+# 636712374045976715 (S* 0.636712 USDG), 1790353488, 1790353761 (16:24:48 to 16:29:21 UTC), 4 observations
+```
+
+**On-chain, live.** `ExposureGuard` against the live venue on a 46630 fork at head − 60
+([`test/fork/ExposureGuard.fork.t.sol`](test/fork/ExposureGuard.fork.t.sol), transcript
+[`docs/demo-outputs/vexi-guard-46630.txt`](docs/demo-outputs/vexi-guard-46630.txt), block 124,542,896): the six
+`poolOf` keys hash to the venue's pricing pool ids, `bound` agrees with the table above, and `venueVerdict` on the
+series settling at the next fix (18–20 per market, read from `SeriesOpened` logs at run time) sums 0 contracts, prices
+them at the pool and reports trusted, 0.80–0.86M gas each. The venue (`0xF91B7277217AC8E5Ff3E6144C1c5A66BbE1B06fA`)
+and its spot registry (`0xCEde7e1Eb7e67338BCA489C3d3e9697ae19Faa04`) are not ours to deploy; they are called by ABI.
+Nothing new was deployed for this: [`script/DeployExposureGuard.s.sol`](script/DeployExposureGuard.s.sol) and
+[`script/DemoVexiCheck.s.sol`](script/DemoVexiCheck.s.sol) were rehearsed in simulation without a broadcast, and the
+board at [`web/vexi/`](web/vexi/) reads the deployed lens and the PoolManager's storage directly.
+
+Three caveats. The venue's live fix reads that rate-limited ring, not a hook TWAP, and all six markets fix from
+hookless pools (its oracle-hook pool, RDR-0052 in its spec, is wired to none of them). `arbReversionSeconds` is 0 here
+because no third-party swap has been seen on these pools: conservative, not measured. And HAKARI discloses; nothing in
+the venue reads the bound, and a fix never reverts. Every fix so far passes because the open interest is tiny.
 
 ## What the review found, and what changed
 
@@ -277,10 +350,14 @@ move back across the gap it was pushed through, so a held push shows up as a low
   time-weighted liquidity recorded by the hook (new flags, new salt, new pool), so a wall must stand for the whole
   window. `test_knownLimit_aWallAcrossTransactions_buysTrust` demonstrates the limit.
 - **Three inputs are trusted.** `exposure` must be the total settling on that price (every position, every
-  protocol), which no contract can see. `arbReversionSeconds` is the caller's statement about arbitrage: 0 while
+  protocol), which no contract can see in general. On a fully collateralised ERC-6909 venue the exposure per expiry is
+  the sum of its series' supply, and `ExposureGuard` reads that sum for the ids it is given; the id list, and any other
+  reader of the same pool, stay unseen. `arbReversionSeconds` is the caller's statement about arbitrage: 0 while
   mint/redeem is closed, and otherwise a slow, measured bound, since a fast one overstates what faking costs.
   `npm run reversion` measures it from a pool's own swaps; over the week of 2026-09-21 the slow side was 0 for all 28
-  stock pools ([The reversion time, measured](#why-not-just-truncate-the-oracle)). With
+  stock pools ([The reversion time, measured](#why-not-just-truncate-the-oracle)). On the six 46630 pools it is 0 too:
+  no third-party swap in the logs since the venue's deploy (the only swapper is the venue's own adapter, so pull-backs
+  are possible and would only raise the bound), a conservative setting, not a measurement. With
   arbitrage closed the bound is a lower bound (fees on an exact retrace); with it open, it is only as good as the
   reversion time. `quoteIsCurrency0` says which side is the quote; the wrong side prices cost and gain in the
   wrong unit. `settle` is permissionless: a `Settled` log is only as meaningful as its caller.
@@ -315,8 +392,14 @@ move back across the gap it was pushed through, so a held push shows up as a low
   (`costComplete = false`), so the bound is too.
 - **One Δ per hook**, fixed at deployment, and the hook only covers pools created with it. Δ now affects only the
   truncated TWAP reported alongside, not the decision.
-- **`SafeSettle` is a demo rule**, not a product. The contribution is the measurement (lens, bound, gauge) and the
-  two-series hook; the rule shows one way to use them.
+- **On our own venue the bound is a disclosure.** Vexi's live fix reads a rate-limited ring of its pool's TWAP, not a
+  hook TWAP, and all six markets fix from hookless pools (its oracle-hook pool, RDR-0052 in its spec, is wired to none
+  of them). `ExposureGuard` verifies the series ids it is handed, cannot enumerate them (ERC-6909 has no per-id
+  enumeration) and cannot gate `Venue.fix`, which nothing in the venue makes conditional on the bound. On those pools
+  every fix so far passes because the open interest is tiny (39 cells, 1,806 USDG in all): the replay shows the
+  pipeline, not a refusal.
+- **`SafeSettle` is a demo rule**, not a product, and `ExposureGuard`'s verdict is another. The contribution is the
+  measurement (lens, bound, gauge) and the two-series hook; the rules show two ways to use them.
 
 ## Prior art
 
@@ -341,27 +424,33 @@ did not.
 
 ```bash
 git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari && cd vexi-hakari
-forge test --no-match-path 'test/fork/*'          # 44 tests, no RPC
-script/record-fork-tests.sh                       # 5 fork tests on real pools (public RPC, ~6 min), URLs masked
-cd gauge && npm ci && npm test                    # 88 tests (4 skip without `npm run squeeze`'s caches); the walk and the bound are pinned to the Solidity ones
+forge test --no-match-path 'test/fork/*'          # 53 tests, no RPC
+script/record-fork-tests.sh                       # 5 fork tests on real pools (4663, public RPC, ~6 min), URLs masked
+RH_TESTNET_RPC= forge test --match-path 'test/fork/ExposureGuard*' -vv   # the guard against the live venue (46630, head only, ~2.5 min; run alone)
+cd gauge && npm ci && npm test                    # 118 tests (4 skip without `npm run squeeze`'s caches); the walk and the bound are pinned to the Solidity ones
 npm run discover                                  # the deepest USDG pool of 30 stock tokens
 npm run weekend -- 2026-09-18                     # rebuild a weekend for every one of them
 npm run hims && npm run ladder && npm run calibrate && npm run charts
 npm run live:baseline                             # Friday's close for the live board (web/live/), rebuilt from logs
 npm run reversion                                 # how fast each pool's pushed price is pulled back
 npm run amc                                       # AMC over the HIMS weekend and Labor Day (needs an archive RPC for totalSupply)
+npm run vexi                                      # every fix our venue made on 46630, replayed against the bound (public RPC, cached; ~40 s)
 ```
 
 `.env.example` lists the variables. The gauge rotates across every mainnet RPC you list and checks each one
-answers chain 4663. Some tests rewrite files under `web/decisions/` and `test/fixtures/`.
+answers chain 4663; `npm run vexi` and the guard's fork test use `RH_TESTNET_RPC` if set, else the public 46630
+endpoint, and check for 46630. Some tests rewrite files under `web/decisions/` and `test/fixtures/`.
 
 ## Provenance
 
 Built during the hackathon, from the first commit onward. Public libraries unchanged: Uniswap `v4-core`
 @ `d153b048`, OpenZeppelin `uniswap-hooks` @ `acbd604`, `forge-std` @ `bf647bd`, `viem`. We brought in
 knowledge, not code: the HIMS weekend was first traced in our own pre-hackathon research on the same chain.
-The numbers above are re-derived here by a new collector, and they match. The atomic-push figure comes from
-our other project, Vexi; none of its code is here. An earlier testnet deployment (commit `bb1cf1a`, a shared
+The numbers above are re-derived here by a new collector, and they match. Vexi, our other project, predates the
+hackathon: its contracts on 46630 (the venue `0xF91B7277…`, the spot registry `0xCEde7e1E…`) are called by ABI through
+interfaces re-declared here in our own words from the deployed contracts' signatures (`gauge/src/vexi-abi.ts`,
+`src/interfaces/IVexi.sol`); none of its code (BUSL-1.1) is here, and its research figures (the +87 bps push) are
+quoted with their pins, not re-run. An earlier testnet deployment (commit `bb1cf1a`, a shared
 deployer wallet) is superseded and kept for the record in `deployments/46630-bb1cf1a-superseded.json`. So are
 three `SafeSettle` deployments and one lens: `798ab19` (`0x64890652…B150`) and `fced71c` (`0x8191E930…6f44`),
 replaced by the rule above, and `98bc7d7` (`0x68435Bf7…3561`, with the lens `0x4E73CcC9…69E5` from `798ab19`),
@@ -373,7 +462,9 @@ Most of the code, tests and docs here were written by AI agents (Claude Code), t
 of us, each from our own machine. Eric wrote the spec ([`docs/prompts/2026-09-25-spec-zh.md`](docs/prompts/2026-09-25-spec-zh.md),
 translated as `SPEC.md`) and directed the build; Abner joined at 22:24 JST and directed the internal review
 and the docs passes. The prompts that shaped the work, verbatim or summarized, are in [`docs/prompts/log.md`](docs/prompts/log.md),
-and the review's fixes are in the history. The pace of the commit history is the agents'.
+and the review's fixes are in the history. The pace of the commit history is the agents'. The venue pass on the
+evening of 2026-09-26 (the collector, `ExposureGuard` with its fork test and scripts, the board and this section) was
+three agent lanes working one plan in parallel, directed by Abner, with nothing deployed and nothing broadcast.
 
 ## Next
 
@@ -384,3 +475,6 @@ and the review's fixes are in the history. The pace of the commit history is the
 - **A wider, adaptive ladder**, searching for the cheapest move instead of sampling six.
 - Upstream: a price-limit quote on `V4Quoter` and a directional tick search next to `ReservesLens`
   (`FEEDBACK.md` § 1, § 3).
+- **To our own venue**, under its owner's tickets: a depth cap in its vault sizer from this bound over the fix
+  window (its DRAFT-008), a thin- or cheap-fix badge from the cost-to-move model (its DRAFT-013), and a re-run of
+  `npm run vexi` once a market is wired to its oracle-hook pool.
