@@ -1,0 +1,1228 @@
+{
+  "checked_at_utc": "2026-09-26T20:03:52.995916+00:00",
+  "authentication": "none; no Authorization header or cookie",
+  "local_head": "3f2918c45a3627516a6c3bc955571d6d43c40aff",
+  "local_branch": "tk-137-aqua-band-slice",
+  "repository": {
+    "request": {
+      "url": "https://api.github.com/repos/vexi-v1/vexi-hakari",
+      "final_url": "https://api.github.com/repos/vexi-v1/vexi-hakari",
+      "status": 200,
+      "sha256": "3d265ef1d58e73ab554f04ae4c85bee06ba770a7df4f100fb30d7e0d94acf8cb"
+    },
+    "private": false,
+    "default_branch": "main"
+  },
+  "public_tree": {
+    "request": {
+      "url": "https://api.github.com/repos/vexi-v1/vexi-hakari/git/trees/main?recursive=1",
+      "final_url": "https://api.github.com/repos/vexi-v1/vexi-hakari/git/trees/main?recursive=1",
+      "status": 200,
+      "sha256": "8d13e095ca5b033fa1f69ec4c281bc54adebf882172dc93e1c05e8e5ca7c4a43"
+    },
+    "commit": "aefa9236a1302ace3e766266eb44a27aaa8a8fbc",
+    "has_aqua": false,
+    "has_reviewer_map": false
+  },
+  "feedback_form": {
+    "submission": "user-confirmed complete; see submission-review.md",
+    "actual_entered_url": "not recorded; requested from user",
+    "draft_candidate_url": "https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md"
+  },
+  "local_links": [
+    {
+      "document": "README.md",
+      "target": "docs/settlement.md",
+      "exists": true,
+      "path": "docs/settlement.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/history.md",
+      "exists": true,
+      "path": "docs/history.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/website.md",
+      "exists": true,
+      "path": "docs/website.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/submission-review.md",
+      "exists": true,
+      "path": "docs/submission-review.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/demo.md",
+      "exists": true,
+      "path": "docs/demo.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/reviewer-code-map.md",
+      "exists": true,
+      "path": "docs/reviewer-code-map.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/uniswap-feedback-draft.md",
+      "exists": true,
+      "path": "docs/uniswap-feedback-draft.md"
+    },
+    {
+      "document": "README.md",
+      "target": "#how-it-fits-together",
+      "exists": true,
+      "path": "README.md"
+    },
+    {
+      "document": "README.md",
+      "target": "#for-1inch-reviewers-aqua-and-swapvm",
+      "exists": true,
+      "path": "README.md"
+    },
+    {
+      "document": "README.md",
+      "target": "#for-uniswap-reviewers-v4-hook-and-band",
+      "exists": true,
+      "path": "README.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/band.md",
+      "exists": true,
+      "path": "docs/band.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/settlement.md",
+      "exists": true,
+      "path": "docs/settlement.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/history.md",
+      "exists": true,
+      "path": "docs/history.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/extraction.md",
+      "exists": true,
+      "path": "docs/extraction.md"
+    },
+    {
+      "document": "README.md",
+      "target": "archive/README.md",
+      "exists": true,
+      "path": "archive/README.md"
+    },
+    {
+      "document": "README.md",
+      "target": "FEEDBACK.md",
+      "exists": true,
+      "path": "FEEDBACK.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/settlement.md",
+      "exists": true,
+      "path": "docs/settlement.md"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/",
+      "exists": true,
+      "path": "aqua"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/aqua/AquaWriter.sol",
+      "exists": true,
+      "path": "aqua/src/aqua/AquaWriter.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/book/OptionBook.sol",
+      "exists": true,
+      "path": "aqua/src/book/OptionBook.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/swapvm/ExposureGuard.sol",
+      "exists": true,
+      "path": "aqua/src/swapvm/ExposureGuard.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/swapvm/ExposureGuardExtruction.sol",
+      "exists": true,
+      "path": "aqua/src/swapvm/ExposureGuardExtruction.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/swapvm/WriterSwapVMRouter.sol",
+      "exists": true,
+      "path": "aqua/src/swapvm/WriterSwapVMRouter.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/deployed-46630/",
+      "exists": true,
+      "path": "aqua/deployed-46630"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/Lifecycle.t.sol",
+      "exists": true,
+      "path": "aqua/test/Lifecycle.t.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/ExposureGuard.t.sol",
+      "exists": true,
+      "path": "aqua/test/ExposureGuard.t.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/ExposureGuardCanonical.t.sol",
+      "exists": true,
+      "path": "aqua/test/ExposureGuardCanonical.t.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/CanonicalAqua.t.sol",
+      "exists": true,
+      "path": "aqua/test/CanonicalAqua.t.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/GuardProperties.t.sol",
+      "exists": true,
+      "path": "aqua/test/GuardProperties.t.sol"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L311",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_ABuyThroughTheBandPullsFromTheMakerThroughAqua() public {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L359",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_APushOfTheReferencePastTheBandPausesTheBook() public {"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/demo.md",
+      "exists": true,
+      "path": "docs/demo.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/band.md",
+      "exists": true,
+      "path": "docs/band.md"
+    },
+    {
+      "document": "README.md",
+      "target": "FEEDBACK.md",
+      "exists": true,
+      "path": "FEEDBACK.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/submission-review.md#uniswap-feedback-submission--confirmed-2026-09-27",
+      "exists": true,
+      "path": "docs/submission-review.md"
+    },
+    {
+      "document": "README.md",
+      "target": "src/HakariOracleHook.sol#L24",
+      "exists": true,
+      "path": "src/HakariOracleHook.sol",
+      "line_text": "function twaps(PoolId id, uint32 window) external view returns (int24 rawTick, int24 truncTick) {"
+    },
+    {
+      "document": "README.md",
+      "target": "script/Deploy.s.sol#L51",
+      "exists": true,
+      "path": "script/Deploy.s.sol",
+      "line_text": "function _mine(bytes memory creationWithArgs) internal view returns (address, bytes32) {"
+    },
+    {
+      "document": "README.md",
+      "target": "test/HakariOracleHook.t.sol#L29",
+      "exists": true,
+      "path": "test/HakariOracleHook.t.sol",
+      "line_text": "function test_twaps_pushUndoneWithinTheSameSecond_isNeverRecorded() public {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L199",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "function status() public view returns (Status memory s) {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L116",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "constructor("
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/HookTwapExpiryPrice.sol#L92",
+      "exists": true,
+      "path": "aqua/src/band/HookTwapExpiryPrice.sol",
+      "line_text": "function setSource(IPoolManager manager, PoolKey calldata key, address base, address quote, Params calldata p)"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/BandMath.sol#L30",
+      "exists": true,
+      "path": "aqua/src/band/BandMath.sol",
+      "line_text": "function priceOf(uint160 sqrtPriceX96, bool baseIs0, uint256 scale) internal pure returns (uint256) {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L130",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "uint8 baseDecimals = IERC20Metadata(base).decimals();"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L236",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "if (!BandMath.within(s.truncatedCenterWad, s.centerWad, p.halfWidthBps)) {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/StabilityBand.t.sol#L320",
+      "exists": true,
+      "path": "aqua/test/StabilityBand.t.sol",
+      "line_text": "function test_RawAndTruncatedDisagreeingPauses() public {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L281",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "function ask(uint256 seriesId, uint256 n) external view returns (uint256) {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/book/OptionBook.sol#L221",
+      "exists": true,
+      "path": "aqua/src/book/OptionBook.sol",
+      "line_text": "function buy(uint256 orderId, uint256 n, uint256 maxPremium) external nonReentrant {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/StabilityBand.t.sol#L284",
+      "exists": true,
+      "path": "aqua/test/StabilityBand.t.sol",
+      "line_text": "function test_AYoungPoolOrABrokenOracleIsUnavailable() public {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/HookTwapExpiryPrice.sol#L141",
+      "exists": true,
+      "path": "aqua/src/band/HookTwapExpiryPrice.sol",
+      "line_text": "function priceAt(address base, address quote, uint64 at) external view returns (uint256 priceWad) {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/src/band/HookTwapExpiryPrice.sol#L156",
+      "exists": true,
+      "path": "aqua/src/band/HookTwapExpiryPrice.sol",
+      "line_text": "function _price(address base, address quote, uint64 at) internal view returns (uint256 priceWad, uint16 i) {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L506",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_APushAtExpiryDefersSettlementOnTheRealHook() public {"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/settlement.md",
+      "exists": true,
+      "path": "docs/settlement.md"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/script/HookedPool.s.sol#L88",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "function run() external {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/script/HookedPool.s.sol#L195",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "function _mintAndApprove(address token, address operator, uint256 amount) internal {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/deployments/46630-hooked-pool.json",
+      "exists": true,
+      "path": "aqua/deployments/46630-hooked-pool.json"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L172",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function setUp() public {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L276",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_TheBandReadsHakarisHookOnTheRealPoolManager() public view {"
+    },
+    {
+      "document": "README.md",
+      "target": "aqua/README.md",
+      "exists": true,
+      "path": "aqua/README.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/history.md",
+      "exists": true,
+      "path": "docs/history.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/extraction.md",
+      "exists": true,
+      "path": "docs/extraction.md"
+    },
+    {
+      "document": "README.md",
+      "target": "docs/prompts/",
+      "exists": true,
+      "path": "docs/prompts"
+    },
+    {
+      "document": "README.md",
+      "target": "AGENTS.md",
+      "exists": true,
+      "path": "AGENTS.md"
+    },
+    {
+      "document": "README.md",
+      "target": "LICENSE",
+      "exists": true,
+      "path": "LICENSE"
+    },
+    {
+      "document": "README.md",
+      "target": "LICENSES/SwapVM-1.1.txt",
+      "exists": true,
+      "path": "LICENSES/SwapVM-1.1.txt"
+    },
+    {
+      "document": "README.md",
+      "target": "THIRD_PARTY_NOTICES.md",
+      "exists": true,
+      "path": "THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "docs/reviewer-code-map.md",
+      "exists": true,
+      "path": "docs/reviewer-code-map.md"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "docs/submission-review.md#public-document-check--2026-09-27",
+      "exists": true,
+      "path": "docs/submission-review.md"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "docs/band.md",
+      "exists": true,
+      "path": "docs/band.md"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "docs/settlement.md",
+      "exists": true,
+      "path": "docs/settlement.md"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L311",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_ABuyThroughTheBandPullsFromTheMakerThroughAqua() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L359",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_APushOfTheReferencePastTheBandPausesTheBook() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBand.t.sol#L284",
+      "exists": true,
+      "path": "aqua/test/StabilityBand.t.sol",
+      "line_text": "function test_AYoungPoolOrABrokenOracleIsUnavailable() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/src/band/BandMath.sol#L30",
+      "exists": true,
+      "path": "aqua/src/band/BandMath.sol",
+      "line_text": "function priceOf(uint160 sqrtPriceX96, bool baseIs0, uint256 scale) internal pure returns (uint256) {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L130",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "uint8 baseDecimals = IERC20Metadata(base).decimals();"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L199",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "function status() public view returns (Status memory s) {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L359",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_APushOfTheReferencePastTheBandPausesTheBook() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L432",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_APushOfTheReferenceThatStandsBecomesTheCenter() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/script/HookedPool.s.sol#L88",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "function run() external {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/script/HookedPool.s.sol#L173",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "function _plan(uint256 priceWad, uint256 aaplAmount) internal view returns (Plan memory p) {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/script/HookedPool.s.sol#L195",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "function _mintAndApprove(address token, address operator, uint256 amount) internal {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/deployments/46630-hooked-pool.json",
+      "exists": true,
+      "path": "aqua/deployments/46630-hooked-pool.json"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "foundry.toml",
+      "exists": true,
+      "path": "foundry.toml"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/foundry.toml",
+      "exists": true,
+      "path": "aqua/foundry.toml"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L172",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function setUp() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L276",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_TheBandReadsHakarisHookOnTheRealPoolManager() public view {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/script/HookedPool.s.sol#L124",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "IHakariOracleHook(HOOK).increaseObservationCardinalityNext(cardinality, id);"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L217",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "hook.increaseObservationCardinalityNext(300, id);"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/src/band/StabilityBandPricer.sol#L211",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "try ORACLE.observe(ago, POOL_ID) returns (int56[] memory r, int56[] memory t) {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBand.t.sol#L284",
+      "exists": true,
+      "path": "aqua/test/StabilityBand.t.sol",
+      "line_text": "function test_AYoungPoolOrABrokenOracleIsUnavailable() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/script/HookedPool.s.sol#L159",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "function _swap(PoolSwapTest router, PoolKey memory key, bool zeroForOne, uint256 amountIn) internal {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "aqua/test/StabilityBandFork.t.sol#L172",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function setUp() public {"
+    },
+    {
+      "document": "FEEDBACK.md",
+      "target": "archive/feedback-history.md",
+      "exists": true,
+      "path": "archive/feedback-history.md"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "submission-review.md#public-document-check--2026-09-27",
+      "exists": true,
+      "path": "docs/submission-review.md"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/aqua/AquaWriter.sol#L86",
+      "exists": true,
+      "path": "aqua/src/aqua/AquaWriter.sol",
+      "line_text": "function bind(Strategy calldata strategy) external onlyOwner returns (bytes32 hash) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/aqua/AquaWriter.sol#L170",
+      "exists": true,
+      "path": "aqua/src/aqua/AquaWriter.sol",
+      "line_text": "function provide(uint256 seriesId, address, address collateral, uint256 amount) external onlyBook {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/book/OptionBook.sol#L221",
+      "exists": true,
+      "path": "aqua/src/book/OptionBook.sol",
+      "line_text": "function buy(uint256 orderId, uint256 n, uint256 maxPremium) external nonReentrant {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/aqua/AquaWriter.sol#L179",
+      "exists": true,
+      "path": "aqua/src/aqua/AquaWriter.sol",
+      "line_text": "function onReturned(uint256 seriesId, address, address token, uint256 amount) external onlyBook {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/aqua/AquaWriter.sol#L157",
+      "exists": true,
+      "path": "aqua/src/aqua/AquaWriter.sol",
+      "line_text": "function available(uint256, address, address collateral) external view returns (uint256 amount) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/swapvm/ExposureGuard.sol#L42",
+      "exists": true,
+      "path": "aqua/src/swapvm/ExposureGuard.sol",
+      "line_text": "/// @param args.writer | 20 bytes"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/swapvm/ExposureGuardExtruction.sol#L25",
+      "exists": true,
+      "path": "aqua/src/swapvm/ExposureGuardExtruction.sol",
+      "line_text": "/// @param args `abi.encodePacked(writer)`."
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../src/HakariOracleHook.sol#L24",
+      "exists": true,
+      "path": "src/HakariOracleHook.sol",
+      "line_text": "function twaps(PoolId id, uint32 window) external view returns (int24 rawTick, int24 truncTick) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/band/StabilityBandPricer.sol#L199",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "function status() public view returns (Status memory s) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/band/StabilityBandPricer.sol#L281",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "function ask(uint256 seriesId, uint256 n) external view returns (uint256) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/band/StabilityBandPricer.sol#L260",
+      "exists": true,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "line_text": "function referencePriceWad() external view returns (uint256) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/book/FixedPremium.sol#L87",
+      "exists": true,
+      "path": "aqua/src/book/FixedPremium.sol",
+      "line_text": "function ask(uint256 seriesId, uint256 n) external view returns (uint256) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/band/BandMath.sol#L30",
+      "exists": true,
+      "path": "aqua/src/band/BandMath.sol",
+      "line_text": "function priceOf(uint160 sqrtPriceX96, bool baseIs0, uint256 scale) internal pure returns (uint256) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/band/HookTwapExpiryPrice.sol#L141",
+      "exists": true,
+      "path": "aqua/src/band/HookTwapExpiryPrice.sol",
+      "line_text": "function priceAt(address base, address quote, uint64 at) external view returns (uint256 priceWad) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/src/band/HookTwapExpiryPrice.sol#L147",
+      "exists": true,
+      "path": "aqua/src/band/HookTwapExpiryPrice.sol",
+      "line_text": "function record(address base, address quote, uint64 at) external returns (uint256 priceWad) {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/test/StabilityBandFork.t.sol#L311",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_ABuyThroughTheBandPullsFromTheMakerThroughAqua() public {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/test/StabilityBandFork.t.sol#L359",
+      "exists": true,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "line_text": "function test_APushOfTheReferencePastTheBandPausesTheBook() public {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/test/StabilityBand.t.sol#L284",
+      "exists": true,
+      "path": "aqua/test/StabilityBand.t.sol",
+      "line_text": "function test_AYoungPoolOrABrokenOracleIsUnavailable() public {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/script/HookedPool.s.sol#L124",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "IHakariOracleHook(HOOK).increaseObservationCardinalityNext(cardinality, id);"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/script/HookedPool.s.sol#L195",
+      "exists": true,
+      "path": "aqua/script/HookedPool.s.sol",
+      "line_text": "function _mintAndApprove(address token, address operator, uint256 amount) internal {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/test/ExposureGuardCanonical.t.sol#L66",
+      "exists": true,
+      "path": "aqua/test/ExposureGuardCanonical.t.sol",
+      "line_text": "function test_CanonicalRouterCapsAtTheUnpromisedBalance() public {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "../aqua/test/Lifecycle.t.sol#L465",
+      "exists": true,
+      "path": "aqua/test/Lifecycle.t.sol",
+      "line_text": "function test_DockedStrategyBlocksCloseUntilTheMakerRebinds() public {"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "demo.md",
+      "exists": true,
+      "path": "docs/demo.md"
+    },
+    {
+      "document": "docs/reviewer-code-map.md",
+      "target": "submission-review.md",
+      "exists": true,
+      "path": "docs/submission-review.md"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "uniswap-feedback-draft.md",
+      "exists": true,
+      "path": "docs/uniswap-feedback-draft.md"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "demo.md",
+      "exists": true,
+      "path": "docs/demo.md"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "reviewer-code-map.md",
+      "exists": true,
+      "path": "docs/reviewer-code-map.md"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "demo.md",
+      "exists": true,
+      "path": "docs/demo.md"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "uniswap-feedback-draft.md",
+      "exists": true,
+      "path": "docs/uniswap-feedback-draft.md"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "../LICENSES/SwapVM-1.1.txt",
+      "exists": true,
+      "path": "LICENSES/SwapVM-1.1.txt"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "../LICENSES/Aqua-Source-1.1.txt",
+      "exists": true,
+      "path": "LICENSES/Aqua-Source-1.1.txt"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "../THIRD_PARTY_NOTICES.md",
+      "exists": true,
+      "path": "THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "evidence/2026-09-27-demo.txt",
+      "exists": true,
+      "path": "docs/evidence/2026-09-27-demo.txt"
+    },
+    {
+      "document": "docs/submission-review.md",
+      "target": "evidence/2026-09-27-public-documents.json",
+      "exists": true,
+      "path": "docs/evidence/2026-09-27-public-documents.json"
+    },
+    {
+      "document": "docs/uniswap-feedback-draft.md",
+      "target": "submission-review.md#uniswap-feedback-submission--confirmed-2026-09-27",
+      "exists": true,
+      "path": "docs/submission-review.md"
+    },
+    {
+      "document": "docs/uniswap-feedback-draft.md",
+      "target": "submission-review.md#public-document-check--2026-09-27",
+      "exists": true,
+      "path": "docs/submission-review.md"
+    }
+  ],
+  "public_pages": [
+    {
+      "url": "https://github.com/vexi-v1/vexi-hakari/blob/main/README.md",
+      "final_url": "https://github.com/vexi-v1/vexi-hakari/blob/main/README.md",
+      "status": 200,
+      "sha256": "d679048b7c2d567abf2cf5f41a1b8ea4ec026c3424d8b310f86157f67450cf13"
+    },
+    {
+      "url": "https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md",
+      "final_url": "https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md",
+      "status": 200,
+      "sha256": "cda1462ddcd420c2004c94862b88499a543fa16ab7d772b8e44c534e630a08e7"
+    },
+    {
+      "url": "https://github.com/vexi-v1/vexi-hakari/blob/main/docs/reviewer-code-map.md",
+      "status": 404
+    }
+  ],
+  "public_content": [
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/AGENTS.md",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/AGENTS.md",
+      "status": 200,
+      "sha256": "d27abd0d903f27a2a4cfa4dbde1aa9f723ec653f5764051fc4943857a5fc3b43",
+      "path": "AGENTS.md",
+      "local_sha256": "ffac65984c7f1a937fffb7d3eec73eaca156abb2173fd88f7ae708f7bcbd4314",
+      "matches_working_copy": false,
+      "first_line": "# Rules for AI agents working in this repo"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/FEEDBACK.md",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/FEEDBACK.md",
+      "status": 200,
+      "sha256": "1d61f2281cb6e795d1af0ddd245586a6bfaa2e57289c27aafb54a65fb3ac7a47",
+      "path": "FEEDBACK.md",
+      "local_sha256": "6b774205bb24ac4a854df5b7a0132e005f1262c431e487badef1f057f9329c8a",
+      "matches_working_copy": false,
+      "first_line": "# FEEDBACK.md — friction met while building on the Uniswap stack"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/LICENSE",
+      "status": 200,
+      "sha256": "248602bfc7f268a452d607002a66c2c2dc2564c5338fb125742c4b3334527781",
+      "path": "LICENSE",
+      "local_sha256": "8bde331c277ea0187afbf4ebb860bc1fc19801bc07419ae827f8a0041bc3c964",
+      "matches_working_copy": false,
+      "first_line": "MIT License"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/LICENSES/Aqua-Source-1.1.txt",
+      "status": 404,
+      "path": "LICENSES/Aqua-Source-1.1.txt",
+      "local_sha256": "2968a3a012735b40335d89095a619aacedf9b43fdf29f750fe7ad7b841331fdf",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/LICENSES/SwapVM-1.1.txt",
+      "status": 404,
+      "path": "LICENSES/SwapVM-1.1.txt",
+      "local_sha256": "c6979248328b66b97cc3c3da4bedb8dc3178e381526274df8f6a15e73e00afc4",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/README.md",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/README.md",
+      "status": 200,
+      "sha256": "3b38ec5da961550e77da5b93fe7956cf95cfc941eac35de1ad1ee2a6eff4c31c",
+      "path": "README.md",
+      "local_sha256": "d232ac057602fa7d2e30077a3be26707caf93a07e2dda99b72d9cd145aab80d4",
+      "matches_working_copy": false,
+      "first_line": "# HAKARI (秤) — what it costs to fake a price"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/THIRD_PARTY_NOTICES.md",
+      "status": 404,
+      "path": "THIRD_PARTY_NOTICES.md",
+      "local_sha256": "ae0f3ba3bfbecaeb1c10511983bdde168a5e59b5484196d4ef60b2b4f0d3f9c4",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/README.md",
+      "status": 404,
+      "path": "aqua/README.md",
+      "local_sha256": "b64a7a328e337cc6da79531e19bc5ed25c67d444e55d959ff17d31ee0f705552",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/deployments/46630-hooked-pool.json",
+      "status": 404,
+      "path": "aqua/deployments/46630-hooked-pool.json",
+      "local_sha256": "b5e205f250da969770981571aa3b4c5559ddfa16ae7c56e8810eaf805e590433",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/foundry.toml",
+      "status": 404,
+      "path": "aqua/foundry.toml",
+      "local_sha256": "edd673320402ba11a651b398de18d8a4281e04bbc951c7572f91ee9ed9e3c7dd",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/script/HookedPool.s.sol",
+      "status": 404,
+      "path": "aqua/script/HookedPool.s.sol",
+      "local_sha256": "fc964c6a7a1e2a049f6ebf9c587e49de49cb4ebd125ac556f1a4c7f24a8f2d26",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/aqua/AquaWriter.sol",
+      "status": 404,
+      "path": "aqua/src/aqua/AquaWriter.sol",
+      "local_sha256": "ede43c5c9a0c036273974f4e61068ffdee0090618d0c5868c11f6355ec1b6b89",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/band/BandMath.sol",
+      "status": 404,
+      "path": "aqua/src/band/BandMath.sol",
+      "local_sha256": "2e18a0632aacf6327b7e0a4247eb241ccdf15fb3453d69831e6c95b2ae8dea17",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/band/HookTwapExpiryPrice.sol",
+      "status": 404,
+      "path": "aqua/src/band/HookTwapExpiryPrice.sol",
+      "local_sha256": "1ee44c4f5189e2be5d05541d46532017432b39baf554c7d071fbf71fbaacb4cc",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/band/StabilityBandPricer.sol",
+      "status": 404,
+      "path": "aqua/src/band/StabilityBandPricer.sol",
+      "local_sha256": "e6a8dbbb2e4f42af0b705f47ff2579fb8a9f546606b3a4b6794ba86ff98250bb",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/book/FixedPremium.sol",
+      "status": 404,
+      "path": "aqua/src/book/FixedPremium.sol",
+      "local_sha256": "cd172be46c5b821b09308040931eaa3071cfa06beea6bd3b71cc764b28e9499b",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/book/OptionBook.sol",
+      "status": 404,
+      "path": "aqua/src/book/OptionBook.sol",
+      "local_sha256": "97da9ba27fd27e56bb8d38cbbe7cc0b00cf37d9837c615242810bb0da467abf7",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/swapvm/ExposureGuard.sol",
+      "status": 404,
+      "path": "aqua/src/swapvm/ExposureGuard.sol",
+      "local_sha256": "085c3b16417f0191ee824ed1f45e07ba6fad091bae6382649eb6052fb80da5e9",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/swapvm/ExposureGuardExtruction.sol",
+      "status": 404,
+      "path": "aqua/src/swapvm/ExposureGuardExtruction.sol",
+      "local_sha256": "8e02865a2a729d0aabecbb33ac064ebcfb19fb49b21dc84e7b35ce7c4c64453d",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/src/swapvm/WriterSwapVMRouter.sol",
+      "status": 404,
+      "path": "aqua/src/swapvm/WriterSwapVMRouter.sol",
+      "local_sha256": "26cce581cf501af9f0a296a8dba37150e4457255c0c0fe94ab0a683469a98f20",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/test/CanonicalAqua.t.sol",
+      "status": 404,
+      "path": "aqua/test/CanonicalAqua.t.sol",
+      "local_sha256": "d12ddfd2c3c0c15d69b18558cb1e65efa25ff269df175e87cffcd2db297dc45d",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/test/ExposureGuard.t.sol",
+      "status": 404,
+      "path": "aqua/test/ExposureGuard.t.sol",
+      "local_sha256": "1aa4c49bd49d0971ae678187582ecc3f6531ca22ccf92368a35524285df96fce",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/test/ExposureGuardCanonical.t.sol",
+      "status": 404,
+      "path": "aqua/test/ExposureGuardCanonical.t.sol",
+      "local_sha256": "aad1243b2a28b1d7f7307c1d662cc8740626e89de91e5b19e81dff4c49c0a201",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/test/GuardProperties.t.sol",
+      "status": 404,
+      "path": "aqua/test/GuardProperties.t.sol",
+      "local_sha256": "0c2c87950dea7d77f30c36f3fdc3a9ea43b17f86dd78df9c0e1dbbb40dce2bac",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/test/Lifecycle.t.sol",
+      "status": 404,
+      "path": "aqua/test/Lifecycle.t.sol",
+      "local_sha256": "04f3e05176bdafc3497b9bb78b9880678bb63ed067ea040a22eba2d3f25abfd3",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/test/StabilityBand.t.sol",
+      "status": 404,
+      "path": "aqua/test/StabilityBand.t.sol",
+      "local_sha256": "7089aba927637fd9c88397ee225e4ee746d4c2312db138da7fae5d77e05081fe",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/aqua/test/StabilityBandFork.t.sol",
+      "status": 404,
+      "path": "aqua/test/StabilityBandFork.t.sol",
+      "local_sha256": "d3ff4ea91ffb511b621e9120c8ef405d8ec335b6e9a38d223432d72fc00f0a99",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/archive/README.md",
+      "status": 404,
+      "path": "archive/README.md",
+      "local_sha256": "6e054759c1b4f0d1c303078f71635b60411d1969404b9be0c9101f3384646dfd",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/archive/feedback-history.md",
+      "status": 404,
+      "path": "archive/feedback-history.md",
+      "local_sha256": "e4f07af1cd3c38d8d8975f2cd9457c94e5374ab680887e262f2c45cb7b3837bb",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/band.md",
+      "status": 404,
+      "path": "docs/band.md",
+      "local_sha256": "c401283453c0491222999e2aaa7628e71e9409c236bf0cc922487e500b9bc335",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/demo.md",
+      "status": 404,
+      "path": "docs/demo.md",
+      "local_sha256": "95ab3603f9e1cbeb6a5af189b5b2e0b5cf69501dd99d415d6723da3e25b40f4b",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/evidence/2026-09-27-demo.txt",
+      "status": 404,
+      "path": "docs/evidence/2026-09-27-demo.txt",
+      "local_sha256": "acef2bd8235fd4bc020a4cc3e3bad4eca0977602afff362e975832ea4bcf6643",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/extraction.md",
+      "status": 404,
+      "path": "docs/extraction.md",
+      "local_sha256": "cd7f491df82b6b4487fc66a51912237e6fac7ee16b3b18c1fe2407bfc4ac13b6",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/history.md",
+      "status": 404,
+      "path": "docs/history.md",
+      "local_sha256": "2c935b7065c014e55737002225fea160cb24b1d2ce5384a6ee0194128a0f1902",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/reviewer-code-map.md",
+      "status": 404,
+      "path": "docs/reviewer-code-map.md",
+      "local_sha256": "696b79d1910c1152a7e59957fe20edcd9a7224184d6249434b81b77c701b9a07",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/settlement.md",
+      "status": 404,
+      "path": "docs/settlement.md",
+      "local_sha256": "14daeb697d96753a5700af943f2e780f836267cbb3bd024d431494c84429e698",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/submission-review.md",
+      "status": 404,
+      "path": "docs/submission-review.md",
+      "local_sha256": "106cb24cf5028fc1721363269b3f528b64107b78d4d843d30ab50153a87970c1",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/uniswap-feedback-draft.md",
+      "status": 404,
+      "path": "docs/uniswap-feedback-draft.md",
+      "local_sha256": "50e6f8aa74e70f1b4f63cb77329acdab2c872f482e89beffe4bb89f5250e0dda",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/docs/website.md",
+      "status": 404,
+      "path": "docs/website.md",
+      "local_sha256": "0731a20c478b5d64417fd3271c8bddd5c7ce9d9bd2884e32f6316cf9f8db50cb",
+      "matches_working_copy": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/foundry.toml",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/foundry.toml",
+      "status": 200,
+      "sha256": "dd4d103d0af9e8294e6b3e56919d68558dda4031a8a1675f677253448d55a0cb",
+      "path": "foundry.toml",
+      "local_sha256": "47e27984334828d572dbbb3d6faf3ffa6b35c0444ec88d08bf36dbde8ecda3fe",
+      "matches_working_copy": false,
+      "first_line": "[profile.default]"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/script/Deploy.s.sol",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/script/Deploy.s.sol",
+      "status": 200,
+      "sha256": "1abc9c7ca7ae0d4dd85ec08f362996bb985efaeab94f8d9466c10e911335216a",
+      "path": "script/Deploy.s.sol",
+      "local_sha256": "9b4f8ef20f5e9674cf390870550f6c680f2a5c4a835d897a80510c2bd4149af4",
+      "matches_working_copy": false,
+      "first_line": "// SPDX-License-Identifier: MIT"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/src/HakariOracleHook.sol",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/src/HakariOracleHook.sol",
+      "status": 200,
+      "sha256": "2a3b1c7f56b08ab39a9c3fd474db31b0a7d1f356e55c245033335d8151a43985",
+      "path": "src/HakariOracleHook.sol",
+      "local_sha256": "2a3b1c7f56b08ab39a9c3fd474db31b0a7d1f356e55c245033335d8151a43985",
+      "matches_working_copy": true,
+      "first_line": "// SPDX-License-Identifier: MIT"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/test/HakariOracleHook.t.sol",
+      "final_url": "https://raw.githubusercontent.com/vexi-v1/vexi-hakari/aefa9236a1302ace3e766266eb44a27aaa8a8fbc/test/HakariOracleHook.t.sol",
+      "status": 200,
+      "sha256": "ca82bc396a249d1bf36cf625cfb0fa65a940a80349798c4b15158b51fe48c705",
+      "path": "test/HakariOracleHook.t.sol",
+      "local_sha256": "ca82bc396a249d1bf36cf625cfb0fa65a940a80349798c4b15158b51fe48c705",
+      "matches_working_copy": true,
+      "first_line": "// SPDX-License-Identifier: MIT"
+    }
+  ],
+  "summary": {
+    "local_links_checked": 129,
+    "local_errors": 0,
+    "public_files_checked": 43,
+    "public_missing_or_failed": 35,
+    "public_files_differing_from_working_copy": 6
+  },
+  "source_anchor_review": {
+    "checked": 27,
+    "errors": 0,
+    "method": "Compared referenced source lines with expected function names or statements in the local working tree; contract tests not rerun for documentation edits."
+  }
+}

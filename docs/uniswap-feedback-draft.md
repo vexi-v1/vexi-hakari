@@ -6,6 +6,11 @@ Form: [developers.uniswap.org/hackathon-feedback](https://developers.uniswap.org
 The answers below are retained as the preparation draft, not an exact transcript of the final submission.
 This document contains no participant contact details, ratings or consent.
 
+**Link verification:** the URL below is the draft's recommended URL; the actual submitted field value was not
+recorded. The [anonymous public-document check](submission-review.md#public-document-check--2026-09-27) found that
+`main` still served the earlier study. Keep the successful submission status separate from confirming that the
+entered link serves the current feedback. Publishing another branch does not update a `blob/main/FEEDBACK.md` URL.
+
 ## Selections and participant details
 
 | Form field | Answer |
@@ -77,10 +82,10 @@ These suggestions come from the integration issues we encountered during the bui
 ## Any additional feedback?
 
 Detailed integration feedback:
-https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md
+[FEEDBACK.md](https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md)
 
 Project repository:
-https://github.com/vexi-v1/vexi-hakari
+[vexi-v1/vexi-hakari](https://github.com/vexi-v1/vexi-hakari)
 
 The v4 hook interface and StateLibrary let us connect pool observations to a rule enforced during an option
 purchase without modifying PoolManager. One particularly useful testing detail was that Robinhood Chain's mainnet

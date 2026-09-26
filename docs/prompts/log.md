@@ -542,3 +542,15 @@ source. `aqua/deployed-46630/` now holds `WriterSwapVMRouter`, `ExposureGuard` a
 `0xfadDb…`: compiled in the tree they were deployed from, they match the on-chain runtime code byte for byte once
 immutables and the metadata hash are masked, and only their header comments changed for publication. A separate
 Foundry profile builds them; the deploy command was rehearsed on a local anvil.
+
+## 2026-09-27 — Abner: review and enhance public Uniswap documentation
+
+> Confirm that FEEDBACK.md and the README's contract/source-line links are publicly readable. The Uniswap
+> feedback form already has a successful submission record; check the entered link rather than submitting again.
+> Review and enhance.
+
+English translation of the request. Work (Codex): check anonymous GitHub access and the published revision,
+review README code pointers against the source, and refine the eight existing feedback findings with evidence
+and specific requests. Preserve attribution to OpenZeppelin/Panoptic and distinguish the confirmed form submission
+from its unrecorded final URL. The public main branch still contained the earlier study at the check; local link
+validation is recorded separately from publication. Existing website work in the shared working tree is preserved.

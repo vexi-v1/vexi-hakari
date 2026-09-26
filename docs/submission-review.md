@@ -1,14 +1,16 @@
 # Submission readiness review — 2026-09-27 JST
 
 **The implementation is demonstrable locally, but the submission is not yet verified complete.** The local
-working tree passed 5 hook tests and 92 Aqua/band/settlement tests. The public default branch still showed the
-previous study when checked anonymously; the current integration must be published before judges can inspect it.
+working tree passed 5 hook tests and 92 Aqua/band/settlement tests at the implementation-review snapshot. The
+anonymous GitHub check was repeated during the document review: the public default branch still showed the
+previous study. The current integration must be published before judges can inspect it. Document/link checks
+below are separate from that earlier contract-test run.
 
 ## Required actions before submission
 
 | Priority | Finding | Evidence / action to close it |
 |---|---|---|
-| P0 | Public repository does not yet contain this entry | GitHub's unauthenticated tree API returned `main = aefa9236a1302ace3e766266eb44a27aaa8a8fbc`, with no `aqua/`, at about 04:22 JST. Local work is on `tk-137-aqua-band-slice` with uncommitted changes. Publish the reviewed integration and verify the submitted ref anonymously; preferably make it the default branch. A local passing suite is not evidence that judges can access that code. |
+| P0 | Public default branch does not yet contain this entry | The repeated anonymous check still found `main = aefa9236a1302ace3e766266eb44a27aaa8a8fbc`, with no `aqua/`; the branch API listed only `main`. The current integration is on local `tk-137-aqua-band-slice`. Publish the reviewed integration and verify the exact submitted ref anonymously. If the feedback URL uses `blob/main/FEEDBACK.md`, publishing only a different branch will not update it. See the public-document check below. |
 | Done | Open-source eligibility | `AquaWriter.sol`, `OptionBook.sol` and `ICollateralSource.sol` are MIT (were BUSL-1.1). ETHGlobal requires the new parts of a Continuity entry to remain open source, and neither 1inch prize nor 1inch's licenses ask for BUSL; the SwapVM extensions keep LicenseRef-Degensoft-SwapVM-1.1, which that license requires. See `LICENSE` and `THIRD_PARTY_NOTICES.md`. |
 | Done | Uniswap Developer Feedback Form submitted | On 2026-09-27, the user confirmed completion and supplied the form's success message: "Thanks for sharing your feedback". See the submission confirmation below. The prepared answers remain in [the form draft](uniswap-feedback-draft.md). |
 | P0 | Dashboard completion and partner selection are unverified | The supplied `/events/tokyo2026/project` link redirects to sign-in in the review browser. Verify the actual title, descriptions, repository revision, selected Continuity track, both partner prizes and final submitted status. The link alone is not a submission receipt. |
@@ -108,11 +110,33 @@ The user reported that the form was completed and supplied this success message:
 This records the participant's confirmation of a successful submission. The final field values and a submission
 identifier were not provided; the preparation draft is not an exact transcript of the submitted answers.
 
+## Public-document check — 2026-09-27
+
+The document review made unauthenticated requests, without GitHub credentials. The repository was public, with
+`main` as its default branch, but that branch still held the earlier study at
+`aefa9236a1302ace3e766266eb44a27aaa8a8fbc`. The source revision reviewed locally started at
+`c7cdd32`, plus the document changes from this review. Request timestamps, statuses, hashes and local-link results
+are in [the check record](evidence/2026-09-27-public-documents.json). This is a dated snapshot, not a live status indicator.
+
+At 05:03 JST, all 129 local document links resolved and 27 selected source anchors matched their intended
+functions or statements. The public README and FEEDBACK pages returned HTTP 200 but contained the earlier study;
+the public reviewer-code-map page returned 404. No contract tests were rerun for these documentation-only edits.
+
+| Check | Meaning / completion condition |
+|---|---|
+| Public repository | Confirmed public through GitHub's unauthenticated API. This alone does not establish that the submitted implementation is present. |
+| README and feedback content | Check the body as well as HTTP status. The old `main` has files with these names, so successful responses can still show the wrong project version. |
+| Integration links | README now links to the hook, pool reads, observation handling, quote refusal, settlement and fork proofs by source line. Local path/anchor checks do not mark unpublished remote files as available. |
+| Feedback quality | Eight build-experience findings have concrete implementation references and scoped requests. The revision credits existing cardinality NatSpec, avoids claiming the mint guide lacks action constants, and distinguishes test helpers and synthetic fork evidence from production integrations. |
+| Form submission | User-confirmed complete. The draft recommends `https://github.com/vexi-v1/vexi-hakari/blob/main/FEEDBACK.md`; the actual entered URL was not recorded and still needs confirmation. Do not treat the draft as the submitted form. |
+| Final public verification | After publication, resolve the submitted branch to a commit, fetch README, FEEDBACK and every linked integration file anonymously, check line targets, and record that commit. Verify the actual URL entered in the form; a correct URL whose content is updated does not by itself call for another form submission. |
+
 ## Final handoff checklist
 
 - [x] Owners resolve the three BUSL file licenses: MIT (see "Licensing decision").
 - [ ] Publish the complete reviewed revision, preserving real history; verify a fresh recursive clone.
 - [ ] Ensure README code links and the feedback link open without a signed-in GitHub session.
+- [ ] Confirm the actual feedback URL entered in the completed form and that it serves the current integration feedback.
 - [ ] Rehearse the demo; preserve visible transfer and refusal evidence. Add the optional recording URL.
 - [x] Submit the Uniswap Developer Feedback Form; user-confirmed success message recorded above.
 - [ ] Confirm the dashboard's Continuity track, both sponsors and the full submitted state before 09:00 JST.

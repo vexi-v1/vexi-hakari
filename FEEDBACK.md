@@ -1,75 +1,133 @@
 # Uniswap developer feedback — HAKARI band
 
-ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution".
+ETHGlobal Tokyo 2026 · Uniswap Foundation "Best Uniswap Stack Contribution" · Continuity Track.
 
 These eight findings come from building the option book and its price band in `aqua/` on 2026-09-26/27.
-Each describes an integration issue we encountered, our workaround, and what would have helped.
+They cover friction we encountered, one integration detail that worked well, and specific improvements we would
+like. Source links point to this revision; the [reviewer code map](docs/reviewer-code-map.md) connects them to the
+entry, and the [public-document check](docs/submission-review.md#public-document-check--2026-09-27) records whether
+the revision is available to an unauthenticated reviewer.
 
 The band reads pool state through `StateLibrary` and raw/truncated TWAPs through `HakariOracleHook`, based on
 OpenZeppelin's `BaseOracleHook`. We tested it on a Robinhood Chain mainnet fork (4663) and created a hooked pool on
 testnet (46630), using PoolManager `0x8366a39CC670B4001A1121B8F6A443A643e40951`, PositionManager and Permit2.
 See [the band](docs/band.md) and [experimental settlement](docs/settlement.md) for the consumer's behavior and limits.
-The observations below reflect the build, not a fresh review of upstream documentation or deployments.
+These are build-experience notes, not a claim that a topic is absent from all upstream documentation. The linked
+Uniswap guides and vendored oracle source were rechecked on 2026-09-27 when refining the feedback.
 
-## 1. No safe "price from `sqrtPriceX96`" recipe
+The most useful improvement for us would be a runnable oracle-consumer example: initialize a hooked pool, grow
+its observation ring, accumulate a window, call `observe`, and refuse a quote when that history is unavailable.
+Our [successful buy](aqua/test/StabilityBandFork.t.sol#L311),
+[out-of-band refusal](aqua/test/StabilityBandFork.t.sol#L359) and
+[unavailable-history test](aqua/test/StabilityBand.t.sol#L284) show why each step matters.
 
-The v4 [read pool state](https://developers.uniswap.org/docs/protocols/v4/guides/read-pool-state) guide stops at
-`sqrtPriceX96`. It does not show turning it into a human price with token decimals and token order, and does not warn
-that squaring a uint160 can need 320 bits, so every integrator who uses a pool as a price reference writes this by
-hand. We borrowed v3's `OracleLibrary.getQuoteAtTick` split (square exactly below 2^128, go through X128 above) and
-needed tests on powers of two, both token orders and a fuzz over the whole tick range to trust it
-([`BandMath.priceOf`](aqua/src/band/BandMath.sol)). A documented helper, or a function in v4-periphery, would remove a
-class of bugs.
+## 1. From `sqrtPriceX96` to a whole-token price
 
-## 2. No word on `slot0` as a reference price
+**Observed.** The [read-pool-state guide](https://developers.uniswap.org/docs/protocols/v4/guides/read-pool-state)
+explains the encoded price. Our consumer also needed quote-per-base units, either token order, and decimal scaling.
+Directly squaring a uint160 can require 320 bits.
 
-The same guide reads `slot0` with no note that it can be moved inside one transaction and that v4 has no built-in
-oracle. We designed for it (the band's center is a hook TWAP; `slot0` only decides how far from it we are), but a
-one-paragraph warning with a link to oracle-hook examples belongs next to `getSlot0`.
+**Workaround and evidence.** [`BandMath.priceOf`](aqua/src/band/BandMath.sol#L30) uses a Q192 square for values that
+fit in uint128, otherwise a Q128 ratio computed with `FullMath.mulDiv`, following v3's conversion approach.
+The [consumer constructor](aqua/src/band/StabilityBandPricer.sol#L130) validates decimals up to 18 and derives the scale.
 
-## 3. Minting from a plain script needs three things the mint guide leaves out
+**Request.** Link a conversion example from the state-reading guide, including both token orders, unequal decimals,
+rounding and representable output limits. This would shorten the path from a state read to a usable price.
 
-The [mint position](https://developers.uniswap.org/docs/protocols/v4/guides/managing-liquidity/mint-position) guide
-names `Actions.MINT_POSITION` and `Actions.SETTLE_PAIR` but not their byte values (we used `0x02` and `0x0d` from
-v4-periphery's `Actions.sol` rather than add the whole periphery as a dependency, and confirmed them only by
-simulating against the deployed PositionManager); it does not mention the two Permit2 approvals the settle step needs
-(`token.approve(Permit2)`, then `Permit2.approve(token, PositionManager, amount, expiration)`); and it does not show
-computing liquidity for full range from token amounts. A short "first position from a Foundry script" page with those
-three would have saved us the most time.
+## 2. State reads need an explicit oracle-use caveat
+
+**Observed.** The same guide lists a price oracle as a use case for `getSlot0`. A pool's current price can move
+within one transaction, so reading it is not sufficient to establish a trustworthy reference.
+
+**Workaround and evidence.** [`status`](aqua/src/band/StabilityBandPricer.sol#L199) compares the current pool price
+with a hook TWAP and checks raw/truncated-series agreement. The [fork refusal](aqua/test/StabilityBandFork.t.sol#L359)
+exercises an actual purchase after a push. A [sustained push can become the center](aqua/test/StabilityBandFork.t.sol#L432);
+this policy does not establish an external fair price.
+
+**Request.** Put a short caveat next to that use case, linked to oracle-hook examples and their liquidity,
+history and manipulation assumptions.
+
+## 3. A complete first-position script would reduce setup work
+
+**Observed.** The [mint-position guide](https://developers.uniswap.org/docs/protocols/v4/guides/managing-liquidity/mint-position)
+shows action encoding and links a setup guide. Assembling our Foundry script also required both Permit2 approvals
+and the conversion from token amounts to full-range liquidity.
+
+**Workaround and evidence.** [`HookedPool.run`](aqua/script/HookedPool.s.sol#L88) initializes and mints;
+[`_plan`](aqua/script/HookedPool.s.sol#L173) computes liquidity and maximum amounts;
+[`_mintAndApprove`](aqua/script/HookedPool.s.sol#L195) approves the token to Permit2 and Permit2 to PositionManager.
+Our minimal-interface script uses action bytes `0x02`/`0x0d`; the guide's `Actions` imports already supply those
+constants for projects using v4-periphery. The [testnet record](aqua/deployments/46630-hooked-pool.json) records our run.
+
+**Request.** A runnable first-position script combining setup, approvals, liquidity calculation and minting,
+with the deployed-address and token-order assumptions visible in one place.
 
 ## 4. v4-core as a Foundry submodule
 
-The repository has one release tag (`v4.0.0`) while `main` has moved on, so `forge install` without a tag lands on an
-arbitrary `main` commit (this repository ends up with two: the hook builds against a later `main` commit, `aqua/`
-against `v4.0.0`). Foundry also picks up v4-core's own `remappings.txt`, adding `hardhat/` and `@ensdomains/` entries
-that point into a `node_modules/` a submodule checkout does not have. Saying which tag or commit the deployed
-PoolManagers were built from would help.
+**Observed.** Our two Foundry projects ended up with different v4-core revisions. The dependency's remappings also
+include `hardhat/` and `@ensdomains/` paths to a `node_modules/` directory absent from our submodule checkout.
+
+**Workaround and evidence.** We pin the hook's v4-core to
+[`d153b04`](https://github.com/Uniswap/v4-core/tree/d153b048868a60c2403a3ef5b2301bb247884d46) and the consumer's to
+[`e50237c`](https://github.com/Uniswap/v4-core/tree/e50237c43811bd9b526eff40f26772152a42daba), and configure imports in
+[the root](foundry.toml) and [consumer](aqua/foundry.toml) projects. The
+[pinned dependency remappings](https://github.com/Uniswap/v4-core/blob/e50237c43811bd9b526eff40f26772152a42daba/remappings.txt#L1)
+show the paths we encountered. They did not prevent the recorded build from passing.
+
+**Request.** Show a tested Foundry dependency/remapping set and identify the source revision for each deployment,
+so integrators can deliberately match source and bytecode.
 
 ## 5. The same PoolManager address on both chains let us run a testnet hook on a mainnet fork
 
-Worked well. We etched the hook's deployed 46630 bytecode at its own flag-mined address on a 4663 fork, and it ran
-unchanged against the real PoolManager (its immutable `poolManager` matched)
-([`test/StabilityBandFork.t.sol`](aqua/test/StabilityBandFork.t.sol)). One of our most useful integration tests, and
-only possible because the addresses match; worth saying on the deployments page.
+**Worked well.** The matching PoolManager addresses let the hook's immutable manager address remain valid when we
+installed its deployed 46630 runtime at its flag-mined address on a local 4663 fork.
+
+**Evidence.** The [fixture](aqua/test/StabilityBandFork.t.sol#L172) creates a new hooked pool on the real PoolManager,
+and [assertions](aqua/test/StabilityBandFork.t.sol#L276) check the reference and observations. The pool and swap
+history are synthetic; this is not a mainnet deployment or evidence that the two chains have identical state.
+
+**Request.** Document this reusable fork-testing pattern alongside chain-specific deployment addresses, with
+explicit checks for bytecode compatibility and hook immutables.
 
 ## 6. The cardinality trap is easy to fall into with a v4 oracle hook
 
-After `initialize` the ring holds one observation; the first swap in a later second overwrites it unless
-`increaseObservationCardinalityNext` was called first, and the growth only takes effect on the write after that. A
-one-hour TWAP then reverts (`TargetPredatesOldestObservation`) for an hour after every swap. This is v3's behaviour,
-but the v4 hook docs and the OpenZeppelin hook's NatSpec do not warn about it. A line in the oracle-hook guide ("grow
-the ring before the first swap; size it to swap-seconds per window") would help.
+**Observed.** A newly initialized ring holds one observation. Without growth, a write at a later timestamp replaces
+it; a requested window older than retained history reverts with `TargetPredatesOldestObservation`. Merely waiting
+an hour does not ensure an hour of retained history on an actively overwritten ring.
 
-## 7. No cheap way to ask for the oldest observation
+**Workaround and evidence.** Our [testnet script](aqua/script/HookedPool.s.sol#L124) grows the ring before its swaps;
+the [fork fixture](aqua/test/StabilityBandFork.t.sol#L217) grows it and then builds two hours of observations.
+Growth reserves capacity; it does not backfill historical prices.
 
-A consumer that wants "the longest window available, up to W" must read `stateById` and then `observationsById` to
-find the oldest timestamp, or call `observe` and catch the revert. An `oldestObservationTimestamp(poolId)` view on the
-oracle hook would make fail-closed consumers simpler; ours catches the revert and pauses.
+**Request.** Add an end-to-end warm-up example explaining capacity, elapsed history and distinct-timestamp writes.
+The [pinned OpenZeppelin NatSpec](https://github.com/OpenZeppelin/uniswap-hooks/blob/acbd604c409a827f7f98c9517236da860c4fca1a/src/oracles/panoptic/BaseOracleHook.sol#L24)
+already explains deferred cardinality growth; our difficulty was translating that into a ready-to-query consumer.
 
-## 8. `PoolSwapTest` and `PoolModifyLiquidityTest` are what scripts end up using on a testnet
+## 7. Discovering the available observation window
 
-They live under v4-core's `src/test`; the only minimal swap router we found on Robinhood testnet was one deployed from
-that folder. Either blessing them for scripts or listing a periphery router on testnets would help.
+**Observed.** The oracle exposes `stateById` and `observationsById`, but a consumer must interpret ring state to
+find the oldest initialized observation, or try `observe` and handle failure.
+
+**Workaround and evidence.** Our [observation read](aqua/src/band/StabilityBandPricer.sol#L211) catches failure and
+returns `ReferenceUnavailable`; the [consumer test](aqua/test/StabilityBand.t.sol#L284) checks that quotes refuse.
+We keep the configured window rather than silently accepting a shorter one.
+
+**Request.** An `oldestObservationTimestamp(poolId)` helper, with partially populated-ring semantics, would make
+readiness checks and frontend explanations simpler. This concerns the OpenZeppelin/Panoptic oracle interface,
+not a missing PoolManager method.
+
+## 8. Finding a minimal testnet router
+
+**Observed.** Our minimal swaps used `PoolSwapTest` from v4-core's `src/test`, and the fork fixture used
+`PoolModifyLiquidityTest` for liquidity. It took extra work to distinguish demonstration helpers from the
+recommended application integration path.
+
+**Workaround and evidence.** [`HookedPool._swap`](aqua/script/HookedPool.s.sol#L159) uses `PoolSwapTest`; the
+[fork setup](aqua/test/StabilityBandFork.t.sol#L172) uses the test helpers locally. Testnet minting instead goes
+through PositionManager and Permit2 as described above.
+
+**Request.** List a supported minimal swap path for each testnet and state when these helpers are suitable for
+examples. We are not recommending test helpers as production routers.
 
 ---
 
