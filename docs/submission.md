@@ -79,7 +79,9 @@ strategy, moved only at a fill. SwapVM is the spot pool and the place where the 
   Aqua); `promised(token)`.
 - `aqua/src/swapvm/ExposureGuard.sol`: custom instruction, same price, depth capped at the unpromised balance;
   `ExposureGuardExtruction.sol`: the same policy on the canonical router through `Extruction`;
-  `WriterSwapVMRouter.sol`: the deployed router's opcode table plus the guard.
+  `WriterSwapVMRouter.sol`: the deployed router's opcode table plus the guard. `aqua/deployed-46630/`: the router the
+  vaults use on testnet 46630, published as deployed, with a second instruction, `DeltaSkew` (opcode 35), that leans
+  the spot price against the delta the option book added.
 - Proofs: `aqua/test/Lifecycle.t.sol` (the Aqua invariants on the fork), `aqua/test/ExposureGuard.t.sol` (without the
   guard, a spot fill takes promised collateral and the option buyer is refused), `aqua/test/ExposureGuardCanonical.t.sol`
   (the guard on `0x111111338c…`), `aqua/test/GuardProperties.t.sol`.

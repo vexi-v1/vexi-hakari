@@ -11,6 +11,7 @@ src/book/IPremium.sol, IQuoteReference.sol, ICollateralSource.sol
 src/swapvm/ExposureGuard.sol         custom SwapVM instruction: spot depth ≤ wallet − promised, same price
 src/swapvm/ExposureGuardExtruction.sol   the same guard on the canonical router, through Extruction
 src/swapvm/WriterSwapVMRouter.sol    the deployed router's opcode table plus the guard
+deployed-46630/                      the router deployed on testnet 46630 (guard + DeltaSkew), as deployed; own build profile
 src/band/StabilityBandPricer.sol     ±5 % around a hooked v4 pool's TWAP: taper, then pause
 src/band/HookTwapExpiryPrice.sol     experimental TWAP settlement-window selection
 src/band/BandMath.sol                average tick, tick → price, the band check

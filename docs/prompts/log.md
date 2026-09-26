@@ -520,3 +520,15 @@ The user supplied the form's success message and confirmed completion. Outcome (
 submission complete in the readiness checklist, recorded the user-provided confirmation, and changed the form
 draft's status to submitted while retaining it as a preparation copy. Final field values were not supplied;
 other submission checks were not marked complete.
+
+## 2026-09-27 05:00 — Abner: publish the router deployed on testnet 46630
+
+> option 1
+
+(Chosen from three: publish the deployed router's source here; leave it unpublished and accept the license risk; or
+redeploy the vaults on a router without the second instruction.) Outcome (Claude Code): the router the team's vaults
+use on 46630 carries two custom SwapVM instructions, and SwapVM-1.1 §3.1 A asks a deployed modification to publish its
+source. `aqua/deployed-46630/` now holds `WriterSwapVMRouter`, `ExposureGuard` and `DeltaSkew` as deployed at
+`0xfadDb…`: compiled in the tree they were deployed from, they match the on-chain runtime code byte for byte once
+immutables and the metadata hash are masked, and only their header comments changed for publication. A separate
+Foundry profile builds them; the deploy command was rehearsed on a local anvil.

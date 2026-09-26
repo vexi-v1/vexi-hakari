@@ -14,6 +14,15 @@ via_ir = true
 dynamic_test_linking = false
 fs_permissions = [{ access = "read-write", path = "./deployments" }]
 
+# The router deployed on testnet 46630 (both custom instructions), published as deployed: deployed-46630/README.md.
+# Built on its own so its WriterOpcodes and WriterSwapVMRouter do not share a build with src/swapvm's.
+[profile.deployed46630]
+src = "deployed-46630/src"
+test = "deployed-46630/src"
+script = "deployed-46630/src"
+out = "deployed-46630/out"
+cache_path = "deployed-46630/cache"
+
 [fuzz]
 runs = 256
 

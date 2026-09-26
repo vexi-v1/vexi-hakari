@@ -94,6 +94,7 @@ the router deployed on Robinhood Chain 4663). Canonical Aqua and the deployed Sw
 | Custom SwapVM instruction: same price, depth capped at the unpromised balance | [`ExposureGuard.sol`](aqua/src/swapvm/ExposureGuard.sol) `_exposureGuardXD`, `capToFree` |
 | The same guard on the canonical router already deployed on 4663, through its `Extruction` opcode | [`ExposureGuardExtruction.sol`](aqua/src/swapvm/ExposureGuardExtruction.sol) |
 | Router subclass: the deployed router's opcode table plus `ExposureGuard`, every existing opcode keeps its number | [`WriterSwapVMRouter.sol`](aqua/src/swapvm/WriterSwapVMRouter.sol) |
+| The router the team's vaults use on testnet 46630, with a second custom instruction, `DeltaSkew` (opcode 35: the spot price leans against the delta the option book added), published as deployed | [`aqua/deployed-46630/`](aqua/deployed-46630/) |
 | Proofs, on a fork of 4663 against canonical Aqua and the deployed router | [`test/Lifecycle.t.sol`](aqua/test/Lifecycle.t.sol) (the Aqua invariants), [`test/ExposureGuard.t.sol`](aqua/test/ExposureGuard.t.sol) (without the guard a spot fill takes promised collateral and the option buyer is refused), [`test/ExposureGuardCanonical.t.sol`](aqua/test/ExposureGuardCanonical.t.sol) (the guard on `0x111111338c…`), [`test/CanonicalAqua.t.sol`](aqua/test/CanonicalAqua.t.sol), [`test/GuardProperties.t.sol`](aqua/test/GuardProperties.t.sol) (fuzzed) |
 
 ## For Uniswap reviewers: v4 hook and band

@@ -2,3 +2,5 @@ out/
 cache/
 broadcast/**/dry-run/
 .env
+deployed-46630/out/
+deployed-46630/cache/

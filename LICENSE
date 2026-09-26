@@ -12,6 +12,7 @@ MIT (LICENSES/MIT.txt), unless listed below:
 LicenseRef-Degensoft-SwapVM-1.1 (LICENSES/SwapVM-1.1.txt, copied byte for byte from 1inch swap-vm v1.0.2), as
 modifications of 1inch SwapVM, which that license requires to carry it (its §3.1 A):
   aqua/src/swapvm/
+  aqua/deployed-46630/src/ (the router deployed on testnet 46630, published as deployed)
   aqua/test/helpers/AquaPrograms.sol, WriterPrograms.sol, OrderBuilders.sol
   Powered by SwapVM — © Degensoft Ltd 2025.
 

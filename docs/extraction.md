@@ -17,6 +17,7 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 | The book | [`aqua/src/book/OptionBook.sol`](../aqua/src/book/OptionBook.sol) | A small book of covered calls and cash-secured puts: create a series, post, buy, settle, exercise by delivery, close, refund. No buybacks and no position tokens for the writer. Every order is priced by an `IPremium` |
 | The seams | [`IQuoteReference`](../aqua/src/book/IQuoteReference.sol), [`ICollateralSource`](../aqua/src/book/ICollateralSource.sol), [`IPremium`](../aqua/src/book/IPremium.sol), [`IExpiryPrice`](../aqua/src/price/IExpiryPrice.sol) | Reduced to the calls the book above makes |
 | SwapVM guard | [`aqua/src/swapvm/`](../aqua/src/swapvm/): `ExposureGuard`, `ExposureGuardExtruction`, `WriterSwapVMRouter` | Unchanged, except that the router appends only `ExposureGuard` to the deployed router's opcode table |
+| The router deployed on testnet 46630 | [`aqua/deployed-46630/`](../aqua/deployed-46630/): `WriterSwapVMRouter` with `ExposureGuard` and `DeltaSkew` | Published as deployed, because 1inch's SwapVM license asks a deployed modification to publish its source; only header comments changed, and the deployed code was checked against it byte for byte. `DeltaSkew` leans the spot price against the delta the option book added (−0.5 per short call, +0.5 per short put). Nothing else in this repository uses it |
 | The band | [`aqua/src/band/StabilityBandPricer.sol`](../aqua/src/band/StabilityBandPricer.sol), [`BandMath.sol`](../aqua/src/band/BandMath.sol) | A fixed half-width, 5 % by default ([band.md](band.md)); it wraps any `IPremium` |
 | Settlement on the hook | [`aqua/src/band/HookTwapExpiryPrice.sol`](../aqua/src/band/HookTwapExpiryPrice.sol) | The same fixed band decides whether a settle window is accepted |
 | Test doubles | [`FixedExpiryPrice`](../aqua/src/price/FixedExpiryPrice.sol) | Unchanged |
@@ -38,7 +39,6 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 |---|---|
 | Vexi's option pricer and board view | Product: how Vexi prices options. `FixedPremium` stands in |
 | The shared vault (depositors' shares of one Aqua maker) | Product: how a Vexi vault accounts for its depositors. Here the maker is a plain wallet, the way Aqua is meant to be used |
-| A second SwapVM instruction tied to the pricer | Part of the pricing above |
 | Buybacks and the writer's position tokens | Not needed to show the Aqua seam; they belong with the pricer |
 | A settlement source on a Chainlink feed | Not part of either partner integration; the book takes any `IExpiryPrice` |
 | A simpler `slot0` check against the Uniswap pool | The band covers it: it reads the same `slot0` through `StateLibrary`, plus the hook's TWAP |
