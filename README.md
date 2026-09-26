@@ -27,7 +27,7 @@ Uniswap study and changed shape during the event; [docs/history.md](docs/history
 | [For 1inch reviewers](#for-1inch-reviewers-aqua-and-swapvm) · [For Uniswap reviewers](#for-uniswap-reviewers-v4-hook-and-band) | The integration, file by file |
 | [docs/band.md](docs/band.md) | Quote validity, optional anchors, the fixed demonstration band and its limits |
 | [docs/settlement.md](docs/settlement.md) | Experimental settlement: window selection, deferral and refund outcomes |
-| [docs/history.md](docs/history.md) · [docs/extraction.md](docs/extraction.md) | How the repository got here; what was brought in from the team's private code and what was left out |
+| [docs/history.md](docs/history.md) · [docs/extraction.md](docs/extraction.md) | How the repository got here (Vexi before the event, what was added at it); what was brought in from Vexi's private codebase and what was left out |
 | [archive/](archive/README.md) | The first study, "what it costs to fake a price", kept as it was |
 | [FEEDBACK.md](FEEDBACK.md) | Uniswap developer feedback |
 
@@ -140,11 +140,12 @@ PoolManager next to the real TSLA/USDG liquidity of mainnet.
 
 ## Provenance and AI disclosure
 
-Everything in this repository was written during ETHGlobal Tokyo 2026 (from 2026-09-25 21:29 JST). The hook and the
-first study were built here, commit by commit. The Aqua seam, the band and the settlement source were written in the
-team's private repository during the event and brought here on 2026-09-27; [docs/history.md](docs/history.md) lists
-when each part was written and [docs/extraction.md](docs/extraction.md) what was changed on the way. No code from Vexi
-or any other pre-existing project is included. Public libraries are pinned submodules, unmodified: v4-core,
+Vexi existed before the event; everything in this repository was added to it during ETHGlobal Tokyo 2026 (from
+2026-09-25 21:29 JST). The hook and the first study were built here, commit by commit. The Aqua seam, the band and the
+settlement source were written during the event in Vexi's private codebase and brought here on 2026-09-27, this being
+the entry's only public repository; [docs/history.md](docs/history.md) lists when each part was written and
+[docs/extraction.md](docs/extraction.md) what was changed on the way. No code written before the event, from Vexi or
+any other project, is included. Public libraries are pinned submodules, unmodified: v4-core,
 OpenZeppelin `uniswap-hooks` and `openzeppelin-contracts`, forge-std, 1inch `aqua`, `swap-vm` and `solidity-utils`.
 
 Built with Claude Code (Anthropic), with subsequent quote-validity and documentation work using Codex (OpenAI). The prompts that shaped the work are in [docs/prompts/](docs/prompts/); the rules

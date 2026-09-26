@@ -13,8 +13,9 @@ and the settlement source. `archive/` is the first study, kept as it was; do not
 2. **Hackathon provenance.** Code written before the hackathon started (2026-09-25 21:00 JST) is not pasted in.
    Knowledge and public on-chain data are reused; code is rewritten here. Public libraries are fine as pinned
    submodules.
-3. **This repository is public; the team's product code is not.** Bring nothing in from the private repositories
-   beyond what `docs/extraction.md` lists, and write nothing about how the product prices options or sizes its risk.
+3. **This repository is public and the entry's only public one; Vexi's code stays private.** Bring nothing in from
+   the private repositories beyond what `docs/extraction.md` lists, and write nothing about how the product prices
+   options or sizes its risk.
    The band's width is a fixed percentage; keep it that way unless the owners decide otherwise.
 4. **Secrets.** Never read, print or log a `.env` file or a private key. A deploy key lives only in an environment
    variable; it never appears in `argv` or in a log line.

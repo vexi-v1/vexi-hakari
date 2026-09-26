@@ -1,9 +1,9 @@
 # What was brought in, and what was left out
 
-The team's 1inch entry was written during ETHGlobal Tokyo 2026 in a private repository, because it grew out of Vexi's
-product design (see [history.md](history.md)). On 2026-09-27 the owners chose to keep that repository private and to
-bring here only what the two partner prizes review. This page is the inventory, so a reviewer knows what they are
-looking at and what they are not.
+The Aqua writer and the band were added to Vexi, the team's existing project, during ETHGlobal Tokyo 2026, in Vexi's
+private codebase (see [history.md](history.md)). Vexi stays private; on 2026-09-27 the owners chose to bring into this
+repository, the entry's only public one, just what the two partner prizes review. This page is the inventory, so a
+reviewer knows what they are looking at and what they are not.
 
 The rule for each part: **does a 1inch or Uniswap reviewer need it to verify the integration?** If yes, it is here,
 trimmed to what the integration needs. If it is Vexi's product (how options are priced, how a shared vault accounts
@@ -47,6 +47,6 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 
 ## How the move was made
 
-- A copy of the files, not a merge of histories: the private repository's history carries the parts left out. The
-  commits here that bring the code in say so, and [history.md](history.md) lists when each part was first written.
+- A copy of the files, not a merge of histories: Vexi's history carries the parts left out. The commits here that
+  bring the code in say so, and [history.md](history.md) lists when each part was first written.
 - Every contract here compiles and is tested here: `cd aqua && forge test`.

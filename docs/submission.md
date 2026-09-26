@@ -1,7 +1,8 @@
 # ETHGlobal Tokyo 2026: submission texts
 
 Draft text for the ETHGlobal form. Complete [the readiness checks](submission-review.md) before submitting. Track: **Continuity**. Partner prizes: 1inch **Build an Aqua App - Continuity Track** and
-Uniswap Foundation **Best Uniswap Stack Contribution**. Repository: <https://github.com/vexi-v1/vexi-hakari>.
+Uniswap Foundation **Best Uniswap Stack Contribution**. Repository: <https://github.com/vexi-v1/vexi-hakari>, the
+entry's only public repository; Vexi's own codebase stays private and is not linked.
 
 ## Tagline
 
@@ -61,9 +62,8 @@ validity and original anchors, the taper's size-times-deviation arithmetic and e
 - **Testnet 46630:** the hook, and an AAPL/USDG v4 pool created with it through PositionManager and Permit2
   (`MINT_POSITION` + `SETTLE_PAIR`, full range), its observation ring grown to 128.
 - **Built at the event, in public and in private:** the hook and the first study were built in this repository
-  commit by commit; the Aqua seam, the band and the settlement were written during the event in the team's private
-  product repository and brought here on 2026-09-27, trimmed to the integration (`docs/history.md`,
-  `docs/extraction.md`).
+  commit by commit; the Aqua seam, the band and the settlement were written during the event in Vexi's private
+  codebase and brought here on 2026-09-27, trimmed to the integration (`docs/history.md`, `docs/extraction.md`).
 - **AI:** built with Claude Code, with subsequent quote-validity and documentation work using Codex; the prompts are in `docs/prompts/`.
 
 ## How is 1inch Aqua / SwapVM used
@@ -101,11 +101,13 @@ Uniswap v4 is the price the writer's book is checked against, through HAKARI's h
 
 ## Continuity Track: what existed before the event, and what was built at it
 
-**Before the event.** Vexi, the team's options venue on Robinhood Chain (a separate, private codebase). This entry
-continues Vexi's design questions, not its code. No code, contract or asset from Vexi or any other pre-existing project
-is in the repository; public libraries are pinned submodules, unmodified.
+**Before the event.** Vexi, the team's options venue on Robinhood Chain: vaults that write covered calls and
+cash-secured puts on tokenized stocks, quoting a board of strikes and expiries (a private codebase). No code written
+before the event is in the repository; public libraries are pinned submodules, unmodified.
 
-**At the event.** Everything in the repository. HAKARI's first commit is `c65549c` (2026-09-25 21:29 JST) and its
-history is public. The Aqua seam, the band and the settlement were written during the event in the team's private
-repository, from 2026-09-25 21:46 JST, and brought into this repository on 2026-09-27; `docs/history.md` lists when
-each part was written.
+**At the event.** Two additions to Vexi, one per partner: the 1inch Aqua writer (collateral stays in the writer's
+wallet until a fill; a SwapVM guard keeps the spot pool on the same balance from selling promised tokens), and,
+through HAKARI, the Uniswap v4 band and settlement. HAKARI was built in this repository in public, commit by commit
+from `c65549c` (2026-09-25 21:29 JST). The Aqua writer, the band and the settlement were written in Vexi's private
+codebase from 2026-09-25 21:46 JST and brought into this repository on 2026-09-27; `docs/history.md` lists when each
+part was written. The repository holds only those additions.
