@@ -637,3 +637,30 @@ fixed-point rounding, ordered refusal conditions and pinned source assertions. C
 code, per-observation truncation including read-time extrapolation, and the synthetic fork fixture. Keep the
 fixed-width public boundary, preserve evidence and contract code, verify both locales and responsive layouts,
 and commit locally without pushing.
+
+
+## 2026-09-27 — Abner: six-minute Google Slides and integrated pitch
+
+> Make another version in Google Slides; let me log in.
+>
+> This version is too simple. Make it six minutes, with sufficiently complete charts, visualizations and content.
+>
+> Refer to the whole supplied HAKARI pitch deck and integrate it to make the explanation more complete.
+
+English translations of the instructions. Work (Codex): expand the bilingual dark Vexi presentation to fourteen
+main slides timed for six minutes and six optional discussion pages. Integrate the supplied HTML deck's options
+basics, motivation, hook explanation, partner contribution and provenance with the public website's recorded
+lifecycle, native charts and source notes. Separate teaching examples, calculator curves and fork observations.
+Keep historical HIMS material in an explicitly labelled appendix, correct stale or unsupported reference claims,
+and exclude private product pricing and risk policy. Preserve the original Vexi logo and include timed scripts
+and browser actions. Create editable Google presentations through the user-authorized browser import workflow,
+retain the PowerPoint files and scripts in this repository, and commit locally only.
+
+## 2026-09-27 — Abner: submission project name
+
+> Use VexiHakari consistently as the project name.
+
+English translation of the instruction. Work (Codex): set the ETHGlobal project-name field to VexiHakari and
+save the draft, preserving the user's existing other field values. Align the current submission text and the
+separate form-review draft with that spelling. Keep repository paths, Solidity identifiers and historical study
+names intact. This naming change does not finalize the event submission or publish repository changes.

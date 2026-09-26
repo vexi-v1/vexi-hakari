@@ -4,8 +4,9 @@ The deliverable is a runnable contract integration with a [static interactive we
 replay is one continuous local-fork test, from shipping and a guarded spot fill through physical exercise, close
 and premium returns. Generate its evidence with `python3 scripts/website-evidence.py`. The first study is archived.
 
-For a short presentation, use the [three-minute PowerPoint decks](presentations/README.md), available in English
-and Traditional Chinese with visual diagrams, an editable band chart and timed speaker notes.
+For a presentation, use the [three- or six-minute PowerPoint decks](presentations/README.md), available in English
+and Traditional Chinese with editable diagrams and charts, plus timed speaker notes. The six-minute version
+adds the options introduction, full mechanism and six optional discussion pages.
 
 The terminal commands below select the earlier focused tests and show actual ERC-20 calls and Aqua events in
 Foundry's local fork EVM. They do not produce mainnet transactions or public explorer transaction hashes.
