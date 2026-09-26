@@ -5,7 +5,8 @@ bound on what faking a price costs, for any v4 pool, computed at the moment the 
 prices a push, and `CostModel` turns that cost into the largest exposure the pool can safely carry right now.
 `SafeSettle` is a demo user of the bound: it settles on the pool's TWAP only below that line, and refuses above it.
 
-**Try it:** [measure any pool live](https://vexi-v1.github.io/vexi-hakari/web/) (read-only, nothing deployed) ·
+**Try it:** [every stock pool right now vs Friday's close](https://vexi-v1.github.io/vexi-hakari/web/live/) (live, every minute) ·
+[measure any pool live](https://vexi-v1.github.io/vexi-hakari/web/) (read-only, nothing deployed) ·
 [the HIMS weekend, minute by minute](https://vexi-v1.github.io/vexi-hakari/web/squeeze/)\
 **Verify it:** [the on-chain refusal](https://explorer.testnet.chain.robinhood.com/tx/0xb2ca68bf6b448ffabe9eb8732524f21d6bd463477eb416331249ee591ac0ee88?tab=logs) ·
 [verified `SafeSettle`](https://explorer.testnet.chain.robinhood.com/address/0xf360b8ebe3A68e8029308A8CAa76E867B0F02c84?tab=contract) ·

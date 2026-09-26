@@ -214,3 +214,23 @@ one-interval width exactly). On the TSLA book at block 72,481,549 the weekday bo
 `SafeSettle` redeployed from `44521a9` on 46630 and verified; the demo settlement was re-run against them. README,
 FEEDBACK (§ 7 rewritten for v1, § 10 new) and this log corrected as listed.
 
+
+## 2026-09-26 11:20 — Abner: a live board, a measured reversion time, and a second case
+
+> 1. 「現在就被圍住的池子」即時看板：評審多半在週末、而且是鑄造窗口關閉時看 demo。看板每分鐘更新每個股票池目前的安全額度，
+> 並和週五收盤時比較，能當場看到問題正在發生，而不只是看八月的重播，對 Finalist 現場最有說服力。約 2 小時，都在 gauge 和
+> web 範圍內，屬於我這邊。
+> 2. 實測套利拉回時間：從平日的 swap 資料量出每個池子價格被推開後多快被拉回，取代 README 裡「呼叫者自己填」的假設。這是
+> 評審最可能追問的弱點（檢查清單 A6）。約 1.5 小時。
+> 3. 第二個案例：同週末的 AMC：X 研究裡看到 AMC 代幣曾印出約 $166（正股約 $2.59），造市商在勞動節週末前預先鑄造了約 $1M
+> 的 AMC 代幣。用現成的收集器和 skill 就能重建，可以正面回答「HIMS 是不是特例」。約 2 小時。
+>
+> ("1. A live board of the pools boxed in right now: judges mostly watch the demo at the weekend, while the mint window is
+> closed. Every minute, each stock pool's current safe amount against Friday's close, so the problem can be seen happening,
+> not only replayed from August. 2. Measure the arbitrage pull-back time: from weekday swaps, how fast each pool's price is
+> pulled back after being pushed, replacing the README's 'the caller fills it in'. The weakness judges are most likely to
+> press on (checklist A6). 3. A second case, AMC on the same weekend: X posts say the AMC token printed about $166 against
+> a ~$2.59 stock, and that the market maker pre-minted about $1M of AMC tokens before the Labor Day weekend. Rebuild it with
+> the existing collectors and skill, to answer 'was HIMS a one-off?' head on.")
+
+Output so far: `web/live/` and `npm run live:baseline` (item 1).

@@ -1,0 +1,3702 @@
+{
+  "friday": "2026-09-25",
+  "fridayClose": {
+    "time": "2026-09-25T20:00:00.000Z",
+    "block": "72496352",
+    "blockTimestamp": 1790366400
+  },
+  "generatedAt": "2026-09-26T02:35:53.659Z",
+  "head": {
+    "block": "72729329",
+    "timestamp": 1790389904
+  },
+  "method": "Friday 20:00 UTC (the US close) and every hour since: each pool rebuilt from its ModifyLiquidity logs, price and fee from the last Swap at or before the point (replay.ts), max safe exposure as CostModel.maxSafeExposure with nobody pushing back (replay.ts, pinned to the Solidity). check: at one recent block, the same bound from PushCostLens.roundTripCosts by eth_call state override (what web/live/ runs every minute) next to the rebuild.",
+  "ladderTicks": [
+    50,
+    100,
+    200,
+    488,
+    953,
+    1823
+  ],
+  "maxWalkSteps": 256,
+  "points": [
+    {
+      "time": "2026-09-25T20:00:00.000Z",
+      "block": "72496352",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-25T21:00:00.000Z",
+      "block": "72532199",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-25T22:00:00.000Z",
+      "block": "72567999",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-25T23:00:00.000Z",
+      "block": "72603682",
+      "mintWindowClosed": false
+    },
+    {
+      "time": "2026-09-26T00:00:00.000Z",
+      "block": "72639311",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-26T01:00:00.000Z",
+      "block": "72674990",
+      "mintWindowClosed": true
+    },
+    {
+      "time": "2026-09-26T02:00:00.000Z",
+      "block": "72710510",
+      "mintWindowClosed": true
+    }
+  ],
+  "pools": [
+    {
+      "symbol": "SPY",
+      "id": "0xfe2a80bb5618fd14984b92ca6d45bf5ba67443ddb1435e28b2e48df2fc1526cd",
+      "key": {
+        "currency0": "0x117cc2133c37b721f49de2a7a74833232b3b4c0c",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 20568,
+      "swapsSinceLookback": 1593,
+      "friday": {
+        "price": 770.5465688898036,
+        "maxSafeUsdg": 58735.690589109865,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 770.5465688898036,
+          "maxSafeUsdg": 58735.690589109865,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 411,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 770.6245947884186,
+          "maxSafeUsdg": 58356.48131038932,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 413,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 770.7923067604082,
+          "maxSafeUsdg": 57472.65299950664,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 413,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 770.8315805950174,
+          "maxSafeUsdg": 57248.409883325054,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 412,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 770.9251232101342,
+          "maxSafeUsdg": 56755.60451016319,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 412,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 770.8602762412271,
+          "maxSafeUsdg": 57097.25860781799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 412,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 770.8629953205731,
+          "maxSafeUsdg": 57083.6351257663,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 412,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 770.8629174507115,
+          "maxSafeUsdg": 57084.04546627891,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 412,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        "lens": {
+          "usdg": 57084.04546627891,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "META",
+      "id": "0x5875d407a42965b0e768c8925cea290e06fa50603ef34fc99eb92a1050e6ae36",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xc0d6457c16cc70d6790dd43521c899c87ce02f35",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 7896,
+      "swapsSinceLookback": 9647,
+      "friday": {
+        "price": 752.0185185681964,
+        "maxSafeUsdg": 72008.44431827066,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 752.0185185681964,
+          "maxSafeUsdg": 72008.44431827066,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 296,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 751.4258636463766,
+          "maxSafeUsdg": 73038.14101748081,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 299,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 751.2266907457501,
+          "maxSafeUsdg": 73582.2267674779,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 301,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 751.0398875988668,
+          "maxSafeUsdg": 74081.0207826954,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 302,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 750.8321878724151,
+          "maxSafeUsdg": 74517.26464216452,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 301,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 747.7901580685706,
+          "maxSafeUsdg": 81961.64423387793,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 304,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 747.660721781954,
+          "maxSafeUsdg": 82273.57173111601,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 304,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 747.52651533068,
+          "maxSafeUsdg": 82602.3395873893,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 304,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        "lens": {
+          "usdg": 82602.3395873893,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "MSTR",
+      "id": "0xd54e725de99633dae34f6d3eeec4196027c7c05d92b1cbeb0052a65d7b2b3197",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xec262a75e413fafd0df80480274532c79d42da09",
+        "fee": 2004,
+        "tickSpacing": 1,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 2653,
+      "swapsSinceLookback": 826,
+      "friday": {
+        "price": 159.04537091464954,
+        "maxSafeUsdg": 31.802397413794715,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 159.04537091464954,
+          "maxSafeUsdg": 31.802397413794715,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 158.69267411870922,
+          "maxSafeUsdg": 35.73851175446517,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 158.68662009629148,
+          "maxSafeUsdg": 35.80607418759437,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 158.71725529149023,
+          "maxSafeUsdg": 35.464181270991084,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 158.88518908220752,
+          "maxSafeUsdg": 33.59003138187717,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 158.88518908220752,
+          "maxSafeUsdg": 33.59003138187717,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 159.07941503003676,
+          "maxSafeUsdg": 31.422467497459337,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 159.07941503003676,
+          "maxSafeUsdg": 31.422467497459337,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 2335
+        },
+        "lens": {
+          "usdg": 31.422467497459337,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "GLD",
+      "id": "0xfe281bbfa9aa658c1aa9c2ad1b0c62c4286f96c7cb1074296b54e869935a7a3a",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xc9a981fee1f9dec688bb123ccdecc63d0debfc4e",
+        "fee": 8388608,
+        "tickSpacing": 10,
+        "hooks": "0xb608a78761f179f7c56f15e7d13921b92f00a080"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": true,
+      "modifyLiquidityLogs": 12520,
+      "swapsSinceLookback": 277,
+      "friday": {
+        "price": 393.27788867038487,
+        "maxSafeUsdg": 14057.615073719164,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 393.27788867038487,
+          "maxSafeUsdg": 14057.615073719164,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 311,
+          "liquidityMatches": true,
+          "swapFeePips": 2500
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 393.2867597109773,
+          "maxSafeUsdg": 35701.62821042395,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 312,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 393.288092976183,
+          "maxSafeUsdg": 35730.74593586835,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 312,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 393.2891411241244,
+          "maxSafeUsdg": 35899.643397693195,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 310,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 393.30377678085114,
+          "maxSafeUsdg": 35893.49357656718,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 309,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 393.3095932207838,
+          "maxSafeUsdg": 35550.940913278704,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 309,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 393.31203220874147,
+          "maxSafeUsdg": 35603.440876582965,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 317,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 393.3130095053684,
+          "maxSafeUsdg": 35634.13009902944,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 318,
+          "liquidityMatches": true,
+          "swapFeePips": 6000
+        },
+        "lens": {
+          "usdg": 0,
+          "bindingTicks": 50,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 0
+      }
+    },
+    {
+      "symbol": "CRCL",
+      "id": "0x5177eac8c2176468bbf15e44081e151d35c2e7d068e96d3db94f496a4dc944b2",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xdf0992e440dd0be65bd8439b609d6d4366bf1cb5",
+        "fee": 1500,
+        "tickSpacing": 15,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 193,
+      "swapsSinceLookback": 666,
+      "friday": {
+        "price": 88.779870511765,
+        "maxSafeUsdg": 912.1719471241557,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 88.779870511765,
+          "maxSafeUsdg": 912.1719471241557,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 86.84752533721891,
+          "maxSafeUsdg": 110.17012750165725,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 12,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 86.75278023642716,
+          "maxSafeUsdg": 138.96580755772564,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 12,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 87.02857506575879,
+          "maxSafeUsdg": 166.4574216244722,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 13,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 87.27798502635271,
+          "maxSafeUsdg": 189.38812623797338,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 13,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 87.34429814723603,
+          "maxSafeUsdg": 325.5740434764911,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 16,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 87.54357985201797,
+          "maxSafeUsdg": 420.5190140742181,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 16,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 87.54544983609935,
+          "maxSafeUsdg": 421.41055279906664,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 16,
+          "liquidityMatches": true,
+          "swapFeePips": 1762
+        },
+        "lens": {
+          "usdg": 421.41055279906664,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "TSLA",
+      "id": "0x8517f8071ae5b831b738052f12125e8e3d6c158b78728aa44ce3b25e5104d32e",
+      "key": {
+        "currency0": "0x322f0929c4625ed5bad873c95208d54e1c003b2d",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 4540,
+      "swapsSinceLookback": 1040,
+      "friday": {
+        "price": 372.49686210904883,
+        "maxSafeUsdg": 14236.162149717133,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 372.49686210904883,
+          "maxSafeUsdg": 14236.162149717133,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 175,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 372.58603555809026,
+          "maxSafeUsdg": 14231.512799123662,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 175,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 372.6047760496625,
+          "maxSafeUsdg": 14216.045482761658,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 175,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 372.606339774327,
+          "maxSafeUsdg": 14217.516778515823,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 177,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 372.6170244051137,
+          "maxSafeUsdg": 14208.409457547496,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 177,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 372.522893293083,
+          "maxSafeUsdg": 14217.161953219349,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 176,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 372.2291172429641,
+          "maxSafeUsdg": 14458.44320983273,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 177,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 372.20749863803434,
+          "maxSafeUsdg": 14475.954497335086,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 177,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        "lens": {
+          "usdg": 14475.954497335086,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "AAPL",
+      "id": "0xc748f4671a867db48b552f6b7650bf3255e05f80f00e3f7aad1b17ccb7898fdb",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xaf3d76f1834a1d425780943c99ea8a608f8a93f9",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 5365,
+      "swapsSinceLookback": 519,
+      "friday": {
+        "price": 340.69594357616825,
+        "maxSafeUsdg": 6500.813227577537,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 340.69594357616825,
+          "maxSafeUsdg": 6500.813227577537,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 172,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 341.05437104676156,
+          "maxSafeUsdg": 6506.4107376553875,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 173,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 341.0509109411152,
+          "maxSafeUsdg": 6508.108040000257,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 173,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 340.7133377657406,
+          "maxSafeUsdg": 6666.752204380919,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 171,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 340.7369833754349,
+          "maxSafeUsdg": 6655.154585137202,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 171,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 340.8393234094365,
+          "maxSafeUsdg": 6607.488093344608,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 171,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 341.0573479197089,
+          "maxSafeUsdg": 6504.3474829663965,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 171,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 341.09501158959796,
+          "maxSafeUsdg": 6486.507129907984,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 171,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        "lens": {
+          "usdg": 6486.507129907984,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "GOOGL",
+      "id": "0xd4ecb79fdc521d7725d22b33ed43cb4e47aa96bfad76aa29577e3151f723ac5e",
+      "key": {
+        "currency0": "0x2e0847e8910a9732eb3fb1bb4b70a580adad4fe3",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 4676,
+      "swapsSinceLookback": 459,
+      "friday": {
+        "price": 343.91654102334894,
+        "maxSafeUsdg": 16054.810370161835,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 343.91654102334894,
+          "maxSafeUsdg": 16054.810370161835,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 160,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 343.90691866803996,
+          "maxSafeUsdg": 16048.592726634695,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 160,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 343.9065858443036,
+          "maxSafeUsdg": 16048.377671654232,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 160,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 343.9072636110573,
+          "maxSafeUsdg": 16048.815618817056,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 160,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 344.02781846988336,
+          "maxSafeUsdg": 16018.079343154577,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 343.92937442281726,
+          "maxSafeUsdg": 15956.363622537592,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 343.92937442281726,
+          "maxSafeUsdg": 15956.363622537592,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 343.96551104194583,
+          "maxSafeUsdg": 15979.070210780992,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        "lens": {
+          "usdg": 15979.070210780992,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "PLTR",
+      "id": "0xee430ee1003e1985e1828a01b9a20dad67ad4302994fe2abb4a173de4ac54623",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0x894e1ec2d74ffe5aef8dc8a9e84686accb964f2a",
+        "fee": 10000,
+        "tickSpacing": 200,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 4802,
+      "swapsSinceLookback": 183,
+      "friday": {
+        "price": 191.4866176025078,
+        "maxSafeUsdg": 28361.831471069312,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 191.4866176025078,
+          "maxSafeUsdg": 28361.831471069312,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 157,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 190.70119921909054,
+          "maxSafeUsdg": 31153.62828451244,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 157,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 190.6867722774837,
+          "maxSafeUsdg": 31143.8663080716,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 157,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 190.69884033068706,
+          "maxSafeUsdg": 31106.681045079757,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 157,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 190.55694638962987,
+          "maxSafeUsdg": 31561.268765264926,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 157,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 190.67874365257353,
+          "maxSafeUsdg": 31388.5160145616,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 190.82564306654328,
+          "maxSafeUsdg": 30885.36377732537,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 190.50241615936025,
+          "maxSafeUsdg": 31991.72217915137,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 159,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 31991.72217915137,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "SPCX",
+      "id": "0xcb6ffbcc84359535c2cc0a5688c0a76520ea6e0a4820fddd3ac8d7880e576370",
+      "key": {
+        "currency0": "0x4a0e65a3eccec6dbe60ae065f2e7bb85fae35eea",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 10000,
+        "tickSpacing": 200,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 13879,
+      "swapsSinceLookback": 60,
+      "friday": {
+        "price": 147.99430495748834,
+        "maxSafeUsdg": 37626.50616630764,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 147.99430495748834,
+          "maxSafeUsdg": 37626.50616630764,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 238,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 147.99430521110133,
+          "maxSafeUsdg": 37626.505461177876,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 238,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 148.02430024091944,
+          "maxSafeUsdg": 37541.9387288445,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 237,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 148.00851205690424,
+          "maxSafeUsdg": 37509.86733192825,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 236,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 148.00827436585843,
+          "maxSafeUsdg": 37510.53157416496,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 236,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 148.007988479099,
+          "maxSafeUsdg": 37511.330506187864,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 236,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 148.007988479099,
+          "maxSafeUsdg": 37511.330506187864,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 236,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 148.01548380513464,
+          "maxSafeUsdg": 37490.38424656719,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 236,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 37490.38424656719,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "NVDA",
+      "id": "0x3bb34a44f1b2b5f32c034c38a53065a521a47b199700fa9bd19d60985ff24bf1",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xd0601ce157db5bdc3162bbac2a2c8af5320d9eec",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 10167,
+      "swapsSinceLookback": 287,
+      "friday": {
+        "price": 224.86468681186585,
+        "maxSafeUsdg": 14064.666885421855,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 224.86468681186585,
+          "maxSafeUsdg": 14064.666885421855,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 212,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 224.65444752217533,
+          "maxSafeUsdg": 14159.90813712615,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 212,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 224.65858880675657,
+          "maxSafeUsdg": 14157.28830501339,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 211,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 225.0344490250991,
+          "maxSafeUsdg": 13990.025269551044,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 211,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 225.03143316381107,
+          "maxSafeUsdg": 13995.470741650213,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 212,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 225.03022173500412,
+          "maxSafeUsdg": 13996.188813792935,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 212,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 225.0295227399151,
+          "maxSafeUsdg": 13993.426815518147,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 212,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 225.02304206011195,
+          "maxSafeUsdg": 13997.26826743863,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 212,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        "lens": {
+          "usdg": 13997.26826743863,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "MSFT",
+      "id": "0x9194a557b6a6bb2236b49ea7e2bbccec5d3eeb705aef00903be4b3de1d949579",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xe93237c50d904957cf27e7b1133b510c669c2e74",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 3021,
+      "swapsSinceLookback": 579,
+      "friday": {
+        "price": 516.5559705934506,
+        "maxSafeUsdg": 1348.7264534360702,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 516.5559705934506,
+          "maxSafeUsdg": 1348.7264534360702,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 68,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 516.6519601974942,
+          "maxSafeUsdg": 1333.0401667782114,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 68,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 516.6306897447328,
+          "maxSafeUsdg": 1336.6492959456657,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 67,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 516.8318449769872,
+          "maxSafeUsdg": 1303.7200661673382,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 67,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 516.6727747922018,
+          "maxSafeUsdg": 1329.8089421543748,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 67,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 516.6336849414707,
+          "maxSafeUsdg": 1336.1410774211092,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 67,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 516.6336849414707,
+          "maxSafeUsdg": 1336.1410774211092,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 67,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 516.7462560829441,
+          "maxSafeUsdg": 1317.641373026032,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 67,
+          "liquidityMatches": true,
+          "swapFeePips": 3499
+        },
+        "lens": {
+          "usdg": 1317.641373026032,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "COIN",
+      "id": "0x007a13fa152f6dc383cad20a8eaab4e1e2538b606936eae2a424f8aa47d6db31",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0x6330d8c3178a418788df01a47479c0ce7ccf450b",
+        "fee": 10000,
+        "tickSpacing": 200,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 2931,
+      "swapsSinceLookback": 771,
+      "friday": {
+        "price": 194.81526988421305,
+        "maxSafeUsdg": 27108.121447964942,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 194.81526988421305,
+          "maxSafeUsdg": 27108.121447964942,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 188,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 194.8152102130681,
+          "maxSafeUsdg": 27289.2590416831,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 194.8152102130681,
+          "maxSafeUsdg": 27289.258756630647,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 194.81520988928978,
+          "maxSafeUsdg": 27300.6678161748,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 190,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 194.81520972943045,
+          "maxSafeUsdg": 26776.635106424314,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 194.81520972943045,
+          "maxSafeUsdg": 26776.635106424314,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 194.7850074586184,
+          "maxSafeUsdg": 26804.397135312134,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 194.7850074586184,
+          "maxSafeUsdg": 26804.397135312134,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 189,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 26804.397135312134,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "AMD",
+      "id": "0xde9f85fdd9e05a943a52f2c69ffafe3064a3287df03d02c9b431bc92d4781274",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0x86923f96303d656e4aa86d9d42d1e57ad2023fdc",
+        "fee": 10000,
+        "tickSpacing": 200,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 3111,
+      "swapsSinceLookback": 412,
+      "friday": {
+        "price": 633.6508758729746,
+        "maxSafeUsdg": 16268.373075902116,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 633.6508758729746,
+          "maxSafeUsdg": 16268.373075902116,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 60,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 635.2756497013642,
+          "maxSafeUsdg": 15704.00584361952,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 60,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 634.2208964805561,
+          "maxSafeUsdg": 16079.029712122898,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 634.1412060577138,
+          "maxSafeUsdg": 16106.345083814944,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 634.0822118174378,
+          "maxSafeUsdg": 16126.685701982882,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 633.0466939952489,
+          "maxSafeUsdg": 16494.893091088437,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 632.8380830015343,
+          "maxSafeUsdg": 16567.740456773623,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 60,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 632.8782099261239,
+          "maxSafeUsdg": 16553.293788235616,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 60,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 16553.293788235616,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "MU",
+      "id": "0x6fa3ee0048e78bf0a513eb0ab56f482944a767c21db990fcf555605e69f05659",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xff080c8ce2e5feadaca0da81314ae59d232d4afd",
+        "fee": 10000,
+        "tickSpacing": 200,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 3993,
+      "swapsSinceLookback": 86,
+      "friday": {
+        "price": 1085.0702928018989,
+        "maxSafeUsdg": 17553.815963624562,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 1085.0702928018989,
+          "maxSafeUsdg": 17553.815963624562,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 1084.537886706003,
+          "maxSafeUsdg": 17591.205299170713,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 1084.520193020122,
+          "maxSafeUsdg": 17593.274059872943,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 1084.5197842145208,
+          "maxSafeUsdg": 17593.321858669082,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 1084.5197842145208,
+          "maxSafeUsdg": 17593.321858669082,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 1084.5197842145208,
+          "maxSafeUsdg": 17593.321858669082,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 1084.5197842145208,
+          "maxSafeUsdg": 17593.321858669082,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 1084.5197842145208,
+          "maxSafeUsdg": 17593.321858669082,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 65,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 17593.321858669082,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "INTC",
+      "id": "0xf2e329e631d0fb315a5c563ee3a9120f24822b5ef6c502a91cb56b174d5d8c22",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xc72b96e0e48ecd4dc75e1e45396e26300bc39681",
+        "fee": 10000,
+        "tickSpacing": 200,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 3369,
+      "swapsSinceLookback": 1148,
+      "friday": {
+        "price": 124.34353548085221,
+        "maxSafeUsdg": 12762.615011242375,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 124.34353548085221,
+          "maxSafeUsdg": 12762.615011242375,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 73,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 124.37377867052767,
+          "maxSafeUsdg": 13331.566647166625,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 122.54999877897862,
+          "maxSafeUsdg": 14895.827764217427,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 122.6146609680202,
+          "maxSafeUsdg": 19707.95224703757,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 76,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 122.66551877429532,
+          "maxSafeUsdg": 19623.479341970688,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 75,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 122.59692573597303,
+          "maxSafeUsdg": 19779.326326602313,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 76,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 121.93537408996517,
+          "maxSafeUsdg": 20532.39502453928,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 76,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 121.96281957583882,
+          "maxSafeUsdg": 20499.947878476072,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 76,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 20499.947878476072,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "LLY",
+      "id": "0x23b1d33a2158e4551b9d48f16bbf0d19ade4b119668fd16864402143240bc673",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0x8005d266423c7ea827372c9c864491e5786600ea",
+        "fee": 810,
+        "tickSpacing": 8,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 445,
+      "swapsSinceLookback": 231,
+      "friday": {
+        "price": 1183.8231680680085,
+        "maxSafeUsdg": 348.87421633204787,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 1183.8231680680085,
+          "maxSafeUsdg": 348.87421633204787,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 1183.6879735094049,
+          "maxSafeUsdg": 349.9373219693143,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 1181.9652055671972,
+          "maxSafeUsdg": 363.4795140616803,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 1183.7833314132272,
+          "maxSafeUsdg": 349.1881040950225,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 1183.3329947166822,
+          "maxSafeUsdg": 352.72790050356446,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 1183.042863710074,
+          "maxSafeUsdg": 355.0075200089391,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 1183.0322102322282,
+          "maxSafeUsdg": 355.0914654569411,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 1183.0322102322282,
+          "maxSafeUsdg": 355.0914654569411,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 10,
+          "liquidityMatches": true,
+          "swapFeePips": 977
+        },
+        "lens": {
+          "usdg": 355.0914654569411,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "HIMS",
+      "id": "0x68d4f28f1432e0ad714658853edb2e6b0b1ac4060355ff3d169fea656b1d1c52",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xccee82fe024c36fa15e1005ede3e9e4787e23d09",
+        "fee": 9000,
+        "tickSpacing": 90,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 4480,
+      "swapsSinceLookback": 150,
+      "friday": {
+        "price": 29.453471969479935,
+        "maxSafeUsdg": 6144.070363223076,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 29.453471969479935,
+          "maxSafeUsdg": 6144.070363223076,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 62,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 29.453471969479935,
+          "maxSafeUsdg": 6132.805235165815,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 29.453471969479935,
+          "maxSafeUsdg": 6141.116549649612,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 29.453826983038493,
+          "maxSafeUsdg": 6140.088350435976,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 29.453826983038493,
+          "maxSafeUsdg": 6140.088350435976,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 29.453826983038493,
+          "maxSafeUsdg": 6145.347573260754,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 29.453826983038493,
+          "maxSafeUsdg": 6145.347573260754,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 29.441064302410346,
+          "maxSafeUsdg": 6181.191624437037,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 61,
+          "liquidityMatches": true,
+          "swapFeePips": 9991
+        },
+        "lens": {
+          "usdg": 6181.191624437037,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "AMZN",
+      "id": "0x5619cb8420678b47997f20925eb01be8750c907d6226a0df5d7eafeff966346f",
+      "key": {
+        "currency0": "0x12f190a9f9d7d37a250758b26824b97ce941bf54",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 8388608,
+        "tickSpacing": 60,
+        "hooks": "0x5eb87f69be00df39981622fd60a8de4b7837e080"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": true,
+      "modifyLiquidityLogs": 266,
+      "swapsSinceLookback": 21,
+      "friday": {
+        "price": 250.1192746604146,
+        "maxSafeUsdg": 1422.622276910593,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 250.1192746604146,
+          "maxSafeUsdg": 1422.622276910593,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 4216
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 250.1192746604146,
+          "maxSafeUsdg": 1422.622276910593,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 4216
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 250.1192746604146,
+          "maxSafeUsdg": 1422.622276910593,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 4216
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 250.1192746604146,
+          "maxSafeUsdg": 1422.622276910593,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 4216
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 250.1192746604146,
+          "maxSafeUsdg": 1422.622276910593,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 4216
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 249.81022841107122,
+          "maxSafeUsdg": 1118.675070088651,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 3450
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 249.81022841107122,
+          "maxSafeUsdg": 1118.675070088651,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 3450
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 249.81022841107122,
+          "maxSafeUsdg": 1118.675070088651,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 15,
+          "liquidityMatches": true,
+          "swapFeePips": 3450
+        },
+        "lens": {
+          "usdg": 0,
+          "bindingTicks": 50,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 0
+      }
+    },
+    {
+      "symbol": "RDDT",
+      "id": "0x7c2985fd7623a5dcd88c7d51099931ca295875743b96bc64990e374f49e5f387",
+      "key": {
+        "currency0": "0x05b37fb53a299a1b874a619e1c4c404d52c36f4c",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 2900,
+        "tickSpacing": 29,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 852,
+      "swapsSinceLookback": 239,
+      "friday": {
+        "price": 150.832870890842,
+        "maxSafeUsdg": 1593.7149713925548,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 150.832870890842,
+          "maxSafeUsdg": 1593.7149713925548,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 16,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 150.60662398078563,
+          "maxSafeUsdg": 1550.1608140017338,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 150.65228901103157,
+          "maxSafeUsdg": 1560.0816614458697,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 150.65228901103157,
+          "maxSafeUsdg": 1560.0816614458697,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 150.65228901103157,
+          "maxSafeUsdg": 1560.0816614458697,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 150.47953305011237,
+          "maxSafeUsdg": 1522.556556660208,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 150.36473374981873,
+          "maxSafeUsdg": 1497.610472971631,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 150.35700519625615,
+          "maxSafeUsdg": 1495.936444245459,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 17,
+          "liquidityMatches": true,
+          "swapFeePips": 3379
+        },
+        "lens": {
+          "usdg": 1495.936444245459,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "BABA",
+      "id": "0x1791fc651cc794a282e5dbcb56d0b2b38eff8754b677c8876e86901521ecc439",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xad25ac6c84d497db898fa1e8387bf6af3532a1c4",
+        "fee": 1000,
+        "tickSpacing": 10,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 114,
+      "swapsSinceLookback": 103,
+      "friday": {
+        "price": 109.84866971657273,
+        "maxSafeUsdg": 301.5132335519791,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 109.84866971657273,
+          "maxSafeUsdg": 301.5132335519791,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 109.78210296712648,
+          "maxSafeUsdg": 295.7835068509268,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 109.87179543966032,
+          "maxSafeUsdg": 303.5037808188914,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 109.86673292804544,
+          "maxSafeUsdg": 303.0680239919724,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 109.6318417038792,
+          "maxSafeUsdg": 282.84977735637096,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 109.63526847546521,
+          "maxSafeUsdg": 283.14474059142646,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 109.63448593978363,
+          "maxSafeUsdg": 283.0773862620821,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 109.63479944023086,
+          "maxSafeUsdg": 283.1043663997097,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 5,
+          "liquidityMatches": true,
+          "swapFeePips": 1193
+        },
+        "lens": {
+          "usdg": 283.1043663997097,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "CRM",
+      "id": "0x5d0434f1dcf45ff9450c1a63b5c9e088f90cfebf483458164e81be6fb96e2b2a",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xd95b44124e475743a7589e68f3d74008a5536d44",
+        "fee": 10000,
+        "tickSpacing": 100,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 164,
+      "swapsSinceLookback": 16,
+      "friday": {
+        "price": 236.4676867956251,
+        "maxSafeUsdg": 2003.1675023299133,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 236.4676867956251,
+          "maxSafeUsdg": 2003.1675023299133,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 236.4676867956251,
+          "maxSafeUsdg": 2003.1675023299133,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 236.46762496758916,
+          "maxSafeUsdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 236.46762496758916,
+          "maxSafeUsdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 236.46762496758916,
+          "maxSafeUsdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 236.46762496758916,
+          "maxSafeUsdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 236.46762496758916,
+          "maxSafeUsdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 236.46762496758916,
+          "maxSafeUsdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 9,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 2003.151359854331,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "ORCL",
+      "id": "0xc2ce4784e1e72cf0221b51b30c8aaadf6c0b12863cf03ab3687854fb7b1d850a",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xb0992820e760d836549ba69bc7598b4af75dee03",
+        "fee": 10000,
+        "tickSpacing": 200,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 363,
+      "swapsSinceLookback": 310,
+      "friday": {
+        "price": 137.96519444928063,
+        "maxSafeUsdg": 3055.1039733578586,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 137.96519444928063,
+          "maxSafeUsdg": 3055.1039733578586,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 33,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 137.96265700684188,
+          "maxSafeUsdg": 3055.904680707465,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 33,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 138.92894298371823,
+          "maxSafeUsdg": 2774.3792481879436,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 33,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 138.03472865568204,
+          "maxSafeUsdg": 3035.3442420872225,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 33,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 138.0276273102736,
+          "maxSafeUsdg": 3324.288139784576,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 35,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 138.0276273102736,
+          "maxSafeUsdg": 3324.288139784576,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 35,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 138.0276273102736,
+          "maxSafeUsdg": 3324.288139784576,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 35,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 138.0276273102736,
+          "maxSafeUsdg": 3324.288139784576,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 35,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 3324.288139784576,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "NFLX",
+      "id": "0xe4930a6215f21aa3b37c01adbded3362f56ae31b9a60066f5f9641e601d5111f",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xe0444ef8bf4ed74f74fd73686e2ddf4c1c5591e8",
+        "fee": 10000,
+        "tickSpacing": 100,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 2298,
+      "swapsSinceLookback": 28,
+      "friday": {
+        "price": 71.48353050171619,
+        "maxSafeUsdg": 1703.1832912661987,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 71.48353050171619,
+          "maxSafeUsdg": 1703.1832912661987,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 71.48353050171619,
+          "maxSafeUsdg": 1703.1832912661987,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 71.50145722070755,
+          "maxSafeUsdg": 1708.535116012856,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 71.50003950813749,
+          "maxSafeUsdg": 1708.0333730664188,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 71.49612631984967,
+          "maxSafeUsdg": 1706.9793654256162,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 71.52730205524514,
+          "maxSafeUsdg": 1716.688944469993,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 71.54796082606525,
+          "maxSafeUsdg": 1723.0070614055617,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 71.54796082606525,
+          "maxSafeUsdg": 1723.0070614055617,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 50,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 1723.0070614055617,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "GME",
+      "id": "0x9a82aa6af873870874cf11cf9e99bb81c9ebf28cc5b394e4fa4996a6805c7c06",
+      "key": {
+        "currency0": "0x1b0e319c6a659f002271b69db8a7df2f911c153e",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 9800,
+        "tickSpacing": 98,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 20,
+      "swapsSinceLookback": 0,
+      "friday": {
+        "price": 20.183236907856465,
+        "maxSafeUsdg": 0.000005000920290835799,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 20.183236907856465,
+          "maxSafeUsdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 10791
+        },
+        "lens": {
+          "usdg": 0.000005000920290835799,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "AVGO",
+      "id": "0x9214bd3afeae46a8df2a39278050362e0bde9d587f0e0934a38031bc4831a90e",
+      "key": {
+        "currency0": "0x156e175dd063a8ce274c50654ef40e0032b3fbcf",
+        "currency1": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "fee": 10000,
+        "tickSpacing": 100,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": false,
+      "decimals0": 18,
+      "decimals1": 6,
+      "hooked": false,
+      "modifyLiquidityLogs": 56,
+      "swapsSinceLookback": 0,
+      "friday": {
+        "price": 352.6238816791571,
+        "maxSafeUsdg": 822.2945856862714,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 352.6238816791571,
+          "maxSafeUsdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 8,
+          "liquidityMatches": true,
+          "swapFeePips": 10990
+        },
+        "lens": {
+          "usdg": 822.2945856862714,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "QQQ",
+      "id": "0xcdedaed0ee8af27da28fbc6c7e2e08b7507981e4d843dd0c7ba39f68d0d018ff",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xd5f3879160bc7c32ebb4dc785f8a4f505888de68",
+        "fee": 370,
+        "tickSpacing": 4,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 2,
+      "swapsSinceLookback": 55,
+      "friday": {
+        "price": 745.3798076322915,
+        "maxSafeUsdg": 0.529847504814053,
+        "bindingTicks": 1823,
+        "bindingAssetUp": true,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 745.3798076322915,
+          "maxSafeUsdg": 0.529847504814053,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 744.7043712275932,
+          "maxSafeUsdg": 0.602605894125423,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 746.0494787497273,
+          "maxSafeUsdg": 0.4577192314593282,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 746.006957995387,
+          "maxSafeUsdg": 0.4623000744457338,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 745.9418660541561,
+          "maxSafeUsdg": 0.46930636377319473,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 743.8569761946424,
+          "maxSafeUsdg": 0.6938826912737579,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 743.9420555267413,
+          "maxSafeUsdg": 0.6847160043806559,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 744.1757767889048,
+          "maxSafeUsdg": 0.6595413716365884,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "livePositions": 1,
+          "liquidityMatches": true,
+          "swapFeePips": 468
+        },
+        "lens": {
+          "usdg": 0.6595413716365884,
+          "bindingTicks": 1823,
+          "bindingAssetUp": true,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    },
+    {
+      "symbol": "SMCI",
+      "id": "0xcbc5164c76a22d18a8195ee1da318ae08a214f6b5ccf11e556f0289211a51cee",
+      "key": {
+        "currency0": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+        "currency1": "0xc01aa1fecec0605b13bc84874ff7256c0f5f562a",
+        "fee": 48000,
+        "tickSpacing": 480,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "quoteIsCurrency0": true,
+      "decimals0": 6,
+      "decimals1": 18,
+      "hooked": false,
+      "modifyLiquidityLogs": 64,
+      "swapsSinceLookback": 4,
+      "friday": {
+        "price": 41.43179659164545,
+        "maxSafeUsdg": 231.70312959425848,
+        "bindingTicks": 1823,
+        "bindingAssetUp": false,
+        "liquidityMatches": true
+      },
+      "series": [
+        {
+          "time": "2026-09-25T20:00:00.000Z",
+          "block": "72496352",
+          "mintWindowClosed": false,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        },
+        {
+          "time": "2026-09-25T21:00:00.000Z",
+          "block": "72532199",
+          "mintWindowClosed": false,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        },
+        {
+          "time": "2026-09-25T22:00:00.000Z",
+          "block": "72567999",
+          "mintWindowClosed": false,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        },
+        {
+          "time": "2026-09-25T23:00:00.000Z",
+          "block": "72603682",
+          "mintWindowClosed": false,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        },
+        {
+          "time": "2026-09-26T00:00:00.000Z",
+          "block": "72639311",
+          "mintWindowClosed": true,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        },
+        {
+          "time": "2026-09-26T01:00:00.000Z",
+          "block": "72674990",
+          "mintWindowClosed": true,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        },
+        {
+          "time": "2026-09-26T02:00:00.000Z",
+          "block": "72710510",
+          "mintWindowClosed": true,
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        }
+      ],
+      "check": {
+        "block": "72728729",
+        "rebuilt": {
+          "price": 41.43179659164545,
+          "maxSafeUsdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "livePositions": 6,
+          "liquidityMatches": true,
+          "swapFeePips": 48952
+        },
+        "lens": {
+          "usdg": 231.70312959425848,
+          "bindingTicks": 1823,
+          "bindingAssetUp": false,
+          "complete": true
+        },
+        "slot0PriceMatchesLastSwap": true,
+        "lensOverRebuilt": 1
+      }
+    }
+  ]
+}
