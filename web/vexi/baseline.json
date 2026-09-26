@@ -1,0 +1,261 @@
+{
+  "stub": true,
+  "generatedAt": null,
+  "head": {
+    "block": "0",
+    "timestamp": 0
+  },
+  "chainId": 46630,
+  "method": "Placeholder until gauge/src/vexi.ts (npm run vexi) writes it: every venue fix since deploy replayed against CostModel.maxSafeExposure on the pricing pool's pre-window state; per-market head bounds from PushCostLens.roundTripCosts.",
+  "quote": {
+    "symbol": "USDG",
+    "address": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a",
+    "decimals": 6
+  },
+  "terms": {
+    "step": 900,
+    "window": 900,
+    "fixWindow": 300
+  },
+  "ladderTicks": [
+    50,
+    100,
+    200,
+    488,
+    953,
+    1823
+  ],
+  "markets": [
+    {
+      "symbol": "AI",
+      "key": {
+        "currency0": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a",
+        "currency1": "0x7ec15f39d9c307edbd07c730e87fb914e178b7b9",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "poolId": "0xee57cbac0517ef7e227e28633eb7982c89fcf59353074ce70d2835d996664de7",
+      "quoteIsCurrency0": true,
+      "liquidity": "0",
+      "headTick": 0,
+      "spot": 0,
+      "quoteReserve": 0,
+      "headBound": 0,
+      "boundAtRung": {
+        "50": 0,
+        "1823": 0
+      },
+      "boundOverReserve": 0,
+      "a22": {
+        "up": 0,
+        "down": 0
+      },
+      "lensOverRebuilt": 0,
+      "fixes": 0,
+      "lastFix": {
+        "sStar": 0,
+        "nObs": 0,
+        "span": 0
+      }
+    },
+    {
+      "symbol": "PONS",
+      "key": {
+        "currency0": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a",
+        "currency1": "0x9eda6980d539bcaaf03c4c953265894ceddc07e7",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "poolId": "0x6c538477cc7c98ab21d317000924599f4ed02422daa6510e1373c9458ac1d9a3",
+      "quoteIsCurrency0": true,
+      "liquidity": "0",
+      "headTick": 0,
+      "spot": 0,
+      "quoteReserve": 0,
+      "headBound": 0,
+      "boundAtRung": {
+        "50": 0,
+        "1823": 0
+      },
+      "boundOverReserve": 0,
+      "a22": {
+        "up": 0,
+        "down": 0
+      },
+      "lensOverRebuilt": 0,
+      "fixes": 0,
+      "lastFix": {
+        "sStar": 0,
+        "nObs": 0,
+        "span": 0
+      }
+    },
+    {
+      "symbol": "MEME",
+      "key": {
+        "currency0": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a",
+        "currency1": "0x4a1fad07d52d0743274b6adc5e5a1b3578530232",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "poolId": "0x6b6610c1e919d70a0835760822f981bbed6cf801d0e56f3bcaad498d4c5a5bfa",
+      "quoteIsCurrency0": true,
+      "liquidity": "0",
+      "headTick": 0,
+      "spot": 0,
+      "quoteReserve": 0,
+      "headBound": 0,
+      "boundAtRung": {
+        "50": 0,
+        "1823": 0
+      },
+      "boundOverReserve": 0,
+      "a22": {
+        "up": 0,
+        "down": 0
+      },
+      "lensOverRebuilt": 0,
+      "fixes": 0,
+      "lastFix": {
+        "sStar": 0,
+        "nObs": 0,
+        "span": 0
+      }
+    },
+    {
+      "symbol": "NVDA",
+      "key": {
+        "currency0": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a",
+        "currency1": "0x2f168c5ef394b84aff8ff8814cb637dac8bbdf12",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "poolId": "0x1f65201c2406510eeaced1ae93c0e4be5d602f17de3d5f9f625753a2b6aa6beb",
+      "quoteIsCurrency0": true,
+      "liquidity": "0",
+      "headTick": 0,
+      "spot": 0,
+      "quoteReserve": 0,
+      "headBound": 0,
+      "boundAtRung": {
+        "50": 0,
+        "1823": 0
+      },
+      "boundOverReserve": 0,
+      "a22": {
+        "up": 0,
+        "down": 0
+      },
+      "lensOverRebuilt": 0,
+      "fixes": 0,
+      "lastFix": {
+        "sStar": 0,
+        "nObs": 0,
+        "span": 0
+      }
+    },
+    {
+      "symbol": "MU",
+      "key": {
+        "currency0": "0x0650fb2e4a28e170f58f8aea4997c1e55197de6c",
+        "currency1": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "poolId": "0xdc290821c86075a90f5da5ae36fd0bfbd6dad4cb0db84119f39acc34ef9c62ea",
+      "quoteIsCurrency0": false,
+      "liquidity": "0",
+      "headTick": 0,
+      "spot": 0,
+      "quoteReserve": 0,
+      "headBound": 0,
+      "boundAtRung": {
+        "50": 0,
+        "1823": 0
+      },
+      "boundOverReserve": 0,
+      "a22": {
+        "up": 0,
+        "down": 0
+      },
+      "lensOverRebuilt": 0,
+      "fixes": 0,
+      "lastFix": {
+        "sStar": 0,
+        "nObs": 0,
+        "span": 0
+      }
+    },
+    {
+      "symbol": "TSLA",
+      "key": {
+        "currency0": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a",
+        "currency1": "0x58b728202fe175f1f2fe20e22205358e6d3da0a4",
+        "fee": 3000,
+        "tickSpacing": 60,
+        "hooks": "0x0000000000000000000000000000000000000000"
+      },
+      "poolId": "0x837bf9ccc605da1f5c9e95670b717854fd9ebf5063a542e8891fa2d7eb2c301e",
+      "quoteIsCurrency0": true,
+      "liquidity": "0",
+      "headTick": 0,
+      "spot": 0,
+      "quoteReserve": 0,
+      "headBound": 0,
+      "boundAtRung": {
+        "50": 0,
+        "1823": 0
+      },
+      "boundOverReserve": 0,
+      "a22": {
+        "up": 0,
+        "down": 0
+      },
+      "lensOverRebuilt": 0,
+      "fixes": 0,
+      "lastFix": {
+        "sStar": 0,
+        "nObs": 0,
+        "span": 0
+      }
+    }
+  ],
+  "cells": [
+    {
+      "symbol": "PONS",
+      "expiry": 0,
+      "fixTx": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "sStar": 0,
+      "nObs": 0,
+      "span": 0,
+      "thin": false,
+      "preWindowTick": 0,
+      "bound": 0,
+      "exposure": 0,
+      "ratio": 0,
+      "trusted": true,
+      "transferAtBinding": 0,
+      "breakEven": 0,
+      "sStarVsPreWindowBps": 0,
+      "inWindowSwaps": 0
+    }
+  ],
+  "summary": {
+    "fixesScanned": 0,
+    "expiries": 0,
+    "cellsWithExposure": 0,
+    "seriesWithExposure": 0,
+    "totalExposure": 0,
+    "maxRatio": 0,
+    "maxRatioCell": null,
+    "maxBreakEven": 0,
+    "nObsHistogram": {},
+    "fixedLate": 0,
+    "allLiquidityMatches": true
+  }
+}
