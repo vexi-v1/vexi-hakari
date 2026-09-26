@@ -5,6 +5,19 @@ The root `index.html` is the current HAKARI demonstration. It is a static site f
 CDN dependency or runtime RPC. Deployment status depends on the published branch; a local build does not update
 Pages. The first study is linked separately in the footer through its archived source.
 
+## Languages and visual style
+
+The interface is available in English and Traditional Chinese. The persistent header's **EN / 繁中** control
+switches all presentation copy, including the lifecycle, calculator explanations, adverse scenarios, accessibility
+labels and load errors. It preserves the selected step, case and calculator inputs. Contract identifiers,
+verbatim EVM logs, evidence files and third-party legal notices retain their original wording.
+
+Share `?lang=en` or `?lang=zh-Hant` on the site URL to select a language explicitly. The URL takes precedence over
+the browser's saved preference; a new visitor defaults to English. Storage is optional, and a blocked localStorage
+does not prevent language switching. The translation catalog is `website/i18n.mjs`; English source strings remain
+readable alongside the code. The dark presentation uses Vexi's near-black, gray-panel, green and red/pink visual
+palette, with original public-site CSS and system font fallbacks. No private product code or font assets are copied.
+
 ## What the visitor can verify
 
 The primary replay follows one continuous `test_WebsiteLifecycle` execution, with the same accounts, wallet and
@@ -54,7 +67,7 @@ Open `http://127.0.0.1:8787`. Use an HTTP server rather than opening `index.html
 browser fetches the JSON artifact. Node.js 24 runs the small calculator checks:
 
 ```bash
-node --test website/band.test.mjs
+node --test website/*.test.mjs
 ```
 
 The generator runs five tests in `aqua/test/WebsiteEvidence.t.sol` with `EXPORT_WEBSITE=true`, then publishes:

@@ -7,7 +7,7 @@ import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / '_site'
-ASSETS = ('style.css', 'app.js', 'band.mjs')
+ASSETS = ('style.css', 'app.js', 'band.mjs', 'i18n.mjs')
 EVIDENCE = ('demo.json', 'trace.txt', 'source.zip', 'source-files.json')
 
 def main():

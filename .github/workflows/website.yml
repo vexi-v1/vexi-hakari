@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
-      - name: Check the band illustration
-        run: node --test website/band.test.mjs
+      - name: Check the band illustration and language handling
+        run: node --test website/*.test.mjs
       - name: Verify evidence and stage the public artifact
         run: python3 scripts/build-website.py
       - name: Upload the site

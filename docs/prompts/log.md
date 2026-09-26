@@ -554,3 +554,14 @@ review README code pointers against the source, and refine the eight existing fe
 and specific requests. Preserve attribution to OpenZeppelin/Panoptic and distinguish the confirmed form submission
 from its unrecorded final URL. The public main branch still contained the earlier study at the check; local link
 validation is recorded separately from publication. Existing website work in the shared working tree is preserved.
+
+
+## 2026-09-27 — Abner: bilingual website in Vexi's dark visual style
+
+> Provide both English and Chinese versions. Use a dark theme matching Vexi's DeFi style.
+
+English translation of the user instruction. Work (Codex): add English / Traditional Chinese presentation copy,
+a persistent language selector and shareable locale URLs. Match the existing Vexi brand color direction using
+new public-site CSS; no private product code or assets are copied. Preserve the recorded evidence and the selected
+replay/calculator state across language switches, and verify both languages at desktop and mobile sizes. The
+explicit bilingual request overrides this repository's default English-only language convention for the website.

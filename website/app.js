@@ -1,8 +1,29 @@
 // SPDX-License-Identifier: MIT
 import { calculateBand, units } from './band.mjs';
+import { resolveLanguage, translate } from './i18n.mjs';
 const $ = (id) => document.getElementById(id);
 const escape = (value) => String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const repo = 'https://github.com/vexi-v1/vexi-hakari';
+let savedLanguage;
+try { savedLanguage = localStorage.getItem('hakari-language'); } catch { /* Storage is optional. */ }
+let language = resolveLanguage(location.search, savedLanguage);
+const t = (message, params) => translate(message, language, params);
+// Capture only the initial static document. Dynamic evidence/logs are rendered separately, never translated.
+const staticText = [];
+const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+while (walker.nextNode()) {
+  const node = walker.currentNode;
+  if (!node.textContent.trim() || node.parentElement.closest('script,style,pre,code,noscript,[translate="no"]')) continue;
+  staticText.push({ node, original: node.textContent, message: node.textContent.trim() });
+}
+const staticAttributes = [];
+for (const node of document.querySelectorAll('[aria-label],[title],meta[name="description"]')) {
+  if (node.closest('[translate="no"]')) continue;
+  for (const attribute of ['aria-label', 'title', ...(node.matches('meta') ? ['content'] : [])]) {
+    if (node.hasAttribute(attribute)) staticAttributes.push({ node, attribute, message: node.getAttribute(attribute) });
+  }
+}
+
 const instructions = {
   initial: ['Start with the wallet', 'The maker has 30 TSLA and 20,000 USDG. The buyer and spot taker are separate synthetic accounts. The book holds no tokens. Both options have a 400 USDG strike and one contract represents one TSLA.', ['Maker wallet', 'No escrow']],
   ship: ['Ship two strategies', 'Aqua records virtual balances for the option writer and the canonical SwapVM router. Both refer to the same wallet. Virtual allocations are not separate deposits and must not be added together as assets.', ['Maker', 'Aqua.ship', 'Writer.bind']],
@@ -33,8 +54,10 @@ const fields = [
 let evidence;
 let lifecycle;
 let position = 0;
-function fundCard(title, t, q, note, labels = ['TSLA', 'USDG']) {
-  return `<div class="fund-card"><h4>${title}</h4><div class="balance">${t}<small>${labels[0]}</small></div><div class="balance">${q}<small>${labels[1]}</small></div><p>${note}</p></div>`;
+let selectedCase = 0;
+let loadError;
+function fundCard(title, baseAmount, quoteAmount, note, labels = ['TSLA', 'USDG']) {
+  return `<div class="fund-card"><h4>${escape(t(title))}</h4><div class="balance">${baseAmount}<small>${escape(t(labels[0]))}</small></div><div class="balance">${quoteAmount}<small>${escape(t(labels[1]))}</small></div><p>${escape(t(note))}</p></div>`;
 }
 function renderStep(index) {
   position = index;
@@ -42,28 +65,28 @@ function renderStep(index) {
   const before = lifecycle.steps[Math.max(0, index - 1)];
   const [title, copy, flow] = instructions[s.id];
   $('step-number').textContent = String(index + 1).padStart(2, '0');
-  $('step-title').textContent = title;
-  $('step-copy').textContent = copy;
+  $('step-title').textContent = t(title);
+  $('step-copy').textContent = t(copy);
   const seconds = Number(BigInt(s.timestamp) - BigInt(lifecycle.steps[0].timestamp));
-  $('step-time').textContent = `Test clock +${Math.floor(seconds / 60)}m ${seconds % 60}s`;
-  $('flow').innerHTML = flow.map((f) => `<span>${escape(f)}</span>`).join('<b aria-hidden="true">→</b>');
+  $('step-time').textContent = t('Test clock +{minutes}m {seconds}s', {minutes: Math.floor(seconds / 60), seconds: seconds % 60});
+  $('flow').innerHTML = flow.map((f) => `<span>${escape(t(f))}</span>`).join('<b aria-hidden="true">→</b>');
   $('funds').innerHTML = fundCard('Maker wallet', units(s.makerTsla), units(s.makerUsdg, 6), 'Actual tokens; shared by both strategies')
     + fundCard('Unfilled promises', units(s.promisedTsla), units(s.promisedUsdg, 6), 'Inventory reserved by this writer’s open orders')
     + fundCard('Book token balances', units(s.bookTsla), units(s.bookUsdg, 6), 'Collateral, premiums and exercise proceeds')
     + fundCard('Buyer long positions', escape(s.callLong), escape(s.putLong), 'ERC-1155 units; one contract = one TSLA', ['CALLS', 'PUTS']);
   const afterExpiry = BigInt(s.timestamp) >= BigInt(lifecycle.expiry);
-  $('quote-state').textContent = afterExpiry ? 'SERIES EXPIRED' : s.quoteAvailable ? '1-CONTRACT QUOTE AVAILABLE' : s.id === 'initial' || s.id === 'ship' ? 'NO ORDER YET' : 'QUOTE REFUSED';
+  $('quote-state').textContent = t(afterExpiry ? 'SERIES EXPIRED' : s.quoteAvailable ? '1-CONTRACT QUOTE AVAILABLE' : s.id === 'initial' || s.id === 'ship' ? 'NO ORDER YET' : 'QUOTE REFUSED');
   $('quote-state').classList.toggle('warn', !s.quoteAvailable && !afterExpiry && !['initial', 'ship'].includes(s.id));
   const deviation = Number(BigInt(s.current) - BigInt(s.center)) / Number(s.center) * 100;
   $('recorded-marker').style.left = `${Math.max(0, Math.min(100, (deviation + 7) / 14 * 100))}%`;
   $('recorded-marker').style.background = s.bandQuoting ? 'var(--green)' : 'var(--orange)';
-  const metrics = [['TWAP / USDG', units(s.center, 18, 2)], ['Live / USDG', units(s.current, 18, 2)], ['Band cap / call', s.cap], ['1-contract ask', s.quoteAvailable ? `${units(s.quoteOne, 6)} USDG` : 'Unavailable']];
-  $('band-metrics').innerHTML = metrics.map(([label, value]) => `<div><span>${label}</span><b>${escape(value)}</b></div>`).join('');
+  const metrics = [['TWAP / USDG', units(s.center, 18, 2)], ['Live / USDG', units(s.current, 18, 2)], ['Band cap / call', s.cap], ['1-contract ask', s.quoteAvailable ? `${units(s.quoteOne, 6)} USDG` : t('Unavailable')]];
+  $('band-metrics').innerHTML = metrics.map(([label, value]) => `<div><span>${escape(t(label))}</span><b>${escape(value)}</b></div>`).join('');
   $('balance-table').querySelector('tbody').innerHTML = fields.map(([label, key, decimals]) => {
     const delta = BigInt(s[key]) - BigInt(before[key]);
-    return `<tr><td>${label}</td><td>${units(before[key], decimals)}</td><td>${units(s[key], decimals)}</td><td>${delta > 0n ? '+' : ''}${units(delta, decimals)}</td></tr>`;
+    return `<tr><td>${escape(t(label))}</td><td>${units(before[key], decimals)}</td><td>${units(s[key], decimals)}</td><td>${delta > 0n ? '+' : ''}${units(delta, decimals)}</td></tr>`;
   }).join('');
-  $('event-count').textContent = `${s.logs.length} logs`;
+  $('event-count').textContent = t('{count} logs', {count: s.logs.length});
   $('event-json').textContent = JSON.stringify({ timestamp: s.timestamp, quoteRefusal: s.quoteRefusal, logs: s.logs }, null, 2);
   $('previous').disabled = index === 0;
   $('next').disabled = index === lifecycle.steps.length - 1;
@@ -73,27 +96,28 @@ function renderStep(index) {
   });
 }
 const cases = [
-  ['anchor', 'A rolling center cannot renew an anchor', 'QuoteOffAnchor', 'A 6% move lasts long enough to become the new TWAP center. The band reopens. The original anchor remains unchanged and a real buy still refuses.', (s) => [`Band open: ${s.bandQuoting}`, `Quote available: ${s.quoteAvailable}`, `Buyer USDG: ${units(s.buyerUsdg, 6)} · call longs: ${s.callLong}`]],
-  ['unguarded', 'What happens without the inventory guard', 'SourceShort', 'An independent unguarded spot strategy sells 21 TSLA. Only 9 remain in the maker wallet, below the 10-call promise. A later buy refuses and the premium transfer rolls back.', (s) => [`Maker TSLA: ${units(s.makerTsla)} · promised: ${units(s.promisedTsla)}`, `Book TSLA: ${units(s.bookTsla)}`, `Buyer USDG: ${units(s.buyerUsdg, 6)} · call longs: ${s.callLong}`]],
-  ['delayed', 'A later window can be accepted', 'EXPERIMENTAL SETTLEMENT', 'The reference is held 6% higher over the last five minutes. Window 0 is rejected. After the price returns and another five minutes pass, window 1 is accepted. Someone must retry settlement; the later price changes the economic outcome.', (s) => [`Call and put series settled in the test`, `Recorded price: ${units(s.recordedPrice, 18, 4)} USDG`, `Elapsed since expiry: ${BigInt(s.timestamp) - BigInt(evidence.scenarios.find(x => x.scenario === 'delayed').expiry)} seconds`]],
-  ['refund', 'No accepted window means an unwind', 'EXPERIMENTAL SETTLEMENT', 'A persistent 10% gap rejects all six candidate windows. After the one-hour settlement grace, the maker closes and the holder refunds. Premiums are pooled per series and returned pro rata by contract count, not by each purchase price.', (s) => [`Maker: ${units(s.makerTsla)} TSLA · ${units(s.makerUsdg, 6)} USDG`, `Buyer USDG: ${units(s.buyerUsdg, 6)}`, `Book USDG: ${units(s.bookUsdg, 6)} · remaining promises: ${units(s.promisedTsla)} TSLA`]],
+  ['anchor', 'A rolling center cannot renew an anchor', 'QuoteOffAnchor', 'A 6% move lasts long enough to become the new TWAP center. The band reopens. The original anchor remains unchanged and a real buy still refuses.', (s) => [t('Band open: {value}', {value: t(s.bandQuoting ? 'Yes' : 'No')}), t('Quote available: {value}', {value: t(s.quoteAvailable ? 'Yes' : 'No')}), t('Buyer USDG: {balance} · call longs: {longs}', {balance: units(s.buyerUsdg, 6), longs: s.callLong})]],
+  ['unguarded', 'What happens without the inventory guard', 'SourceShort', 'An independent unguarded spot strategy sells 21 TSLA. Only 9 remain in the maker wallet, below the 10-call promise. A later buy refuses and the premium transfer rolls back.', (s) => [t('Maker TSLA: {balance} · promised: {promised}', {balance: units(s.makerTsla), promised: units(s.promisedTsla)}), t('Book TSLA: {balance}', {balance: units(s.bookTsla)}), t('Buyer USDG: {balance} · call longs: {longs}', {balance: units(s.buyerUsdg, 6), longs: s.callLong})]],
+  ['delayed', 'A later window can be accepted', 'EXPERIMENTAL SETTLEMENT', 'The reference is held 6% higher over the last five minutes. Window 0 is rejected. After the price returns and another five minutes pass, window 1 is accepted. Someone must retry settlement; the later price changes the economic outcome.', (s) => [t('Call and put series settled in the test'), t('Recorded price: {price} USDG', {price: units(s.recordedPrice, 18, 4)}), t('Elapsed since expiry: {seconds} seconds', {seconds: BigInt(s.timestamp) - BigInt(evidence.scenarios.find(x => x.scenario === 'delayed').expiry)})]],
+  ['refund', 'No accepted window means an unwind', 'EXPERIMENTAL SETTLEMENT', 'A persistent 10% gap rejects all six candidate windows. After the one-hour settlement grace, the maker closes and the holder refunds. Premiums are pooled per series and returned pro rata by contract count, not by each purchase price.', (s) => [t('Maker: {base} TSLA · {quote} USDG', {base: units(s.makerTsla), quote: units(s.makerUsdg, 6)}), t('Buyer USDG: {balance}', {balance: units(s.buyerUsdg, 6)}), t('Book USDG: {balance} · remaining promises: {promised} TSLA', {balance: units(s.bookUsdg, 6), promised: units(s.promisedTsla)})]],
 ];
 function renderCase(index) {
+  selectedCase = index;
   const [id, title, tag, copy, metrics] = cases[index];
   const scenario = evidence.scenarios.find((s) => s.scenario === id);
   const s = scenario.steps.at(-1);
-  $('case-detail').innerHTML = `<span class="tag warn">${tag}</span><h3>${title}</h3><p>${copy}</p><ul>${metrics(s).map(x => `<li>${escape(x)}</li>`).join('')}</ul><details><summary>Inspect this scenario’s recorded steps</summary><pre tabindex="0">${escape(JSON.stringify(scenario.steps.map(x => ({ step: x.id, timestamp: x.timestamp, bandQuoting: x.bandQuoting, quoteAvailable: x.quoteAvailable, refusal: x.quoteRefusal, settled: x.settled, settlementPrice: x.settlementPrice, makerTsla: x.makerTsla, makerUsdg: x.makerUsdg, bookTsla: x.bookTsla, bookUsdg: x.bookUsdg, buyerUsdg: x.buyerUsdg })), null, 2))}</pre></details>`;
+  $('case-detail').innerHTML = `<span class="tag warn">${escape(t(tag))}</span><h3>${escape(t(title))}</h3><p>${escape(t(copy))}</p><ul>${metrics(s).map(x => `<li>${escape(x)}</li>`).join('')}</ul><details><summary>${escape(t('Inspect this scenario’s recorded steps'))}</summary><pre tabindex="0">${escape(JSON.stringify(scenario.steps.map(x => ({ step: x.id, timestamp: x.timestamp, bandQuoting: x.bandQuoting, quoteAvailable: x.quoteAvailable, refusal: x.quoteRefusal, settled: x.settled, settlementPrice: x.settlementPrice, makerTsla: x.makerTsla, makerUsdg: x.makerUsdg, bookTsla: x.bookTsla, bookUsdg: x.bookUsdg, buyerUsdg: x.buyerUsdg })), null, 2))}</pre></details>`;
   document.querySelectorAll('#case-buttons button').forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
 }
 function renderLab() {
   const deviation = Number($('deviation').value);
   const r = calculateBand(deviation, $('expired-toggle').checked, $('anchor-toggle').checked);
   $('deviation-value').textContent = `${deviation > 0 ? '+' : ''}${(deviation / 100).toFixed(1)}%`;
-  $('deviation').setAttribute('aria-valuetext', `${(deviation / 100).toFixed(1)} percent from the TWAP center`);
+  $('deviation').setAttribute('aria-valuetext', t('{percent} percent from the TWAP center', {percent: (deviation / 100).toFixed(1)}));
   $('lab-price').textContent = units(r.current, 18, 2);
   $('lab-cap').textContent = String(r.cap);
   $('lab-premium').textContent = r.premium === null ? '—' : units(r.premium, 6);
-  $('lab-state').textContent = r.reason || 'QUOTE AVAILABLE';
+  $('lab-state').textContent = r.reason || t('QUOTE AVAILABLE');
   $('lab-state').classList.toggle('warn', !!r.reason);
   const marker = 30 + (deviation + 700) / 1400 * 500;
   $('lab-chart-marker').setAttribute('x1', marker);
@@ -103,7 +127,7 @@ function renderLab() {
     QuoteExpired: 'The band still permits this size, but the fixed quote’s deadline has elapsed. The maker must explicitly publish new terms.',
     QuoteOffAnchor: 'The rolling band permits quoting, but the live reference is more than 5% away from the original anchor. A recovered TWAP cannot renew that anchor.',
   };
-  $('lab-explanation').textContent = r.reason ? explanations[r.reason] : `The band adds ${(Number(r.extraBps) / 100).toFixed(2)}% to the 8 USDG base premium and permits at most ${r.cap} whole contracts per call. Other inventory and collateral checks still apply.`;
+  $('lab-explanation').textContent = r.reason ? t(explanations[r.reason]) : t('The band adds {extra}% to the 8 USDG base premium and permits at most {cap} whole contracts per call. Other inventory and collateral checks still apply.', {extra: (Number(r.extraBps) / 100).toFixed(2), cap: r.cap});
 }
 function selectStep(index) {
   renderStep(index);
@@ -118,10 +142,19 @@ $('expired-toggle').addEventListener('change', renderLab);
 $('anchor-toggle').addEventListener('change', renderLab);
 document.querySelectorAll('[data-deviation]').forEach(b => b.addEventListener('click', () => { $('deviation').value = b.dataset.deviation; renderLab(); }));
 $('copy-command').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText('python3 scripts/website-evidence.py'); $('copy-command').textContent = 'Copied'; }
-  catch { $('copy-command').textContent = 'Select the command'; }
+  try { await navigator.clipboard.writeText('python3 scripts/website-evidence.py'); $('copy-command').textContent = t('Copied'); }
+  catch { $('copy-command').textContent = t('Select the command'); }
 });
-renderLab();
+document.querySelectorAll('[data-language]').forEach(button => button.addEventListener('click', () => {
+  language = button.dataset.language;
+  try { localStorage.setItem('hakari-language', language); } catch { /* URL selection still works. */ }
+  const url = new URL(location.href);
+  url.searchParams.set('lang', language);
+  history.replaceState(null, '', url);
+  applyLanguage();
+}));
+
+applyLanguage();
 try {
   const response = await fetch(new URL('./evidence/demo.json', import.meta.url));
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -132,34 +165,68 @@ try {
   lifecycle.steps.forEach((s, i) => {
     const li = document.createElement('li');
     const button = document.createElement('button');
-    button.innerHTML = `<span>${String(i + 1).padStart(2, '0')}</span>${instructions[s.id][0]}`;
+    button.innerHTML = `<span>${String(i + 1).padStart(2, '0')}</span>${escape(t(instructions[s.id][0]))}`;
     button.addEventListener('click', () => selectStep(i));
     li.append(button); $('steps').append(li);
   });
   cases.forEach(([id, title], i) => {
     const button = document.createElement('button');
-    button.innerHTML = `${title}<span>↗</span>`;
+    button.innerHTML = `${escape(t(title))}<span>↗</span>`;
     button.addEventListener('click', () => renderCase(i));
     $('case-buttons').append(button);
   });
+  renderProvenance();
+  $('load-status').hidden = true; $('replay-content').hidden = false;
+  renderStep(0); renderCase(0);
+} catch (error) {
+  loadError = error.message;
+  renderLoadError();
+}
+
+function renderProvenance() {
   const sourceRoot = `${repo}/blob/${evidence.sourceRevision}`;
   $('step-source').href = `${sourceRoot}/aqua/test/WebsiteEvidence.t.sol`;
   // The docs may evolve independently of the generated Solidity inputs.
   const provenance = [
-    ['Execution', 'Foundry local EVM · 5 verified scenarios'],
-    ['Fork', `${evidence.chainId} / block ${evidence.forkBlock.toLocaleString('en-US')}`],
+    ['Execution', t('Foundry local EVM · 5 verified scenarios')],
+    ['Fork', t('{chain} / block {block}', {chain: evidence.chainId, block: evidence.forkBlock.toLocaleString('en-US')})],
     ['Base revision', `<a href="${repo}/commit/${escape(evidence.sourceRevision)}">${escape(evidence.sourceRevision.slice(0, 12))} ↗</a>`],
-    ['Source inputs', evidence.sourceInputsModified ? 'Modified from base revision; exact files in source.zip' : 'Match base revision; exact files in source.zip'],
+    ['Source inputs', t(evidence.sourceInputsModified ? 'Modified from base revision; exact files in source.zip' : 'Match base revision; exact files in source.zip')],
     ['SHA-256', escape(evidence.sourceFingerprint)],
     ['Hook runtime', escape(lifecycle.hookCodeHash)],
-    ['Trace', 'Local calls and EVM logs; no explorer transaction hashes'],
+    ['Trace', t('Local calls and EVM logs; no explorer transaction hashes')],
   ];
-  $('provenance').innerHTML = provenance.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
-  $('load-status').hidden = true; $('replay-content').hidden = false;
-  renderStep(0); renderCase(0);
-} catch (error) {
-  $('load-status').textContent = `The evidence could not be loaded (${error.message}). Serve this directory over HTTP, or open the JSON and trace downloads directly.`;
-  $('proof-count').textContent = 'Unavailable';
-  $('provenance').innerHTML = '<dt>Evidence</dt><dd>Unavailable. Use the download links to inspect the committed artifacts.</dd>';
-  $('case-detail').textContent = 'Recorded scenarios are unavailable until the evidence JSON loads.';
+  $('provenance').innerHTML = provenance.map(([k, v]) => `<dt>${escape(t(k))}</dt><dd>${v}</dd>`).join('');
+}
+function renderLoadError() {
+  $('load-status').hidden = false;
+  $('replay-content').hidden = true;
+  $('case-buttons').hidden = true;
+  $('load-status').textContent = t('The evidence could not be loaded ({error}). Serve this directory over HTTP, or open the JSON and trace downloads directly.', {error: t(loadError)});
+  $('proof-count').textContent = t('Unavailable');
+  $('provenance').innerHTML = `<dt>${escape(t('Evidence'))}</dt><dd>${escape(t('Unavailable. Use the download links to inspect the committed artifacts.'))}</dd>`;
+  $('case-detail').textContent = t('Recorded scenarios are unavailable until the evidence JSON loads.');
+}
+function applyLanguage() {
+  document.documentElement.lang = language;
+  document.title = t('HAKARI — One wallet. Two strategies.');
+  for (const {node, original, message} of staticText) {
+    if (node.isConnected) node.textContent = original.replace(message, t(message));
+  }
+  for (const {node, attribute, message} of staticAttributes) node.setAttribute(attribute, t(message));
+  document.querySelectorAll('[data-language]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
+  $('copy-command').textContent = t('Copy');
+  if (lifecycle && !loadError) {
+    document.querySelectorAll('#steps button').forEach((button, i) => {
+      button.innerHTML = `<span>${String(i + 1).padStart(2, '0')}</span>${escape(t(instructions[lifecycle.steps[i].id][0]))}`;
+    });
+    document.querySelectorAll('#case-buttons button').forEach((button, i) => {
+      button.innerHTML = `${escape(t(cases[i][1]))}<span>↗</span>`;
+    });
+    renderStep(position);
+    renderCase(selectedCase);
+    renderProvenance();
+  }
+  if (loadError) renderLoadError();
+  renderLab();
 }
