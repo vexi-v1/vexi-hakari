@@ -289,3 +289,24 @@ Provenance, Next and AI disclosure, every figure typed from `gauge/data/vexi-fix
 docs commit that closes this entry). Addresses called, not deployed: the venue `0xF91B7277…` and its spot registry
 `0xCEde7e1E…` on 46630. Cut: the writable-by-mandate column, the `Poked` observation weights, the deploy and demo
 transactions (left for a human with the key), and the board screenshot.
+
+## 2026-09-26 23:20 — Abner: the vexi board's framing, a hook-optional line in the README, the video's Vexi segment
+
+> https://developers.uniswap.org/llms-full.txt
+> 3、4、5 項動手
+>
+> ("Do items 3, 4 and 5." The items came from a review asked as "the whole story, what it has to do with Uniswap, how to make
+> the Uniswap and the other judges think we deserve to win", against the prize page's own yardstick, "integration quality and
+> ecosystem impact". Item 3: the vexi board's lead opens with why a venue, the what-if shows the bound itself as a second
+> line, and the page names `ExposureGuard`. Item 4: one README sentence, the hook is optional. Item 5: the 25-second Vexi
+> segment of the video, drafted. Items 1 and 2, the Uniswap Developer Feedback Form and an `ExposureGuard` broadcast on
+> 46630, stay with a human; the board's `ExposureGuard` line says "not deployed" until then.)
+
+Output: `web/vexi/index.html` (the lead: the exposure settling on a price is the one input the bound cannot read for
+itself, and an ERC-6909 venue is where it is readable; a second what-if line; the finding's bullet says a full-range
+position is the calibration case, HIMS at 0.006× and TSLA's +100 % push the counter-examples; a new bullet on
+`ExposureGuard` with the fork test and its transcript), `web/vexi/app.js` (the second line is `whatIf(bound, bound)` and
+`whatIf(bound × 0.5, bound)` from `core.js`, so the tests that pin `core.js` still cover it), `README.md` (first paragraph:
+`SafeSettle` needs a hooked pool, `ExposureGuard` reads the same bound on any existing pool, 26 of the 28 deepest
+stock-token pools have none, FEEDBACK § 10). The video segment was handed over in the session, not committed. Checked
+locally on `python3 -m http.server` before the commit.

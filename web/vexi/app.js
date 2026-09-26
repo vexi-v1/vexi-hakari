@@ -153,7 +153,15 @@ function renderWhatIf() {
   const b = BAND[w.band];
   const next = nextExpiry(Date.now() / 1000, step);
   const bound = w.bound > 0 ? `${fmtUsdg(w.bound)} USDG` : "an unknown bound";
-  $("wi-out").innerHTML = `<b>${esc(w.symbol)}</b>: ${fmtUsdg(w.exposure)} USDG settling at the ${hhmm(next)} fix would be <b>${fmtRatio(w.ratio)}</b> of ${bound} the pool can safely carry ${w.live ? "now" : `(collector figure, ${asOf})`} → <span class="status ${w.band}"><i aria-hidden="true">${b.icon}</i>${b.label}</span>. ${w.bound > 0 ? `Refused from ${fmtUsdg(w.bound)} USDG; watch from ${fmtUsdg(w.bound * WATCH_AT)}.` : ""}`;
+  $("wi-out").innerHTML = `<b>${esc(w.symbol)}</b>: ${fmtUsdg(w.exposure)} USDG settling at the ${hhmm(next)} fix would be <b>${fmtRatio(w.ratio)}</b> of ${bound} the pool can safely carry ${w.live ? "now" : `(collector figure, ${asOf})`} → <span class="status ${w.band}"><i aria-hidden="true">${b.icon}</i>${b.label}</span>.`;
+  // the second line sits on the line itself, so both verdicts are on the page without typing a figure
+  if (w.bound > 0) {
+    const at = whatIf(w.bound, w.bound), atB = BAND[at.band];
+    const half = whatIf(w.bound * WATCH_AT, w.bound), halfB = BAND[half.band];
+    $("wi-out2").innerHTML = `The same fix with <b>${fmtUsdg(w.bound)} USDG</b> on it, the bound itself → <span class="status ${at.band}"><i aria-hidden="true">${atB.icon}</i>${atB.label}</span>; from ${fmtUsdg(w.bound * WATCH_AT)} USDG the board says <span class="status ${half.band}"><i aria-hidden="true">${halfB.icon}</i>${halfB.label}</span>.`;
+  } else {
+    $("wi-out2").innerHTML = "";
+  }
   renderCapacity(null, w);
 }
 function initWhatIf() {
@@ -161,7 +169,7 @@ function initWhatIf() {
   const top = cells[0];
   if (top && bySymbol(top.symbol)) $("wi-market").value = top.symbol;
   $("wi-exposure").value = top && top.exposure > 0 ? Math.round(top.exposure) : 1000;
-  $("wi-note").textContent = `Exposure = contracts × the price they settle at, every series on the expiry summed; the default is the largest the venue has fixed so far. This page reads the pool and the lens, not the venue's open interest, so the figure is yours to set.`;
+  $("wi-note").textContent = `Exposure = contracts × the price they settle at, every series on the expiry summed; the default is the largest the venue has fixed so far, and the second line is the bound itself. This page reads the pool and the lens, not the venue's open interest, so the figure is yours to set.`;
   $("wi-market").addEventListener("change", renderWhatIf);
   $("wi-exposure").addEventListener("input", renderWhatIf);
 }

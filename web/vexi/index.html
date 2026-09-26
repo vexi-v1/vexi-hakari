@@ -99,7 +99,7 @@
 <main>
   <p class="crumbs"><a href="../">HAKARI</a> · <a href="../live/">the live board</a> · <a href="../squeeze/">the HIMS weekend replay</a></p>
   <h1>A live options venue, every fix checked against the bound</h1>
-  <p class="lead">Our own venue on testnet 46630 (built before the hackathon; none of its code is in this repo) sells physically settled 15-minute options and fixes each settlement price once, from a 300-second TWAP of its own hookless Uniswap v4 pool on the official PoolManager. Because every contract on an expiry is an ERC-6909 token with public supply, the exposure settling on that pool's price is readable for this one consumer, and HAKARI's bound can be checked against every fix the venue has made.</p>
+  <p class="lead"><b>Why a venue.</b> The one input HAKARI's bound cannot read for itself is the exposure settling on a price: every position, every protocol. On a fully collateralised options venue it is readable, because every contract on an expiry is an ERC-6909 token with a public supply. So this is the one place the bound can be checked end to end against real price fixes, from the collector here and from <code>ExposureGuard</code> on-chain. The venue is our own, on testnet 46630 (built before the hackathon; none of its code is in this repo): it sells physically settled 15-minute options and fixes each settlement price once, from a 300-second TWAP of its own hookless Uniswap v4 pool on the official PoolManager.</p>
   <div class="notice"><p><b>What this is not:</b> a market. The tokens are mocks, every pool holds one full-range position we seeded, all open interest was written by one address (the venue's own) and all swaps came from its own swap adapter. What it shows is the pipeline on a real consumer's contracts, and one result about rate limiters.</p></div>
   <div class="notice" id="stub-notice" hidden><p><b>Placeholder data.</b> <span id="stub-text"></span></p></div>
 
@@ -122,6 +122,7 @@
       <label>exposure settling on the next fix (USDG) <input id="wi-exposure" type="number" min="0" step="any" inputmode="decimal"></label>
     </div>
     <p id="wi-out" aria-live="polite" style="margin:10px 0 0"></p>
+    <p id="wi-out2" aria-live="polite" style="margin:6px 0 0"></p>
     <p class="meta" id="wi-note" style="margin:6px 0 0"></p>
   </div>
 
@@ -137,7 +138,8 @@
 
   <h2>What you are looking at</h2>
   <ul class="plain">
-    <li><b>S*</b> is the venue's own fix: a rate-limited ring of a handful of TWAP observations over the last 300 s before expiry. The limiter clips a big atomic push and passes a small push held through the window untouched; on a single full-range position the cost per move is nearly the same at every rung, so the limiter does not raise the safe line above fee × reserve.</li>
+    <li><b>S*</b> is the venue's own fix: a rate-limited ring of a handful of TWAP observations over the last 300 s before expiry. The limiter clips a big atomic push and passes a small push held through the window untouched; on a single full-range position the cost per move is nearly the same at every rung, so the limiter does not raise the safe line above fee × reserve. A single full-range position is the one book with a closed-form bound, fee × reserve, so it is the calibration case for the lens; a real book has none (HIMS/USDG fell to 0.006× of Friday's bound on 2026-08-30, and on TSLA/USDG a +100 % push undercuts the ladder).</li>
+    <li><b>On-chain, the same read is <code>ExposureGuard</code></b> (<a href="https://github.com/vexi-v1/vexi-hakari/blob/main/src/ExposureGuard.sol">source</a>): a hook-free consumer of <code>CostModel</code> over the deployed lens, for any pool key. Handed the series ids on an expiry, it sums their supply from the venue, prices the sum at the pool's <code>slot0</code> and emits <code>Checked(…)</code> with the verdict; it verifies the ids it is given and cannot enumerate them. Against this venue on a 46630 fork (<a href="https://github.com/vexi-v1/vexi-hakari/blob/main/test/fork/ExposureGuard.fork.t.sol">fork test</a>, <a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/demo-outputs/vexi-guard-46630.txt">transcript</a>) its bound equals the table above and the series on the next expiry sum to 0 contracts. It is not deployed on 46630, and nothing in the venue reads it.</li>
     <li><b>arbReversionSeconds = 0</b> because no third-party swap has been seen on these pools: the bound assumes nobody pushes back, which is the conservative setting, not a measurement.</li>
     <li>HAKARI <b>discloses</b>; it cannot gate the venue's fix. Nothing in the venue reads the bound, and a fix never reverts. The history above is a replay of what the bound would have said.</li>
   </ul>

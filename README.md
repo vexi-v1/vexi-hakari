@@ -4,6 +4,9 @@
 bound on what faking a price costs, for any v4 pool, computed at the moment the price is read: `PushCostLens`
 prices a push, and `CostModel` turns that cost into the largest exposure the pool can safely carry right now.
 `SafeSettle` is a demo user of the bound: it settles on the pool's TWAP only below that line, and refuses above it.
+The hook is optional: `SafeSettle` needs a pool created with `HakariOracleHook`, while `ExposureGuard` reads the same
+bound on any existing pool, hook or no hook, which on Robinhood Chain is 26 of the 28 deepest stock-token pools
+([`FEEDBACK.md`](FEEDBACK.md) § 10).
 
 **Try it:** [29 stock pools right now vs Friday's close](https://vexi-v1.github.io/vexi-hakari/web/live/) (live, every minute) ·
 [measure any pool live](https://vexi-v1.github.io/vexi-hakari/web/) (read-only, nothing deployed) ·
