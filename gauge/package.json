@@ -21,7 +21,8 @@
     "hims:hook": "tsx src/squeeze/hakari-read.ts",
     "live:baseline": "tsx src/live-baseline.ts",
     "reversion": "tsx src/reversion.ts",
-    "amc": "tsx src/amc.ts"
+    "amc": "tsx src/amc.ts",
+    "vexi": "tsx src/vexi.ts"
   },
   "dependencies": {
     "@types/node": "^26.6.2",

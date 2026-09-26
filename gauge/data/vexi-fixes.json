@@ -459,7 +459,23 @@
       },
       "sStarVsPreWindowBps": -3.3306690738754696e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xc35da58369d265c4c86a72002720688720931d2b433ef1a30b0c72cd767b8428",
+          "kind": "call",
+          "strike": 0.72,
+          "contracts": 1254.9592786844776,
+          "oi": "1254959278684477526927"
+        },
+        {
+          "id": "0x697c8d574e3c855c58c9d1c1a093953ce5e4a0e063d8f751d0de2635dd10fe8e",
+          "kind": "call",
+          "strike": 0.6345,
+          "contracts": 32.0718923539005,
+          "oi": "32071892353900503368"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -495,7 +511,23 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x1844f9ae0b3a4826b579dd9fa1e3e980387c6a79d4bb87f4a30d3e77d4d0a74c",
+          "kind": "call",
+          "strike": 0.05863,
+          "contracts": 17.1573673735502,
+          "oi": "17157367373550202456"
+        },
+        {
+          "id": "0xeb77f725f15db0503ce28fde9ba7cc4d2211c1283c9ffedfb48110c0d1cf6186",
+          "kind": "call",
+          "strike": 0.05945,
+          "contracts": 990.0891090099,
+          "oi": "990089109009900000008"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -531,7 +563,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xf56c5f6371ed392fbb4d3b90931e724c8f0fcb77ceecf6b3314fa6d7a41f656c",
+          "kind": "put",
+          "strike": 0.05822,
+          "contracts": 649.3506493506494,
+          "oi": "649350649350649350649"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -567,7 +608,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x357f50c7c4a40ebb8ae25f6c22ffaaa5c019c62aee008137da6cf2c3c91c1902",
+          "kind": "put",
+          "strike": 0.05822,
+          "contracts": 636.9426751592357,
+          "oi": "636942675159235668789"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -603,7 +653,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xb9db5301b00535313426227006ffc4939bdafc2247e2103de5930c359acdd7b4",
+          "kind": "put",
+          "strike": 0.05822,
+          "contracts": 632.9113924050633,
+          "oi": "632911392405063291139"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -639,7 +698,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x5eb1cb5599a216cd3cb2eb10a386fc9eb56363f2988b343526dd66fd6997b2ee",
+          "kind": "call",
+          "strike": 0.05822,
+          "contracts": 331.12582781456956,
+          "oi": "331125827814569536423"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -675,7 +743,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x23646356bcc4b77d5342fb153aac05bc1389ae3e2a9d67ae4ff2de5d030c99fa",
+          "kind": "call",
+          "strike": 0.05822,
+          "contracts": 327.8688524590164,
+          "oi": "327868852459016393442"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -711,7 +788,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x84129b087337a38a64f4deada585f9b8d071c001a29e0254cb772052309c991e",
+          "kind": "call",
+          "strike": 0.05822,
+          "contracts": 326.797385620915,
+          "oi": "326797385620915032679"
+        }
+      ]
     },
     {
       "symbol": "AI",
@@ -747,7 +833,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x5a04646dbdb20890c3dedd640cbeb0ab706bc81434ff225b4f5fb2bd01c5046a",
+          "kind": "call",
+          "strike": 0.05822,
+          "contracts": 323.62459546925567,
+          "oi": "323624595469255663430"
+        }
+      ]
     },
     {
       "symbol": "MEME",
@@ -783,7 +878,16 @@
       },
       "sStarVsPreWindowBps": -4.440892098500626e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x8245fc7f84b22cb91ccc7171d3aba15fd1dc33e974aea9eb916541e6129bf974",
+          "kind": "call",
+          "strike": 0.1044,
+          "contracts": 55.991041433370654,
+          "oi": "55991041433370660694"
+        }
+      ]
     },
     {
       "symbol": "MEME",
@@ -819,7 +923,16 @@
       },
       "sStarVsPreWindowBps": -4.440892098500626e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x21dedab158ed6c3ed35ad22c79da12195eb290f68a6bf303a15863401483310a",
+          "kind": "call",
+          "strike": 0.1044,
+          "contracts": 55.248618784530386,
+          "oi": "55248618784530386740"
+        }
+      ]
     },
     {
       "symbol": "MEME",
@@ -855,7 +968,16 @@
       },
       "sStarVsPreWindowBps": -4.440892098500626e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xd9d628e709bc383dd14583ed6c6f95996193d19a94f6221682441cd39c62e5dc",
+          "kind": "call",
+          "strike": 0.1044,
+          "contracts": 54.94505494505494,
+          "oi": "54945054945054945054"
+        }
+      ]
     },
     {
       "symbol": "MEME",
@@ -891,7 +1013,16 @@
       },
       "sStarVsPreWindowBps": -4.440892098500626e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x864f53dc60012356e5ae2222625e4db6783c2968796b45999230e5fd2fed4efc",
+          "kind": "call",
+          "strike": 0.1044,
+          "contracts": 54.28881650380022,
+          "oi": "54288816503800217155"
+        }
+      ]
     },
     {
       "symbol": "MEME",
@@ -927,7 +1058,16 @@
       },
       "sStarVsPreWindowBps": -4.440892098500626e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xc5dff004b46294c8a34b424b46c66b7b944a1d0f400010c51e9a07d815df2e7c",
+          "kind": "put",
+          "strike": 0.1044,
+          "contracts": 50.327126321087064,
+          "oi": "50327126321087065928"
+        }
+      ]
     },
     {
       "symbol": "MEME",
@@ -963,7 +1103,16 @@
       },
       "sStarVsPreWindowBps": -4.440892098500626e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xb63537a2baca98e15e028da1e5ae6c93052b8f5f4bc1a920f564cb4ba3c0a366",
+          "kind": "put",
+          "strike": 0.1044,
+          "contracts": 50.150451354062184,
+          "oi": "50150451354062186559"
+        }
+      ]
     },
     {
       "symbol": "PONS",
@@ -999,7 +1148,16 @@
       },
       "sStarVsPreWindowBps": 0.380263288783933,
       "inWindowSwaps": 1,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x1bc6e0fe484fd7cbee437dabcb1eff3bcdb62a41f70e578e4c954a0c33b271be",
+          "kind": "call",
+          "strike": 0.6435,
+          "contracts": 9.30232558139535,
+          "oi": "9302325581395348837"
+        }
+      ]
     },
     {
       "symbol": "PONS",
@@ -1035,7 +1193,16 @@
       },
       "sStarVsPreWindowBps": -2.220446049250313e-12,
       "inWindowSwaps": 1,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x07f6374fb8be258fc9e4a72dca4d750e1efa710f3f983b9313c06830f752d996",
+          "kind": "put",
+          "strike": 0.6255,
+          "contracts": 8.56898029134533,
+          "oi": "8568980291345329905"
+        }
+      ]
     },
     {
       "symbol": "PONS",
@@ -1071,7 +1238,16 @@
       },
       "sStarVsPreWindowBps": -2.220446049250313e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x93c71b803fe853af49ca50c605f2b2a2879764a80cd0109ee23bcf6c11b18bba",
+          "kind": "put",
+          "strike": 0.657,
+          "contracts": 8.285004142502071,
+          "oi": "8285004142502071251"
+        }
+      ]
     },
     {
       "symbol": "PONS",
@@ -1107,7 +1283,16 @@
       },
       "sStarVsPreWindowBps": 6.319161038264021,
       "inWindowSwaps": 1,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x49df0debda6b75c71c7a9bfdd76688d4961dd276c094b086d25219b6d3ba4fa6",
+          "kind": "call",
+          "strike": 0.6435,
+          "contracts": 8.381527114240216,
+          "oi": "8381527114240214567"
+        }
+      ]
     },
     {
       "symbol": "PONS",
@@ -1143,7 +1328,16 @@
       },
       "sStarVsPreWindowBps": -3.3306690738754696e-12,
       "inWindowSwaps": 1,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xbeea482430167eb534d4eab35a9f2bdf02de3587f9125caa59f8d8aca25ca092",
+          "kind": "call",
+          "strike": 0.63,
+          "contracts": 7.9732100143517775,
+          "oi": "7973210014351778025"
+        }
+      ]
     },
     {
       "symbol": "NVDA",
@@ -1179,7 +1373,16 @@
       },
       "sStarVsPreWindowBps": 2.220446049250313e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xd70144afd5c731ccce3ed13b8b82b4bbeffc87c9bcf9e6a3c9b6e87bc0353160",
+          "kind": "call",
+          "strike": 225.6,
+          "contracts": 0.33556596555750934,
+          "oi": "335565965557509295"
+        }
+      ]
     },
     {
       "symbol": "NVDA",
@@ -1215,7 +1418,16 @@
       },
       "sStarVsPreWindowBps": -1.1102230246251565e-12,
       "inWindowSwaps": 1,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x8f0b59e7d6bd4494c1e5756278b8429bea3cd236a3ff6e8a4a6d2fc802d60e9c",
+          "kind": "call",
+          "strike": 225.6,
+          "contracts": 0.28610584199518774,
+          "oi": "286105841995187699"
+        }
+      ]
     },
     {
       "symbol": "NVDA",
@@ -1251,7 +1463,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xccdc69e9070a20f06510a6e053e188b1fc42ae3caa32009ece9f64c7337a8800",
+          "kind": "call",
+          "strike": 224,
+          "contracts": 0.1849112426035503,
+          "oi": "184911242603550295"
+        }
+      ]
     },
     {
       "symbol": "TSLA",
@@ -1287,7 +1508,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 1,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x5b1251ac9da785316cf04d2ef9579faef599ec378a550804eb4ed225ef24d866",
+          "kind": "put",
+          "strike": 371.8,
+          "contracts": 0.13053654435827583,
+          "oi": "130536544358275821"
+        }
+      ]
     },
     {
       "symbol": "TSLA",
@@ -1323,7 +1553,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xa4fe2c2374901524382f8b05db0ca15da3e28b55bda28964b63749389ce8c66a",
+          "kind": "put",
+          "strike": 371.8,
+          "contracts": 0.12498203383263656,
+          "oi": "124982033832636558"
+        }
+      ]
     },
     {
       "symbol": "TSLA",
@@ -1359,7 +1598,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xdab0d9e968433bdec69b66586776f4d9a132c35583fed39763fb363c5edb8e64",
+          "kind": "call",
+          "strike": 371.8,
+          "contracts": 0.10101275387030366,
+          "oi": "101012753870303664"
+        }
+      ]
     },
     {
       "symbol": "NVDA",
@@ -1395,7 +1643,16 @@
       },
       "sStarVsPreWindowBps": -1.1102230246251565e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xb82e9410d5d37f9d574b18d3847cab865a22b30934c24a06b0b92f636a34bb86",
+          "kind": "call",
+          "strike": 224,
+          "contracts": 0.12660247077381961,
+          "oi": "126602470773819621"
+        }
+      ]
     },
     {
       "symbol": "TSLA",
@@ -1431,7 +1688,16 @@
       },
       "sStarVsPreWindowBps": -14.499967264975933,
       "inWindowSwaps": 2,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x288b5340bcfc19b59e8896401038f05cbdfe6646dbcafbcb364a2e28753719e2",
+          "kind": "call",
+          "strike": 371.8,
+          "contracts": 0.0978981272088265,
+          "oi": "97898127208826495"
+        }
+      ]
     },
     {
       "symbol": "MU",
@@ -1467,7 +1733,16 @@
       },
       "sStarVsPreWindowBps": 2.220446049250313e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xeeaae8a00a57d082760ee9e73d53446854cab29a83cc71aa4cee2cc5a5577df4",
+          "kind": "call",
+          "strike": 1086.8,
+          "contracts": 0.05730058108519279,
+          "oi": "57300581085192784"
+        }
+      ]
     },
     {
       "symbol": "NVDA",
@@ -1503,7 +1778,16 @@
       },
       "sStarVsPreWindowBps": -2.220446049250313e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x87150ee99830bacd90c27aeacbb8eabd2c87aa48ac5b51dcef868329fb452a8e",
+          "kind": "put",
+          "strike": 225.6,
+          "contracts": 0.1157258731806446,
+          "oi": "115725873180644616"
+        }
+      ]
     },
     {
       "symbol": "MU",
@@ -1539,7 +1823,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xdd0e0420cf808481dc8bd632fa775939f5ae22f7330837bf9463e2331905e3b2",
+          "kind": "call",
+          "strike": 1086.8,
+          "contracts": 0.05094407003383195,
+          "oi": "50944070033831956"
+        }
+      ]
     },
     {
       "symbol": "NVDA",
@@ -1575,7 +1868,16 @@
       },
       "sStarVsPreWindowBps": 2.220446049250313e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x8681e6b2ca2afc1537c732d0c1cf339864e9d373b443d4269fc9471c48e99cb6",
+          "kind": "put",
+          "strike": 225.6,
+          "contracts": 0.10453930573356277,
+          "oi": "104539305733562762"
+        }
+      ]
     },
     {
       "symbol": "TSLA",
@@ -1611,7 +1913,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x500e2c132f1e512c9b93fd3e6bc7c0d348dde8108809a67aaea9e77600e09164",
+          "kind": "call",
+          "strike": 371.8,
+          "contracts": 0.06941378668865696,
+          "oi": "69413786688656954"
+        }
+      ]
     },
     {
       "symbol": "TSLA",
@@ -1647,7 +1958,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x641a1c1f9a373635bbf2f97ffae6afe8f1284f2b4b7afa420bee5b82ba3db6fe",
+          "kind": "call",
+          "strike": 369.2,
+          "contracts": 0.0574957165691156,
+          "oi": "57495716569115600"
+        }
+      ]
     },
     {
       "symbol": "MU",
@@ -1683,7 +2003,16 @@
       },
       "sStarVsPreWindowBps": -2.220446049250313e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xcd497412b93b7fbef0b6e2c9fc8b93f7da72fdbd680bc671e77c596c9d94c052",
+          "kind": "put",
+          "strike": 1086.8,
+          "contracts": 0.021646445999909954,
+          "oi": "21646445999909950"
+        }
+      ]
     },
     {
       "symbol": "MU",
@@ -1719,7 +2048,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x8c1b13c0da63fe4ce3c7ce82ba7c8400a6586948b6476f4de25598832ae5e1c2",
+          "kind": "call",
+          "strike": 1079.2,
+          "contracts": 0.02100895065333635,
+          "oi": "21008950653336347"
+        }
+      ]
     },
     {
       "symbol": "MU",
@@ -1755,7 +2093,16 @@
       },
       "sStarVsPreWindowBps": 0,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0xe9c7c95f8cb35fc789dd6dedfb2dc2924b22f52f653d8192825a3e3bd8cddf04",
+          "kind": "call",
+          "strike": 1079.2,
+          "contracts": 0.01859726415646994,
+          "oi": "18597264156469941"
+        }
+      ]
     },
     {
       "symbol": "MU",
@@ -1791,7 +2138,16 @@
       },
       "sStarVsPreWindowBps": -2.220446049250313e-12,
       "inWindowSwaps": 0,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x0fca881b93145141c471b1a017ec8e0f484e245d03595ab210bf2be449f3df1c",
+          "kind": "put",
+          "strike": 1086.8,
+          "contracts": 0.018081946658980632,
+          "oi": "18081946658980633"
+        }
+      ]
     },
     {
       "symbol": "PONS",
@@ -1827,7 +2183,16 @@
       },
       "sStarVsPreWindowBps": -33.29000679081595,
       "inWindowSwaps": 1,
-      "inWindowForeignSwaps": 0
+      "inWindowForeignSwaps": 0,
+      "series": [
+        {
+          "id": "0x890b9165ba85ae8ab726d14751d0eb78676854cac8ecaa952bd9e53cc0e68302",
+          "kind": "call",
+          "strike": 0.63,
+          "contracts": 0.1,
+          "oi": "100000000000000000"
+        }
+      ]
     }
   ]
 }
