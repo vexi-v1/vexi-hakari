@@ -350,3 +350,33 @@ live oracle ticks, and the bound from `PushCostLens.roundTripCosts` by state ove
 reads, next to what that consumer has riding on it; `gauge/data/consumers.json`; a README section "Who else settles
 on a pool's price on 4663 today"; a card on `web/plain/` pointing at it. Candidates came from DefiLlama's Robinhood
 Chain listing and its adapters (secondary, addresses only); every number in the section is read from the chain.
+
+## 2026-09-27 00:20 — Abner: the safety line is far-fetched; change the topic to a Vexi-side Uniswap integration
+
+> HAKARI 安全線這件事有點牽強，因為只是設了一個無法約束大家的 bound，沒有有效得行為限制。那 protocol 自己靠規則去保護，反而更容易。
+> 所以要直接改變主題。在 Vexi protocol (vexi-v1) 下，目前 Vault 已經串了 v4-hooks，ref developers.uniswap.org/llms-full.txt，
+> 找出更好可以整合 Uniswap 滿足 EthGlobal tokyo 2026 的方案
+>
+> ("HAKARI's safety line is a stretch: a bound that constrains nobody is not a behavioural rule; a protocol protecting
+> itself by its own rules is easier. So change the topic. Under Vexi, whose vault already runs v4 hooks, and with
+> the Uniswap docs index as reference, find a better Uniswap integration for ETHGlobal Tokyo 2026.")
+
+Then, at 00:50: "開一個新的 session 當反方，你當正方不斷想方案，反方不斷質疑找漏洞，要接地氣" ("open a second
+session as the opposing side; you propose, it attacks, and it must stay concrete"). The proposing session drafted
+the opposing session's brief; the two exchanged rounds by session message.
+
+What the proposing session put forward: a rule the pool itself would carry, clamping the fix window's recorded
+price to a trailing 30-minute TWAP ± 3 % (the old rate limiter's cap), first as a new hook, then as a stateless
+reader over any OpenZeppelin `BaseOracleHook` record. What the opposing session found, in two rounds of five: a
+clamp applied where the hook writes is skipped by not swapping inside the window (`Oracle.write` credits one tick
+to the whole span); a new hook is a new codehash, which Vexi's own decision record pins to one hook; the on-chain
+demo could not land before the cut line; and, decisive, with the reversion this chain showed (0 everywhere
+measured) holding is free, so the reference costs exactly what the window costs to fake (1.00×), and a push released
+before the window makes the clamp read an honest window as the fake. The proposing session conceded all ten.
+
+Outcome: no pivot. Three additions, each its own commit: `test_observe_aPushBeforeAQuietWindow_isWhatTheWindowReads`
+and `FEEDBACK.md` § 12; a row in README § "What the review found" and two Limitations paragraphs (a time rule adds
+no cost where nobody pulls back; a venue's behavioural limit lives in its sizing); this entry. Wording rule adopted:
+"enforced", "guarded", "protected" only where they point at a call that refuses. The answer to the opening
+objection, as the opposing session put it: the line is not the rule; the rule can only live where money is at
+risk and refuses, and what HAKARI supplies is the input that rule needs and only it measures, depth at settlement.
