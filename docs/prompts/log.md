@@ -427,3 +427,12 @@ Validation for these changes (Foundry, 2026-09-27 JST):
   variable; the explicit public archive endpoint above resolved the five fork-suite setup failures.
 - The macOS sandbox's Foundry system-proxy initialization crashed after compilation; the same tests completed
   outside the sandbox. No transactions were broadcast. Existing uncommitted edits were preserved.
+
+## 2026-09-27 — Abner: lead with band feedback
+
+> Put band-related content first in FEEDBACK.md; move the archived version after it, or advise whether to retain it.
+
+Outcome (Codex): current integration entries 13–20 come first; the archived study's entries 1–12 remain in a
+clearly marked historical section; research entry 21 is separate and still explicitly not re-checked. Entry
+numbers and bodies are preserved for traceability. Added navigation and clarified historical README references;
+no new upstream or deployment claims, no archive edits.
