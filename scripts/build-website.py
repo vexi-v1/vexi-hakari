@@ -9,6 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / '_site'
 ASSETS = ('style.css', 'app.js', 'band.mjs', 'i18n.mjs', 'vexi-logo.svg')
 EVIDENCE = ('demo.json', 'trace.txt', 'source.zip', 'source-files.json')
+LEGACY_PAGES = ('web/index.html', 'web/plain/index.html', 'web/squeeze/index.html',
+                'web/live/index.html', 'web/vexi/index.html')
 
 def main():
     evidence_dir = ROOT / 'website/evidence'
@@ -48,6 +50,10 @@ def main():
         shutil.copy2(ROOT / 'website' / name, SITE / 'website' / name)
     for name in EVIDENCE:
         shutil.copy2(evidence_dir / name, SITE / 'website/evidence' / name)
+    for name in LEGACY_PAGES:
+        target = SITE / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / name, target)
     print(f'Validated evidence, source fingerprints and token conservation. Staged {len(list(SITE.rglob("*")))} paths in {SITE}')
 
 if __name__ == '__main__':

@@ -610,3 +610,7 @@ Work (Codex): publish the public integration branch, including the recovered AI 
 legacy branch publishing to the existing GitHub Actions workflow, and check its deployment and the live site.
 This instruction authorizes publication of the current public repository; it does not import any additional
 private product code or broadcast blockchain transactions.
+
+The live check found that the old `/web/` entry points returned 404 under the new artifact allowlist. Include
+their redirect pages and point them to the current homepage, retaining query strings and fragments. The
+archived study remains linked as repository source. Verify the redirects after the follow-up deployment.

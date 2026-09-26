@@ -1,19 +1,18 @@
 # Submission readiness review — 2026-09-27 JST
 
-**The implementation is demonstrable locally, but the submission is not yet verified complete.** The local
-working tree passed 5 hook tests and 92 Aqua/band/settlement tests at the implementation-review snapshot. The
-anonymous GitHub check was repeated during the document review: the public default branch still showed the
-previous study. The current integration must be published before judges can inspect it. Document/link checks
-below are separate from that earlier contract-test run.
+**The current integration and AI documentation are published; the external submission is not yet verified
+complete.** The local working tree passed 5 hook tests and 92 Aqua/band/settlement tests at the implementation-review
+snapshot. The earlier anonymous check found only the previous study; the publication check below supersedes
+that finding. Document/link and website checks are separate from the earlier contract-test run.
 
 ## Required actions before submission
 
 | Priority | Finding | Evidence / action to close it |
 |---|---|---|
-| P0 | Public default branch does not yet contain this entry | The repeated anonymous check still found `main = aefa9236a1302ace3e766266eb44a27aaa8a8fbc`, with no `aqua/`; the branch API listed only `main`. The current integration is on local `tk-137-aqua-band-slice`. Publish the reviewed integration and verify the exact submitted ref anonymously. If the feedback URL uses `blob/main/FEEDBACK.md`, publishing only a different branch will not update it. See the public-document check below. |
+| Done | Publish the current integration to the public default branch | On 2026-09-27, `main` was fast-forwarded from `aefa923` to `290b189458c66dc4be988cbaf8f72fa1456355a5` and pushed, preserving the integration commits. Anonymous requests returned the current README, FEEDBACK, reviewer code map, OptionBook and AI-document indexes byte-for-byte. The actual dashboard revision and entered feedback URL remain separate checks. |
 | Done | Open-source eligibility | `AquaWriter.sol`, `OptionBook.sol` and `ICollateralSource.sol` are MIT (were BUSL-1.1). ETHGlobal requires the new parts of a Continuity entry to remain open source, and neither 1inch prize nor 1inch's licenses ask for BUSL; the SwapVM extensions keep LicenseRef-Degensoft-SwapVM-1.1, which that license requires. See `LICENSE` and `THIRD_PARTY_NOTICES.md`. |
 | Done | Uniswap Developer Feedback Form submitted | On 2026-09-27, the user confirmed completion and supplied the form's success message: "Thanks for sharing your feedback". See the submission confirmation below. The prepared answers remain in [the form draft](uniswap-feedback-draft.md). |
-| Done locally; publication pending | Missing Aqua AI development documents | [AI usage](ai-usage.md) and the [artifact package](prompts/aqua/README.md) now provide the original handoff specs/plan/demo/facts, the later AI-usage record and build/review briefs, plus explicit public-interface excerpts from the source band's document. The manifest identifies source Git objects and checksums. Raw conversations/review reports absent from the versioned source are disclosed as unavailable; the original development history and external submission state remain separate checks. |
+| Done; published | Missing Aqua AI development documents | [AI usage](ai-usage.md) and the [artifact package](prompts/aqua/README.md) now provide the original handoff specs/plan/demo/facts, the later AI-usage record and build/review briefs, plus explicit public-interface excerpts from the source band's document. The manifest identifies source Git objects and checksums. Raw conversations/review reports absent from the versioned source are disclosed as unavailable; the original development history and external submission state remain separate checks. |
 | P0 | Dashboard completion and partner selection are unverified | The supplied `/events/tokyo2026/project` link redirects to sign-in in the review browser. Verify the actual title, descriptions, repository revision, selected Continuity track, both partner prizes and final submitted status. The link alone is not a submission receipt. |
 | P1 | Transfer demonstration needs to be presented | [demo.md](demo.md) and `bash scripts/judge-demo.sh` now provide reproducible call traces. Record or present the successful ERC-20 transfers, `Pulled`/`Pushed`, the SwapVM fill and the band's refusal. A test count or archived website by itself is insufficient evidence for this requirement. |
 | P1 | Current submission has no verified demo-video URL | A video is optional under the general event rules, but strongly useful for partner review. Record the current integration, not only the archived study. Add its URL to the dashboard and README when available. |
@@ -134,9 +133,18 @@ the public reviewer-code-map page returned 404. No contract tests were rerun for
 
 ## Final handoff checklist
 
+Publication follow-up on 2026-09-27: [Actions run 36269481775](https://github.com/vexi-v1/vexi-hakari/actions/runs/36269481775)
+built and deployed `290b189458c66dc4be988cbaf8f72fa1456355a5` successfully. Anonymous HTTP requests to the homepage
+and its nine public assets returned HTTP 200 and matched the local build byte-for-byte; the seven selected
+repository files named above (including both AI indexes and their manifest) also matched. The live browser loaded
+all five scenarios; selecting replay step 7, switching English to Traditional Chinese, and selecting the calculator's
+outside-band preset worked. Seven website tests and the source/evidence checksum build passed. A fresh recursive
+clone and the external dashboard/form values were not verified in this publication check.
+
 - [x] Owners resolve the three BUSL file licenses: MIT (see "Licensing decision").
 - [x] Recover the missing Aqua AI documents locally, with file-level attribution, source manifest and explicit record limitations.
-- [ ] Publish the complete reviewed revision, preserving real history; verify a fresh recursive clone.
+- [x] Publish the complete reviewed revision to `main`, preserving its existing commits.
+- [ ] Verify a fresh recursive clone.
 - [ ] Ensure README code links and the feedback link open without a signed-in GitHub session.
 - [ ] Confirm the actual feedback URL entered in the completed form and that it serves the current integration feedback.
 - [ ] Rehearse the demo; preserve visible transfer and refusal evidence. Add the optional recording URL.

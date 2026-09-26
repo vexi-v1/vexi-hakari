@@ -113,6 +113,11 @@ from the root of `main` to **GitHub Actions** (`build_type: workflow`) for `.git
 Pushes to `main` now trigger the workflow below. Check the deployment run and the live site when verifying a
 publication; changing the source setting alone does not publish a new artifact.
 
+The artifact also includes redirects from the previous `/web/`, `/web/plain/`, `/web/squeeze/`, `/web/live/`
+and `/web/vexi/` entry points to the current homepage. Existing bookmarks and a cached version of the former
+root redirect therefore reach the current demonstration. The archived study remains available as repository
+source, linked from the footer; it is not part of the deployed site.
+
 The workflow checks the calculator, verifies the committed evidence and uploads only `_site`. The deploy job
 requires `pages: write` and `id-token: write`, targets the `github-pages` environment, and runs only on `main`.
 Pull requests build and verify without deploying. It uses relative asset URLs, so it works under the repository
