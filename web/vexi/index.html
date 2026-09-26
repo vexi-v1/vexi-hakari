@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HAKARI vexi board</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="A live options venue on testnet 46630 fixes a settlement price from six hookless Uniswap v4 pools every 15 minutes; every fix it has made checked against HAKARI's bound, and what those pools can safely carry now.">
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --surface-2: #f1f0ec; --line: #d9d7d0;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #8a887f;
+    --series-1: #2a78d6; --series-2: #eb6834;
+    --good: #008300; --warning: #b86e00; --serious: #e34948;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --surface-2: #242422; --line: #3a3936;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+      --series-1: #3987e5; --series-2: #d95926;
+      --good: #4caf50; --warning: #e0a030; --serious: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --surface-2: #242422; --line: #3a3936;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+    --series-1: #3987e5; --series-2: #d95926;
+    --good: #4caf50; --warning: #e0a030; --serious: #e66767;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface-1); color: var(--text-primary); font: 15px/1.5 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; text-wrap: balance; }
+  h2 { font-size: 19px; margin: 36px 0 8px; }
+  p.lead { color: var(--text-secondary); margin: 0 0 8px; max-width: 76ch; }
+  .meta { color: var(--text-muted); font-size: 13px; }
+  a { color: var(--series-1); }
+  code { font-size: 13px; background: var(--surface-2); padding: 1px 4px; border-radius: 4px; }
+  .crumbs { font-size: 13px; margin: 0 0 12px; }
+  .notice { border-left: 3px solid var(--series-2); padding: 2px 0 2px 12px; margin: 12px 0; max-width: 80ch; }
+  .notice p { margin: 4px 0; }
+  .hero { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
+  .tile { background: var(--surface-2); border-radius: 10px; padding: 12px 14px; }
+  .tile .k { font-size: 13px; color: var(--text-secondary); }
+  .tile .v { font-size: 26px; font-weight: 650; letter-spacing: -0.01em; }
+  .tile .s { font-size: 13px; color: var(--text-secondary); }
+  .status { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .status i { font-style: normal; font-size: 12px; }
+  .status.refused { color: var(--serious); }
+  .status.watch { color: var(--warning); }
+  .status.trusted { color: var(--good); }
+  .status.unknown { color: var(--text-muted); }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill.live { background: color-mix(in oklab, var(--series-1) 18%, transparent); color: var(--series-1); }
+  .pill.asof { background: color-mix(in oklab, var(--text-muted) 18%, transparent); color: var(--text-secondary); }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: middle; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--text-secondary); font-weight: 600; font-size: 13px; }
+  td.ratio { font-weight: 650; }
+  tr.fresh td { animation: fresh 1.2s ease-out; }
+  @keyframes fresh { from { background: color-mix(in oklab, var(--series-1) 12%, transparent); } to { background: transparent; } }
+  @media (prefers-reduced-motion: reduce) { tr.fresh td { animation: none; } }
+  tr.wi-trusted td:first-child { box-shadow: inset 3px 0 0 var(--good); }
+  tr.wi-watch td:first-child { box-shadow: inset 3px 0 0 var(--warning); }
+  tr.wi-refused td:first-child { box-shadow: inset 3px 0 0 var(--serious); }
+  /* the ratio meter: fill carries the band, the track is a lighter step of the same colour; ticks at 0.5× and 1× */
+  .meter { position: relative; display: inline-block; width: 110px; height: 8px; border-radius: 4px; vertical-align: middle; background: color-mix(in oklab, var(--good) 18%, transparent); }
+  .meter.watch { background: color-mix(in oklab, var(--warning) 18%, transparent); }
+  .meter.refused { background: color-mix(in oklab, var(--serious) 18%, transparent); }
+  .meter.unknown { background: color-mix(in oklab, var(--text-muted) 18%, transparent); }
+  .meter .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--good); }
+  .meter.watch .fill { background: var(--warning); }
+  .meter.refused .fill { background: var(--serious); }
+  .meter .tick { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--text-muted); left: 50%; }
+  .meter .tick.one { left: calc(100% - 1px); }
+  .bars { display: grid; grid-template-columns: max-content 1fr max-content; gap: 4px 10px; align-items: center; max-width: 480px; margin: 8px 0; }
+  .bars .bar { height: 10px; border-radius: 2px; background: var(--series-1); min-width: 2px; }
+  .bars .n { font-size: 13px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .card { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+  label { display: flex; flex-direction: column; font-size: 13px; color: var(--text-secondary); gap: 4px; }
+  input, select { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); max-width: 100%; }
+  input { min-width: 16ch; }
+  input:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+  .err { color: var(--serious); }
+  details summary { cursor: pointer; color: var(--text-secondary); }
+  details { margin: 10px 0; }
+  ul.plain { padding-left: 20px; margin: 8px 0; max-width: 80ch; color: var(--text-secondary); }
+  ul.plain li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<main>
+  <p class="crumbs"><a href="../">HAKARI</a> · <a href="../live/">the live board</a> · <a href="../squeeze/">the HIMS weekend replay</a></p>
+  <h1>A live options venue, every fix checked against the bound</h1>
+  <p class="lead">Our own venue on testnet 46630 (built before the hackathon; none of its code is in this repo) sells physically settled 15-minute options and fixes each settlement price once, from a 300-second TWAP of its own hookless Uniswap v4 pool on the official PoolManager. Because every contract on an expiry is an ERC-6909 token with public supply, the exposure settling on that pool's price is readable for this one consumer, and HAKARI's bound can be checked against every fix the venue has made. <b>What this is not:</b> a market. The tokens are mocks, every pool holds one full-range position we seeded, all open interest was written by the venue's own Book and all swaps came from its own adapter. What it shows is the pipeline on a real consumer's contracts, and one result about rate limiters.</p>
+  <div class="notice" id="stub-notice" hidden><p><b>Placeholder data.</b> <span id="stub-text"></span></p></div>
+
+  <div class="hero" aria-live="polite">
+    <div class="tile"><div class="k">Fixes scanned since deploy</div><div class="v" id="fixes-v">…</div><div class="s" id="fixes-s"></div></div>
+    <div class="tile"><div class="k">Fixes with anything at stake</div><div class="v" id="cells-v">…</div><div class="s" id="cells-s"></div></div>
+    <div class="tile"><div class="k">Closest to the line</div><div class="v" id="max-v">…</div><div class="s" id="max-s"></div></div>
+  </div>
+
+  <h2>What the six pools can carry now</h2>
+  <p class="lead">Per pricing pool: the largest settlement its price can safely carry with nobody pushing back (<code>CostModel.maxSafeExposure</code>, <code>arbReversionSeconds = 0</code>), at the binding rung and at the smallest one, next to fee × the pool's quote-side reserve. A settlement at or above the bound would be refused; from half of it the board says watch. The "now" columns are one read per pool of the deployed <code>PushCostLens</code> and the PoolManager's own storage on the public testnet RPC, made when this page loaded; the rest is the collector's last run.</p>
+  <p class="meta" id="progress" aria-live="polite">loading…</p>
+  <div class="tablewrap"><table id="capacity"></table></div>
+  <p class="meta" id="capacity-note"></p>
+
+  <h2>What if a settlement landed on the next fix?</h2>
+  <div class="card">
+    <div class="row">
+      <label>market <select id="wi-market"></select></label>
+      <label>exposure settling on the next fix (USDG) <input id="wi-exposure" type="number" min="0" step="any" inputmode="decimal"></label>
+    </div>
+    <p id="wi-out" aria-live="polite" style="margin:10px 0 0"></p>
+    <p class="meta" id="wi-note" style="margin:6px 0 0"></p>
+  </div>
+
+  <h2>Every fix that had exposure on it</h2>
+  <p class="lead" id="history-lead"></p>
+  <div class="tablewrap"><table id="history"></table></div>
+  <p class="meta" id="history-note"></p>
+
+  <h2>How the venue fixes</h2>
+  <div id="fixstats"></div>
+
+  <details id="check-wrap"><summary>Checks: pool ids, token order, lens against the rebuild</summary><div class="tablewrap"><table id="check"></table></div><p class="meta" id="check-note"></p></details>
+
+  <h2>What you are looking at</h2>
+  <ul class="plain">
+    <li><b>S*</b> is the venue's own fix: a rate-limited ring of a handful of TWAP observations over the last 300 s before expiry. The limiter clips a big atomic push and passes a small push held through the window untouched; on a single full-range position the cost per move is nearly the same at every rung, so the limiter does not raise the safe line above fee × reserve.</li>
+    <li><b>arbReversionSeconds = 0</b> because no third-party swap has been seen on these pools: the bound assumes nobody pushes back, which is the conservative setting, not a measurement.</li>
+    <li>HAKARI <b>discloses</b>; it cannot gate the venue's fix. Nothing in the venue reads the bound, and a fix never reverts. The history above is a replay of what the bound would have said.</li>
+  </ul>
+  <p class="meta" style="margin-top:32px">ETHGlobal Tokyo 2026 · MIT · <a href="https://github.com/vexi-v1/vexi-hakari/tree/main/web/vexi">source</a> · data <a href="baseline.json">baseline.json</a> (<code>npm run vexi</code> in gauge/)</p>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
