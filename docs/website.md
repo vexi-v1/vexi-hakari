@@ -21,6 +21,15 @@ does not prevent language switching. The translation catalog is `website/i18n.mj
 readable alongside the code. The dark presentation uses Vexi's near-black, gray-panel, green and red/pink visual
 palette, with original public-site CSS and system font fallbacks. No private product code or font assets are copied.
 
+## Uniswap mechanism explainer
+
+The bilingual Uniswap section precedes the contract replay. It follows PoolManager state, the oracle hook,
+StabilityBandPricer and the check inside OptionBook.buy. Expandable explanations cover pre-swap observations,
+live slot0 versus geometric TWAP, raw versus truncated series, observation capacity, the optional liquidity
+floor and exact illustrative 400 / 410 / 420 USDG quotes. The section distinguishes option-fill refusal from
+reference-pool swaps, and links to the public implementation and official Uniswap documentation. The existing
+Band lab remains the interactive calculator; recorded evidence and contracts are unchanged.
+
 ## What the visitor can verify
 
 The primary replay follows one continuous `test_WebsiteLifecycle` execution, with the same accounts, wallet and

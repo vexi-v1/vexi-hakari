@@ -614,3 +614,14 @@ private product code or broadcast blockchain transactions.
 The live check found that the old `/web/` entry points returned 404 under the new artifact allowlist. Include
 their redirect pages and point them to the current homepage, retaining query strings and fragments. The
 archived study remains linked as repository source. Verify the redirects after the follow-up deployment.
+
+
+## 2026-09-27 — Abner: explain the Uniswap mechanism
+
+> Explain the Uniswap-related mechanisms.
+
+English translation of the instruction. Work (Codex): add a dedicated English / Traditional Chinese section
+to the public website explaining the v4 pool, Oracle Hook, raw and truncated TWAPs, fixed band, and buy-time
+enforcement. Check claims against the public contracts and official Uniswap documentation; distinguish
+reference-pool swaps from option-fill refusal. Preserve the dark Vexi presentation, update section numbering,
+and keep private product pricing and risk information outside the public site. Commit locally without pushing.

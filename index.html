@@ -14,7 +14,7 @@
   <a class="skip" href="#replay">Skip to the contract replay</a>
   <header class="header wrap">
     <a href="#" class="brand" aria-label="Vexi Hakari home"><img class="brand-logo" src="website/vexi-logo.svg" width="32" height="32" alt=""><span class="brand-label" translate="no">Vexi Hakari</span><span class="brand-note">PUBLIC LAB</span></a>
-    <div class="header-actions"><nav aria-label="Main navigation"><a href="#replay">01 / Replay</a><a href="#lab">02 / Band lab</a><a href="#evidence">03 / Evidence</a><a class="repo-link" href="https://github.com/vexi-v1/vexi-hakari">GitHub ↗</a></nav>
+    <div class="header-actions"><nav aria-label="Main navigation"><a href="#uniswap">01 / Uniswap</a><a href="#replay">02 / Replay</a><a href="#lab">03 / Band lab</a><a href="#evidence">04 / Evidence</a><a class="repo-link" href="https://github.com/vexi-v1/vexi-hakari">GitHub ↗</a></nav>
       <div class="language-switch" role="group" aria-label="Website language"><button type="button" data-language="en" lang="en" translate="no" aria-pressed="true">EN</button><button type="button" data-language="zh-Hant" lang="zh-Hant" translate="no" aria-pressed="false">繁中</button></div>
     </div>
   </header>
@@ -24,7 +24,7 @@
         <p class="eyebrow"><span class="dot"></span> ETHGLOBAL TOKYO 2026 / CONTINUITY</p>
         <h1 id="hero-title">One wallet.<br>Two strategies.<br><span>A band that says no.</span></h1>
         <p class="hero-copy">Keep unfilled option collateral in the maker’s wallet. Share that wallet with spot trading. Let a Uniswap v4 reference narrow — or stop — new quotes.</p>
-        <div class="hero-actions"><a class="button dark" href="#replay">Explore the lifecycle <span>↗</span></a><a href="#evidence" class="text-link">Reproduce the evidence ↓</a></div>
+        <div class="hero-actions"><a class="button dark" href="#uniswap">Understand Uniswap <span>↗</span></a><a href="#replay" class="text-link">Explore the lifecycle ↓</a></div>
       </div>
       <div class="hero-visual" aria-label="Mechanism: a Uniswap v4 reference gates option fills; Aqua connects a maker wallet to the book and guarded SwapVM spot trading.">
         <div class="visual-label"><span>THE PUBLIC MECHANISM</span><span>TSLA / USDG</span></div>
@@ -39,8 +39,50 @@
     <div class="proof-strip wrap"><div><b>4663</b><span>Read-only fork source</span></div><div><b>72,248,228</b><span>Pinned block</span></div><div><b id="proof-count">…</b><span>Executed scenarios</span></div><div><b>0</b><span>Mainnet broadcasts</span></div></div>
     <div class="scope wrap"><span class="tag">RECORDED LOCAL FORK</span><p>Real protocol calls in a local test EVM, with synthetic accounts and market history. This page replays the exported results. It does not connect a wallet or send transactions.</p></div>
 
+
+    <section id="uniswap" class="section uniswap-section wrap" aria-labelledby="uniswap-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / THE UNISWAP MECHANISM</p><h2 id="uniswap-title">From pool price<br>to permission to fill.</h2></div><p>Uniswap v4 supplies the reference.<br>Vexi Hakari turns it into quote rules.</p></div>
+      <p class="uniswap-intro">A tokenized-stock pool can keep trading while its underlying market is closed. Vexi Hakari reads that pool’s price and price history before offering a new option fill. Here is how the public integration works.</p>
+      <ol class="uniswap-flow" aria-label="From the Uniswap pool to an option quote">
+        <li class="uniswap-node pool-node"><span class="tiny">01 / PRICE</span><h3>Uniswap v4 pool</h3><p>The TSLA / USDG reference pool lives in PoolManager. Swaps change its live price; active liquidity describes the depth currently in range.</p><div class="uniswap-output"><code>getSlot0 · getLiquidity</code><span>Live price + active liquidity</span></div></li>
+        <li class="uniswap-node oracle-node"><span class="tiny">02 / HISTORY</span><h3>Oracle Hook</h3><p>HakariOracleHook builds on OpenZeppelin’s oracle. It records raw and truncated tick histories, then exposes observations for a time window.</p><div class="uniswap-output"><code>observe([3600, 0])</code><span>One-hour TWAP center</span></div></li>
+        <li class="uniswap-node band-node"><span class="tiny">03 / QUOTE RULES</span><h3>Stability Band</h3><p>The pricer compares the live price with that center. Approaching either edge raises the option premium and reduces the maximum size of each fill.</p><div class="uniswap-output"><code>StabilityBandPricer.ask</code><span>Premium + per-call size cap</span></div></li>
+      </ol>
+      <div class="uniswap-gate"><div><span class="tiny">ENFORCED ON EVERY BUY</span><h3>The book checks again at execution.</h3><p>OptionBook.buy reads the band-adjusted quote before taking the premium or requesting collateral through Aqua. A failed check reverts the buy.</p></div><div class="uniswap-callpath" aria-label="Option buy checks the band before collateral is pulled"><code>OptionBook.buy</code><span aria-hidden="true">↓</span><code>StabilityBandPricer.ask</code><span aria-hidden="true">↓</span><span>Quote passes → Aqua pulls collateral</span></div></div>
+      <p class="uniswap-boundary"><strong>What pauses?</strong> <span>The band pauses new option fills. The reference pool can still trade: this Oracle Hook records observations and does not apply the option band to Uniswap swaps.</span></p>
+
+      <div class="uniswap-details">
+        <details><summary>Why read both a live price and a TWAP?</summary><div class="uniswap-detail-body">
+          <p>The hook is selected in the PoolKey when a new pool is created. PoolManager calls its enabled callbacks; HakariOracleHook uses afterInitialize and beforeSwap. An existing pool cannot be retrofitted with this hook.</p>
+          <p>The default center is a one-hour time-weighted average tick, converted to a geometric average price. The default live reference comes directly from the pool’s slot0.</p>
+          <ol><li><code>afterInitialize</code><span>Start the pool’s observation history.</span></li><li><code>beforeSwap</code><span>Record the pre-swap tick, at most once per block timestamp.</span></li><li><code>swap</code><span>Update the live pool price. A subsequent option buy reads it immediately.</span></li></ol>
+          <p>A push and reversal within one transaction adds no elapsed time at the pushed price to the TWAP. An option buy between those swaps still sees the pushed slot0 price and can refuse. Setting nowWindow above zero uses a short TWAP for the live reference instead, with a slower response.</p>
+        </div></details>
+        <details><summary>What do raw and truncated mean?</summary><div class="uniswap-detail-body">
+          <p>A tick expresses price on a logarithmic scale. The raw series follows the observed tick; the truncated series limits each observation’s tick change using the hook’s configured MAX_ABS_TICK_DELTA.</p>
+          <p>The band uses the raw TWAP as its center and checks it against the truncated TWAP. If their price difference exceeds the configured half-width, it refuses with SeriesDisagree. Truncation changes the oracle series, not the pool’s traded price.</p>
+          <p>The history is a finite observation ring. If the requested window is too old or history is too short, the band refuses with ReferenceUnavailable. Increasing observation capacity helps retain a longer history; it does not create past observations.</p>
+          <p>ReferenceTooThin refuses when active liquidity is below minLiquidity. The default threshold is zero; a deployment must choose a nonzero floor to use that filter.</p>
+        </div></details>
+        <details><summary>How does a 5% band change the quote?</summary><div class="uniswap-detail-body">
+          <p>For a 400 USDG center, a fixed 5% half-width gives edges at 380 and 420. With an 8 USDG base premium, a 20% maximum extra and 50 contracts per call:</p>
+          <div class="uniswap-examples"><div><strong>400 USDG</strong><span>At the center</span><b>8 USDG · 50</b></div><div><strong>410 USDG</strong><span>Halfway to the upper edge</span><b>8.4 USDG · 25</b></div><div><strong>420 USDG</strong><span>At the edge: refused</span><b>— · 0</b></div></div>
+          <p class="note">Each result shows premium per contract and maximum contracts per call. These are exact illustrative inputs, independent of the recorded fork. Below the center, the same distance produces the same taper.</p>
+          <p>The size cap rounds down, so quoting can stop just inside the edge when fewer than one whole contract remains. OutsideBand also refuses beyond the edge; SizeCapped refuses a requested quantity above an otherwise open band’s cap.</p>
+          <a class="text-link" href="#lab">Move the price in the Band lab →</a>
+        </div></details>
+      </div>
+
+      <div class="uniswap-limits"><h3>Three checks beyond the rolling center.</h3><div class="uniswap-limits-grid">
+        <div><span class="tiny">QUOTE VALIDITY</span><p>A sustained move can become the new TWAP center. The quote’s separate deadline and optional original-price anchor still apply; only the maker can renew the terms.</p></div>
+        <div><span class="tiny">FILL CAPACITY</span><p>The cap applies per call. Repeated buys can exceed one call’s cap, while remaining order quantity and deliverable collateral still limit execution. An open band alone does not guarantee a fill.</p></div>
+        <div><span class="tiny">REFERENCE QUALITY</span><p>This is a configurable pool-price rule. A fixed 5% band does not establish a fair stock value or a loss guarantee. Experimental expiry settlement uses a separate window-selection policy.</p></div>
+      </div></div>
+      <div class="uniswap-sources"><span class="tiny">FOLLOW THE IMPLEMENTATION</span><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/src/HakariOracleHook.sol">Oracle Hook source ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/aqua/src/band/StabilityBandPricer.sol">Band pricer source ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/band.md">Band mechanics &amp; limits ↗</a><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/settlement.md">Settlement policy ↗</a><a href="https://developers.uniswap.org/docs/protocols/v4/concepts/hooks">Uniswap v4 Hooks docs ↗</a><a href="https://developers.uniswap.org/docs/protocols/v4/concepts/poolmanager">PoolManager docs ↗</a></div>
+    </section>
+
     <section id="replay" class="section wrap" aria-labelledby="replay-title">
-      <div class="section-heading"><div><p class="eyebrow">01 / FOLLOW THE FUNDS</p><h2 id="replay-title">From promise to settlement.</h2></div><p>The same maker. The same wallet.<br>One continuous, asserted contract test.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">02 / FOLLOW THE FUNDS</p><h2 id="replay-title">From promise to settlement.</h2></div><p>The same maker. The same wallet.<br>One continuous, asserted contract test.</p></div>
       <p id="load-status" role="status">Loading recorded evidence…</p>
       <div class="replay-layout" id="replay-content" hidden>
         <aside><p class="tiny sidebar-label">LIFECYCLE STEPS</p><ol class="steps" id="steps" aria-label="Choose a lifecycle step"></ol></aside>
@@ -63,7 +105,7 @@
     </section>
 
     <section id="lab" class="lab-section" aria-labelledby="lab-title"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">02 / CHANGE THE REFERENCE</p><h2 id="lab-title">Move the price.<br>Watch the quote respond.</h2></div><p><span class="tag">ILLUSTRATIVE CALCULATOR</span><br>Independent of the recorded fork.<br>No contract calls are made here.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">03 / CHANGE THE REFERENCE</p><h2 id="lab-title">Move the price.<br>Watch the quote respond.</h2></div><p><span class="tag">ILLUSTRATIVE CALCULATOR</span><br>Independent of the recorded fork.<br>No contract calls are made here.</p></div>
       <div class="lab-grid">
         <div class="lab-controls"><p>Fixed center: <strong>400 USDG</strong> · Half-width: <strong>5%</strong></p><label for="deviation">Live reference vs. TWAP center <output id="deviation-value" for="deviation">+2.5%</output></label><input type="range" id="deviation" min="-700" max="700" step="10" value="250"><div class="bar-labels"><span>−7%</span><span>0%</span><span>+7%</span></div>
           <div class="presets" aria-label="Reference price presets"><button data-deviation="0">Center</button><button data-deviation="250">Halfway</button><button data-deviation="510">Outside</button></div>
@@ -85,7 +127,7 @@
     </section>
 
     <section id="evidence" class="section evidence-section wrap" aria-labelledby="evidence-title">
-      <div class="section-heading"><div><p class="eyebrow">03 / VERIFY IT YOURSELF</p><h2 id="evidence-title">A path back to the contracts.</h2></div><span class="tag">SOURCE → TEST → JSON → PAGE</span></div>
+      <div class="section-heading"><div><p class="eyebrow">04 / VERIFY IT YOURSELF</p><h2 id="evidence-title">A path back to the contracts.</h2></div><span class="tag">SOURCE → TEST → JSON → PAGE</span></div>
       <div class="evidence-grid"><div><p>Rebuild the recorded data from the pinned fork. The website itself is plain HTML, CSS and JavaScript; viewing it needs no RPC connection, API key or backend.</p><div class="command"><code>python3 scripts/website-evidence.py</code><button id="copy-command" aria-label="Copy evidence generation command">Copy</button></div><p class="note">Requires Python 3, Foundry, initialized pinned submodules and an archive RPC. First compilation and fork reads take time.</p><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/website.md" id="reproduction-link" class="text-link">Full reproduction & deployment instructions ↗</a><div class="downloads"><a href="website/evidence/demo.json" download>Evidence JSON ↓</a><a href="website/evidence/trace.txt" download>Foundry call trace ↓</a><a href="website/evidence/source.zip" download>Exact source inputs ↓</a><a href="website/evidence/source-files.json" download>SHA-256 manifest ↓</a></div></div>
       <dl id="provenance" class="provenance"><dt>Evidence</dt><dd>Loading…</dd></dl></div>
       <div class="limitations"><h3>What this demonstration establishes</h3><p>Aqua pulls exact collateral when an option fills. A guarded SwapVM strategy respects this writer’s unfilled promises. The book enforces the v4-based quote policy. These are local-fork integration results, with test accounts funded using Foundry and a synthetic hooked pool on the canonical manager.</p><p>The maker can still withdraw assets or revoke approval; a later fill then refuses. The guard only constrains strategies that use it. Experimental settlement can accept a later price or refund pooled premiums after no accepted window. It does not establish fair expiry value or production readiness.</p><a href="https://github.com/vexi-v1/vexi-hakari/blob/main/docs/settlement.md">Read the settlement tradeoffs ↗</a></div>
