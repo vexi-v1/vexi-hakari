@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: LicenseRef-Degensoft-SwapVM-1.1
 pragma solidity 0.8.30;
 
-/// @custom:license-url https://github.com/1inch/swap-vm/blob/main/LICENSES/SwapVM-1.1.txt
+/// @custom:license-url https://github.com/1inch/swap-vm/blob/v1.0.2/LICENSES/SwapVM-1.1.txt (copy: LICENSES/SwapVM-1.1.txt)
 /// @dev Test helper that derives from the WriterOpcodes table to build programs. Powered by SwapVM — © Degensoft Ltd 2025.
+///      Written 2026-09-25 JST; last changed 2026-09-27 JST.
 
 import { XYCSwap } from "@1inch/swap-vm/src/instructions/XYCSwap.sol";
 import { Controls, ControlsArgsBuilder } from "@1inch/swap-vm/src/instructions/Controls.sol";

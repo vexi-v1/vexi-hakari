@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: LicenseRef-Degensoft-SwapVM-1.1
 pragma solidity 0.8.30;
 
-/// @custom:license-url https://github.com/1inch/swap-vm/blob/main/LICENSES/SwapVM-1.1.txt
+/// @custom:license-url https://github.com/1inch/swap-vm/blob/v1.0.2/LICENSES/SwapVM-1.1.txt (copy: LICENSES/SwapVM-1.1.txt)
 /// @notice A custom SwapVM instruction written for the Vexi × HAKARI entry at ETHGlobal Tokyo 2026.
 ///         Powered by SwapVM — © Degensoft Ltd 2025.
+/// @dev A new instruction for SwapVM's opcode table, written 2026-09-25 JST; last changed 2026-09-25 JST.
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";

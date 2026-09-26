@@ -26,6 +26,26 @@ forge test                                  # fork tests pin block 72,248,228
 forge test --match-path "test/{FixedPremium,GuardProperties,BookRefund,StabilityBand,StabilityTwapSettle}.t.sol"   # no fork needed
 ```
 
+## Build and deploy the SwapVM extensions
+
+`src/swapvm/` modifies 1inch SwapVM and is under its license (LicenseRef-Degensoft-SwapVM-1.1,
+[copy](../LICENSES/SwapVM-1.1.txt)), which asks for build and deployment instructions (its §3.1 E). `forge build`
+builds them. The tests deploy them on a fork of 4663; to deploy them yourself, for example on a local anvil (the key
+never goes on the command line: use an unlocked anvil account, or `--account <keystore>`):
+
+```bash
+anvil --fork-url "$RH_MAINNET_RPC" --fork-block-number 72248228    # or a plain `anvil`: the constructors need no state
+forge create src/swapvm/ExposureGuardExtruction.sol:ExposureGuardExtruction \
+  --rpc-url http://127.0.0.1:8545 --unlocked --from <address> --broadcast
+forge create src/swapvm/WriterSwapVMRouter.sol:WriterSwapVMRouter \
+  --rpc-url http://127.0.0.1:8545 --unlocked --from <address> --broadcast \
+  --constructor-args 0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a 0x0000000000000000000000000000000000000000 <owner> "Writer SwapVM" "1.0.2"
+```
+
+The router's arguments are canonical Aqua on 4663, no WETH, the owner who may rescue funds, and the EIP-712 name and
+version. `ExposureGuardExtruction` has no constructor arguments: a program on the canonical router names it through
+the `Extruction` opcode (`test/ExposureGuardCanonical.t.sol`). Powered by SwapVM — © Degensoft Ltd 2025.
+
 ## Deploy the band on testnet 46630
 
 The band and the settlement source read the AAPL/USDG pool whose hook is HAKARI's

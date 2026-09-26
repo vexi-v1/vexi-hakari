@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: LicenseRef-Degensoft-SwapVM-1.1
 pragma solidity 0.8.30;
 
-/// @custom:license-url https://github.com/1inch/swap-vm/blob/main/LICENSES/SwapVM-1.1.txt
+/// @custom:license-url https://github.com/1inch/swap-vm/blob/v1.0.2/LICENSES/SwapVM-1.1.txt (copy: LICENSES/SwapVM-1.1.txt)
+/// @custom:copyright © 2025 Degensoft Ltd (AquaSwapVMRouter, which WriterSwapVMRouter adapts)
 /// @notice A SwapVM router subclass written for the Vexi × HAKARI entry at ETHGlobal Tokyo 2026.
 ///         Powered by SwapVM — © Degensoft Ltd 2025.
+/// @dev Adapted from `src/routers/AquaSwapVMRouter.sol` of 1inch swap-vm v1.0.2: the same bases, constructor and
+///      `_instructions`. Changes, 2026-09-25 JST: `AquaOpcodes` replaced by `WriterOpcodes`, the AquaOpcodes table with
+///      `ExposureGuard` appended in the first free slot; `exposureGuardOpcode()` added. Last changed 2026-09-27 JST.
 
 import { Simulator } from "@1inch/solidity-utils/contracts/mixins/Simulator.sol";
 
