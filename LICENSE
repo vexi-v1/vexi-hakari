@@ -2,19 +2,20 @@ vexi-hakari is licensed file by file. A Solidity file's SPDX header is authorita
 
 MIT (LICENSES/MIT.txt), unless listed below:
   src/, test/, script/ (HakariOracleHook, its tests and its deploy script)
+  aqua/src/aqua/ (AquaWriter: calls 1inch Aqua through its published interface only)
+  aqua/src/book/ (OptionBook, ICollateralSource, IPremium, IQuoteReference, FixedPremium)
   aqua/src/band/ (the stability band, the hook-TWAP settlement, BandMath)
-  aqua/src/book/IPremium.sol, aqua/src/book/IQuoteReference.sol, aqua/src/book/FixedPremium.sol
   aqua/src/price/
   aqua/test/ and aqua/script/, except the SwapVM-derived helpers below
   docs/, archive/, and everything else
 
-BUSL-1.1 (LICENSES/BUSL-1.1.txt; the Change License is MIT, from 2028-09-27):
-  aqua/src/aqua/AquaWriter.sol
-  aqua/src/book/OptionBook.sol, aqua/src/book/ICollateralSource.sol
-
-LicenseRef-Degensoft-SwapVM-1.1 (aqua/lib/swap-vm/LICENSES/SwapVM-1.1.txt), as extensions of 1inch SwapVM:
+LicenseRef-Degensoft-SwapVM-1.1 (LICENSES/SwapVM-1.1.txt, copied byte for byte from 1inch swap-vm v1.0.2), as
+modifications of 1inch SwapVM, which that license requires to carry it (its §3.1 A):
   aqua/src/swapvm/
   aqua/test/helpers/AquaPrograms.sol, WriterPrograms.sol, OrderBuilders.sol
-  Powered by SwapVM — © Degensoft Ltd 2025. Uses Aqua — © Degensoft Ltd 2025 (called through its published ABI).
+  Powered by SwapVM — © Degensoft Ltd 2025.
 
-lib/ and aqua/lib/: each dependency under its own license.
+Not modified and not copied here: 1inch Aqua (LicenseRef-Degensoft-Aqua-Source-1.1, LICENSES/Aqua-Source-1.1.txt)
+is only called through its published interface. Aqua — © Degensoft Ltd 2025.
+
+lib/ and aqua/lib/: git submodules, each dependency under its own license; see THIRD_PARTY_NOTICES.md.

@@ -9,7 +9,7 @@ previous study when checked anonymously; the current integration must be publish
 | Priority | Finding | Evidence / action to close it |
 |---|---|---|
 | P0 | Public repository does not yet contain this entry | GitHub's unauthenticated tree API returned `main = aefa9236a1302ace3e766266eb44a27aaa8a8fbc`, with no `aqua/`, at about 04:22 JST. Local work is on `tk-137-aqua-band-slice` with uncommitted changes. Publish the reviewed integration and verify the submitted ref anonymously; preferably make it the default branch. A local passing suite is not evidence that judges can access that code. |
-| P0 | Open-source eligibility is unresolved | `AquaWriter.sol`, `OptionBook.sol`, and `ICollateralSource.sol` are BUSL-1.1 with no additional use grant until 2028-09-27. The event requires new Continuity work to remain open source; Uniswap also requires open-source code. Ask the owners to approve an appropriate open-source license for these team-owned files, or obtain the organizers' explicit acceptance of this mixed-license scope. Do not represent public source availability as resolved eligibility. |
+| Done | Open-source eligibility | `AquaWriter.sol`, `OptionBook.sol` and `ICollateralSource.sol` are MIT (were BUSL-1.1). ETHGlobal requires the new parts of a Continuity entry to remain open source, and neither 1inch prize nor 1inch's licenses ask for BUSL; the SwapVM extensions keep LicenseRef-Degensoft-SwapVM-1.1, which that license requires. See `LICENSE` and `THIRD_PARTY_NOTICES.md`. |
 | P0 | No Uniswap form receipt is recorded | Having `FEEDBACK.md` does not complete the separate Developer Feedback Form. Use [the prepared answers](uniswap-feedback-draft.md), include the public `FEEDBACK.md` URL, submit with the actual participant's details, and retain confirmation. |
 | P0 | Dashboard completion and partner selection are unverified | The supplied `/events/tokyo2026/project` link redirects to sign-in in the review browser. Verify the actual title, descriptions, repository revision, selected Continuity track, both partner prizes and final submitted status. The link alone is not a submission receipt. |
 | P1 | Transfer demonstration needs to be presented | [demo.md](demo.md) and `bash scripts/judge-demo.sh` now provide reproducible call traces. Record or present the successful ERC-20 transfers, `Pulled`/`Pushed`, the SwapVM fill and the band's refusal. A test count or archived website by itself is insufficient evidence for this requirement. |
@@ -60,18 +60,23 @@ Checked against the live pages on 2026-09-27:
 | “Settlement refusal is automatically safer.” | A caller must retry, deferred acceptance selects a later price, and a genuine gap can cause premium refunds instead of exercise. Explain this as an experimental adapter, not the central production claim. |
 | “It is already a usable deployed options product.” | The public deliverable is a contract integration with tests and scripts. The testnet hook/pool exist; the full public stack and a current trading UI are not deployed from this repository. Private product deployments are not evidence for this public code. |
 
-## Licensing decision to resolve with the owners
+## Licensing decision (resolved 2026-09-27)
 
-The team-owned files requiring a decision are:
+The three team-owned files that were BUSL-1.1 are MIT: `aqua/src/aqua/AquaWriter.sol`, `aqua/src/book/OptionBook.sol`
+and `aqua/src/book/ICollateralSource.sol`. The rules that decided it:
 
-1. `aqua/src/aqua/AquaWriter.sol`
-2. `aqua/src/book/OptionBook.sol`
-3. `aqua/src/book/ICollateralSource.sol`
+- ETHGlobal, Rules on Pre-existing Work: "All new parts of extending an existing project must remain open source."
+  These files were written at the event; BUSL-1.1 says of itself that it is not an open-source license.
+- The 1inch prize texts set no license. 1inch's own licenses reach only code derived from Aqua or SwapVM: the SwapVM
+  extensions must carry LicenseRef-Degensoft-SwapVM-1.1 (SwapVM-1.1 §3.1 A), and independent code that only calls
+  Aqua is not subject to Aqua's copyleft (Aqua-Source-1.1 §3.3). `AquaWriter` only calls Aqua through `IAqua`;
+  `OptionBook` and `ICollateralSource` import nothing from 1inch.
+- Uniswap asks for a public repository with open-source code.
 
-If their copyright owners approve MIT, update the three SPDX headers, the root license map and README license
-paragraph together. Keep upstream licenses and SwapVM-derived notices intact. No license change was made in this
-review. [MariaDB's BSL explanation](https://mariadb.com/bsl-faq-mariadb/) distinguishes present source availability
-from open-source status after the change date; sponsor acceptance of the current combination is not established.
+Upstream licenses stay intact: [LICENSES/SwapVM-1.1.txt](../LICENSES/SwapVM-1.1.txt) and
+[LICENSES/Aqua-Source-1.1.txt](../LICENSES/Aqua-Source-1.1.txt) are byte-for-byte copies of the pinned texts, and
+[THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) lists every dependency. Commercial use of Aqua or SwapVM still
+needs a commercial license from Degensoft, whatever license our own files carry.
 
 ## Verification record
 
@@ -95,7 +100,7 @@ were present and are included in these results; this review did not author those
 
 ## Final handoff checklist
 
-- [ ] Owners resolve the three BUSL file licenses or obtain an explicit eligibility answer.
+- [x] Owners resolve the three BUSL file licenses: MIT (see "Licensing decision").
 - [ ] Publish the complete reviewed revision, preserving real history; verify a fresh recursive clone.
 - [ ] Ensure README code links and the feedback link open without a signed-in GitHub session.
 - [ ] Rehearse the demo; preserve visible transfer and refusal evidence. Add the optional recording URL.

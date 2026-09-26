@@ -153,7 +153,8 @@ every AI session follows are in [AGENTS.md](AGENTS.md).
 
 ## License
 
-File by file; [LICENSE](LICENSE) is the map and each Solidity file's SPDX header is authoritative. MIT by default;
-the options book and the Aqua writer under BUSL-1.1 (MIT from 2028-09-27); the SwapVM extensions under 1inch's
-SwapVM license. Powered by SwapVM — © Degensoft Ltd 2025. Uses Aqua — © Degensoft Ltd 2025, called through its
-published ABI only.
+File by file; [LICENSE](LICENSE) is the map and each Solidity file's SPDX header is authoritative. Everything written
+for this entry is MIT, except the SwapVM extensions (`aqua/src/swapvm/` and three test helpers), which 1inch's SwapVM
+license requires to carry that license ([LICENSES/SwapVM-1.1.txt](LICENSES/SwapVM-1.1.txt)). Dependencies:
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Powered by SwapVM — © Degensoft Ltd 2025. Uses Aqua — © Degensoft
+Ltd 2025, called through its published ABI only.
