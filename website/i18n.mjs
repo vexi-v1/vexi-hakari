@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 // English is the source locale. Contract identifiers and evidence payloads stay verbatim.
 export const translations = {
-  'HAKARI — One wallet. Two strategies.': 'HAKARI — 一個錢包，兩種策略。',
-  "Replay HAKARI's options lifecycle: one wallet, Aqua and SwapVM strategies, and a Uniswap v4 stability band. Reproducible local-fork evidence.": '回放 HAKARI 的選擇權完整流程：同一個錢包、Aqua 與 SwapVM 策略，以及 Uniswap v4 穩定價格帶。所有證據皆可在本機分叉環境重現。',
+  "Replay Vexi Hakari's options lifecycle: one wallet, Aqua and SwapVM strategies, and a Uniswap v4 stability band. Reproducible local-fork evidence.": '回放 Vexi Hakari 的選擇權完整流程：同一個錢包、Aqua 與 SwapVM 策略，以及 Uniswap v4 穩定價格帶。所有證據皆可在本機分叉環境重現。',
   'Skip to the contract replay': '跳至合約流程回放',
-  'HAKARI home': 'HAKARI 首頁',
-  'VEXI / PUBLIC LAB': 'VEXI / 公開實驗室',
+  'Vexi Hakari home': 'Vexi Hakari 首頁',
+  'PUBLIC LAB': '公開實驗室',
   'Main navigation': '主選單',
   'Website language': '網站語言',
   '01 / Replay': '01 / 流程回放',

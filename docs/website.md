@@ -7,6 +7,9 @@ Pages. The first study is linked separately in the footer through its archived s
 
 ## Languages and visual style
 
+The website is titled **Vexi Hakari** in both languages. The header, footer and favicon use the existing Vexi
+logo, copied unchanged as `website/vexi-logo.svg` at the owner's explicit request.
+
 The interface is available in English and Traditional Chinese. The persistent header's **EN / 繁中** control
 switches all presentation copy, including the lifecycle, calculator explanations, adverse scenarios, accessibility
 labels and load errors. It preserves the selected step, case and calculator inputs. Contract identifiers,

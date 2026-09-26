@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/* Public HAKARI styling, using the Vexi brand palette. No product UI code or assets are imported. */
+/* Public Vexi Hakari styling. The Vexi logo is reused at the owner's request; product UI code is not imported. */
 :root {
   --paper:#08080a;
   --ink:#fafafa;
@@ -121,16 +121,6 @@ button:hover:not(:disabled) {
   font-size:22px;
   font-weight:800;
   letter-spacing:2px
-}
-.brand-mark {
-  border:2px solid var(--ink);
-  width:28px;
-  height:29px;
-  display:grid;
-  place-items:center;
-  font-size:24px;
-  line-height:1;
-  letter-spacing:0
 }
 .brand-note {
   font-size:9px;
@@ -1421,11 +1411,6 @@ input[type=checkbox] {
   font-weight:650;
   letter-spacing:-.5px
 }
-.brand-mark {
-  border-color:var(--green);
-  color:var(--green);
-  font-weight:600
-}
 .brand-note {
   color:var(--muted);
   font-size:8px;
@@ -1792,11 +1777,6 @@ html[lang="zh-Hant"] .hero-copy {
   .brand-note {
     display:none
   }
-  .brand-mark {
-    width:24px;
-    height:26px;
-    font-size:21px
-  }
   .repo-link {
     font-size:11px;
     padding:9px 10px
@@ -1848,4 +1828,19 @@ html[lang="zh-Hant"] .hero-copy {
   .section-heading>p {
     max-width:100%
   }
+}
+
+/* Shared Vexi mark, with the public demonstration's full name. */
+.brand-logo {
+  display: block;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+}
+.brand-label {
+  white-space: nowrap;
+}
+@media (max-width: 740px) {
+  .header .brand { font-size: 17px; gap: 6px; }
+  .header .brand-logo { width: 26px; height: 26px; }
 }

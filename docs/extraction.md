@@ -25,6 +25,9 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 | Tests | [`aqua/test/`](../aqua/test/) | Ported to the trimmed contracts; the band's and the settlement's tests written here |
 | The hooked testnet pool | [`aqua/script/HookedPool.s.sol`](../aqua/script/HookedPool.s.sol), [`aqua/deployments/46630-hooked-pool.json`](../aqua/deployments/46630-hooked-pool.json) | The script that made the AAPL/USDG pool with HAKARI's hook on 46630, and its record |
 
+The website additionally reuses the existing Vexi logo as [`website/vexi-logo.svg`](../website/vexi-logo.svg),
+unchanged, at the owner's explicit request on 2026-09-27. This branding asset does not include product UI code.
+
 ## Written here
 
 | Part | Why |

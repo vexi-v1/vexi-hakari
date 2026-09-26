@@ -565,3 +565,12 @@ a persistent language selector and shareable locale URLs. Match the existing Vex
 new public-site CSS; no private product code or assets are copied. Preserve the recorded evidence and the selected
 replay/calculator state across language switches, and verify both languages at desktop and mobile sizes. The
 explicit bilingual request overrides this repository's default English-only language convention for the website.
+
+
+## 2026-09-27 — Abner: Vexi Hakari name and Vexi logo
+
+> The title is Vexi Hakari. Use the Vexi logo.
+
+English translation of the instruction. Work (Codex): use the exact Vexi Hakari name for the browser title and
+site branding in both languages. Reuse the existing Vexi SVG mark unchanged for the header, footer and favicon,
+explicitly authorized by this request. Add this brand asset to the public extraction inventory and Pages allowlist.

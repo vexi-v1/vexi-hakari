@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Vexi">
+  <rect width="64" height="64" rx="14" fill="#141418"/>
+  <polygon points="10.5,16 19.6,16 31.15,42.4 31.15,49.8" fill="#FF007A"/>
+  <polygon points="53.5,16 44.4,16 32.85,42.4 32.85,49.8" fill="#37D67A"/>
+  <circle cx="32" cy="47.2" r="4.2" fill="#141418"/>
+  <path d="M32 43.2 A4 4 0 0 0 32 51.2" fill="#FF007A"/>
+  <path d="M32 43.2 A4 4 0 0 1 32 51.2" fill="#37D67A"/>
+</svg>

@@ -209,7 +209,7 @@ function renderLoadError() {
 }
 function applyLanguage() {
   document.documentElement.lang = language;
-  document.title = t('HAKARI — One wallet. Two strategies.');
+  document.title = 'Vexi Hakari';
   for (const {node, original, message} of staticText) {
     if (node.isConnected) node.textContent = original.replace(message, t(message));
   }
