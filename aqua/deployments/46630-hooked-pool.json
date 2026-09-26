@@ -1,0 +1,100 @@
+{
+  "note": "The AAPL/USDG Uniswap v4 pool on Robinhood Chain testnet 46630 whose hook is HAKARI's HakariOracleHook. The operator's own stand-in on a testnet, not an independent market. Created 2026-09-27 01:53 JST with PositionManager and Permit2; the band and the settlement source in this directory read it.",
+  "chainId": 46630,
+  "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+  "positionManager": "0x58daec3116aae6D93017bAAea7749052E8a04fA7",
+  "hakariOracleHook": "0x3b58D774cE351227B24A91103b20bA4fc068D080",
+  "poolId": "0x3e8b60d6f58a9f894f1b76f3a8239814f0186b78e2990801773a55fd34e43fbe",
+  "currency0": "0xEC654A00FBf55334f70B867bbbB2502406deba6B",
+  "currency0Symbol": "AAPL (testnet, 18 decimals)",
+  "currency1": "0xf46f82B1d1c341e6680798fE0a52285004112351",
+  "currency1Symbol": "USDG (testnet, 6 decimals)",
+  "fee": 3000,
+  "tickSpacing": 60,
+  "openingPriceWad": "624000000000000000000",
+  "positionTokenId": 10475,
+  "observationCardinalityNext": 128,
+  "swapRouter": "0xa5E02eAB263f7ceAE8259651138c158e15062f66",
+  "poolInitializedAt": 1790441603,
+  "poolInitializedBlock": 124716744,
+  "txs": [
+    {
+      "step": "initializePool",
+      "hash": "0xb8741b881a6294e56b1d24badf7a9398af03c14b1e2304cd7ffb5d6c1ec278ad",
+      "gas": 116390,
+      "status": 1
+    },
+    {
+      "step": "mint AAPL",
+      "hash": "0xfb902d4c3afd9cb8880d4e9ce49269cfd9b5489df1ed5548b417cc9c7f5445a0",
+      "gas": 39895,
+      "status": 1
+    },
+    {
+      "step": "approve AAPL to Permit2",
+      "hash": "0xb428769ccd03c9f1d876c01a4fdfbb1ad1e4953f72c5eb3e71d0ac0bda2b94ac",
+      "gas": 32238,
+      "status": 1
+    },
+    {
+      "step": "Permit2 approve AAPL",
+      "hash": "0x3739d329ddce7ce4062af78b130a8851f545da66c44371f0c9248624425f1e89",
+      "gas": 38785,
+      "status": 1
+    },
+    {
+      "step": "mint USDG",
+      "hash": "0x9125e0488b88f56848e183fd06b1e1ee34e05168eccda6577d03ab909e555127",
+      "gas": 39880,
+      "status": 1
+    },
+    {
+      "step": "approve USDG to Permit2",
+      "hash": "0xfd1f04c455c68b3ed1594c4a20b5cb0a847a17655392daa8757ec184973b88f3",
+      "gas": 32271,
+      "status": 1
+    },
+    {
+      "step": "Permit2 approve USDG",
+      "hash": "0x858a874cd36c11821558c058bc622c0eb91e2e1f24b55948c0906a18219972e2",
+      "gas": 38764,
+      "status": 1
+    },
+    {
+      "step": "modifyLiquidities (full range)",
+      "hash": "0x7585c5b7fcbf3e64e6e1268d30aa047c63e444e30f904f7c2964a6970cd088d7",
+      "gas": 403501,
+      "status": 1
+    },
+    {
+      "step": "increaseObservationCardinalityNext(128)",
+      "hash": "0xd26f2d5916e3d85d506a750f716312c697ea8f6ec0fb971c5e960d42d3fe4868",
+      "gas": 2862460,
+      "status": 1
+    },
+    {
+      "step": "approve AAPL to swap router",
+      "hash": "0x67ebd7cd60d2c2b3e647ab0e214024eb97adb68f9c68b379b70ab11b5ea84ff1",
+      "gas": 52264,
+      "status": 1
+    },
+    {
+      "step": "approve USDG to swap router",
+      "hash": "0x2a8134d4c1ccbbc348272bb5d563e6929c531c8453cf8c79a53136e6c4d63d73",
+      "gas": 52264,
+      "status": 1
+    },
+    {
+      "step": "swap 0.01 AAPL in",
+      "hash": "0x05c4656223492ed6ea73b9fe5d299b6eb3b165cefe13c946c67715b90c9e43db",
+      "gas": 166969,
+      "status": 1
+    },
+    {
+      "step": "swap 6.24 USDG in",
+      "hash": "0xc4ef81291b92f553143081b1f7c05f255d77c05cda6ec2dfddc3d83047fad2d7",
+      "gas": 167851,
+      "status": 1
+    }
+  ]
+}
