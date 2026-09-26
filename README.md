@@ -11,7 +11,8 @@ bound on any existing pool, hook or no hook, which on Robinhood Chain is 26 of t
 **Try it:** [29 stock pools right now vs Friday's close](https://vexi-v1.github.io/vexi-hakari/web/live/) (live, every minute) ·
 [measure any pool live](https://vexi-v1.github.io/vexi-hakari/web/) (read-only, nothing deployed) ·
 [the HIMS weekend, minute by minute](https://vexi-v1.github.io/vexi-hakari/web/squeeze/) ·
-[a live options venue, every fix checked](https://vexi-v1.github.io/vexi-hakari/web/vexi/) (our own, testnet 46630)\
+[a live options venue, every fix checked](https://vexi-v1.github.io/vexi-hakari/web/vexi/) (our own, testnet 46630) ·
+[who else settles on a pool's price on mainnet](#who-else-settles-on-a-pools-price-on-4663-today) (Morpho, Panoptic: read, not deployed)\
 **Verify it:** [the on-chain refusal](https://explorer.testnet.chain.robinhood.com/tx/0xb2ca68bf6b448ffabe9eb8732524f21d6bd463477eb416331249ee591ac0ee88?tab=logs) ·
 [verified `SafeSettle`](https://explorer.testnet.chain.robinhood.com/address/0xf360b8ebe3A68e8029308A8CAa76E867B0F02c84?tab=contract) ·
 [the Uniswap code, line by line](#where-the-uniswap-integration-is)
@@ -326,6 +327,69 @@ hookless pools (the oracle-hook pricing pool its spec decided on is not deployed
 is 0 here because no third-party swap has been seen on these pools: conservative, not measured. And HAKARI discloses;
 nothing in the venue reads the bound, and a fix never reverts. Every fix so far passes because the open interest is tiny.
 
+## Who else settles on a pool's price on 4663 today
+
+Our own venue is on testnet. On mainnet 4663 two third-party protocols already settle on v4 pool prices, and both can
+be read from their own contracts: `npm run consumers` ([`gauge/src/consumers.ts`](gauge/src/consumers.ts), output
+[`gauge/data/consumers.json`](gauge/data/consumers.json), block 73,168,332, 2026-09-26 14:52 UTC, the mint window
+closed). Candidates came from DefiLlama's Robinhood Chain listing and its adapters (addresses only, secondary); every
+number below is read from the chain. Nothing was deployed and nothing broadcast.
+
+**Morpho Blue** (`0x9D53d5E3bd5E8d4Cbfa6DB1ca238AEA02E651010`; 285 markets from its `CreateMarket` logs, 276 distinct
+oracles). Each oracle's runtime code was searched for what it calls: 185 carry Chainlink's `latestRoundData`, 86 carry
+no selector we know (exchange-rate or fixed-price oracles), 12 carry Uniswap v3's `observe` (a TWAP; 5 of them next to
+Chainlink), and **2 carry the v4 PoolManager's address and `extsload`**: they read the pool's own storage, `slot0`, the
+live spot price with no averaging. Both price the same collateral, the memecoin NOTHING, from the USDG/NOTHING v4
+pool `0x75a59aee…1656` (fee 0.9 %, spacing 90, hook `0xB1A660B8…0044`, initialized 2026-08-18): the oracle's `price()`
+equals the pool's `slot0` to six figures. One of the two is a market Longbow lists (LLTV 39 %, created 2026-09-01):
+226.83 USDG supplied, 123.87 borrowed. The money reads Chainlink: of 512.2M USDG supplied across the USDG-loan
+markets (452.9M borrowed), the 14 Uniswap-priced markets hold 28,725 USDG, and Longbow's 55 markets (1.26M USDG
+supplied, 1.15M borrowed) are 52 Chainlink, 2 unknown, 1 v4 spot. [A write-up on
+Longbow](https://bakas.media/defi/rwa-projects-robinhood-chain/) says its feed-less markets "fall back to a
+manipulation-resistant Uniswap TWAP" (secondary); the bytecode of the one v4-priced market reads spot.
+
+**Panoptic V2** (options on v3 and v4 pools; factories at the same addresses as on Ethereum,
+`0x0000000000000c51d0f8cf4bd9adE7191372a625` for v4). Its first pool on 4663, 2026-09-14 15:07 UTC, is on **SPY/USDG
+fee 0.3 %** (`0xfe2a80bb…26cd`, hookless), the pool the live board measures; on 2026-09-25 18:53–18:55 UTC it added a
+second SPY/USDG pool (fee 0.05 %) and six v3 pools (GOOGL, NVDA, SPCX, GLD and QQQ against USDG, and WETH/USDG). Its
+oracle reads the v4 pool's current tick through `extsload`
+([`V4StateReader.getTick`](https://github.com/panoptic-labs/panoptic-v2-core/blob/main/contracts/libraries/V4StateReader.sol))
+into an 8-slot median ring and four EMAs; liquidations use the EMA blend (`twapEMA`), each internal median update is
+clamped to 149 ticks (`MAX_CLAMP_DELTA`), and a fast/slow disagreement past `MAX_TICKS_DELTA` puts the pool in safe
+mode. Every stock pool runs
+[`RiskEngineXStocks`](https://github.com/panoptic-labs/panoptic-v2-core/blob/main/contracts/RiskEngineXStocks.sol),
+"a parameter-only fork … with more conservative ('xstocks') risk": `MAX_TICKS_DELTA` 953 and EMA periods
+120/240/480/1920 s against 724 and 60/120/240/960 s on WETH/USDG, and a seller collateral ratio of 3.3× against 2×.
+A protocol reading stock pools has already decided they need slower averaging and more collateral; it has not asked
+what a push costs. Collateral on deposit: 12.45 SPY and 7,611.67 USDG on the first pool, dust on the rest; oracle
+ticks −209,846 current, −209,899 TWAP, safe mode off.
+
+**The bound for each pool they read**, `CostModel.maxSafeExposure` with nobody pushing back, from
+`PushCostLens.roundTripCosts` by state override (the live board's call), in USDG:
+
+| Consumer | Pool | It reads | Max safe exposure | Riding on the price | Of the line |
+|---|---|---|---|---|---|
+| Panoptic V2 | SPY/USDG 0.3 % | tick → median ring + EMAs | **57,085** (binding rung +20 %, round trip 11,415) | 17,212: 12.45 SPY at 770.87 and 7,611.67 USDG in its trackers | **0.30** |
+| Panoptic V2 | SPY/USDG 0.05 % | same | 1,877 | 0 | 0 |
+| Morpho market, Longbow-listed | USDG/NOTHING 0.9 %, hooked | `slot0` spot | **218** (binding rung +20 %, round trip 43.49) | 226.83 supplied, 123.87 borrowed | **1.04** |
+| Morpho market `0x63dd2e68…` | the same pool | `slot0` spot | 218 | 0 | 0 |
+
+On SPY/USDG, with minting closed for the weekend, Panoptic's whole deposit base sits at 0.30 of what faking the
+price would cost, so a pushed liquidation cannot pay for itself today; the line is what it would check before that
+changes. On USDG/NOTHING, pushing the price 20 % and selling straight back costs 43 USDG in fees, so the line is
+218 USDG and the Longbow-listed market's 227 USDG of deposits are past it: `ExposureGuard.check` on that pool with
+`exposure = 226.83 USDG` reports `trusted = false` by the formula the table uses ([`gauge/test/live-core.test.ts`](gauge/test/live-core.test.ts)
+pins it to the Solidity's fixture; the guard is not deployed on 4663 and this was not run there). Small money, but it is the first
+third-party consumer we found on mainnet that the bound refuses.
+
+Caveats, the same as [Limitations](#limitations). The line reads the pool's liquidity now with nobody pushing back;
+NOTHING has no mint window, so pull-backs are possible and would raise it. The pool is hooked and the view walk does
+not see the hook's charges, so its cost reads low and the line conservative. Panoptic's exposure here is its deposit
+base, not its open positions' notional; the Morpho market's is its supply, the most lenders can lose, with 124 USDG
+actually borrowed. Perps venues (Lighter, Arcus) and the chain's other v4 hooks (Fables, a dynamic-fee DEX whose
+listing says its stock pools' fee follows the market calendar; What The Hook, which captures the gap between pools)
+were not read; they are the next survey.
+
 ## What the review found, and what changed
 
 An internal adversarial review (Abner's session, `e581e23`) attacked the first rule, which settled on raw or
@@ -481,6 +545,9 @@ three agent lanes working one plan in parallel, directed by Abner, with nothing 
 - **A wider, adaptive ladder**, searching for the cheapest move instead of sampling six.
 - Upstream: a price-limit quote on `V4Quoter` and a directional tick search next to `ReservesLens`
   (`FEEDBACK.md` § 1, § 3).
+- **Against the two mainnet readers**: an `ExposureGuard` what-if on a 4663 fork for the Longbow-listed NOTHING market
+  and Panoptic's SPY/USDG pool, and the survey extended to hooks that read other pools (What The Hook) and to Fables'
+  calendar fee ([Who else settles on a pool's price](#who-else-settles-on-a-pools-price-on-4663-today)).
 - **To our own venue**, under its owner's tickets: a depth cap in its vault sizer from this bound over the fix
   window and a thin- or cheap-fix badge from the cost-to-move model (both in its own draft specs), and a re-run of
   `npm run vexi` once a market is wired to its oracle-hook pool.

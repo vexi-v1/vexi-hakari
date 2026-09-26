@@ -327,3 +327,26 @@ the fix does not read the bound), why the line itself refuses and what "watch" i
 worse off, whether a refusal can be forced, and the on-chain refusal tx. Every figure is the README's. The what-if's second
 line and the disclosure bullet link to it. The video segment keeps its four-second line; a longer variant went into the
 draft's "+5 s" list.
+
+## 2026-09-26 23:30 — Abner: can any third-party protocol on mainnet use HAKARI, and can it go into the story
+
+> 如果我希望真實的創造出實際案例，例如把 Vexi + vexi-hakari 部署到 Mainnet，有意義嗎，能夠創造出真實可用的案例？
+>
+> 還是能不能找到其他主網 第三方協議 能夠適用 hakari，加入到故事中補充
+>
+> ("If I want a real, usable case, for example deploying Vexi + vexi-hakari to mainnet, does that make sense? Could it
+> create a real case?" Then: "Or can we find other third-party protocols on mainnet that HAKARI applies to, and add them
+> to the story as a supplement?")
+
+The first question was answered in the session, not in the repo: deploying does not create a case (a case needs
+third-party money, third-party trades and a price somebody else reads), AGENTS.md rule 1 keeps 4663 read-only, and
+Vexi's own gates (its RDR-0006: stability period, v1.0, audit, the owner's written word; its RDR-0061: no stock
+market on mainnet) close its mainnet in any form. The second question was taken as work.
+
+Output: `gauge/src/consumers.ts` (`npm run consumers`), a read-only survey of who settles on a v4 pool's price on
+4663 today: every Morpho Blue market's oracle classified from its runtime code (Chainlink, Uniswap v3 `observe`, or
+the v4 PoolManager's `extsload`), every Panoptic V2 pool from both factories with its risk engine's parameters and
+live oracle ticks, and the bound from `PushCostLens.roundTripCosts` by state override for each v4 pool one of them
+reads, next to what that consumer has riding on it; `gauge/data/consumers.json`; a README section "Who else settles
+on a pool's price on 4663 today"; a card on `web/plain/` pointing at it. Candidates came from DefiLlama's Robinhood
+Chain listing and its adapters (secondary, addresses only); every number in the section is read from the chain.

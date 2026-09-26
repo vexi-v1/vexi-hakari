@@ -456,6 +456,11 @@
           "text": { "en": "Our own options app on the test network fixes a price at every expiry. This board checks each of those prices against HAKARI's line. So far every one stayed under it, because the money riding on them is still small.", "zh": "我們自己的選擇權應用（測試網）在每次到期時定一次價。這個看板把每一次定價都拿來對照 HAKARI 的界線。目前全都在界線之內，因為押在上面的錢還很少（英文介面）。" }
         },
         {
+          "href": "https://github.com/vexi-v1/vexi-hakari#who-else-settles-on-a-pools-price-on-4663-today",
+          "title": { "en": "Who reads these prices for real →", "zh": "誰真的在用這些價格 →" },
+          "text": { "en": "On the real chain, a lending market and an options app already settle on Uniswap pool prices, one of them on the live price of a hooked memecoin pool. We measured each against HAKARI's line and wrote down what they have riding on it. Small money so far, and every one under the line.", "zh": "在主網上，已經有一個借貸市場和一個選擇權應用照 Uniswap 池的價格結算，其中一個讀的是一個帶 hook 的迷因幣池的即時價。我們把每一個都拿來對照 HAKARI 的界線，並記下押在上面的錢有多少。目前錢還很少，也都在界線之內（英文）。" }
+        },
+        {
           "href": "https://github.com/vexi-v1/vexi-hakari",
           "title": { "en": "Read the code ↗", "zh": "看程式碼（GitHub）↗" },
           "text": { "en": "The open-source contracts, tests and data scripts behind every number. MIT licence.", "zh": "每個數字背後的合約、測試與資料腳本，MIT 授權。" }
