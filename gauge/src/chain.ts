@@ -4,7 +4,8 @@
 // comma-separated URLs; requests rotate across them, a failing endpoint hands the request to the next, and the
 // public endpoint is always last in the ring. Every URL must answer chain id 4663 or it is dropped: a variable's
 // name is not its chain (this repo's .env once had mainnet and testnet swapped). URLs can carry API keys, so no
-// URL is ever printed: errors name endpoints as <rpc#N>.
+// URL is ever printed: errors name endpoints as <rpc#N>. Testnet 46630 gets the same ring through RH_TESTNET_RPC
+// (`testnet()`): its public endpoint keeps every log since genesis but serves state only for recent blocks.
 import { createPublicClient, custom, http, type Log, type PublicClient } from "viem";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
@@ -25,7 +26,8 @@ function urlsFrom(value: string | undefined, fallback: string): string[] {
 }
 
 export const MAINNET_RPCS = urlsFrom(process.env.RH_MAINNET_RPC, PUBLIC_MAINNET_RPC);
-const KNOWN_URLS = [...MAINNET_RPCS, ...urlsFrom(process.env.RH_TESTNET_RPC, PUBLIC_TESTNET_RPC)];
+export const TESTNET_RPCS = urlsFrom(process.env.RH_TESTNET_RPC, PUBLIC_TESTNET_RPC);
+const KNOWN_URLS = [...MAINNET_RPCS, ...TESTNET_RPCS];
 
 /** Replace every configured RPC URL (and anything that looks like one) in a message with <rpc#N>. */
 export function redact(message: string): string {
@@ -44,6 +46,14 @@ export const robinhood = {
   name: "Robinhood Chain",
   nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   rpcUrls: { default: { http: [PUBLIC_MAINNET_RPC] } },
+} as const;
+
+/** Testnet 46630: the PoolManager and StateView sit at the same addresses as on 4663. */
+export const robinhoodTestnet = {
+  ...robinhood,
+  id: 46630,
+  name: "Robinhood Chain testnet",
+  rpcUrls: { default: { http: [PUBLIC_TESTNET_RPC] } },
 } as const;
 
 /** A transport that rotates requests across `urls`, fails over on error, and first drops any URL not on `chainId`. */
@@ -88,6 +98,11 @@ export function rotating(urls: string[], chainId: number) {
 
 export function mainnet(): PublicClient {
   return createPublicClient({ chain: robinhood, transport: rotating(MAINNET_RPCS, 4663) });
+}
+
+/** Read-only client on testnet 46630; a URL that answers 4663 is dropped from the ring, whatever its variable is called. */
+export function testnet(): PublicClient {
+  return createPublicClient({ chain: robinhoodTestnet, transport: rotating(TESTNET_RPCS, 46630) });
 }
 
 /** Run a script's main with errors printed redacted and a non-zero exit. */
@@ -155,6 +170,71 @@ export async function getLogsChunked(
     writeCache(cacheFile, { done: [...done], logs });
     await sleep(pauseMs);
   }
+  return logs;
+}
+
+export type SerializedLog = ReturnType<typeof serializeLog>;
+
+/** Logs in (block, logIndex) order. */
+export const byLogOrder = (a: { blockNumber: string; logIndex: number }, b: { blockNumber: string; logIndex: number }) =>
+  BigInt(a.blockNumber) < BigInt(b.blockNumber) ? -1 : BigInt(a.blockNumber) > BigInt(b.blockNumber) ? 1 : a.logIndex - b.logIndex;
+
+/** The public endpoints' refusal of a query matching more than 10,000 logs; halving the range is the cure, a retry is not. */
+export function isLogCap(message: string): boolean {
+  return /exceeds limit|exceeds the limit|too many (logs|results)|more than \d+ (logs|results)|query returned more/i.test(message);
+}
+
+/**
+ * Every log of `filter` in [fromBlock, toBlock]: one query when the RPC accepts it, the range halved whenever it does
+ * not. The public endpoints have no block-range cap but refuse a query that matches more than 10,000 logs; that refusal
+ * halves at once, any other is retried `attempts` times and then halved too. Cached as a whole once every piece is in,
+ * so a cache file is either complete or absent. Use this rather than getLogsChunked for a filter that may exceed the
+ * cap inside one window: the chunked fetcher retries the same window five times and then gives up.
+ */
+export async function getLogsHalving(
+  client: PublicClient,
+  filter: LogFilter,
+  fromBlock: bigint,
+  toBlock: bigint,
+  cacheFile: string,
+  opts: { attempts?: number; pauseMs?: number; maxDepth?: number; onRange?: (from: bigint, to: bigint, n: number) => void } = {},
+): Promise<SerializedLog[]> {
+  const cached = readCache(cacheFile) as SerializedLog[] | undefined;
+  if (cached) return cached;
+  const attempts = opts.attempts ?? 2;
+  const pauseMs = opts.pauseMs ?? 500;
+  const maxDepth = opts.maxDepth ?? 24;
+  const label = filter.event?.name ?? "logs";
+  const logs: SerializedLog[] = [];
+  const query = async (from: bigint, to: bigint): Promise<Log[]> => {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await client.getLogs({ address: filter.address, event: filter.event, args: filter.args as any, fromBlock: from, toBlock: to });
+      } catch (e: any) {
+        const msg = redact(String(e?.details ?? e?.shortMessage ?? e?.message ?? e));
+        if (isLogCap(msg) || attempt + 1 >= attempts) throw new Error(`${label} ${from}-${to}: ${msg}`);
+        await sleep(1500 * 2 ** attempt);
+      }
+    }
+  };
+  const fetchRange = async (from: bigint, to: bigint, depth: number): Promise<void> => {
+    let chunk: Log[];
+    try {
+      chunk = await query(from, to);
+    } catch (e) {
+      if (to <= from || depth >= maxDepth) throw e;
+      const mid = from + (to - from) / 2n;
+      await fetchRange(from, mid, depth + 1);
+      await fetchRange(mid + 1n, to, depth + 1);
+      return;
+    }
+    for (const l of chunk) logs.push(serializeLog(l as any));
+    opts.onRange?.(from, to, chunk.length);
+    if (pauseMs) await sleep(pauseMs);
+  };
+  await fetchRange(fromBlock, toBlock, 0);
+  logs.sort(byLogOrder);
+  writeCache(cacheFile, logs);
   return logs;
 }
 

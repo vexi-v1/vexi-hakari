@@ -28,4 +28,5 @@ export const lensAbi = parseAbi([
   "function quotePush(PoolKey key, int24 ticks, bool up) returns (PushQuote)",
   "function quotePushLadder(PoolKey key, int24[] ticks, bool up) returns (PushQuote[])",
   "function depthToMove(PoolKey key, int24 ticks, bool up, uint256 maxSteps) view returns (uint256 amountIn, uint256 amountOut, uint256 feePaid, bool complete)",
+  "function roundTripCosts(PoolKey key, int24[] widths, bool up, uint256 maxSteps) view returns (uint256[] costInCurrency0, uint256[] costInCurrency1, bool[] complete)",
 ]);

@@ -1,0 +1,18 @@
+{
+  "chainId": 46630,
+  "note": "Vexi's public deployment on testnet 46630 as the gauge calls it: the venue and its spot leaf (not ours, called by ABI), HAKARI's PushCostLens, the quote token and the six markets with their pricing pools on the official PoolManager. Hand-curated, lower-case, no other address.",
+  "venue": "0xf91b7277217ac8e5ff3e6144c1c5a66bbe1b06fa",
+  "spotLeaf": "0xcede7e1eb7e67338bca489c3d3e9697ae19faa04",
+  "deployBlock": 124141549,
+  "lens": "0xe1aa7dd1bd65bc9a88fbe62ce03aa4cbb7bfdca2",
+  "quote": { "symbol": "USDG", "address": "0x09bb68fe50f37e02e6bba45bfe4d204ad479581a", "decimals": 6 },
+  "terms": { "step": 900, "window": 900, "fixWindow": 300 },
+  "markets": [
+    { "symbol": "AI", "base": "0x7ec15f39d9c307edbd07c730e87fb914e178b7b9", "decimals": 18, "pricingPoolId": "0xee57cbac0517ef7e227e28633eb7982c89fcf59353074ce70d2835d996664de7" },
+    { "symbol": "PONS", "base": "0x9eda6980d539bcaaf03c4c953265894ceddc07e7", "decimals": 18, "pricingPoolId": "0x6c538477cc7c98ab21d317000924599f4ed02422daa6510e1373c9458ac1d9a3" },
+    { "symbol": "MEME", "base": "0x4a1fad07d52d0743274b6adc5e5a1b3578530232", "decimals": 18, "pricingPoolId": "0x6b6610c1e919d70a0835760822f981bbed6cf801d0e56f3bcaad498d4c5a5bfa" },
+    { "symbol": "NVDA", "base": "0x2f168c5ef394b84aff8ff8814cb637dac8bbdf12", "decimals": 18, "pricingPoolId": "0x1f65201c2406510eeaced1ae93c0e4be5d602f17de3d5f9f625753a2b6aa6beb" },
+    { "symbol": "MU", "base": "0x0650fb2e4a28e170f58f8aea4997c1e55197de6c", "decimals": 18, "pricingPoolId": "0xdc290821c86075a90f5da5ae36fd0bfbd6dad4cb0db84119f39acc34ef9c62ea" },
+    { "symbol": "TSLA", "base": "0x58b728202fe175f1f2fe20e22205358e6d3da0a4", "decimals": 18, "pricingPoolId": "0x837bf9ccc605da1f5c9e95670b717854fd9ebf5063a542e8891fa2d7eb2c301e" }
+  ]
+}
