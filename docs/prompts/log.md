@@ -575,6 +575,19 @@ English translation of the instruction. Work (Codex): use the exact Vexi Hakari 
 site branding in both languages. Reuse the existing Vexi SVG mark unchanged for the header, footer and favicon,
 explicitly authorized by this request. Add this brand asset to the public extraction inventory and Pages allowlist.
 
+## 2026-09-27 — Abner: three-minute visual PowerPoint demo
+
+> Make a PowerPoint based on this website that is easier to demo. Use visualizations or charts where possible,
+> with little on-slide text and the details in speaker notes.
+>
+> A three-minute demo. Only the key points.
+
+English translation of the instructions. Work (Codex): create six-slide English and Traditional Chinese decks,
+continuing the requested Vexi dark palette and original logo. Focus on the shared maker wallet, exact collateral
+pulls, the fixed-percentage band and recorded replay steps 05, 07 and 09. Include a 180-second script and actions
+in speaker notes, plus a separate rehearsal script. Use only public website content and committed evidence.
+Keep the diagrams and chart editable, and cite the source and local-fork scope in the notes. Commit locally only.
+
 ## 2026-09-27 — Abner: restore the missing AI development artifacts
 
 > fix P1: missing AI development documents
