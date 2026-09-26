@@ -30,7 +30,7 @@ for its depositors, the trading app), it stays private, and the smallest honest 
 |---|---|
 | [`FixedPremium`](../aqua/src/book/FixedPremium.sol) | The stand-in for Vexi's pricer: one owner-set premium per series, with an explicit deadline and an optional original-price anchor. These generic validity checks remain separate from the rolling band |
 | [`aqua/script/DeployBand.s.sol`](../aqua/script/DeployBand.s.sol) | Deploys the band and the settlement source over the hooked pool on 46630 |
-| [`docs/`](.), this README, [`FEEDBACK.md`](../FEEDBACK.md) items 13 to 21 | Written for readers of this repository |
+| [`docs/`](.), this README, [`FEEDBACK.md`](../FEEDBACK.md) | Written for readers of this repository |
 
 ## Left out
 

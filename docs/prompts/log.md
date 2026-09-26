@@ -448,3 +448,19 @@ review. Codex (OpenAI) checked the official prize/event pages, compared the publ
 working tree, ran the existing suites, and added a readiness review, executable demo runner, presentation guide,
 source-line map and Uniswap feedback draft. It preserved the concurrent quote-validity changes, private-product
 boundary and licenses. External completion, publication and license eligibility remain explicitly tracked.
+
+## 2026-09-27 — Abner: move historical feedback out of the current document
+
+> Move the historical material out of FEEDBACK.md; it seems unrelated to the current version.
+
+Outcome (Codex): moved entries 1–12 and the unrechecked research note 21 into `archive/feedback-history.md`,
+preserving their content and original identifiers while adjusting relative links. The root feedback now contains
+only current band entries 13–20 and one historical link. Updated the archive index's feedback pointer.
+
+## 2026-09-27 — Abner: refactor feedback as standalone documents
+
+> Refactor it and update the numbering; the current numbering looks strange.
+
+Outcome (Codex): the current feedback has a concise introduction, eight top-level entries numbered 1–8 and a
+single historical link at the end. The historical document numbers its entries 1–13. Updated the extraction
+inventory and prepared feedback-form references; earlier prompt entries remain chronological records.

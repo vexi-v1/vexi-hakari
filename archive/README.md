@@ -40,4 +40,5 @@ The contracts above that are still deployed on 46630 keep working; nothing on th
 
 Still on the main line from the study: [`src/HakariOracleHook.sol`](../src/HakariOracleHook.sol) (deployed on 46630
 at `0x3b58D774cE351227B24A91103b20bA4fc068D080`, the oracle the band in [`aqua/`](../aqua/) reads), its tests,
-its deploy script, [`FEEDBACK.md`](../FEEDBACK.md) and the prompt record in [`docs/prompts/`](../docs/prompts/).
+its deploy script and the prompt record in [`docs/prompts/`](../docs/prompts/). The study's feedback is now in
+[`feedback-history.md`](feedback-history.md); the root [`FEEDBACK.md`](../FEEDBACK.md) covers the current band.
