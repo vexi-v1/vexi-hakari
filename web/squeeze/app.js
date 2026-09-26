@@ -787,6 +787,7 @@
         np.appendChild(na);
       }
       s4.appendChild(np);
+      var vp = S.el('p'); vp.appendChild(S.link('https://vexi-v1.github.io/vexi-hakari/web/vexi/', tr('next.vexi'))); s4.appendChild(vp);
       host.appendChild(s4);
     }
     if (ST && ST.glossary) {

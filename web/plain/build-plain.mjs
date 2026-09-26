@@ -433,7 +433,8 @@ const headLinks = between('<!-- bundle:head-start -->', '<!-- bundle:head-end --
 let body = between('<!-- bundle:body-start -->', '<!-- bundle:body-end -->');
 body = body.replace(/href="\.\.\/index\.html"/g, `href="${PAGES}"`)
   .replace(/href="\.\.\/squeeze\/(#[\w-]+)?"/g, (m, h) => `href="${PAGES}squeeze/${h || ''}" target="_blank" rel="noopener"`)
-  .replace(/href="\.\.\/#measure-live"/g, `href="${PAGES}#measure-live" target="_blank" rel="noopener"`);
+  .replace(/href="\.\.\/#measure-live"/g, `href="${PAGES}#measure-live" target="_blank" rel="noopener"`)
+  .replace(/href="\.\.\/(live|vexi)\/"/g, (m, d) => `href="${PAGES}${d}/" target="_blank" rel="noopener"`);
 if (/href="\.\.\//.test(body)) fail('bundle body still has a relative ../ link');
 const scriptList = [...between('<!-- bundle:scripts-start -->', '<!-- bundle:scripts-end -->').matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
 
