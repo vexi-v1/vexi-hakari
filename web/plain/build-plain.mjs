@@ -56,15 +56,20 @@ const ALLOW = {
   '22:00': 'grid minute 1788127200', '23:25': 'grid minute 1788132300 (events min-hims-dollar-pool / min-push-up)',
   '23:53': 'grid minute 1788133980', '00:00': 'reference.mintRuleClosed / session24x5Reopen', '00:37': 'grid minute 1788136620',
   '00:43:30': 'events[mint-first].ts', '01:59': 'grid minute 1788141540', '09:54': 'events[mints-by-0954]', '10:00': 'chart domain end (Mon 10:00 UTC)',
-  '10': 'the measured push is +10 % (series.pushUp10CostUsdg); log gridlines ×10; "never more than 10 % above" (events premium-gone label)',
-  '2': 'within 2 % (events premium-gone .amount = 1.61)', '1': 'per 1 USDG riding; SafeSettle v1',
+  '10': 'the measured push is +10 % (series.pushUp10CostUsdg); log gridlines ×10; "stayed within 10 %" after backTime (claim checked in facts.js)',
+  '2': 'within 2 % (events premium-gone .amount = 1.61)', '1': 'per 1 USDG in the worked example (1.0001^ticks − 1 is per unit of exposure)',
   '1,000': 'payout size replayed (hakari.parameters.exposuresUsdg[0])', '10,000': 'payout size replayed (hakari.parameters.exposuresUsdg[1])',
   '100': 'claim checked in facts.js (cost1940 / cost2353 > 100)', '80': 'claim checked in facts.js (v0Max / nav between 1.75 and 1.8)',
   '25': 'shelf figure scale: one dot = 25 HIMS', '24': 'Robinhood\'s 24/5 session (story.json glossary)', '5': 'Robinhood\'s 24/5 session',
   '35': 'testnet demo pushes the price +35 % (README "On-chain, testnet 46630")', '1,000,000': 'testnet demo exposure (README)',
   '40': 'late buyers at 40–60 USDG (story.json roles[Late buyers of HIMS])', '60': 'same', '29': 'late buyers left near 29 (story.json roles); overview alt: flat near 29 (series.himsUsdg.close)',
   '132': 'the "$132" figure people saw (social.json findings[4])', '12': 'the 12 stock pools of the 2026-09-18 weekend (README)',
-  '4663': 'Robinhood Chain mainnet chain id (D.chain.id)', '0.5': 'rounding step in a fact label', '2026-09-18': 'README weekend id'
+  '4663': 'Robinhood Chain mainnet chain id (D.chain.id)', '0.5': 'rounding step in a fact label', '2026-09-18': 'README weekend id',
+  '133': 'the only trade above 124.70: a 0.52 HIMS router leg at 133.35 in a small pool (social.json findings[4])',
+  '50': 'that small pool charged a 50 % fee (social.json findings[4])',
+  '23:24:59': 'the swap that bought the last in-range HIMS (hakari.moments[sun-2325].label; notableSwaps)',
+  '13': 'RoaringKitty post at 23:24:46 (social.json post 2094204712144773123 .ts) → the 23:24:59 swap',
+  '58': 'anondeguerre post at 00:42:32 (social.json post 2094224283044393196 .ts) → events[mint-first] 00:43:30'
 };
 const SKIP_KEYS = new Set(['_about', '_merge', 'said', 'href', 'chapter', 'kind', 'level', 'id', 'mono']);
 const seenDigits = new Map();
@@ -84,6 +89,16 @@ const seenDigits = new Map();
   if (Array.isArray(o)) { o.forEach((v, i) => walk(v, where + '[' + i + ']')); return; }
   if (o && typeof o === 'object') for (const k of Object.keys(o)) if (!SKIP_KEYS.has(k)) walk(o[k], where ? where + '.' + k : k);
 })(C, '');
+
+// Seconds typed into the plain X asides, checked against the post times and the chain
+{
+  const post = (id) => SOCIAL.posts.find((x) => String(x.id) === id);
+  const lastInRange = (D.notableSwaps || []).find((x) => x.pool === 'himsUsdg' && /last .*HIMS/.test(x.note || ''));
+  const fm = D.events.find((e) => e.id === 'mint-first');
+  if (!lastInRange || lastInRange.ts - post('2094204712144773123').ts !== 13) problems.push('"13 seconds" (RoaringKitty → last in-range HIMS) no longer holds');
+  if (fm.ts - post('2094224283044393196').ts !== 58) problems.push('"58 seconds" (anondeguerre → first new tokens) no longer holds');
+  if (fmt.hms(lastInRange ? lastInRange.ts : 0) !== '23:24:59') problems.push('"23:24:59" is no longer the swap that bought the last in-range HIMS');
+}
 
 // Every string that carries a HAKARI replay number must say so in the same string (or sit under a label that does).
 const REPLAY_WORDS = /replay|never had HAKARI|重播|沒裝|沒有裝|從未裝上/;
@@ -176,10 +191,15 @@ const tblPrice = () => {
 };
 const COST_ROWS = [['cost1940', TS.sun1940], ['costMin', TS.sun2325], ['cost2353', TS.sun2353], ['cost0159', TS.mon0159]];
 const tblCost = () => table([TB.time, TB.cost], COST_ROWS.map(([id, ts]) => [pairText((l) => dayTime(ts, l)), esc(fmt.fix(S.pushUp10CostUsdg[at(ts)], 2))]));
-const tblRestock = () => table([TB.time, TB.price, TB.tokens], [TS.mon0043, TS.mon0100, F.backTime.v, TS.mon0300, TS.mon0600, TS.mon0954].map((ts) => {
-  const i = at(ts);
-  return [pairText((l) => dayTime(ts, l)), esc(fmt.fix(S.himsUsdg.close[i], 2)), esc(fmt.int(S.himsSupply[i]))];
-}));
+const tblRestock = () => {
+  // first row: the pool at the first new tokens (hakari.moments[mon-004330], the same row as the price table) and the count just after them
+  const m = D.hakari.moments.find((x) => x.id === 'mon-004330');
+  const first = [pairText((l) => dayTimeSec(m.ts, l)) + ' · ' + pair(TB.firstMintRow), esc(fmt.fix(m.usdgPerHims, 2)), esc(fmt.int(F.float.v + F.firstMintAmt.v))];
+  return table([TB.time, TB.price, TB.tokens], [first].concat([TS.mon0100, F.backTime.v, TS.mon0300, TS.mon0600, TS.mon0954].map((ts) => {
+    const i = at(ts);
+    return [pairText((l) => dayTime(ts, l)), esc(fmt.fix(S.himsUsdg.close[i], 2)), esc(fmt.int(S.himsSupply[i]))];
+  })));
+};
 const tblSafe = () => table([TB.time, TB.safe, TB.payout], [TS.sun1940, TS.sun2200, TS.sun2325, TS.sun2353, TS.mon0043, TS.mon0159].map((ts) => {
   const i = at(ts), dec = S.hakari.decision.e1000[i];
   const verdict = dec === 0 ? `<span class="verdict no"><i aria-hidden="true">✕</i> ${pair(C.charts.refused)}</span>` : `<span class="verdict yes"><i aria-hidden="true">✓</i> ${pair(C.charts.paid)}</span>`;
@@ -273,13 +293,15 @@ ${tbl}
 </figure>`;
 }
 
-function said(postId) {
+// X asides: the post's paraphrase from social.json (shared with the detailed replay), or the row's own
+// plain-language retelling (saidPlain) when the shared wording is too technical for this page.
+function said(postId, plainText) {
   if (!postId) return '';
   const p = SOCIAL.posts.find((x) => String(x.id) === String(postId));
   if (!p) fail('social.json has no post ' + postId);
   const who = p.author.displayI18n || { en: p.author.display, zh: p.author.display };
   const meta = LANGS.map((l) => `<span class="t" lang="${LA[l]}">${md(C.ui.onX[l], { when: esc(dayTime(p.ts, l)) })} · ${esc(who[l])} · ${esc(C.ui.paraphrased[l])}</span>`).join('');
-  return `<aside class="said"><p class="said-meta">${meta}</p><p class="said-text">${pair(p.paraphrase)}</p><p class="said-link">${aTag(p.url, pair(C.ui.thePost))}</p></aside>`;
+  return `<aside class="said"><p class="said-meta">${meta}</p><p class="said-text">${pair(plainText || p.paraphrase)}</p><p class="said-link">${aTag(p.url, pair(C.ui.thePost))}</p></aside>`;
 }
 function scale(sc) {
   if (!sc) return '';
@@ -293,7 +315,8 @@ function sourcesTable(src) {
     const lab = C.factLabels[k];
     if (!lab) problems.push('copy.json factLabels has no label for fact ' + k);
     return `<tr><td class="n">${factSpan(k)}</td><td>${lab ? pair(lab) : ''}</td><td><code>${esc(F[k].src)}</code></td></tr>`;
-  }).join('\n');
+  }).join('\n') + '\n' + Object.keys(ALLOW).filter((k) => seenDigits.has(k)).map((k) =>
+    `<tr class="typed"><td class="n">${esc(k)}</td><td>${pair(src.typed)}</td><td>${esc(ALLOW[k])}</td></tr>`).join('\n');
   return `<details class="facts" id="numbers"><summary>${pair(src.title)}</summary>
 <p class="facts-intro">${pair(src.intro)}</p>
 <div class="tablewrap"><table><thead><tr><th scope="col" class="n">${pair(src.cols.value)}</th><th scope="col">${pair(src.cols.what)}</th><th scope="col">${pair(src.cols.key)}</th></tr></thead><tbody>
@@ -324,7 +347,7 @@ ${sourcesTable(sec.sources)}
   return `<section class="row" id="${sec.id}">
 ${ta}
 ${figure(sec)}
-<div class="tb">${scale(sec.scale)}${paras(sec.body)}${myth}${take}${cur}${said(sec.said)}${more}</div>
+<div class="tb">${scale(sec.scale)}${paras(sec.body)}${myth}${take}${cur}${said(sec.said, sec.saidPlain)}${more}</div>
 </section>`;
 }
 
@@ -347,10 +370,10 @@ function page() {
 </div>
 <figure class="overview"><div class="plot" data-plot="overview" role="img" aria-label="${attr(plain(H.overviewAlt.en))}" data-alt-zh="${attr(plain(H.overviewAlt.zh))}"></div></figure>
 <div class="hero-foot">
-<div class="start"><a class="btn" href="#token">${pair(H.start)}</a><a class="skipto" href="#hakari">${pair(H.skipToHakari)}</a></div>
 <div class="short"><h2 class="h-short">${pair(H.shortTitle)}</h2>
 ${paras(H.short)}
 <p class="unit-note">${pair(H.unitNote)}</p></div>
+<div class="start"><a class="btn" href="#token">${pair(H.start)}</a><a class="skipto" href="#hakari">${pair(H.skipToHakari)}</a></div>
 </div>
 </div></section>`;
   const rows = C.sections.map(row).join('\n\n');

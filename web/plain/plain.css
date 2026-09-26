@@ -113,7 +113,7 @@ code, .mono { font-family: var(--mono); font-size: .86em; }
 @media (max-width: 479px) { :root[data-lang="zh"] .big-label { max-width: 9.5em; } }
 .overview { margin-bottom: 24px; }
 .overview .plot { height: clamp(88px, 10vw, 120px); }
-.hero-foot { display: grid; gap: 32px; }
+.hero-foot { display: grid; gap: 28px; }
 .start { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
 .btn { display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; background: var(--text-primary); color: var(--surface-1); text-decoration: none; font-family: var(--display); font-stretch: 88%; font-weight: 650; font-size: 16px; white-space: nowrap; }
 .btn:hover { background: var(--text-secondary); }
@@ -121,10 +121,7 @@ code, .mono { font-family: var(--mono); font-size: .86em; }
 .short { max-width: var(--measure); display: flex; flex-direction: column; gap: 16px; }
 .h-short { font-family: var(--display); font-weight: 650; font-stretch: 88%; font-size: clamp(21px, 2.2vw, 26px); line-height: 1.2; }
 .unit-note { font-size: 14px; line-height: 1.5; color: var(--text-tertiary); }
-@media (min-width: 1024px) {
-  .hero-foot { grid-template-columns: minmax(0, var(--measure)) 1fr; grid-template-areas: "short start"; column-gap: clamp(48px, 6vw, 96px); align-items: start; }
-  .short { grid-area: short; } .start { grid-area: start; justify-content: flex-end; }
-}
+/* the start links sit right under the short version at every width */
 
 /* ------------------------------------------------------------------ story rows */
 .row { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 24px; padding-block: 56px; scroll-margin-top: calc(var(--hdr) + 16px); border-top: 0; }
@@ -352,6 +349,9 @@ tbody th { font-weight: 400; white-space: nowrap; }
 .facts { font-size: 14px; }
 .facts-intro { color: var(--text-secondary); margin-top: 8px; max-width: 48rem; line-height: 1.5; }
 .facts td code { font-size: 12px; color: var(--text-secondary); overflow-wrap: anywhere; }
+.facts tr.typed td { color: var(--text-secondary); }
+.facts tr.typed td:last-child { font-size: 13px; overflow-wrap: anywhere; }
+.facts tr:not(.typed) + tr.typed td { border-top: 2px solid var(--line-strong); }
 .facts td:last-child { min-width: 16rem; }
 
 /* footer */

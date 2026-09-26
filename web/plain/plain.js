@@ -91,6 +91,8 @@
     for (var i = 0; i < edges.length - 1; i++) {
       var a = xs(edges[i]), b = xs(edges[i + 1]);
       if (b - a > 22) T(g, (a + b) / 2, yText, dayName(edges[i] + 60), 'ax', 'middle');
+      // a last day too short to centre a name in (the count chart ends Mon 00:43): name it at the right edge
+      else if (i === edges.length - 2 && i > 0) T(g, b, yText, dayName(edges[i] + 60), 'ax', 'end');
     }
   }
   function band(g, xs, from, to, top, bottom, label, atBottom) {

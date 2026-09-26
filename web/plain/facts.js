@@ -125,6 +125,7 @@
     var paid = /paid ([\d.]+) USDG per HIMS/.exec(ps.label.en);
     if (!paid) throw new Error('peak-swap label no longer states the average paid');
     put('peakSwapPaid', +paid[1], paid[1], 'events[peak-swap].label ("paid … USDG per HIMS on average")');
+    put('peakSwapPaidRound', Math.round(+paid[1]), int(+paid[1]), 'events[peak-swap].label (average paid), rounded');
 
     // --- Monday
     var pg = ev('premium-gone');
@@ -134,6 +135,9 @@
     put('backTime', pg.ts, hm(pg.ts), 'events[premium-gone].ts');
     put('backMin', back, String(Math.round(back)), 'events[premium-gone].ts − events[mint-first].ts, minutes');
     put('backPrice', close[at(pg.ts)], fix(close[at(pg.ts)], 2), 'series.himsUsdg.close[Mon 01:58]');
+    var tEnd = D.t[D.t.length - 1], hiAfter = -Infinity, loAfter = Infinity;
+    for (var q = at(pg.ts); q < close.length; q++) if (close[q] != null) { hiAfter = Math.max(hiAfter, close[q]); loAfter = Math.min(loAfter, close[q]); }
+    put('dataEnd', tEnd, hm(tEnd), 't[last] (the minute grid ends Mon 14:00 UTC)');
     put('close0037', close[at(TS.mon0037)], String(Math.floor(close[at(TS.mon0037)])), 'series.himsUsdg.close[Mon 00:37], rounded down');
     var mb = ev('mints-by-0954');
     var mints = D.events.filter(function (e) { return e.kind === 'mint' && e.ts >= fm.ts && e.ts <= mb.ts; }).length;
@@ -189,6 +193,7 @@
       ['"two unbroken hours" (longest refused run)', R.longestRun.minutes === 120],
       ['"about three hours in all" (refused minutes)', R.minutesRefused >= 170 && R.minutesRefused <= 190],
       ['"within 2 %" at backTime', pg.amount < 2],
+      ['"stayed within 10 % of it through Monday dataEnd" (every minute close from backTime to t[last] within ±10 % of nav)', hiAfter / nav < 1.1 && loAfter / nav > 0.9],
       ['"more than double" (supply at 09:54 ÷ float)', s954 / fl > 2],
       ['"fewer than four hours" (19:40 → 23:25)', pmin.ts - TS.sun1940 < 4 * 3600],
       ['"about four hours" (19:40 → 23:53)', Math.abs(TS.sun2353 - TS.sun1940 - 4 * 3600) <= 15 * 60],
