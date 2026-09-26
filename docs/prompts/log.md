@@ -436,3 +436,15 @@ Outcome (Codex): current integration entries 13–20 come first; the archived st
 clearly marked historical section; research entry 21 is separate and still explicitly not re-checked. Entry
 numbers and bodies are preserved for traceability. Added navigation and clarified historical README references;
 no new upstream or deployment claims, no archive edits.
+
+## 2026-09-27 — Abner: audit the 1inch and Uniswap submission and fill missing materials
+
+> Vexi-hakari is the project we will submit to ETHGlobal Tokyo 2026, for 1inch and Uniswap. Review what is
+> insufficient and whether all required material is present; help fill the gaps.
+
+English translation of the user instruction. The user supplied the ETHGlobal project-dashboard URL and later
+authorized inspecting that site's signed-in submission page. No submission or feedback form was sent by this
+review. Codex (OpenAI) checked the official prize/event pages, compared the public default branch with the local
+working tree, ran the existing suites, and added a readiness review, executable demo runner, presentation guide,
+source-line map and Uniswap feedback draft. It preserved the concurrent quote-validity changes, private-product
+boundary and licenses. External completion, publication and license eligibility remain explicitly tracked.

@@ -1,6 +1,6 @@
 # ETHGlobal Tokyo 2026: submission texts
 
-Ready to paste into the ETHGlobal form. Track: **Continuity**. Partner prizes: 1inch **Build an Aqua App** and
+Draft text for the ETHGlobal form. Complete [the readiness checks](submission-review.md) before submitting. Track: **Continuity**. Partner prizes: 1inch **Build an Aqua App - Continuity Track** and
 Uniswap Foundation **Best Uniswap Stack Contribution**. Repository: <https://github.com/vexi-v1/vexi-hakari>.
 
 ## Tagline

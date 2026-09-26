@@ -21,6 +21,8 @@ Uniswap study and changed shape during the event; [docs/history.md](docs/history
 
 | Start here | |
 |---|---|
+| [Submission readiness](docs/submission-review.md) · [Judge demo](docs/demo.md) | Remaining submission checks and runnable transfer/refusal demonstrations |
+| [Reviewer code map](docs/reviewer-code-map.md) · [Uniswap form draft](docs/uniswap-feedback-draft.md) | Exact source lines and prepared feedback answers |
 | [How it fits together](#how-it-fits-together) | One picture and the path of a trade |
 | [For 1inch reviewers](#for-1inch-reviewers-aqua-and-swapvm) · [For Uniswap reviewers](#for-uniswap-reviewers-v4-hook-and-band) | The integration, file by file |
 | [docs/band.md](docs/band.md) | Quote validity, optional anchors, the fixed demonstration band and its limits |
@@ -98,8 +100,8 @@ the router deployed on Robinhood Chain 4663). Canonical Aqua and the deployed Sw
 
 | What | Where |
 |---|---|
-| The hook: OpenZeppelin's `BaseOracleHook` (Panoptic's truncated oracle) plus both TWAPs in one call; deployed on 46630 at [`0x3b58…D080`](https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080), its address mined for its flag bits | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol), [`script/Deploy.s.sol`](script/Deploy.s.sol) (CREATE2 salt loop), [`test/HakariOracleHook.t.sol`](test/HakariOracleHook.t.sol) |
-| The band reads the reference pool: `slot0` and in-range liquidity through v4-core's `StateLibrary` (`extsload`), raw and truncated cumulative ticks from the hook's `observe` | [`StabilityBandPricer.status`](aqua/src/band/StabilityBandPricer.sol) |
+| The hook: OpenZeppelin's `BaseOracleHook` (Panoptic's truncated oracle) plus both TWAPs in one call; deployed on 46630 at [`0x3b58…D080`](https://explorer.testnet.chain.robinhood.com/address/0x3b58D774cE351227B24A91103b20bA4fc068D080), its address mined for its flag bits | [`src/HakariOracleHook.sol`](src/HakariOracleHook.sol#L24), [`script/Deploy.s.sol`](script/Deploy.s.sol) (CREATE2 salt loop), [`test/HakariOracleHook.t.sol`](test/HakariOracleHook.t.sol) |
+| The band reads the reference pool: `slot0` and in-range liquidity through v4-core's `StateLibrary` (`extsload`), raw and truncated cumulative ticks from the hook's `observe` | [`StabilityBandPricer.status`](aqua/src/band/StabilityBandPricer.sol#L199) |
 | The oracle is read from the pool key: `key.hooks` is the hook | `StabilityBandPricer` constructor, `HookTwapExpiryPrice.setSource` |
 | Tick → price through `TickMath.getSqrtPriceAtTick`, √P² without a 320-bit overflow, either token order, any decimals | [`BandMath.priceOf`](aqua/src/band/BandMath.sol) |
 | The hook's truncation used as a check: raw and truncated TWAPs more than a half-width apart pause the book | `StabilityBandPricer.status` (`SeriesDisagree`) |
@@ -117,7 +119,8 @@ git clone --recurse-submodules https://github.com/vexi-v1/vexi-hakari.git && cd 
 forge test                                  # the hook: 5 tests
 
 cd aqua
-cp .env.example .env                        # fill in RH_MAINNET_RPC (read-only, fork source only)
+export RH_MAINNET_RPC=https://rpc.ordofi.network # archive endpoint; read-only fork source
+export RH_MAINNET_FORK_BLOCK=72248228
 forge test                                  # Aqua, quote validity, band, experimental settlement; fork block 72,248,228
 ```
 

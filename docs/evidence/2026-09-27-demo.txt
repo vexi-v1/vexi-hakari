@@ -1,0 +1,84 @@
+HAKARI judge-demo rehearsal — 2026-09-27T04:26:48+09:00
+Command: bash scripts/judge-demo.sh all
+Local fork EVM only; Robinhood 4663 source block 72248228.
+Synthetic funded accounts. No mainnet transactions or public transaction hashes.
+These 12 selected tests are a subset of the 97 passing root + aqua tests, not additional coverage.
+Verbatim excerpts from the successful runner output follow. Each test has an independent fixture.
+
+TEST RESULTS
+[PASS] test_Invariant1_ShippingMovesNoTokens() (gas: 669410)
+[PASS] test_Invariant2_FillPullsExactlyTheCollateralInTheBuyTransaction() (gas: 1661884)
+[PASS] test_Invariant4_UnexercisedCollateralReturnsToWalletAndIsPromisedAgain() (gas: 1150724)
+[PASS] test_Invariant5_PremiumsAreCreditedToTheMakersStrategy() (gas: 1141281)
+[PASS] test_CanonicalRouterCapsAtTheUnpromisedBalance() (gas: 1235185)
+[PASS] test_WithoutTheGuardASpotFillTakesWhatTheOptionsPromised() (gas: 1028002)
+[PASS] test_ABuyThroughTheBandPullsFromTheMakerThroughAqua() (gas: 697678)
+[PASS] test_APushAtExpiryDefersSettlementOnTheRealHook() (gas: 5388375)
+[PASS] test_APushOfTheReferencePastTheBandPausesTheBook() (gas: 1184158)
+[PASS] test_InsideTheBandTheBookTapers() (gas: 823442)
+[PASS] test_ExpiredQuoteBlocksBookBuyWithoutMovingFundsAndDoesNotBlockSettlement() (gas: 4870996)
+[PASS] test_AnchorRefusesAfterRollingBandRecovers() (gas: 290562)
+
+ACTUAL CALL TRACE: AQUA PULL (5 TSLA)
+    │   │   ├─ [46143] Aqua::pull(maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], 0x62435eea481622470d869fd8fc398de892adac4423d44d77750f5660047887c9, TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d], 5000000000000000000 [5e18], OptionBook: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   │   │   ├─ [42577] TSLA::transferFrom(maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], OptionBook: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], 5000000000000000000 [5e18])
+    │   │   │   │   ├─ [425] 0xe10b6f6B275de231345c20D14Ab812db62151b00::implementation() [staticcall]
+    │   │   │   │   │   └─ ← [Return] 0x000000000000000000000000b35490d6f9163de4f80d88dc75c3516eb64c5ae2
+    │   │   │   │   ├─ [41503] 0xb35490d6f9163DE4F80d88dc75c3516eb64C5aE2::transferFrom(maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], OptionBook: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], 5000000000000000000 [5e18]) [delegatecall]
+    │   │   │   │   │   ├─ [338] 0xe10b6f6B275de231345c20D14Ab812db62151b00::paused() [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ [605] 0xe10b6f6B275de231345c20D14Ab812db62151b00::isBlocked(maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65]) [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ [2605] 0xe10b6f6B275de231345c20D14Ab812db62151b00::isBlocked(OptionBook: [0x2e234DAe75C793f67A35089C9d99245E1C58470b]) [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ [605] 0xe10b6f6B275de231345c20D14Ab812db62151b00::isBlocked(Aqua: [0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a]) [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ emit Transfer(from: maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], to: OptionBook: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], value: 5000000000000000000 [5e18])
+    │   │   │   │   │   ├─ emit TransferWithScaledUI(param0: maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], param1: OptionBook: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], param2: 5000000000000000000 [5e18], param3: 5000000000000000000 [5e18])
+    │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   └─ ← [Return] true
+    │   │   │   ├─ emit Pulled(maker: maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], app: AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], strategyHash: 0x62435eea481622470d869fd8fc398de892adac4423d44d77750f5660047887c9, token: TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d], amount: 5000000000000000000 [5e18])
+    │   │   │   └─ ← [Stop]
+
+ACTUAL CALL TRACE: AQUA PUSH (5 TSLA)
+    │   │   ├─ [15885] Aqua::push(maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], 0x62435eea481622470d869fd8fc398de892adac4423d44d77750f5660047887c9, TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d], 5000000000000000000 [5e18])
+    │   │   │   ├─ [12354] TSLA::transferFrom(AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], 5000000000000000000 [5e18])
+    │   │   │   │   ├─ [425] 0xe10b6f6B275de231345c20D14Ab812db62151b00::implementation() [staticcall]
+    │   │   │   │   │   └─ ← [Return] 0x000000000000000000000000b35490d6f9163de4f80d88dc75c3516eb64c5ae2
+    │   │   │   │   ├─ [11280] 0xb35490d6f9163DE4F80d88dc75c3516eb64C5aE2::transferFrom(AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], 5000000000000000000 [5e18]) [delegatecall]
+    │   │   │   │   │   ├─ [338] 0xe10b6f6B275de231345c20D14Ab812db62151b00::paused() [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ [605] 0xe10b6f6B275de231345c20D14Ab812db62151b00::isBlocked(AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9]) [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ [605] 0xe10b6f6B275de231345c20D14Ab812db62151b00::isBlocked(maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65]) [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ [605] 0xe10b6f6B275de231345c20D14Ab812db62151b00::isBlocked(Aqua: [0x1111113CCf1426A8E30e2bfF5E005d929bF6a90a]) [staticcall]
+    │   │   │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000000000000000000000000000
+    │   │   │   │   │   ├─ emit Transfer(from: AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], to: maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], value: 5000000000000000000 [5e18])
+    │   │   │   │   │   ├─ emit TransferWithScaledUI(param0: AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], param1: maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], param2: 5000000000000000000 [5e18], param3: 5000000000000000000 [5e18])
+    │   │   │   │   │   └─ ← [Return] true
+    │   │   │   │   └─ ← [Return] true
+    │   │   │   ├─ emit Pushed(maker: maker: [0x94d0664B249D23286D62F2dd2d21f739B3707f65], app: AquaWriter: [0x5991A2dF15A8F6A256D3Ec51E99254Cd3fb576A9], strategyHash: 0x62435eea481622470d869fd8fc398de892adac4423d44d77750f5660047887c9, token: TSLA: [0x322F0929c4625eD5bAd873c95208D54E1c003b2d], amount: 5000000000000000000 [5e18])
+    │   │   │   └─ ← [Stop]
+
+UNISWAP DEMONSTRATION LOGS
+  10 calls: fixed premium / paid through the band (USDG) 80.0000 80.0080
+  u (1e-4), extra bps 34 1
+  gas, book.quotePremium through the band (cold) 99118
+  gas, book.buy of 10 calls through the band and Aqua 302591
+  push through the last 5 min took USDG / back took TSLA 481160.2920 1235.3884
+  window 0: settle / center price 400.9765 378.2312
+  window 0: off the center, bps 601
+  window 1: settled / honest spot 378.2691 378.2973
+  gas, HookTwapExpiryPrice.priceAt, 2 attempts (cold) 160258
+  push to +5.1 % over the center took USDG 408413.3919
+  push back took TSLA 1053.1815
+  center / pushed price 378.2312 397.5210
+  pushed u (1e-4) 10200
+  pushed back: 10 calls filled for USDG 80.0080
+  push to +2.5 % over the center took USDG 200751.7301
+  u (1e-4), extra bps, size cap 5000 500 25
+  10 calls: fixed / paid (USDG) 80.0000 84.0000
+
+EXPECTED REFUSAL TRACE (the enclosing test passed)
+    │   │   │   └─ ← [Revert] Paused(4)
