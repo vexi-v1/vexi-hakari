@@ -120,3 +120,21 @@ settlement. That is conservative, but it is not a measurement. The fee a swap wi
 board labels the two pools "dynamic fee: not compared" instead of showing a collapse, and README § Limitations
 says view mode sees stored fees only. What would help: a view convention for dynamic-fee hooks (the fee they would
 charge for given swap parameters), or a line in the StateView docs that `lpFee` means nothing on a `0x800000` pool.
+
+## 12. An observation credits its tick to the whole span since the previous one: a quiet window reads the swap before it
+
+`Oracle.write` (OpenZeppelin `uniswap-hooks`, Panoptic's design, the same as Uniswap v3) stores at time `t` the
+tick that stood since the previous observation, multiplied by the seconds it stood. That is correct: between two
+swaps only one price stands. The trap is what it means for a window: a fix window with no swap inside it is priced
+entirely by the last swap before it opened, whether it is read while still open (the record is extrapolated with
+the live tick) or after a later swap has written the span into storage. A push one second before the window, and
+nothing until one second after it, is what the window reads (`test/HakariOracleHook.t.sol`
+`test_observe_aPushBeforeAQuietWindow_isWhatTheWindowReads`). On our own venue 31 of the 39 fix windows that
+carried exposure had no swap inside them (README § A second consumer).
+
+We hit this the night before submission, reviewing a rule we then dropped: a clamp of the fix window to a
+trailing reference, applied where the hook writes. Any rule keyed on *when an observation is written* can be
+skipped by not swapping; a window rule has to segment the stored record at the window's own boundaries when it
+reads, and treat the extrapolated tail the same way. Found in the design review, then reproduced with the test.
+What would help: one sentence in the `observe` / `BaseOracleHook` docs saying that an observation prices the whole
+span back to the previous one, and that a window containing no observation is priced by the swap that preceded it.
